@@ -59,12 +59,11 @@ public class BatchHandler extends RDFHandlerVerbose {
 		 * addVertex() works as expected.
 		 * (https://github.com/tinkerpop/blueprints/wiki/Neo4j-Implementation)
 		 */
-		String shortUri = UriShortener.shorten(uri);
 
-		Vertex v = bgraph.getVertex(shortUri);
+		Vertex v = bgraph.getVertex(uri);
 		if (v == null) {
-			v = bgraph.addVertex(shortUri);
-			v.setProperty(GraphConfig.URI_PROPERTY, shortUri);
+			v = bgraph.addVertex(uri);
+			v.setProperty(GraphConfig.URI_PROPERTY, uri);
 		}
 		return v;
 	}
@@ -83,25 +82,23 @@ public class BatchHandler extends RDFHandlerVerbose {
 
 	@Override
 	public void handleStatement(Statement st) {
-		String subject = st.getSubject().stringValue();
-		String predicate = st.getPredicate().stringValue();
-		String object = st.getObject().stringValue();
-
 		if (!statementFilter.isValidStatement(st)) {
 			invalidTriples++;
 			return;
-		} else {
-			validTriples++;
 		}
+
+		String subject = UriShortener.shorten(st.getSubject().stringValue());
+		String predicate = UriShortener.shorten(st.getPredicate().stringValue());
+		String object = UriShortener.shorten(st.getObject().stringValue());
 
 		Vertex out = addVertexIfNonExistent(subject);
 		Vertex in = addVertexIfNonExistent(object);
 		Edge e = bgraph.addEdge(null, out, in, GraphConfig.EDGE_LABEL);
 		e.setProperty(GraphConfig.URI_PROPERTY, predicate);
-
-		// TODO Make sure this triple is unique?
+		// TODO Make sure the edge is unique?
 
 		// logging metrics
+		validTriples++;
 		long totalTriples = validTriples + invalidTriples;
 		if (totalTriples % TICK_SIZE == 0) {
 			long timeDelta = (System.currentTimeMillis() - tick);

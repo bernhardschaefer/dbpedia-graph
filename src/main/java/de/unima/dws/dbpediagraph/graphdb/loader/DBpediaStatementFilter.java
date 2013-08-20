@@ -17,7 +17,7 @@ public class DBpediaStatementFilter implements StatementFilter {
 
 		// continue if object is not a dbpedia resource
 		// TODO check if prefix should contain dbepdia.org/resource
-		if (!st.getObject().stringValue().startsWith(GraphConfig.DBPEDIA_PREFIX)) {
+		if (!st.getObject().stringValue().startsWith(GraphConfig.DBPEDIA_RESOURCE_URI)) {
 			// noDBpediaObjTriples++;
 			return false;
 		}

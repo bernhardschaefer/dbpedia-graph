@@ -12,11 +12,11 @@
 
 	<!-- Logger -->
 	<logger name="de.unima">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 
 	<root>
-		<priority value="warn" />
+		<priority value="info" />
 		<appender-ref ref="ConsoleLogging" />
 	</root>
 </log4j:configuration>

@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.openrdf.rio.ParseErrorListener;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
@@ -67,6 +69,16 @@ public class DBpediaGraphLoader {
 		for (File f : files) {
 			LoadingMetrics metric = new LoadingMetrics(f.getName());
 
+			// get appropriate handler
+			RDFHandlerVerbose handler = new BatchHandler(graph);
+			for (Entry<String, String> prefix : GraphConfig.URI_TO_PREFIX.entrySet()) {
+				try {
+					handler.handleNamespace(prefix.getValue(), prefix.getKey());
+				} catch (RDFHandlerException e) {
+					logger.error("Exception while trying to assign prefixes", e);
+				}
+			}
+
 			// get appropriate parser
 			RDFFormat format = RDFFormat.forFileName(f.getName());
 			if (format == null) {
@@ -75,9 +87,25 @@ public class DBpediaGraphLoader {
 				continue;
 			}
 			RDFParser rdfParser = Rio.createParser(format);
+			rdfParser.setStopAtFirstError(false);
+			rdfParser.setParseErrorListener(new ParseErrorListener() {
+				@Override
+				public void error(String msg, int lineNo, int colNo) {
+					logger.warn(String.format("Error %s at line %d and colNo %d%n", msg, lineNo, colNo));
+				}
 
-			// register handler
-			RDFHandlerVerbose handler = new BatchHandler(graph);
+				@Override
+				public void fatalError(String msg, int lineNo, int colNo) {
+					logger.warn(String.format("Fatal Error %s at line %d and colNo %d%n", msg, lineNo, colNo));
+				}
+
+				@Override
+				public void warning(String msg, int lineNo, int colNo) {
+					logger.debug(String.format("Warning %s at line %d and colNo %d%n", msg, lineNo, colNo));
+				}
+			});
+
+			// assign handler to parser
 			rdfParser.setRDFHandler(handler);
 
 			// parse file
