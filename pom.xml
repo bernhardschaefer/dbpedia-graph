@@ -1,0 +1,148 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.unima.dws</groupId>
+	<artifactId>dbpedia-graphdb</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>${project.artifactId}</name>
+	<description>DBpedia Graph-based Disambiguation with Graph Database</description>
+
+	<properties>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<encoding>UTF-8</encoding>
+		<!-- graph db stuff -->
+		<tinkerpop.version>2.4.0</tinkerpop.version>
+		<sesame.version>2.7.5</sesame.version>
+		<slf4j.version>1.7.5</slf4j.version>
+		<!-- <junit.version>4.11</junit.version> -->
+		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
+		<!-- <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> -->
+	</properties>
+
+	<dependencies>
+		<!-- for batch etc. https://github.com/tinkerpop/blueprints/wiki/Batch-Implementation -->
+		<dependency>
+			<groupId>com.tinkerpop.blueprints</groupId>
+			<artifactId>blueprints-core</artifactId>
+			<version>${tinkerpop.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.tinkerpop</groupId>
+			<artifactId>pipes</artifactId>
+			<version>${tinkerpop.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.tinkerpop.gremlin</groupId>
+			<artifactId>gremlin-java</artifactId>
+			<version>${tinkerpop.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.tinkerpop.furnace</groupId>
+			<artifactId>furnace</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- https://github.com/tinkerpop/blueprints/wiki/Sail-Ouplementation -->
+		<dependency>
+			<groupId>com.tinkerpop.blueprints</groupId>
+			<artifactId>blueprints-graph-sail</artifactId>
+			<version>${tinkerpop.version}</version>
+		</dependency>
+
+		<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4j-Implementation -->
+		<dependency>
+			<groupId>com.tinkerpop.blueprints</groupId>
+			<artifactId>blueprints-neo4j-graph</artifactId>
+			<version>${tinkerpop.version}</version>
+
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-core</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
+		<!-- logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<!-- build the jar with all dependencies, so that execution from command 
+						line with java -cp target/[...].jar is possible -->
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<!-- define main class in MANIFEST.MF for convenient java -jar execution -->
+					<archive>
+						<manifest>
+							<mainClass>de.unima.dws.dbpediagraph.graphdb.loader.DBpediaGraphLoader</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<!-- furnace exists only as snapshot -->
+		<repository>
+			<id>sonatype-oss-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>central</id>
+			<name>Maven Repository Switchboard</name>
+			<layout>default</layout>
+			<url>http://repo1.maven.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+</project>
