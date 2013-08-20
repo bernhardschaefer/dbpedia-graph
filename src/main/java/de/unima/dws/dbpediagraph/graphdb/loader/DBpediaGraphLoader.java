@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.openrdf.rio.ParseErrorListener;
@@ -26,7 +25,7 @@ import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.LoadingMetrics;
 
 /**
- * Main class for importing DBpedia into a {@link Graph}.
+ * Main class for importing DBpedia files into a {@link Graph}.
  * 
  * @author Bernhard Schäfer
  * 
@@ -42,20 +41,20 @@ public class DBpediaGraphLoader {
 	private static final Logger logger = LoggerFactory.getLogger(DBpediaGraphLoader.class);
 
 	/**
-	 * Main method to be called for importing DBpedia into a {@link Graph}.
+	 * Main method.
 	 * 
 	 * @param args
 	 *            each arg can be a directory containing RDF files or a RDF file
 	 *            itself.
 	 */
 	public static void main(String[] args) throws ConfigurationException {
-		new DBpediaGraphLoader().loadFromFiles(FileUtils.extractFilesFromArgs(args));
+		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args));
 	}
 
 	/**
 	 * Generates a {@link Graph} by parsing the provided RDF files.
 	 */
-	public void loadFromFiles(Collection<File> files) throws ConfigurationException {
+	public static void loadFromFiles(Collection<File> files) throws ConfigurationException {
 		if (files == null || files.size() == 0) {
 			throw new IllegalArgumentException("Provide one or several directories or files in RDF Format.");
 		}
@@ -71,47 +70,22 @@ public class DBpediaGraphLoader {
 
 			// get appropriate handler
 			RDFHandlerVerbose handler = new BatchHandler(graph);
-			for (Entry<String, String> prefix : GraphConfig.URI_TO_PREFIX.entrySet()) {
-				try {
-					handler.handleNamespace(prefix.getValue(), prefix.getKey());
-				} catch (RDFHandlerException e) {
-					logger.error("Exception while trying to assign prefixes", e);
-				}
-			}
 
 			// get appropriate parser
-			RDFFormat format = RDFFormat.forFileName(f.getName());
-			if (format == null) {
+			RDFFormat rdfFormat = RDFFormat.forFileName(f.getName());
+			if (rdfFormat == null) {
 				logger.warn(String.format("File %s could not be parsed since it has no valid RDF format file ending.",
 						f.getName()));
 				continue;
 			}
-			RDFParser rdfParser = Rio.createParser(format);
-			rdfParser.setStopAtFirstError(false);
-			rdfParser.setParseErrorListener(new ParseErrorListener() {
-				@Override
-				public void error(String msg, int lineNo, int colNo) {
-					logger.warn(String.format("Error %s at line %d and colNo %d%n", msg, lineNo, colNo));
-				}
-
-				@Override
-				public void fatalError(String msg, int lineNo, int colNo) {
-					logger.warn(String.format("Fatal Error %s at line %d and colNo %d%n", msg, lineNo, colNo));
-				}
-
-				@Override
-				public void warning(String msg, int lineNo, int colNo) {
-					logger.debug(String.format("Warning %s at line %d and colNo %d%n", msg, lineNo, colNo));
-				}
-			});
+			RDFParser rdfParser = getParserForFormat(rdfFormat);
 
 			// assign handler to parser
 			rdfParser.setRDFHandler(handler);
 
 			// parse file
-			String baseURI = "";
 			try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
-				rdfParser.parse(reader, baseURI);
+				rdfParser.parse(reader, "");
 			} catch (RDFParseException | RDFHandlerException | IOException e) {
 				logger.error("Error while parsing file " + f.getName(), e);
 			}
@@ -124,5 +98,27 @@ public class DBpediaGraphLoader {
 		graph.shutdown();
 
 		globalMetric.finish(metrics);
+	}
+
+	private static RDFParser getParserForFormat(RDFFormat rdfFormat) {
+		RDFParser rdfParser = Rio.createParser(rdfFormat);
+		rdfParser.setStopAtFirstError(false);
+		rdfParser.setParseErrorListener(new ParseErrorListener() {
+			@Override
+			public void error(String msg, int lineNo, int colNo) {
+				logger.warn(String.format("Error %s at line %d and colNo %d%n", msg, lineNo, colNo));
+			}
+
+			@Override
+			public void fatalError(String msg, int lineNo, int colNo) {
+				logger.warn(String.format("Fatal Error %s at line %d and colNo %d%n", msg, lineNo, colNo));
+			}
+
+			@Override
+			public void warning(String msg, int lineNo, int colNo) {
+				logger.debug(String.format("Warning %s at line %d and colNo %d%n", msg, lineNo, colNo));
+			}
+		});
+		return rdfParser;
 	}
 }

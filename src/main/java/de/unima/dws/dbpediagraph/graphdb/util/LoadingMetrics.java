@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import de.unima.dws.dbpediagraph.graphdb.loader.RDFHandlerVerbose;
 
 /**
- * Simple class to record graph loading metrics.
+ * Helper class to record graph loading metrics.
  * 
  * @author Bernhard Schäfer
  * 
