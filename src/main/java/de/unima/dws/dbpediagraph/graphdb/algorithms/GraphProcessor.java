@@ -58,7 +58,7 @@ public class GraphProcessor {
 			Set<String> keys = v.getPropertyKeys();
 			System.out.println("vid: " + v.getId().toString());
 			for (String key : keys) {
-				logger.info(String.format("key: %s, val: %s %n", key, v.getProperty(key)));
+				logger.info(String.format("key: %s, val: %s", key, v.getProperty(key)));
 			}
 		}
 	}
@@ -67,11 +67,11 @@ public class GraphProcessor {
 		Timer t = new Timer();
 
 		long verticesCount = new GremlinPipeline<Object, Object>(graph.getVertices()).count();
-		logger.info(String.format("Vertices: %,d %n", verticesCount));
+		logger.info(String.format("Vertices: %,d", verticesCount));
 		t.tick(" count vertices ");
 
 		long edgesCount = new GremlinPipeline<Object, Object>(graph.getEdges()).count();
-		logger.info(String.format("Edges: %,d %n", edgesCount));
+		logger.info(String.format("Edges: %,d", edgesCount));
 		t.tick(" count edges ");
 
 		t.getTime(" total stats ");
@@ -90,7 +90,7 @@ public class GraphProcessor {
 		// GremlinPipeline pipe = new GremlinPipeline();
 		// pipe.start(graph.getVertex(1)).out("knows").property("name");
 
-		logger.info(String.format("Total time: %.2f sec %n", (System.currentTimeMillis() - startTime) / 1000.0));
+		logger.info(String.format("Total time: %.2f sec", (System.currentTimeMillis() - startTime) / 1000.0));
 	}
 
 }
