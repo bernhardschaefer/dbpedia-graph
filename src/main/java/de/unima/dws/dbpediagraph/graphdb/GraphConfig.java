@@ -6,13 +6,8 @@ import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.GraphFactory;
-import com.tinkerpop.blueprints.TransactionalGraph;
-import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 
 /**
  * The configuration hub for the DBpedia graph project.
@@ -21,15 +16,6 @@ import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
  * 
  */
 public class GraphConfig {
-	/**
-	 * Holder for the singleton.
-	 */
-	private static class Holder {
-		public static final GraphConfig INSTANCE = new GraphConfig();
-	}
-
-	private static final Logger logger = LoggerFactory.getLogger(GraphConfig.class);
-
 	public static final String URI_PROPERTY = "URI";
 	public static final String DBPEDIA_RESOURCE_URI = "http://dbpedia.org/resource/";
 	public static final String EDGE_LABEL = "pred";
@@ -59,17 +45,11 @@ public class GraphConfig {
 		URI_TO_PREFIX.put("http://dbpedia.org/property/", "dbpedia2:");
 	}
 
-	public static GraphConfig getInstance() {
-		return Holder.INSTANCE;
-	}
-
 	/**
 	 * The config file that is used for retrieving {@link Graph}
 	 * implementations.
 	 */
 	private Configuration config;
-
-	private final TransactionalGraph graph;
 
 	private GraphConfig() {
 		try {
@@ -77,36 +57,21 @@ public class GraphConfig {
 		} catch (ConfigurationException e) {
 			throw new IllegalArgumentException(GRAPH_PROPERTY_FILE + " could not be loaded.", e);
 		}
+	}
 
-		graph = openGraph();
-
+	public Configuration getConfig() {
+		return config;
 	}
 
 	/**
-	 * Creates and returns a graph implementation. The graph is created for
-	 * batch inserts using the provided buffer size.
+	 * Holder for the singleton.
 	 */
-	public Graph getBatchGraph(long bufferSize) {
-		return new BatchGraph<TransactionalGraph>(graph, bufferSize);
+	private static class Holder {
+		public static final GraphConfig INSTANCE = new GraphConfig();
 	}
 
-	public TransactionalGraph getGraph() {
-		return graph;
+	public static GraphConfig getInstance() {
+		return Holder.INSTANCE;
 	}
 
-	/**
-	 * Open a graph based on configuration settings.
-	 */
-	private TransactionalGraph openGraph() {
-		long startTime = System.currentTimeMillis();
-
-		Graph graph = GraphFactory.open(config);
-
-		logger.debug(String.format("Graph loading time %.2f sec", (System.currentTimeMillis() - startTime) / 1000.0));
-		if (graph instanceof TransactionalGraph) {
-			return (TransactionalGraph) graph;
-		} else {
-			throw new IllegalArgumentException("Graph specified in properties needs to be a transactional graph.");
-		}
-	}
 }

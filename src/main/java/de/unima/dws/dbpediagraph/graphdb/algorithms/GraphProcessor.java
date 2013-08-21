@@ -14,6 +14,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
+import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.UriShortener;
 import de.unima.dws.dbpediagraph.graphdb.util.Timer;
 
@@ -33,7 +34,7 @@ public class GraphProcessor {
 	private final TransactionalGraph graph;
 
 	public GraphProcessor() {
-		graph = GraphConfig.getInstance().getGraph();
+		graph = GraphProvider.getInstance().getGraph();
 	}
 
 	public void printEdgesOfVertices(Iterator<Vertex> vertices) {

@@ -18,6 +18,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.furnace.algorithms.graphcentric.searching.DepthFirstAlgorithm;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
+import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 
 public class DFS {
 	private static final Logger logger = LoggerFactory.getLogger(DFS.class);
@@ -44,7 +45,7 @@ public class DFS {
 	private final TransactionalGraph graph;
 
 	public DFS() {
-		graph = GraphConfig.getInstance().getGraph();
+		graph = GraphProvider.getInstance().getGraph();
 	}
 
 	public void createSubgraph(Graph subgraph, List<Vertex> vertices, List<Edge> edges, Set<Vertex> done, int depth,
