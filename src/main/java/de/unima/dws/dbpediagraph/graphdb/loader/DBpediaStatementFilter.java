@@ -22,6 +22,15 @@ public class DBpediaStatementFilter implements StatementFilter {
 		}
 
 		// continue if object is not a dbpedia resource
+		// TODO check if this constraint is too large (e.g. dbpedia.org/ontology
+		// is excluded!)
+		/* 
+		 * There are several possibilities here:
+		 * 1. use only triples with object http://dbpedia.org/resource/*
+		 * 2. use only triples with object http://dbpedia.org/*
+		 * 3. use only triples with object that match various uris 
+		 * 	( e.g. http://w3.org* | http://xmlns.com/foaf/0.1/Person | ...)
+		 */
 		if (!st.getObject().stringValue().startsWith(GraphConfig.DBPEDIA_RESOURCE_URI)) {
 			return false;
 		}

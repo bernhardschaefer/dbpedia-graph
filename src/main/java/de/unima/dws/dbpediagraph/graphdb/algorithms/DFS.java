@@ -118,7 +118,7 @@ public class DFS {
 
 		List<Edge> path = findPath(start, target);
 
-		logger.info(String.format("%,.2f secs", (System.currentTimeMillis() - startTime) / 1000.0));
+		logger.info("{} secs", (System.currentTimeMillis() - startTime) / 1000.0);
 		return path;
 	}
 }

@@ -1,7 +1,9 @@
 package de.unima.dws.dbpediagraph.graphdb.algorithms;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
@@ -21,15 +24,15 @@ import de.unima.dws.dbpediagraph.graphdb.util.Timer;
 public class GraphProcessor {
 	public static void main(String[] args) throws ConfigurationException {
 		GraphProcessor processor = new GraphProcessor();
-		processor.stats();
+		// processor.stats();
 
-		// processor.test1();
-		// processor.test2();
+		// processor.disambiguateTest();
+		processor.getVertexTest("http://dbpedia.org/resource/Abraham_Lincoln");
 
 		processor.graph.shutdown();
 	}
 
-	private final Logger logger = LoggerFactory.getLogger(GraphProcessor.class);
+	private static final Logger logger = LoggerFactory.getLogger(GraphProcessor.class);
 
 	private final TransactionalGraph graph;
 
@@ -55,12 +58,13 @@ public class GraphProcessor {
 	public void printVertices(Iterator<Vertex> vertices, int maxCount) {
 		while (maxCount-- > 0 && vertices.hasNext()) {
 			Vertex v = vertices.next();
-			Set<String> keys = v.getPropertyKeys();
-			System.out.println("vid: " + v.getId().toString());
-			for (String key : keys) {
-				logger.info(String.format("key: %s, val: %s", key, v.getProperty(key)));
-			}
+			printVertex(v);
 		}
+	}
+
+	private void printVertex(Vertex v) {
+		String uri = v.getProperty(GraphConfig.URI_PROPERTY);
+		logger.info("vid: {} uri: {}", v.getId().toString(), uri);
 	}
 
 	public void stats() {
@@ -77,20 +81,51 @@ public class GraphProcessor {
 		t.getTime(" total stats ");
 	}
 
-	public void test1() {
-		Iterator<Vertex> vertices = graph.getVertices().iterator();
-		printVertices(vertices);
+	public void disambiguateTest() {
+		// http://en.wikipedia.org/wiki/Michael_I._Jordan
+
+		// Michael I. Jordan is a leading researcher in machine learning and
+		// artificial intelligence.
+
+		String[] resources = new String[] { "Michael_I._Jordan", "Michael_Jordan", "Machine_learning",
+				"Artificial_intelligence" };
+
+		Collection<Vertex> vertices = new LinkedList<Vertex>();
+		for (String resource : resources) {
+			String uri = GraphConfig.DBPEDIA_RESOURCE_URI + resource;
+			vertices.add(getVertexByUri(graph, uri));
+		}
+
+		printVertices(vertices.iterator());
 	}
 
-	public void test2() {
+	private static Vertex getVertexByUri(Graph graph, String uri) {
+		String shortUri = UriShortener.shorten(uri);
+		List<Vertex> vertices = new LinkedList<Vertex>();
+		Iterable<Vertex> verticesIter = graph.getVertices(GraphConfig.URI_PROPERTY, shortUri);
+		for (Vertex v : verticesIter) {
+			vertices.add(v);
+		}
+
+		if (vertices.size() == 0) {
+			return null;
+		}
+		if (vertices.size() > 1) {
+			logger.warn("There is more than one vertex with the uri " + uri);
+		}
+
+		return vertices.get(0);
+	}
+
+	public void getVertexTest(String uri) {
 		long startTime = System.currentTimeMillis();
-		Iterator<Vertex> vertices = graph.getVertices(GraphConfig.URI_PROPERTY,
-				UriShortener.shorten("http://dbpedia.org/resource/Audi")).iterator();
-		printEdgesOfVertices(vertices);
+
+		Vertex v = getVertexByUri(graph, uri);
+		printVertex(v);
 		// GremlinPipeline pipe = new GremlinPipeline();
 		// pipe.start(graph.getVertex(1)).out("knows").property("name");
 
-		logger.info(String.format("Total time: %.2f sec", (System.currentTimeMillis() - startTime) / 1000.0));
+		logger.info("Total time: %.2f sec", (System.currentTimeMillis() - startTime) / 1000.0);
 	}
 
 }

@@ -74,8 +74,7 @@ public class DBpediaGraphLoader {
 			// get appropriate parser
 			RDFFormat rdfFormat = RDFFormat.forFileName(f.getName());
 			if (rdfFormat == null) {
-				logger.warn(String.format("File %s could not be parsed since it has no valid RDF format file ending.",
-						f.getName()));
+				logger.warn("File {} could not be parsed since it has no valid RDF format file ending.", f.getName());
 				continue;
 			}
 			RDFParser rdfParser = getParserForFormat(rdfFormat);
@@ -106,17 +105,17 @@ public class DBpediaGraphLoader {
 		rdfParser.setParseErrorListener(new ParseErrorListener() {
 			@Override
 			public void error(String msg, int lineNo, int colNo) {
-				logger.warn(String.format("Error %s at line %d and colNo %d%n", msg, lineNo, colNo));
+				logger.warn("Error {} at line {} and colNo {}", msg, lineNo, colNo);
 			}
 
 			@Override
 			public void fatalError(String msg, int lineNo, int colNo) {
-				logger.warn(String.format("Fatal Error %s at line %d and colNo %d%n", msg, lineNo, colNo));
+				logger.warn("Fatal Error {} at line {} and colNo {}", msg, lineNo, colNo);
 			}
 
 			@Override
 			public void warning(String msg, int lineNo, int colNo) {
-				logger.debug(String.format("Warning %s at line %d and colNo %d%n", msg, lineNo, colNo));
+				logger.debug("Warning {} at line {} and colNo {}", msg, lineNo, colNo);
 			}
 		});
 		return rdfParser;
