@@ -26,8 +26,8 @@ public class GraphProcessor {
 		GraphProcessor processor = new GraphProcessor();
 		// processor.stats();
 
-		// processor.disambiguateTest();
-		processor.getVertexTest("http://dbpedia.org/resource/Abraham_Lincoln");
+		processor.disambiguateTest();
+		// processor.getVertexTest("http://dbpedia.org/resource/Abraham_Lincoln");
 
 		processor.graph.shutdown();
 	}

@@ -1,7 +1,9 @@
 package de.unima.dws.dbpediagraph.graphdb.algorithms;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
 public class GraphConstructionProcess {
@@ -13,13 +15,15 @@ public class GraphConstructionProcess {
 	 *            drink1, ... , drink5; milk1, ..., milk4)for each content word
 	 *            (e.g. drink, milk),
 	 */
-	public void createSubgraph(List<Vertex> vertices) {
+	public void createSubgraph(List<Vertex> senses, int maxDepth) {
 		// problem is about finding a vertex-induced subgraph
 		// (http://mathworld.wolfram.com/Vertex-InducedSubgraph.html)
 		// (http://www.edmath.org/MATtours/discrete/concepts/csubgr.html)
 
 		// V = vertices
+		List<Vertex> vertices = senses;
 		// E = {}
+		List<Edge> edges = new LinkedList<Edge>();
 
 		// perform a DFS from the vertex vertices(0) until we reach another
 		// vertex from vertices(1-n).

@@ -15,6 +15,7 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import com.tinkerpop.furnace.algorithms.graphcentric.searching.DepthFirstAlgorithm;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
@@ -80,7 +81,7 @@ public class DFS {
 	public Graph createSubgraph(List<Vertex> context) {
 
 		// get it from somewhere...
-		Graph subgraph = null;
+		Graph subgraph = new TinkerGraph();
 
 		for (Vertex start : context) {
 
