@@ -6,7 +6,10 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.GraphFactory;
 import com.tinkerpop.blueprints.TransactionalGraph;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
+import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 /**
  * Singleton that provides graph instances.
@@ -28,7 +31,17 @@ public class GraphProvider {
 	 * batch inserts using the provided buffer size.
 	 */
 	public Graph getBatchGraph(long bufferSize) {
-		return new BatchGraph<TransactionalGraph>(graph, bufferSize);
+		BatchGraph<TransactionalGraph> bgraph = new BatchGraph<TransactionalGraph>(graph, bufferSize);
+
+		// check if graph exists already
+		long verticesCount = new GremlinPipeline<Object, Object>(graph.getVertices()).count();
+		if (verticesCount != 0) {
+			bgraph.setVertexIdKey(GraphConfig.URI_PROPERTY);
+			bgraph.setLoadingFromScratch(false);
+			logger.info("There is an existing graph with {} vertices.", verticesCount);
+		}
+
+		return bgraph;
 	}
 
 	public TransactionalGraph getGraph() {
@@ -42,8 +55,12 @@ public class GraphProvider {
 		long startTime = System.currentTimeMillis();
 
 		Graph graph = GraphFactory.open(GraphConfig.getInstance().getConfig());
+		if (graph instanceof Neo4jGraph) {
+			Neo4jGraph nGraph = (Neo4jGraph) graph;
+			nGraph.createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
+		}
 
-		logger.debug(String.format("Graph loading time %.2f sec", (System.currentTimeMillis() - startTime) / 1000.0));
+		logger.info("Graph loading time {} sec", (System.currentTimeMillis() - startTime) / 1000.0);
 		if (graph instanceof TransactionalGraph) {
 			return (TransactionalGraph) graph;
 		} else {
