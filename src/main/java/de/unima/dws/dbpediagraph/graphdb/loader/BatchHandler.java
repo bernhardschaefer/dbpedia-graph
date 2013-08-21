@@ -84,21 +84,20 @@ public class BatchHandler extends RDFHandlerVerbose {
 	public void handleStatement(Statement st) {
 		if (!statementFilter.isValidStatement(st)) {
 			invalidTriples++;
-			return;
+		} else {
+			validTriples++;
+			String subject = UriShortener.shorten(st.getSubject().stringValue());
+			String predicate = UriShortener.shorten(st.getPredicate().stringValue());
+			String object = UriShortener.shorten(st.getObject().stringValue());
+
+			Vertex out = addVertexIfNonExistent(subject);
+			Vertex in = addVertexIfNonExistent(object);
+			Edge e = bgraph.addEdge(null, out, in, GraphConfig.EDGE_LABEL);
+			e.setProperty(GraphConfig.URI_PROPERTY, predicate);
+			// TODO Make sure the edge is unique?
 		}
 
-		String subject = UriShortener.shorten(st.getSubject().stringValue());
-		String predicate = UriShortener.shorten(st.getPredicate().stringValue());
-		String object = UriShortener.shorten(st.getObject().stringValue());
-
-		Vertex out = addVertexIfNonExistent(subject);
-		Vertex in = addVertexIfNonExistent(object);
-		Edge e = bgraph.addEdge(null, out, in, GraphConfig.EDGE_LABEL);
-		e.setProperty(GraphConfig.URI_PROPERTY, predicate);
-		// TODO Make sure the edge is unique?
-
 		// logging metrics
-		validTriples++;
 		long totalTriples = validTriples + invalidTriples;
 		if (totalTriples % TICK_SIZE == 0) {
 			long timeDelta = (System.currentTimeMillis() - tick);
