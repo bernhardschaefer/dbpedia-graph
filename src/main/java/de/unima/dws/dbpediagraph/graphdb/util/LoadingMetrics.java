@@ -113,11 +113,8 @@ public class LoadingMetrics {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(String.format("DONE with %s.\tProcessing time ~%.2f sec", metricName, timeDelta / 1000.0));
-		builder.append(String.format("\t%,d total triples (%,d valid, %,d invalid).%n", totalTriples, validTriples,
-				invalidTriples));
-		return builder.toString();
+		return String.format("DONE with %s. Overall time ~%.2f sec. %,d total triples (%,d valid, %,d invalid).%n",
+				metricName, timeDelta / 1000.0, totalTriples, validTriples, invalidTriples);
 	}
 
 }
