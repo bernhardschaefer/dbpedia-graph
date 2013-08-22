@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb;
+package de.unima.dws.dbpediagraph.graphdb.jgrapht;
 
 import java.util.HashSet;
 import java.util.Set;
