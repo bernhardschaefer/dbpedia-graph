@@ -13,7 +13,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphHelper;
+import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
@@ -38,7 +38,7 @@ public class PathFinder {
 		Collection<Vertex> vertices = new LinkedList<Vertex>();
 		for (String resource : resources) {
 			String uri = GraphConfig.DBPEDIA_RESOURCE_URI + resource;
-			vertices.add(GraphHelper.getVertexByUri(rawGraph, uri));
+			vertices.add(GraphUtil.getVertexByUri(rawGraph, uri));
 		}
 
 		int nMaxHops = 10;

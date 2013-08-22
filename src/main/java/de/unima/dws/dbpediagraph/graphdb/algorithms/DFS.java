@@ -61,8 +61,6 @@ public class DFS {
 		final Set<Vertex> newDone = new HashSet<>(done);
 		newDone.add(start);
 
-		// TODO implement EdgeFilter so that only edges with specific uri
-		// properties (e.g. rdf:type)
 		// for each adjacent
 		for (Edge e : start.getEdges(Direction.OUT)) {
 			Vertex target = e.getVertex(Direction.OUT);

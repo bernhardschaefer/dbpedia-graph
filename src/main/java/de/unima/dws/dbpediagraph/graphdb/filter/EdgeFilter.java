@@ -6,8 +6,8 @@ import com.tinkerpop.blueprints.Edge;
 
 /**
  * Edge filter functionalities to determine whether edges are valid. Graph
- * Algorithms can use this filter to limit the kind of edges they are working
- * on.
+ * Algorithms can use this filter to limit the kind of edges they are working on
+ * (e.g. only use edges with uri rdf:type) .
  * 
  * @author Bernhard Schäfer
  * 

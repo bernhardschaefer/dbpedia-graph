@@ -11,7 +11,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphHelper;
+import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.UriShortener;
 import de.unima.dws.dbpediagraph.graphdb.filter.DBpediaStatementFilter;
 import de.unima.dws.dbpediagraph.graphdb.filter.StatementFilter;
@@ -93,8 +93,8 @@ public class BatchHandler extends RDFHandlerVerbose {
 			String predicate = UriShortener.shorten(st.getPredicate().stringValue());
 			String object = UriShortener.shorten(st.getObject().stringValue());
 
-			Vertex out = GraphHelper.addVertexByUri(bgraph, subject);
-			Vertex in = GraphHelper.addVertexByUri(bgraph, object);
+			Vertex out = GraphUtil.addVertexByUri(bgraph, subject);
+			Vertex in = GraphUtil.addVertexByUri(bgraph, object);
 			Edge e = bgraph.addEdge(null, out, in, GraphConfig.EDGE_LABEL);
 			e.setProperty(GraphConfig.URI_PROPERTY, predicate);
 			// TODO Make sure the edge is unique?

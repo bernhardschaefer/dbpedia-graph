@@ -13,7 +13,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphHelper;
+import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.filter.DefaultEdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
@@ -28,7 +28,7 @@ public class SubgraphConstruction {
 
 		SubgraphConstruction sc = new SubgraphConstruction(graph);
 
-		Collection<Vertex> vertices = GraphHelper.getTestVertices(graph);
+		Collection<Vertex> vertices = GraphUtil.getTestVertices(graph);
 		long startTime = System.currentTimeMillis();
 		Graph subGraph = sc.createSubgraphNaive(vertices);
 		logger.info("Total time for creating subgraph: {} sec.", (System.currentTimeMillis() - startTime) / 1000.0);
@@ -54,7 +54,7 @@ public class SubgraphConstruction {
 	public Graph createSubgraphNaive(Collection<Vertex> vertices) {
 		Graph subGraph = GraphProvider.getInstance().getNewEmptyGraph();
 
-		GraphHelper.addVerticesByUrisOfVertices(subGraph, vertices);
+		GraphUtil.addVerticesByUrisOfVertices(subGraph, vertices);
 
 		for (Vertex start : vertices) {
 			for (Vertex end : vertices) {
@@ -69,7 +69,7 @@ public class SubgraphConstruction {
 							duration);
 
 					if (!path.isEmpty()) {
-						GraphHelper.addNodeAndEdgesIfNonExistent(subGraph, path);
+						GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, path);
 
 						logger.info(GraphPrinter.toStringPath(path, start, end));
 					}

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphHelper;
+import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
@@ -30,7 +30,7 @@ public class GraphProcessor {
 	public void getVertexTest(String uri) {
 		long startTime = System.currentTimeMillis();
 
-		Vertex v = GraphHelper.getVertexByUri(graph, uri);
+		Vertex v = GraphUtil.getVertexByUri(graph, uri);
 		GraphPrinter.printVertex(v);
 		// GremlinPipeline pipe = new GremlinPipeline();
 		// pipe.start(graph.getVertex(1)).out("knows").property("name");

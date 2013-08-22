@@ -12,6 +12,7 @@ import com.tinkerpop.blueprints.Edge;
  * 
  */
 public abstract class AbstractEdgeFilter implements EdgeFilter {
+
 	/**
 	 * Iterator implementation. For each request it continues iterating on the
 	 * provided iterator until {@link #isValidEdge(Edge)} is satisfied.

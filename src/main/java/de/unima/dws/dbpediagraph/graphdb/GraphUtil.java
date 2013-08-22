@@ -15,8 +15,8 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-public class GraphHelper {
-	private static final Logger logger = LoggerFactory.getLogger(GraphHelper.class);
+public class GraphUtil {
+	private static final Logger logger = LoggerFactory.getLogger(GraphUtil.class);
 
 	// public static void main(String[] args) {
 	// Graph g = GraphProvider.getInstance().getGraph();
@@ -86,7 +86,7 @@ public class GraphHelper {
 		Collection<Vertex> vertices = new LinkedList<Vertex>();
 		for (String resource : resources) {
 			String uri = GraphConfig.DBPEDIA_RESOURCE_URI + resource;
-			vertices.add(GraphHelper.getVertexByUri(graph, uri));
+			vertices.add(GraphUtil.getVertexByUri(graph, uri));
 		}
 
 		return vertices;
