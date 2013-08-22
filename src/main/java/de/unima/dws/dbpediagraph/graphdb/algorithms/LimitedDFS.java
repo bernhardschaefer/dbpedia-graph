@@ -21,6 +21,8 @@ import com.tinkerpop.furnace.algorithms.graphcentric.searching.DepthFirstAlgorit
 import com.tinkerpop.furnace.algorithms.graphcentric.searching.SearchAlgorithm;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
+import de.unima.dws.dbpediagraph.graphdb.filter.DefaultEdgeFilter;
+import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 
 /**
  * Depth-first search with a depth limit. This class is mostly based on
@@ -36,9 +38,19 @@ public class LimitedDFS implements SearchAlgorithm {
 
 	private final int limit;
 
-	public LimitedDFS(Graph graph, int limit) {
+	private final Class<? extends EdgeFilter> edgeFilterClass;
+
+	private final Direction direction;
+
+	public LimitedDFS(Graph graph, int maxDepth) {
+		this(graph, maxDepth, DefaultEdgeFilter.class, Direction.BOTH);
+	}
+
+	public LimitedDFS(Graph graph, int limit, Class<? extends EdgeFilter> edgeFilter, Direction direction) {
 		this.graph = graph;
 		this.limit = limit;
+		this.edgeFilterClass = edgeFilter;
+		this.direction = direction;
 	}
 
 	private void checkValidVertices(Vertex start, Vertex target) {
@@ -104,12 +116,12 @@ public class LimitedDFS implements SearchAlgorithm {
 
 			// check limit
 			int limitNext = vertexDepth.get(next);
-			if (limitNext > limit) {
+			if (limitNext > limit) { // TODO should this be >= instead of > ?
 				logger.debug("vid: {} uri: {} out of limit", next.getId(), next.getProperty(GraphConfig.URI_PROPERTY));
 				continue;
 			}
 
-			for (Edge edge : next.getEdges(Direction.OUT)) {
+			for (Edge edge : new DefaultEdgeFilter(next.getEdges(Direction.OUT))) {
 				Vertex child = edge.getVertex(Direction.IN);
 				if (!visitedSet.contains(child)) {
 					previousMap.put(child, edge);

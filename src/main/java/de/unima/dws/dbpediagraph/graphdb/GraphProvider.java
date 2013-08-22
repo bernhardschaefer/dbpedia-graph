@@ -8,6 +8,7 @@ import com.tinkerpop.blueprints.GraphFactory;
 import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
+import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
 
@@ -18,7 +19,18 @@ import com.tinkerpop.gremlin.java.GremlinPipeline;
  * 
  */
 public class GraphProvider {
+	/**
+	 * Holder for the singleton.
+	 */
+	private static class Holder {
+		public static final GraphProvider INSTANCE = new GraphProvider();
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(GraphProvider.class);
+
+	public static GraphProvider getInstance() {
+		return Holder.INSTANCE;
+	}
 
 	private final TransactionalGraph graph;
 
@@ -48,6 +60,11 @@ public class GraphProvider {
 		return graph;
 	}
 
+	public Graph getNewEmptyGraph() {
+		// TODO use subgraph configuration
+		return new TinkerGraph();
+	}
+
 	/**
 	 * Open a graph based on configuration settings.
 	 */
@@ -66,16 +83,5 @@ public class GraphProvider {
 		} else {
 			throw new IllegalArgumentException("Graph specified in properties needs to be a transactional graph.");
 		}
-	}
-
-	/**
-	 * Holder for the singleton.
-	 */
-	private static class Holder {
-		public static final GraphProvider INSTANCE = new GraphProvider();
-	}
-
-	public static GraphProvider getInstance() {
-		return Holder.INSTANCE;
 	}
 }

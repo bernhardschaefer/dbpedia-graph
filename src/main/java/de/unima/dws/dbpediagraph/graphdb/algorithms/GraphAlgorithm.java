@@ -4,7 +4,7 @@ import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 
-public class GraphAlgorithm {
+public abstract class GraphAlgorithm {
 	protected final Graph graph;
 
 	public GraphAlgorithm() {

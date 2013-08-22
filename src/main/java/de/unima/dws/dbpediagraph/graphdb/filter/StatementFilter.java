@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.loader;
+package de.unima.dws.dbpediagraph.graphdb.filter;
 
 import org.openrdf.model.Statement;
 

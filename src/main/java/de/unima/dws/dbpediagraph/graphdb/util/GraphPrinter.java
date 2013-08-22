@@ -70,4 +70,19 @@ public class GraphPrinter {
 			printVertex(v);
 		}
 	}
+
+	public static String toStringPath(List<Edge> path, Vertex start, Vertex end) {
+		if (path.size() == 0) {
+			return null;
+		}
+
+		StringBuilder builder = new StringBuilder();
+		for (Edge e : path) {
+			builder.append(e.getVertex(Direction.OUT).getProperty(GraphConfig.URI_PROPERTY)).append("--")
+					.append(e.getProperty(GraphConfig.URI_PROPERTY)).append("-->");
+		}
+		builder.append(end.getProperty(GraphConfig.URI_PROPERTY));
+		return builder.toString();
+
+	}
 }
