@@ -45,7 +45,7 @@ public class LimitedDFS implements SearchAlgorithm {
 
 	private static final int DEFAULT_MAX_DEPTH = 5;
 	private static final EdgeFilter DEFAULT_EDGE_FILTER = new DefaultEdgeFilter();
-	private static final Direction DEFAULT_DIRECTION = Direction.BOTH;
+	private static final Direction DEFAULT_DIRECTION = Direction.OUT;
 
 	public LimitedDFS(Graph graph) {
 		this(graph, DEFAULT_MAX_DEPTH, DEFAULT_EDGE_FILTER, DEFAULT_DIRECTION);
@@ -130,7 +130,7 @@ public class LimitedDFS implements SearchAlgorithm {
 				continue;
 			}
 
-			edgeFilter.setIterator(next.getEdges(Direction.OUT).iterator());
+			edgeFilter.setIterator(next.getEdges(direction).iterator());
 			for (Edge edge : edgeFilter) {
 				Vertex child = edge.getVertex(Direction.IN);
 				if (!visitedSet.contains(child)) {
