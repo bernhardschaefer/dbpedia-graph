@@ -3,6 +3,7 @@ package de.unima.dws.dbpediagraph.graphdb;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -75,6 +76,23 @@ public class GraphUtil {
 		return edges;
 	}
 
+	private static int getIterItemCount(Iterator<?> iter) {
+		int counter = 0;
+		while (iter.hasNext()) {
+			iter.next();
+			counter++;
+		}
+		return counter;
+	}
+
+	public static int getNumberOfEdges(Graph subGraph) {
+		return getIterItemCount(subGraph.getEdges().iterator());
+	}
+
+	public static int getNumberOfVertices(Graph subGraph) {
+		return getIterItemCount(subGraph.getVertices().iterator());
+	}
+
 	// TODO put this somewhere else
 	public static Collection<Vertex> getTestVertices(Graph graph) {
 		// http://en.wikipedia.org/wiki/Michael_I._Jordan
@@ -91,6 +109,18 @@ public class GraphUtil {
 		}
 
 		return vertices;
+	}
+
+	private static String getUriOfVertex(Vertex v) {
+		return v.getProperty(GraphConfig.URI_PROPERTY).toString();
+	}
+
+	public static Collection<String> getUrisOfVertices(Collection<Vertex> vertices) {
+		List<String> uris = new LinkedList<>();
+		for (Vertex v : vertices) {
+			uris.add(getUriOfVertex(v));
+		}
+		return uris;
 	}
 
 	public static Vertex getVertexByUri(Graph graph, String uri) {

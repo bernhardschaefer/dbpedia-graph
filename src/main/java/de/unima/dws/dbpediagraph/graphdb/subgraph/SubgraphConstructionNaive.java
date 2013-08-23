@@ -30,7 +30,7 @@ public class SubgraphConstructionNaive implements SubgraphConstruction {
 	public static void main(String[] args) {
 		Graph graph = GraphProvider.getInstance().getGraph();
 
-		SubgraphConstructionNaive sc = new SubgraphConstructionNaive(graph);
+		SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
 		Collection<Vertex> vertices = GraphUtil.getTestVertices(graph);
 		Graph subGraph = sc.createSubgraph(vertices);
 		GraphPrinter.printGraphStatistics(subGraph);
