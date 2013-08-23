@@ -14,6 +14,13 @@ import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 
+/**
+ * Graph Logging and toString helper methods
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
+// TODO clean it up
 public class GraphPrinter {
 	private static final Logger logger = LoggerFactory.getLogger(GraphPrinter.class);
 

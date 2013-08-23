@@ -4,50 +4,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
-import com.tinkerpop.furnace.algorithms.graphcentric.searching.DepthFirstAlgorithm;
-
-import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 
 public class DFS {
-	private static final Logger logger = LoggerFactory.getLogger(DFS.class);
-
 	private static final int MAX_DEPTH = 3;
-
-	public static void main(String[] args) {
-		DFS dfs = new DFS();
-
-		int iterations = 100;
-		while (iterations-- > 0) {
-			List<Edge> edges = dfs.findPathBetweenRandomVertices();
-			int pathSize = -1;
-			if (edges != null) {
-				pathSize = edges.size();
-			}
-			System.out.println("Path size " + pathSize);
-
-		}
-
-		dfs.graph.shutdown();
-	}
-
-	private final TransactionalGraph graph;
-
-	public DFS() {
-		graph = GraphProvider.getInstance().getGraph();
-	}
 
 	public void createSubgraph(Graph subgraph, List<Vertex> vertices, List<Edge> edges, Set<Vertex> done, int depth,
 			Collection<Vertex> targets) {
@@ -98,26 +64,4 @@ public class DFS {
 		return subgraph;
 	}
 
-	public List<Edge> findPath(Vertex start, Vertex target) {
-		DepthFirstAlgorithm dfs = new DepthFirstAlgorithm(graph);
-		List<Edge> path = dfs.findPathToTarget(start, target);
-		return path;
-	}
-
-	public List<Edge> findPathBetweenRandomVertices() {
-		long startTime = System.currentTimeMillis();
-		Random r = new Random();
-		int startId = r.nextInt(1_000_000);
-		int targetId = r.nextInt(1_000_000);
-
-		Vertex start = graph.getVertex(startId);
-		System.out.println(start.getProperty(GraphConfig.URI_PROPERTY));
-		Vertex target = graph.getVertex(targetId);
-		System.out.println(target.getProperty(GraphConfig.URI_PROPERTY));
-
-		List<Edge> path = findPath(start, target);
-
-		logger.info("{} secs", (System.currentTimeMillis() - startTime) / 1000.0);
-		return path;
-	}
 }

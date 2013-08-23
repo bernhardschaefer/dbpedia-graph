@@ -80,6 +80,7 @@ public abstract class AbstractEdgeFilter implements EdgeFilter {
 		return new ValidEdgeIterator(iterator);
 	}
 
+	@Override
 	public void setIterator(Iterator<Edge> iterator) {
 		this.iterator = iterator;
 	}

@@ -38,18 +38,27 @@ public class LimitedDFS implements SearchAlgorithm {
 
 	private final int limit;
 
-	private final Class<? extends EdgeFilter> edgeFilterClass;
+	private final EdgeFilter edgeFilter;
 
+	// TODO implement using direction in findPath()
 	private final Direction direction;
 
-	public LimitedDFS(Graph graph, int maxDepth) {
-		this(graph, maxDepth, DefaultEdgeFilter.class, Direction.BOTH);
+	private static final int DEFAULT_MAX_DEPTH = 5;
+	private static final EdgeFilter DEFAULT_EDGE_FILTER = new DefaultEdgeFilter();
+	private static final Direction DEFAULT_DIRECTION = Direction.BOTH;
+
+	public LimitedDFS(Graph graph) {
+		this(graph, DEFAULT_MAX_DEPTH, DEFAULT_EDGE_FILTER, DEFAULT_DIRECTION);
 	}
 
-	public LimitedDFS(Graph graph, int limit, Class<? extends EdgeFilter> edgeFilter, Direction direction) {
+	public LimitedDFS(Graph graph, int maxDepth) {
+		this(graph, maxDepth, new DefaultEdgeFilter(), Direction.BOTH);
+	}
+
+	public LimitedDFS(Graph graph, int limit, EdgeFilter edgeFilter, Direction direction) {
 		this.graph = graph;
 		this.limit = limit;
-		this.edgeFilterClass = edgeFilter;
+		this.edgeFilter = edgeFilter;
 		this.direction = direction;
 	}
 
@@ -121,7 +130,8 @@ public class LimitedDFS implements SearchAlgorithm {
 				continue;
 			}
 
-			for (Edge edge : new DefaultEdgeFilter(next.getEdges(Direction.OUT))) {
+			edgeFilter.setIterator(next.getEdges(Direction.OUT).iterator());
+			for (Edge edge : edgeFilter) {
 				Vertex child = edge.getVertex(Direction.IN);
 				if (!visitedSet.contains(child)) {
 					previousMap.put(child, edge);

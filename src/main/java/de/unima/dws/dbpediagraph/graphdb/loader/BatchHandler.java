@@ -13,8 +13,8 @@ import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.UriShortener;
-import de.unima.dws.dbpediagraph.graphdb.filter.DBpediaStatementFilter;
-import de.unima.dws.dbpediagraph.graphdb.filter.StatementFilter;
+import de.unima.dws.dbpediagraph.graphdb.filter.DBpediaLoadingStatementFilter;
+import de.unima.dws.dbpediagraph.graphdb.filter.LoadingStatementFilter;
 
 /**
  * Full blueprints compatible batch handler for creating a graph from RDF files.
@@ -37,7 +37,7 @@ public class BatchHandler extends RDFHandlerVerbose {
 	private long tick = System.currentTimeMillis();
 
 	/** the statement filter that decides if a statement is valid */
-	private final StatementFilter statementFilter;
+	private final LoadingStatementFilter statementFilter;
 
 	private static final Logger logger = LoggerFactory.getLogger(BatchHandler.class);
 
@@ -48,7 +48,7 @@ public class BatchHandler extends RDFHandlerVerbose {
 	public BatchHandler(Graph graph) {
 		this.bgraph = graph;
 		// TODO create factory for creating statement filters when necessary
-		statementFilter = new DBpediaStatementFilter();
+		statementFilter = new DBpediaLoadingStatementFilter();
 	}
 
 	/**

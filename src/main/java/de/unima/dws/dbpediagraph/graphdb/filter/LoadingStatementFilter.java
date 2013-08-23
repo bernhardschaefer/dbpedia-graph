@@ -9,7 +9,7 @@ import org.openrdf.model.Statement;
  * @author Bernhard Schäfer
  * 
  */
-public interface StatementFilter {
+public interface LoadingStatementFilter {
 
 	/**
 	 * Predicate that decides if a statement is valid or not.

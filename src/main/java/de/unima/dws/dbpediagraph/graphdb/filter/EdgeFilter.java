@@ -22,4 +22,9 @@ public interface EdgeFilter extends Iterable<Edge> {
 	@Override
 	Iterator<Edge> iterator();
 
+	/**
+	 * Set the iterator that will be used for internal iteration.
+	 */
+	void setIterator(Iterator<Edge> iterator);
+
 }
