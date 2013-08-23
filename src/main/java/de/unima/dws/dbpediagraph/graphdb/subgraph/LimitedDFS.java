@@ -23,10 +23,13 @@ import com.tinkerpop.furnace.algorithms.graphcentric.searching.SearchAlgorithm;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.filter.DefaultEdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
+import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
 /**
  * Depth-first search with a depth limit. This class is mostly based on
- * {@link DepthFirstAlgorithm}.
+ * {@link DepthFirstAlgorithm}, but has been modified to support a maxDepth
+ * constraint and fixed a {@link NullPointerException} bug that occurred when no
+ * path was found.
  * 
  * @author Bernhard Schäfer
  * 
@@ -36,28 +39,35 @@ public class LimitedDFS implements SearchAlgorithm {
 
 	private final Graph graph;
 
-	private final int limit;
+	/**
+	 * "the distance between two vertices in a graph is the <i>number of
+	 * edges</i> in a shortest path connecting them."
+	 * 
+	 * @see <a
+	 *      href="http://en.wikipedia.org/wiki/Distance_(graph_theory)">http://en.wikipedia.org/wiki/Distance_(graph_theory)</a>
+	 */
+	private final int maxDistance;
 
 	private final EdgeFilter edgeFilter;
 
 	// TODO implement using direction in findPath()
 	private final Direction direction;
 
-	private static final int DEFAULT_MAX_DEPTH = 5;
+	private static final int DEFAULT_MAX_DISTANCE = 5;
 	private static final EdgeFilter DEFAULT_EDGE_FILTER = new DefaultEdgeFilter();
 	private static final Direction DEFAULT_DIRECTION = Direction.OUT;
 
 	public LimitedDFS(Graph graph) {
-		this(graph, DEFAULT_MAX_DEPTH, DEFAULT_EDGE_FILTER, DEFAULT_DIRECTION);
+		this(graph, DEFAULT_MAX_DISTANCE, DEFAULT_EDGE_FILTER, DEFAULT_DIRECTION);
 	}
 
 	public LimitedDFS(Graph graph, int maxDepth) {
 		this(graph, maxDepth, new DefaultEdgeFilter(), Direction.BOTH);
 	}
 
-	public LimitedDFS(Graph graph, int limit, EdgeFilter edgeFilter, Direction direction) {
+	public LimitedDFS(Graph graph, int maxDistance, EdgeFilter edgeFilter, Direction direction) {
 		this.graph = graph;
-		this.limit = limit;
+		this.maxDistance = maxDistance;
 		this.edgeFilter = edgeFilter;
 		this.direction = direction;
 	}
@@ -86,7 +96,13 @@ public class LimitedDFS implements SearchAlgorithm {
 		return performDepthFirstSearch(start, target);
 	}
 
-	private List<Edge> getListFromPreviousMap(Vertex start, Vertex end, Map<Vertex, Edge> previousMap) {
+	/**
+	 * @param previousMap
+	 *            the map that stores the performed traversals. Each entry shows
+	 *            the edge from which the vertex has been reached.
+	 * @return the found path from start to end vertex as a list of edges.
+	 */
+	private List<Edge> getListFromTraversalMap(Vertex start, Vertex end, Map<Vertex, Edge> previousMap) {
 		List<Edge> pathFromStartToEnd = new LinkedList<Edge>();
 		Vertex previousVertex = end;
 		while (!start.equals(previousVertex)) {
@@ -99,6 +115,10 @@ public class LimitedDFS implements SearchAlgorithm {
 	}
 
 	private List<Edge> performDepthFirstSearch(Vertex start, Vertex end) {
+		logger.info("From: {} To: {}", start.getProperty(GraphConfig.URI_PROPERTY),
+				end.getProperty(GraphConfig.URI_PROPERTY));
+		long startTime = System.currentTimeMillis();
+
 		if (start.equals(end)) {
 			return new LinkedList<Edge>();
 		}
@@ -108,7 +128,7 @@ public class LimitedDFS implements SearchAlgorithm {
 		// track the path we used
 		// stores the edge that have been traversed to reach the vertex
 		Map<Vertex, Edge> previousMap = new HashMap<Vertex, Edge>();
-		Map<Vertex, Integer> vertexDepth = new HashMap<>();
+		Map<Vertex, Integer> vertexDepth = new HashMap<Vertex, Integer>();
 
 		boolean foundPath = false;
 
@@ -124,8 +144,8 @@ public class LimitedDFS implements SearchAlgorithm {
 			}
 
 			// check limit
-			int limitNext = vertexDepth.get(next);
-			if (limitNext > limit) { // TODO should this be >= instead of > ?
+			int depthNext = vertexDepth.get(next);
+			if (depthNext > maxDistance) {
 				logger.debug("vid: {} uri: {} out of limit", next.getId(), next.getProperty(GraphConfig.URI_PROPERTY));
 				continue;
 			}
@@ -138,16 +158,23 @@ public class LimitedDFS implements SearchAlgorithm {
 					visitedSet.add(child);
 					stack.add(child);
 
-					vertexDepth.put(child, limitNext + 1);
+					vertexDepth.put(child, depthNext + 1);
 				}
 			}
 		}
 
+		List<Edge> path = null;
 		if (foundPath) {
-			return getListFromPreviousMap(start, end, previousMap);
+			path = getListFromTraversalMap(start, end, previousMap);
+			logger.info(GraphPrinter.toStringPath(path, start, end));
 		} else {
-			return new ArrayList<Edge>();
+			path = new ArrayList<Edge>();
 		}
+
+		long duration = System.currentTimeMillis() - startTime;
+		logger.info("Path length: {} Traversed Nodes: {} Duration: {} ms ", path.size(), visitedSet.size(), duration);
+		logger.info("");
+		return path;
 	}
 
 }

@@ -75,6 +75,7 @@ public class GraphUtil {
 		return edges;
 	}
 
+	// TODO put this somewhere else
 	public static Collection<Vertex> getTestVertices(Graph graph) {
 		// http://en.wikipedia.org/wiki/Michael_I._Jordan
 		// Michael I. Jordan is a leading researcher in machine learning and

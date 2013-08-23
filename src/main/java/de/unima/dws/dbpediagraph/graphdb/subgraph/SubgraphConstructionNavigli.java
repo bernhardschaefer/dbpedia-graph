@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 
 public class SubgraphConstructionNavigli implements SubgraphConstruction {
 
@@ -24,7 +23,7 @@ public class SubgraphConstructionNavigli implements SubgraphConstruction {
 
 		// backtrack to vertex before new vertex was discovered (path(n-2))
 
-		return new TinkerGraph();
+		throw new UnsupportedOperationException("Not yet implemented.");
 	}
 
 }
