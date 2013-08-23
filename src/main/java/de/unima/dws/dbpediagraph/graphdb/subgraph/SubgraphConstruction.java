@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.algorithms;
+package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
 import java.util.Collection;
 import java.util.List;

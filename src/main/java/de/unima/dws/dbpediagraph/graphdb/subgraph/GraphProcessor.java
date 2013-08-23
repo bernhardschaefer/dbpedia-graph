@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.algorithms;
+package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.Logger;
