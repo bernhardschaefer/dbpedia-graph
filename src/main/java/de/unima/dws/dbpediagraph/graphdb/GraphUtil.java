@@ -2,10 +2,12 @@ package de.unima.dws.dbpediagraph.graphdb;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -93,6 +95,27 @@ public class GraphUtil {
 		return getIterItemCount(subGraph.getVertices().iterator());
 	}
 
+	/**
+	 * Reconstruct a path based on a start and end vertex and a map that
+	 * displays the traversal taken.
+	 * 
+	 * @param previousMap
+	 *            the map that stores the performed traversals. Each entry shows
+	 *            the edge from which the vertex has been reached.
+	 * @return the found path from start to end vertex as a list of edges.
+	 */
+	public static List<Edge> getPathFromTraversalMap(Vertex start, Vertex end, Map<Vertex, Edge> previousMap) {
+		List<Edge> pathFromStartToEnd = new LinkedList<Edge>();
+		Vertex previousVertex = end;
+		while (!start.equals(previousVertex)) {
+			Edge currentEdge = previousMap.get(previousVertex);
+			pathFromStartToEnd.add(currentEdge);
+			previousVertex = currentEdge.getVertex(Direction.OUT);
+		}
+		Collections.reverse(pathFromStartToEnd);
+		return pathFromStartToEnd;
+	}
+
 	// TODO put this somewhere else
 	public static Collection<Vertex> getTestVertices(Graph graph) {
 		// http://en.wikipedia.org/wiki/Michael_I._Jordan
@@ -108,7 +131,7 @@ public class GraphUtil {
 			vertices.add(GraphUtil.getVertexByUri(graph, uri));
 		}
 
-		return vertices;
+		return Collections.unmodifiableCollection(vertices);
 	}
 
 	private static String getUriOfVertex(Vertex v) {

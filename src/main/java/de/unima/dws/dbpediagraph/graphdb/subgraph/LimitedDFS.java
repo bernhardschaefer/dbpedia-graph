@@ -1,7 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -21,7 +20,7 @@ import com.tinkerpop.furnace.algorithms.graphcentric.searching.DepthFirstAlgorit
 import com.tinkerpop.furnace.algorithms.graphcentric.searching.SearchAlgorithm;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.filter.DefaultEdgeFilter;
+import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
@@ -34,42 +33,19 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
  * @author Bernhard Schäfer
  * 
  */
-public class LimitedDFS implements SearchAlgorithm {
+public class LimitedDFS extends TraversalAlgorithm implements SearchAlgorithm {
 	private static final Logger logger = LoggerFactory.getLogger(LimitedDFS.class);
 
-	private final Graph graph;
-
-	/**
-	 * "the distance between two vertices in a graph is the <i>number of
-	 * edges</i> in a shortest path connecting them."
-	 * 
-	 * @see <a
-	 *      href="http://en.wikipedia.org/wiki/Distance_(graph_theory)">http://en.wikipedia.org/wiki/Distance_(graph_theory)</a>
-	 */
-	private final int maxDistance;
-
-	private final EdgeFilter edgeFilter;
-
-	// TODO implement using direction in findPath()
-	private final Direction direction;
-
-	private static final int DEFAULT_MAX_DISTANCE = 5;
-	private static final EdgeFilter DEFAULT_EDGE_FILTER = new DefaultEdgeFilter();
-	private static final Direction DEFAULT_DIRECTION = Direction.OUT;
-
 	public LimitedDFS(Graph graph) {
-		this(graph, DEFAULT_MAX_DISTANCE, DEFAULT_EDGE_FILTER, DEFAULT_DIRECTION);
+		super(graph);
 	}
 
-	public LimitedDFS(Graph graph, int maxDepth) {
-		this(graph, maxDepth, new DefaultEdgeFilter(), Direction.BOTH);
+	public LimitedDFS(Graph graph, int maxDistance) {
+		super(graph, maxDistance);
 	}
 
 	public LimitedDFS(Graph graph, int maxDistance, EdgeFilter edgeFilter, Direction direction) {
-		this.graph = graph;
-		this.maxDistance = maxDistance;
-		this.edgeFilter = edgeFilter;
-		this.direction = direction;
+		super(graph, maxDistance, edgeFilter, direction);
 	}
 
 	private void checkValidVertices(Vertex start, Vertex target) {
@@ -94,24 +70,6 @@ public class LimitedDFS implements SearchAlgorithm {
 	public List<Edge> findPathToTarget(Vertex start, Vertex target) {
 		checkValidVertices(start, target);
 		return performDepthFirstSearch(start, target);
-	}
-
-	/**
-	 * @param previousMap
-	 *            the map that stores the performed traversals. Each entry shows
-	 *            the edge from which the vertex has been reached.
-	 * @return the found path from start to end vertex as a list of edges.
-	 */
-	private List<Edge> getListFromTraversalMap(Vertex start, Vertex end, Map<Vertex, Edge> previousMap) {
-		List<Edge> pathFromStartToEnd = new LinkedList<Edge>();
-		Vertex previousVertex = end;
-		while (!start.equals(previousVertex)) {
-			Edge currentEdge = previousMap.get(previousVertex);
-			pathFromStartToEnd.add(currentEdge);
-			previousVertex = currentEdge.getVertex(Direction.OUT);
-		}
-		Collections.reverse(pathFromStartToEnd);
-		return pathFromStartToEnd;
 	}
 
 	private List<Edge> performDepthFirstSearch(Vertex start, Vertex end) {
@@ -165,7 +123,7 @@ public class LimitedDFS implements SearchAlgorithm {
 
 		List<Edge> path = null;
 		if (foundPath) {
-			path = getListFromTraversalMap(start, end, previousMap);
+			path = GraphUtil.getPathFromTraversalMap(start, end, previousMap);
 			logger.info(GraphPrinter.toStringPath(path, start, end));
 		} else {
 			path = new ArrayList<Edge>();
