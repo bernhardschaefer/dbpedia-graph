@@ -1,9 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +28,7 @@ public class DegreeCentrality implements LocalDisambiguator {
 		Graph graph = GraphProvider.getInstance().getGraph();
 
 		SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
-		Collection<Vertex> vertices = GraphUtil.getTestVertices(graph);
+		Set<Vertex> vertices = GraphUtil.getTestVertices(graph);
 		Graph subGraph = sc.createSubgraph(vertices);
 
 		Disambiguator dc = new DegreeCentrality();

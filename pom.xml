@@ -64,6 +64,13 @@
 			</exclusions>
 		</dependency>
 
+		<!-- https://github.com/tinkerpop/blueprints/wiki/JUNG-Ouplementation -->
+		<dependency>
+			<groupId>com.tinkerpop.blueprints</groupId>
+			<artifactId>blueprints-graph-jung</artifactId>
+			<version>${tinkerpop.version}</version>
+		</dependency>
+
 		<!-- logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -80,7 +87,7 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		
+
 		<!-- testing -->
 		<dependency>
 			<groupId>junit</groupId>

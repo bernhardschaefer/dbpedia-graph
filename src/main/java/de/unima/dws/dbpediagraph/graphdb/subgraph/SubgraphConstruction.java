@@ -1,6 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
-import java.util.Collection;
+import java.util.Set;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
@@ -30,6 +30,6 @@ public interface SubgraphConstruction {
 	 *            drink1, ... , drink5; milk1, ..., milk4)for each content word
 	 *            (e.g. drink, milk),
 	 */
-	public Graph createSubgraph(Collection<Vertex> senses);
+	public Graph createSubgraph(Set<Vertex> senses);
 
 }

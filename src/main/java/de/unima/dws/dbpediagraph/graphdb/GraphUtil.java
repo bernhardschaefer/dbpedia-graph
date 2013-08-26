@@ -52,8 +52,7 @@ public class GraphUtil {
 	}
 
 	/**
-	 * Adds a vertex with the uri as property to the graph if it does not exist
-	 * yet.
+	 * Adds a vertex with the uri as property to the graph if it does not exist yet.
 	 */
 	public static Vertex addVertexByUri(Graph graph, String uri) {
 		Vertex v = getVertexByUri(graph, uri);
@@ -96,28 +95,33 @@ public class GraphUtil {
 	}
 
 	/**
-	 * Reconstruct a path based on a start and end vertex and a map that
-	 * displays the traversal taken.
+	 * Reconstruct a path based on a start and end vertex and a map that displays the traversal taken.
 	 * 
 	 * @param previousMap
-	 *            the map that stores the performed traversals. Each entry shows
-	 *            the edge from which the vertex has been reached.
+	 *            the map that stores the performed traversals. Each entry shows the edge from which the vertex has been
+	 *            reached.
 	 * @return the found path from start to end vertex as a list of edges.
 	 */
 	public static List<Edge> getPathFromTraversalMap(Vertex start, Vertex end, Map<Vertex, Edge> previousMap) {
-		List<Edge> pathFromStartToEnd = new LinkedList<Edge>();
+		List<Edge> pathFromEndToStart = new LinkedList<Edge>();
 		Vertex previousVertex = end;
 		while (!start.equals(previousVertex)) {
 			Edge currentEdge = previousMap.get(previousVertex);
-			pathFromStartToEnd.add(currentEdge);
+			if (pathFromEndToStart.contains(currentEdge)) {
+				// we have a cycle
+				// return path as currently is
+				// TODO investigate proper action
+				break;
+			}
+			pathFromEndToStart.add(currentEdge);
 			previousVertex = currentEdge.getVertex(Direction.OUT);
 		}
-		Collections.reverse(pathFromStartToEnd);
-		return pathFromStartToEnd;
+		Collections.reverse(pathFromEndToStart); // path is now in start->end order
+		return pathFromEndToStart;
 	}
 
 	// TODO put this somewhere else
-	public static Collection<Vertex> getTestVertices(Graph graph) {
+	public static Set<Vertex> getTestVertices(Graph graph) {
 		// http://en.wikipedia.org/wiki/Michael_I._Jordan
 		// Michael I. Jordan is a leading researcher in machine learning and
 		// artificial intelligence.
@@ -125,13 +129,13 @@ public class GraphUtil {
 		String[] resources = new String[] { "Michael_I._Jordan", "Michael_Jordan", "Machine_learning",
 				"Artificial_intelligence", "Basketball" };
 
-		Collection<Vertex> vertices = new LinkedList<Vertex>();
+		Set<Vertex> vertices = new HashSet<>();
 		for (String resource : resources) {
 			String uri = GraphConfig.DBPEDIA_RESOURCE_URI + resource;
 			vertices.add(GraphUtil.getVertexByUri(graph, uri));
 		}
 
-		return Collections.unmodifiableCollection(vertices);
+		return Collections.unmodifiableSet(vertices);
 	}
 
 	private static String getUriOfVertex(Vertex v) {

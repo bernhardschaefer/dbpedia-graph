@@ -1,0 +1,12 @@
+drink1v drink1n
+drink1v beverage1n
+drink1v drinker2n
+drink2v drinker2n
+drink2v boozing1n
+drink1n beverage1n
+drinker2n beverage1n
+boozing1n beverage1n
+beverage1n milk1n
+beverage1n food1n
+food1n nutriment1n
+nutriment1n milk2n

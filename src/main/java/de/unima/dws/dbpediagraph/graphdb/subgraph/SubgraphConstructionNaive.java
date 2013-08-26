@@ -1,7 +1,7 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class SubgraphConstructionNaive implements SubgraphConstruction {
 	}
 
 	@Override
-	public Graph createSubgraph(Collection<Vertex> senses) {
+	public Graph createSubgraph(Set<Vertex> senses) {
 		long startTime = System.currentTimeMillis();
 
 		Graph subGraph = GraphProvider.getInstance().getNewEmptyGraph();
