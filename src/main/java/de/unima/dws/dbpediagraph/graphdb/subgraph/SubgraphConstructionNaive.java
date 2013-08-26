@@ -1,7 +1,7 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +17,8 @@ import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 
 /**
- * Non-optimized {@link SubgraphConstruction} implementation. Performs a limited
- * shortest-path search between all combinations of input vertices.
+ * Non-optimized {@link SubgraphConstruction} implementation. Performs a limited shortest-path search between all
+ * combinations of input vertices.
  * 
  * @author Bernhard Schäfer
  * 
@@ -27,8 +27,7 @@ public class SubgraphConstructionNaive implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNaive.class);
 
 	/**
-	 * The search algorithm to use for traversing the graph and finding shortest
-	 * paths.
+	 * The search algorithm to use for traversing the graph and finding shortest paths.
 	 */
 	private final SearchAlgorithm searchAlgorithm;
 
@@ -45,7 +44,7 @@ public class SubgraphConstructionNaive implements SubgraphConstruction {
 	}
 
 	@Override
-	public Graph createSubgraph(Set<Vertex> senses) {
+	public Graph createSubgraph(Collection<Vertex> senses) {
 		long startTime = System.currentTimeMillis();
 
 		Graph subGraph = GraphProvider.getInstance().getNewEmptyGraph();

@@ -19,6 +19,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
 public class SubgraphConstructionNavigli extends TraversalAlgorithm implements SubgraphConstruction {
@@ -26,6 +27,14 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 
 	public SubgraphConstructionNavigli(Graph graph) {
 		super(graph);
+	}
+
+	public SubgraphConstructionNavigli(Graph graph, int maxDistance) {
+		super(graph, maxDistance);
+	}
+
+	public SubgraphConstructionNavigli(Graph graph, int maxDistance, EdgeFilter edgeFilter, Direction direction) {
+		super(graph, maxDistance, edgeFilter, direction);
 	}
 
 	private void addIntermediateNodes(List<Edge> path, Set<Vertex> vertices) {
@@ -55,7 +64,7 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 	}
 
 	@Override
-	public Graph createSubgraph(Set<Vertex> senses) {
+	public Graph createSubgraph(Collection<Vertex> senses) {
 		checkValidSenses(senses);
 		long startTime = System.currentTimeMillis();
 
@@ -91,7 +100,7 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 	 *            the other senses as possible target nodes.
 	 * @return the found path
 	 */
-	private void performDepthFirstSearch(Vertex start, Set<Vertex> senses, Set<Vertex> vertices, Set<Edge> edges) {
+	private void performDepthFirstSearch(Vertex start, Collection<Vertex> senses, Set<Vertex> vertices, Set<Edge> edges) {
 		logger.info("");
 		logger.info("DFS starting point: vid: {} uri: {}", start.getId(), start.getProperty(GraphConfig.URI_PROPERTY));
 

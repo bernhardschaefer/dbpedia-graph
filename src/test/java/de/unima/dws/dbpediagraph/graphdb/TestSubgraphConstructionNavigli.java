@@ -9,10 +9,10 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +30,7 @@ public class TestSubgraphConstructionNavigli {
 
 	private Graph graph;
 
-	private Set<Vertex> senses;
+	private Collection<Vertex> senses;
 
 	private Graph subgraph;
 
@@ -78,8 +78,8 @@ public class TestSubgraphConstructionNavigli {
 		return graph;
 	}
 
-	private Set<Vertex> setUpSenses(Graph graph) throws IOException, URISyntaxException {
-		Set<Vertex> senses = new HashSet<>();
+	private Collection<Vertex> setUpSenses(Graph graph) throws IOException, URISyntaxException {
+		List<Vertex> senses = new ArrayList<>();
 
 		List<String> senseStrings = readLinesFromTestFile("/test.senses");
 		for (String s : senseStrings) {
@@ -87,7 +87,7 @@ public class TestSubgraphConstructionNavigli {
 			senses.add(v);
 		}
 
-		return Collections.unmodifiableSet(senses);
+		return Collections.unmodifiableList(senses);
 	}
 
 	@After

@@ -20,39 +20,43 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 
 public class DemoSubgraphConstruction {
+	private static final int SIZE = 800;
+
 	public static void main(String[] args) {
 		Graph graph = GraphProvider.getInstance().getGraph();
 
 		// SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
-		SubgraphConstruction sc = new SubgraphConstructionNavigli(graph);
+		SubgraphConstruction sc = new SubgraphConstructionNavigli(graph, 7);
 		Set<Vertex> vertices = GraphUtil.getTestVertices(graph);
 		Graph subGraph = sc.createSubgraph(vertices);
 		// GraphPrinter.printGraphStatistics(subGraph);
 
 		visualizeGraph(subGraph);
 
+		subGraph.shutdown();
 		graph.shutdown();
 	}
 
 	private static void visualizeGraph(Graph graph) {
-		GraphJung graphJung = new GraphJung(graph);
+		GraphJung<Graph> graphJung = new GraphJung<>(graph);
 		// Layout<Vertex, Edge> layout = new CircleLayout<Vertex, Edge>(graphJung);
 		Layout<Vertex, Edge> layout = new ISOMLayout<Vertex, Edge>(graphJung);
-		layout.setSize(new Dimension(900, 900));
+		layout.setSize(new Dimension(SIZE, SIZE));
 		BasicVisualizationServer<Vertex, Edge> viz = new BasicVisualizationServer<Vertex, Edge>(layout);
-		viz.setPreferredSize(new Dimension(650, 650));
+		viz.setPreferredSize(new Dimension(SIZE, SIZE));
 
 		Transformer<Vertex, String> vertexLabelTransformer = new Transformer<Vertex, String>() {
 			@Override
 			public String transform(Vertex vertex) {
-				return (String) vertex.getProperty(GraphConfig.URI_PROPERTY);
+				return vertex.getProperty(GraphConfig.URI_PROPERTY).toString();
 			}
 		};
 
 		Transformer<Edge, String> edgeLabelTransformer = new Transformer<Edge, String>() {
 			@Override
 			public String transform(Edge edge) {
-				return edge.getProperty(GraphConfig.URI_PROPERTY);
+				String uriProp = edge.getProperty(GraphConfig.URI_PROPERTY);
+				return uriProp != null ? uriProp : "";
 			}
 		};
 

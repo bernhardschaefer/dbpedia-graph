@@ -7,9 +7,8 @@ import de.unima.dws.dbpediagraph.graphdb.filter.DefaultEdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 
 /**
- * Abstract class to be used by all graph traversal algorithm for constructing
- * subgraphs or more general use cases. Provides important fields a traversal
- * algorithm usually utilizes.
+ * Abstract class to be used by all graph traversal algorithm for constructing subgraphs or more general use cases.
+ * Provides important fields a traversal algorithm usually utilizes.
  * 
  * @author Bernhard Schäfer
  * 
@@ -21,8 +20,7 @@ public abstract class TraversalAlgorithm {
 	protected final Graph graph;
 
 	/**
-	 * "the distance between two vertices in a graph is the <i>number of
-	 * edges</i> in a shortest path connecting them."
+	 * "the distance between two vertices in a graph is the <i>number of edges</i> in a shortest path connecting them."
 	 * 
 	 * @see <a
 	 *      href="http://en.wikipedia.org/wiki/Distance_(graph_theory)">http://en.wikipedia.org/wiki/Distance_(graph_theory)</a>
