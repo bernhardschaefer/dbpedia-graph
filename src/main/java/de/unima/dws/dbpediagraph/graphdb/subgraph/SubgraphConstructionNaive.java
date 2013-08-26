@@ -15,7 +15,6 @@ import com.tinkerpop.furnace.algorithms.graphcentric.searching.SearchAlgorithm;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
-import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
 /**
  * Non-optimized {@link SubgraphConstruction} implementation. Performs a limited
@@ -26,17 +25,6 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
  */
 public class SubgraphConstructionNaive implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNaive.class);
-
-	public static void main(String[] args) {
-		Graph graph = GraphProvider.getInstance().getGraph();
-
-		SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
-		Collection<Vertex> vertices = GraphUtil.getTestVertices(graph);
-		Graph subGraph = sc.createSubgraph(vertices);
-		GraphPrinter.printGraphStatistics(subGraph);
-
-		graph.shutdown();
-	}
 
 	/**
 	 * The search algorithm to use for traversing the graph and finding shortest

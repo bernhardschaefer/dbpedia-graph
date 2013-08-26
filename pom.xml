@@ -64,12 +64,6 @@
 			</exclusions>
 		</dependency>
 
-		<dependency>
-			<groupId>com.codahale.metrics</groupId>
-			<artifactId>metrics-core</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-
 		<!-- logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

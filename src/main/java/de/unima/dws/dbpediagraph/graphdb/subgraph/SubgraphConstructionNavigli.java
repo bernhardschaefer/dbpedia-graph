@@ -1,15 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,30 +55,31 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 		while (!dfsStack.isEmpty()) {
 			Vertex v = dfsStack.pop();
 
-			Collection<Vertex> otherSenses = null;
+			Collection<Vertex> otherSenses = new ArrayList<Vertex>(senses);
 			if (senses.contains(v)) {
 				// if the current vertex is a sense, we don't want to find a
 				// path to itself
-				otherSenses = new ArrayList<Vertex>(senses);
 				otherSenses.remove(v);
-			} else {
-				otherSenses = senses;
 			}
 
 			// perform a DFS from the vertex vertices(0) until we reach another
 			// vertex from vertices(1-n).
 			List<Edge> path = performDepthFirstSearch(v, visited, otherSenses);
 
-			if (path != null) {
+			if (path != null && !path.isEmpty()) {
 				// add all edges and vertices on the path from both vertices
 				// V = V.append(List<Vertex> path)
 				// E = E.append(List<Edge> path)
 				GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, path);
 
-				// add vertex before new vertex was discovered (path(n-2)) to
-				// stack to enable backtracking and a new search starting from
-				// this vertex
-				dfsStack.addFirst(path.get(path.size() - 1).getVertex(Direction.OUT));
+				// add intermediate vertices on path
+				if (path.size() > 1) {
+					List<Edge> intermedPath = path.subList(1, path.size());
+					for (Edge e : intermedPath) {
+						Vertex backtrack = e.getVertex(Direction.OUT);
+						dfsStack.addFirst(backtrack);
+					}
+				}
 			}
 
 		}
@@ -100,7 +92,7 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 	/**
 	 * Perform a limited depth-first-search searching for other senses.
 	 * 
-	 * @param sense
+	 * @param start
 	 *            the starting vertex
 	 * @param visited
 	 *            the vertex that have already been visited by other DFS
@@ -109,8 +101,8 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 	 *            the other senses as possible target nodes.
 	 * @return the found path
 	 */
-	private List<Edge> performDepthFirstSearch(Vertex sense, Set<Vertex> visited, Collection<Vertex> otherSenses) {
-		logger.info("From Sense: {}", sense.getProperty(GraphConfig.URI_PROPERTY));
+	private List<Edge> performDepthFirstSearch(Vertex start, Set<Vertex> visited, Collection<Vertex> otherSenses) {
+		logger.info("DFS starting point: vid: {} uri: {}", start.getId(), start.getProperty(GraphConfig.URI_PROPERTY));
 		long startTime = System.currentTimeMillis();
 		int visitedBefore = visited.size();
 
@@ -122,10 +114,10 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 
 		Vertex foundSense = null;
 
-		vertexDepth.put(sense, 0);
+		vertexDepth.put(start, 0);
 
-		stack.add(sense);
-		visited.add(sense);
+		stack.add(start);
+		visited.add(start);
 		while (!stack.isEmpty()) {
 			Vertex next = stack.pop();
 			if (otherSenses.contains(next)) {
@@ -136,7 +128,8 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 			// check limit
 			int depthNext = vertexDepth.get(next);
 			if (depthNext > maxDistance) {
-				logger.debug("vid: {} uri: {} out of limit", next.getId(), next.getProperty(GraphConfig.URI_PROPERTY));
+				// logger.debug("vid: {} uri: {} out of limit", next.getId(),
+				// next.getProperty(GraphConfig.URI_PROPERTY));
 				continue;
 			}
 
@@ -155,15 +148,16 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 
 		List<Edge> path = null;
 		if (foundSense != null) {
-			path = GraphUtil.getPathFromTraversalMap(sense, foundSense, previousMap);
-			logger.info(GraphPrinter.toStringPath(path, sense, foundSense));
-		} else {
-			path = new ArrayList<Edge>();
+			path = GraphUtil.getPathFromTraversalMap(start, foundSense, previousMap);
+			logger.info("Found sense vid: {} uri: {}", foundSense.getId(),
+					foundSense.getProperty(GraphConfig.URI_PROPERTY));
+			logger.info(GraphPrinter.toStringPath(path, start, foundSense));
 		}
 
+		int pathSize = path != null ? path.size() : -1;
 		long duration = System.currentTimeMillis() - startTime;
-		logger.info("Path length: {} Traversed Nodes: {} Duration: {} ms ", path.size(),
-				visited.size() - visitedBefore, duration);
+		logger.info("Path length: {} Traversed Nodes: {} Duration: {} ms ", pathSize, visited.size() - visitedBefore,
+				duration);
 		logger.info("");
 		return path;
 	}
