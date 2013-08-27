@@ -31,7 +31,7 @@ public class DFS {
 		for (Edge e : start.getEdges(Direction.OUT)) {
 			Vertex target = e.getVertex(Direction.OUT);
 			if (targets.contains(target)) {
-				// TODO: we have a path: throw vertices and edges in subgrapgh
+				// we have a path: throw vertices and edges in subgrapgh
 			}
 			List<Vertex> newVertices = new ArrayList<>(vertices);
 			newVertices.add(target);

@@ -39,8 +39,8 @@ public class GraphProvider {
 	}
 
 	/**
-	 * Creates and returns a graph implementation. The graph is created for
-	 * batch inserts using the provided buffer size.
+	 * Creates and returns a graph implementation. The graph is created for batch inserts using the provided buffer
+	 * size.
 	 */
 	public Graph getBatchGraph(long bufferSize) {
 		BatchGraph<TransactionalGraph> bgraph = new BatchGraph<TransactionalGraph>(graph, bufferSize);
@@ -60,8 +60,10 @@ public class GraphProvider {
 		return graph;
 	}
 
+	/**
+	 * Return a new non-persistent graph instance.
+	 */
 	public Graph getNewEmptyGraph() {
-		// TODO use subgraph configuration
 		return new TinkerGraph();
 	}
 

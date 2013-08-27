@@ -89,7 +89,6 @@ public class BatchHandler extends RDFHandlerVerbose {
 			Vertex in = addVertexByUriBatchIfNonExistent(object);
 			Edge e = bgraph.addEdge(null, out, in, GraphConfig.EDGE_LABEL);
 			e.setProperty(GraphConfig.URI_PROPERTY, predicate);
-			// TODO Make sure the edge is unique?
 		}
 
 		// logging metrics

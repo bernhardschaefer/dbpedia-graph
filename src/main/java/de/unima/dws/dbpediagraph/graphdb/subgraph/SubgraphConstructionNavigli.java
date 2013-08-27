@@ -97,6 +97,40 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 
 	}
 
+	private Set<Edge> getConnectedUntraversedEdges(Vertex current, EdgeFilter edgeFilter, Direction direction,
+			Map<Vertex, Integer> visitedVerticesDistance, Set<Vertex> vertices, Map<Vertex, Edge> previousMap) {
+		Set<Edge> untraversedEdges = new HashSet<Edge>();
+
+		edgeFilter.setIterator(current.getEdges(direction).iterator());
+		for (Edge edge : edgeFilter) {
+			// Vertex child = edge.getVertex(Direction.IN);
+			// if (!visited.contains(child) || vertices.contains(child)) {
+			// previous map edge is overwritten in case we find another path
+			// TODO check if this behavior is problematic
+
+			// 1. get vertex of edge that is not equal to next
+			Vertex other = getOtherVertexOfEdge(current, edge);
+
+			// 2. check if we just got from this vertex
+			Edge last = previousMap.get(current);
+			// last == null at the very beginning
+			if (last != null
+					&& (last.getVertex(Direction.IN).equals(other) || last.getVertex(Direction.OUT).equals(other))) {
+				continue;
+			}
+
+			if (!visitedVerticesDistance.containsKey(other) || vertices.contains(other))
+				untraversedEdges.add(edge);
+		}
+		return untraversedEdges;
+	}
+
+	public Vertex getOtherVertexOfEdge(Vertex v, Edge e) {
+		Vertex out = e.getVertex(Direction.OUT);
+		Vertex in = e.getVertex(Direction.IN);
+		return out.equals(v) ? in : out;
+	}
+
 	/**
 	 * Perform a limited depth-first-search searching for other senses.
 	 * 
@@ -116,18 +150,17 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 		// track the path we used
 		// stores the edge that have been traversed to reach the vertex
 		Map<Vertex, Edge> previousMap = new HashMap<>();
-		Set<Vertex> visited = new HashSet<>();
-		Map<Vertex, Integer> vertexDepth = new HashMap<>();
+		Set<Edge> visitedEdges = new HashSet<>();
+		Map<Vertex, Integer> visitedVertexDistance = new HashMap<>();
 
-		vertexDepth.put(start, 0);
-
+		visitedVertexDistance.put(start, 0);
 		stack.add(start);
-		visited.add(start);
+
 		while (!stack.isEmpty()) {
 			Vertex next = stack.pop();
 
 			// check limit
-			int depthNext = vertexDepth.get(next);
+			int depthNext = visitedVertexDistance.get(next);
 			if (depthNext > maxDistance) {
 				// logger.debug("vid: {} uri: {} out of limit", next.getId(),
 				// next.getProperty(GraphConfig.URI_PROPERTY));
@@ -144,17 +177,14 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 				continue;
 			}
 
-			edgeFilter.setIterator(next.getEdges(direction).iterator());
-			for (Edge edge : edgeFilter) {
-				Vertex child = edge.getVertex(Direction.IN);
-				if (!visited.contains(child) || vertices.contains(child)) {
-					// previous map edge is overwritten in case we find another path
-					// TODO check if this behavior is problematic
-					previousMap.put(child, edge);
-					visited.add(child);
-					stack.add(child);
-					vertexDepth.put(child, depthNext + 1);
-				}
+			Set<Edge> untraversedNeighbors = getConnectedUntraversedEdges(next, edgeFilter, direction,
+					visitedVertexDistance, vertices, previousMap);
+			for (Edge edge : untraversedNeighbors) {
+				Vertex other = getOtherVertexOfEdge(next, edge);
+
+				previousMap.put(other, edge);
+				stack.add(other);
+				visitedVertexDistance.put(other, depthNext + 1);
 			}
 		}
 
