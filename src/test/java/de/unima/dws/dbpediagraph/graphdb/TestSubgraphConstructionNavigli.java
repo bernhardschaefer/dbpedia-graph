@@ -26,6 +26,12 @@ import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigli;
 
+/**
+ * Test class for {@link SubgraphConstructionNavigli}.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class TestSubgraphConstructionNavigli {
 
 	private Graph graph;

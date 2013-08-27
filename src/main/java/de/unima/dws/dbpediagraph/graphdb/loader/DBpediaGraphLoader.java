@@ -20,7 +20,10 @@ import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Graph;
 
+import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
+import de.unima.dws.dbpediagraph.graphdb.filter.LoadingStatementFilter;
+import de.unima.dws.dbpediagraph.graphdb.filter.LoadingStatementFilterFactory;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.LoadingMetrics;
 
@@ -33,22 +36,33 @@ import de.unima.dws.dbpediagraph.graphdb.util.LoadingMetrics;
 public class DBpediaGraphLoader {
 
 	/**
-	 * The buffer size for batch importing. Every time the buffer fills up its
-	 * vertices and edges are persisted to the graph.
+	 * The buffer size for batch importing. Every time the buffer fills up its vertices and edges are persisted to the
+	 * graph.
 	 */
 	private static final long BUFFER_SIZE = 100_000;
 
 	private static final Logger logger = LoggerFactory.getLogger(DBpediaGraphLoader.class);
 
-	/**
-	 * Main method.
-	 * 
-	 * @param args
-	 *            each arg can be a directory containing RDF files or a RDF file
-	 *            itself.
-	 */
-	public static void main(String[] args) throws ConfigurationException {
-		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args));
+	private static RDFParser getParserForFormat(RDFFormat rdfFormat) {
+		RDFParser rdfParser = Rio.createParser(rdfFormat);
+		rdfParser.setStopAtFirstError(false);
+		rdfParser.setParseErrorListener(new ParseErrorListener() {
+			@Override
+			public void error(String msg, int lineNo, int colNo) {
+				logger.warn("Error {} at line {} and colNo {}", msg, lineNo, colNo);
+			}
+
+			@Override
+			public void fatalError(String msg, int lineNo, int colNo) {
+				logger.warn("Fatal Error {} at line {} and colNo {}", msg, lineNo, colNo);
+			}
+
+			@Override
+			public void warning(String msg, int lineNo, int colNo) {
+				logger.debug("Warning {} at line {} and colNo {}", msg, lineNo, colNo);
+			}
+		});
+		return rdfParser;
 	}
 
 	/**
@@ -69,7 +83,9 @@ public class DBpediaGraphLoader {
 			LoadingMetrics metric = new LoadingMetrics(f.getName());
 
 			// get appropriate handler
-			RDFHandlerVerbose handler = new BatchHandler(graph);
+			LoadingStatementFilter filter = LoadingStatementFilterFactory
+					.getImpl(GraphConfig.getInstance().getConfig());
+			RDFHandlerVerbose handler = new BatchHandler(graph, filter);
 
 			// get appropriate parser
 			RDFFormat rdfFormat = RDFFormat.forFileName(f.getName());
@@ -99,25 +115,13 @@ public class DBpediaGraphLoader {
 		globalMetric.finish(metrics);
 	}
 
-	private static RDFParser getParserForFormat(RDFFormat rdfFormat) {
-		RDFParser rdfParser = Rio.createParser(rdfFormat);
-		rdfParser.setStopAtFirstError(false);
-		rdfParser.setParseErrorListener(new ParseErrorListener() {
-			@Override
-			public void error(String msg, int lineNo, int colNo) {
-				logger.warn("Error {} at line {} and colNo {}", msg, lineNo, colNo);
-			}
-
-			@Override
-			public void fatalError(String msg, int lineNo, int colNo) {
-				logger.warn("Fatal Error {} at line {} and colNo {}", msg, lineNo, colNo);
-			}
-
-			@Override
-			public void warning(String msg, int lineNo, int colNo) {
-				logger.debug("Warning {} at line {} and colNo {}", msg, lineNo, colNo);
-			}
-		});
-		return rdfParser;
+	/**
+	 * Main method.
+	 * 
+	 * @param args
+	 *            each arg can be a directory containing RDF files or a RDF file itself.
+	 */
+	public static void main(String[] args) throws ConfigurationException {
+		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args));
 	}
 }

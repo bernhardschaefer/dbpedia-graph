@@ -37,7 +37,7 @@ public class PathFinder {
 
 		Collection<Vertex> vertices = new LinkedList<Vertex>();
 		for (String resource : resources) {
-			String uri = GraphConfig.DBPEDIA_RESOURCE_URI + resource;
+			String uri = GraphConfig.DBPEDIA_RESOURCE_PREFIX + resource;
 			vertices.add(GraphUtil.getVertexByUri(rawGraph, uri));
 		}
 

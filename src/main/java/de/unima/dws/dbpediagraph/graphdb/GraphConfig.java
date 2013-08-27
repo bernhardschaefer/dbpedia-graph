@@ -21,7 +21,7 @@ public class GraphConfig {
 	}
 
 	public static final String URI_PROPERTY = "URI";
-	public static final String DBPEDIA_RESOURCE_URI = "http://dbpedia.org/resource/";
+	public static final String DBPEDIA_RESOURCE_PREFIX = "http://dbpedia.org/resource/";
 	public static final String EDGE_LABEL = "pred";
 
 	private static final String GRAPH_PROPERTY_FILE = "graph.properties";

@@ -7,8 +7,7 @@ import java.util.Map.Entry;
 import com.tinkerpop.blueprints.Graph;
 
 /**
- * Implementation for shortening and unshortening uris using prefixes to reduce
- * the persisted size of the {@link Graph}.
+ * Implementation for shortening and unshortening uris using prefixes to reduce the persisted size of the {@link Graph}.
  * 
  * @author Bernhard Schäfer
  * 
@@ -19,7 +18,7 @@ public class UriShortener {
 		URI_TO_PREFIX = new LinkedHashMap<String, String>();
 
 		// subject and objects are all dbpedia resources
-		URI_TO_PREFIX.put(GraphConfig.DBPEDIA_RESOURCE_URI, "dbr:");
+		URI_TO_PREFIX.put(GraphConfig.DBPEDIA_RESOURCE_PREFIX, "dbr:");
 
 		// top predicates extracted from dumps
 		URI_TO_PREFIX.put("http://dbpedia.org/ontology/", "dbo:");

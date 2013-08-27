@@ -22,6 +22,14 @@ import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
+/**
+ * Construct subgraph based on algorithm described in paper by Navigli and Lapata (2010).
+ * 
+ * @see <a
+ *      href="http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4782967">http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4782967</a>
+ * @author Bernhard Schäfer
+ * 
+ */
 public class SubgraphConstructionNavigli extends TraversalAlgorithm implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNavigli.class);
 

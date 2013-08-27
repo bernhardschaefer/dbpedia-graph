@@ -21,16 +21,6 @@ import com.tinkerpop.blueprints.Vertex;
 public class GraphUtil {
 	private static final Logger logger = LoggerFactory.getLogger(GraphUtil.class);
 
-	// public static void main(String[] args) {
-	// Graph g = GraphProvider.getInstance().getGraph();
-	// List<Long> ids = Arrays.asList(5474834L, 5474836L, 5474832L, 5474841L,
-	// 5474837L, 5474843L);
-	// for (Long id : ids) {
-	// g.removeVertex(g.getVertex(id));
-	// }
-	// g.shutdown();
-	// }
-
 	public static void addEdgeIfNonExistent(Graph graph, Edge edge, Vertex outVertex, Vertex inVertex) {
 		// TODO check if this works; maybe the graph implementation ignores the
 		// edge ids
@@ -131,7 +121,7 @@ public class GraphUtil {
 
 		Set<Vertex> vertices = new HashSet<>();
 		for (String resource : resources) {
-			String uri = GraphConfig.DBPEDIA_RESOURCE_URI + resource;
+			String uri = GraphConfig.DBPEDIA_RESOURCE_PREFIX + resource;
 			vertices.add(GraphUtil.getVertexByUri(graph, uri));
 		}
 
@@ -194,8 +184,6 @@ public class GraphUtil {
 	public static Set<Vertex> getVerticesOfEdges(Collection<Edge> edges) {
 		Set<Vertex> vertices = new HashSet<Vertex>();
 		for (Edge e : edges) {
-			// FIXME this is an overhead, since all vertices except for first
-			// and last edge are added twice
 			vertices.add(e.getVertex(Direction.IN));
 			vertices.add(e.getVertex(Direction.OUT));
 		}
