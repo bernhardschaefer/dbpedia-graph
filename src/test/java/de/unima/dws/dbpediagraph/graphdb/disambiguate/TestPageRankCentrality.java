@@ -15,9 +15,7 @@ public class TestPageRankCentrality {
 	@BeforeClass
 	public static void setUp() {
 		double alpha = 0.15;
-		Disambiguator disambiguator = new PageRankCentrality(alpha);
-
-		data = new DisambiguationTestData(disambiguator, new SubgraphConstructionNavigliOld());
+		data = new DisambiguationTestData(new PageRankCentrality(alpha), new SubgraphConstructionNavigliOld());
 	}
 
 	@AfterClass
@@ -28,7 +26,7 @@ public class TestPageRankCentrality {
 
 	@Test
 	public void testDisambiguateValues() {
-		data.checkWeightedUris(LocalConnectivityMeasure.PR);
+		data.checkWeightedUris();
 	}
 
 	@Test

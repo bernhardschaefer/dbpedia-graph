@@ -6,18 +6,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.tinkerpop.blueprints.Direction;
-
 import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
-public class TestDegreeCentrality {
+public class TestHITSCentrality {
 	private static DisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
-		Direction direction = Direction.BOTH;
-		data = new DisambiguationTestData(new DegreeCentrality(direction), new SubgraphConstructionNavigliOld());
+		data = new DisambiguationTestData(new HITSCentrality(), new SubgraphConstructionNavigliOld());
 	}
 
 	@AfterClass

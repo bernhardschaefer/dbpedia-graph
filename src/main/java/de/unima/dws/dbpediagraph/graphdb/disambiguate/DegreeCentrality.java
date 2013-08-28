@@ -72,4 +72,9 @@ public class DegreeCentrality implements LocalDisambiguator {
 		return weightedUris;
 	}
 
+	@Override
+	public LocalConnectivityMeasure getType() {
+		return LocalConnectivityMeasure.Degree;
+	}
+
 }

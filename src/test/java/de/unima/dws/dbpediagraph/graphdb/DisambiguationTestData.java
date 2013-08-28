@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Graph;
 
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalConnectivityMeasure;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedUri;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
@@ -28,8 +28,9 @@ public class DisambiguationTestData extends SubgraphTestData {
 	private final Graph subgraph;
 	private final List<WeightedUri> weightedUris;
 	private Map<String, Map<LocalConnectivityMeasure, Double>> localMeasureResults;
+	private final LocalDisambiguator disambiguator;
 
-	public DisambiguationTestData(Disambiguator disambiguator, SubgraphConstruction subgraphConstruction) {
+	public DisambiguationTestData(LocalDisambiguator disambiguator, SubgraphConstruction subgraphConstruction) {
 		super();
 		try {
 			setUpDisambiguationResults();
@@ -39,12 +40,13 @@ public class DisambiguationTestData extends SubgraphTestData {
 
 		subgraphConstruction.setGraph(graph);
 		subgraph = subgraphConstruction.createSubgraph(senses);
+		this.disambiguator = disambiguator;
 		weightedUris = disambiguator.disambiguate(GraphUtil.getUrisOfVertices(senses), subgraph);
 	}
 
-	public void checkWeightedUris(LocalConnectivityMeasure measure) {
+	public void checkWeightedUris() {
 		for (WeightedUri wUri : weightedUris) {
-			double expected = localMeasureResults.get(wUri.getUri()).get(measure);
+			double expected = localMeasureResults.get(wUri.getUri()).get(disambiguator.getType());
 			logger.info("uri: {} actual weight: {} expected weight: {}", wUri.getUri(), wUri.getWeight(), expected);
 			Assert.assertEquals(expected, wUri.getWeight(), DELTA);
 		}
