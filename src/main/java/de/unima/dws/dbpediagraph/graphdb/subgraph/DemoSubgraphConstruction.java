@@ -26,7 +26,7 @@ public class DemoSubgraphConstruction {
 		Graph graph = GraphProvider.getInstance().getGraph();
 
 		// SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
-		SubgraphConstruction sc = new SubgraphConstructionNavigli(graph, 7);
+		SubgraphConstruction sc = new SubgraphConstructionNavigliOld(graph, 3);
 		Set<Vertex> vertices = GraphUtil.getTestVertices(graph);
 		Graph subGraph = sc.createSubgraph(vertices);
 		// GraphPrinter.printGraphStatistics(subGraph);
