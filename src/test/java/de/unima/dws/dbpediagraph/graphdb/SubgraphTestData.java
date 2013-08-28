@@ -1,11 +1,7 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,9 +12,18 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 
-import de.unima.dws.dbpediagraph.graphdb.subgraph.TestSubgraphConstructionUndirected;
+import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
 public class SubgraphTestData {
+
+	/** Test senses from Navigli&Lapata (2010) */
+	private static final String NL_SENSES = "/nl-test.senses";
+
+	/** Test vertices from Navigli&Lapata (2010) */
+	private static final String NL_VERTICES = "/nl-test.vertices";
+
+	/** Test edges from Navigli&Lapata (2010) */
+	private static final String NL_EDGES = "/nl-test.edges";
 
 	protected Graph graph;
 
@@ -58,15 +63,10 @@ public class SubgraphTestData {
 		return vertices;
 	}
 
-	private List<String> readLinesFromTestFile(String fileName) throws IOException, URISyntaxException {
-		URI uri = TestSubgraphConstructionUndirected.class.getResource(fileName).toURI();
-		return Files.readAllLines(Paths.get(uri), StandardCharsets.UTF_8);
-	}
-
 	private Collection<Vertex> setUpSenses(Graph graph) throws IOException, URISyntaxException {
 		List<Vertex> senses = new ArrayList<>();
 
-		List<String> senseStrings = readLinesFromTestFile("/test.senses");
+		List<String> senseStrings = FileUtils.readLinesFromFile(this.getClass(), NL_SENSES);
 		for (String s : senseStrings) {
 			Vertex v = graph.getVertex(s);
 			senses.add(v);
@@ -78,8 +78,8 @@ public class SubgraphTestData {
 	private Graph setUpTestGraph() throws IOException, URISyntaxException {
 		Graph graph = new TinkerGraph();
 
-		vertices = readLinesFromTestFile("/test.vertices");
-		edges = readLinesFromTestFile("/test.edges");
+		vertices = FileUtils.readLinesFromFile(this.getClass(), NL_VERTICES);
+		edges = FileUtils.readLinesFromFile(this.getClass(), NL_EDGES);
 
 		for (String v : vertices) {
 			Vertex vertex = graph.addVertex(v);
