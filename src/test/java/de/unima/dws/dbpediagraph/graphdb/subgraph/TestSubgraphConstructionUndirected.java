@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb;
+package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
 import org.junit.After;
 import org.junit.Before;

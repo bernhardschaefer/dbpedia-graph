@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb;
+package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,6 +18,9 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
+
+import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
+import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 
 public class AbstractTestSubgraphConstruction {
 
