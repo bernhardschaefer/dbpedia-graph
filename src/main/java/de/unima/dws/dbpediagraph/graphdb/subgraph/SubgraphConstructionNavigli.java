@@ -30,6 +30,8 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
  * @author Bernhard Schäfer
  * 
  */
+// TODO this is currently not working; still needs to figured out how to implement for directed and undirected subgraph
+// construction
 public class SubgraphConstructionNavigli extends TraversalAlgorithm implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNavigli.class);
 
@@ -181,10 +183,11 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 					visitedVertexDistance, vertices, previousMap);
 			for (Edge edge : untraversedNeighbors) {
 				Vertex other = getOtherVertexOfEdge(next, edge);
-
 				previousMap.put(other, edge);
 				stack.add(other);
+
 				visitedVertexDistance.put(other, depthNext + 1);
+				visitedEdges.add(edge);
 			}
 		}
 
