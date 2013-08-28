@@ -24,4 +24,13 @@ public interface SubgraphConstruction {
 	 */
 	public Graph createSubgraph(Collection<Vertex> senses);
 
+	/**
+	 * Get the graph this algorithm is working on.
+	 */
+	public Graph getGraph();
+
+	/**
+	 * Set the graph this algorithm should work on.
+	 */
+	public void setGraph(Graph graph);
 }

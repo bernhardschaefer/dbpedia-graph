@@ -34,6 +34,9 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 public class SubgraphConstructionNavigliOld extends TraversalAlgorithm implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNavigliOld.class);
 
+	public SubgraphConstructionNavigliOld() {
+	}
+
 	public SubgraphConstructionNavigliOld(Graph graph) {
 		super(graph);
 	}

@@ -10,7 +10,6 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.furnace.algorithms.graphcentric.searching.SearchAlgorithm;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
@@ -29,18 +28,18 @@ public class SubgraphConstructionNaive implements SubgraphConstruction {
 	/**
 	 * The search algorithm to use for traversing the graph and finding shortest paths.
 	 */
-	private final SearchAlgorithm searchAlgorithm;
+	private final LimitedDFS limitedDFS;
 
 	public SubgraphConstructionNaive(Graph graph) {
-		searchAlgorithm = new LimitedDFS(graph);
+		limitedDFS = new LimitedDFS(graph);
 	}
 
 	public SubgraphConstructionNaive(Graph graph, int maxDepth) {
-		searchAlgorithm = new LimitedDFS(graph, maxDepth);
+		limitedDFS = new LimitedDFS(graph, maxDepth);
 	}
 
 	public SubgraphConstructionNaive(Graph graph, int maxDepth, EdgeFilter edgeFilter, Direction direction) {
-		searchAlgorithm = new LimitedDFS(graph, maxDepth, edgeFilter, direction);
+		limitedDFS = new LimitedDFS(graph, maxDepth, edgeFilter, direction);
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class SubgraphConstructionNaive implements SubgraphConstruction {
 		for (Vertex start : senses) {
 			for (Vertex end : senses) {
 				if (!start.equals(end)) {
-					List<Edge> path = searchAlgorithm.findPathToTarget(start, end);
+					List<Edge> path = limitedDFS.findPathToTarget(start, end);
 					if (!path.isEmpty()) {
 						GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, path);
 					}
@@ -64,6 +63,16 @@ public class SubgraphConstructionNaive implements SubgraphConstruction {
 
 		logger.info("Total time for creating subgraph: {} sec.", (System.currentTimeMillis() - startTime) / 1000.0);
 		return subGraph;
+	}
+
+	@Override
+	public Graph getGraph() {
+		return limitedDFS.graph;
+	}
+
+	@Override
+	public void setGraph(Graph graph) {
+		limitedDFS.graph = graph;
 	}
 
 }

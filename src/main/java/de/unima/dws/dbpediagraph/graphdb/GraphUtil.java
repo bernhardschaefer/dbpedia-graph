@@ -170,7 +170,7 @@ public class GraphUtil {
 		return String.format("vid: %s uri: %s", v.getId().toString(), uri);
 	}
 
-	public static List<Vertex> getVerticesByUri(Graph graph, List<String> uris) {
+	public static List<Vertex> getVerticesByUri(Graph graph, Collection<String> uris) {
 		List<Vertex> vertices = new LinkedList<Vertex>();
 		for (String uri : uris) {
 			Vertex v = getVertexByUri(graph, uri);

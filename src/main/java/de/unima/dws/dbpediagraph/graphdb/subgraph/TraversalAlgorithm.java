@@ -17,7 +17,7 @@ public abstract class TraversalAlgorithm {
 	/**
 	 * The graph to traverse on.
 	 */
-	protected final Graph graph;
+	protected Graph graph;
 
 	/**
 	 * "the distance between two vertices in a graph is the <i>number of edges</i> in a shortest path connecting them."
@@ -47,6 +47,10 @@ public abstract class TraversalAlgorithm {
 	 */
 	protected static final Direction DEFAULT_DIRECTION = Direction.OUT;
 
+	public TraversalAlgorithm() {
+		this(null, DEFAULT_MAX_DISTANCE, DEFAULT_EDGE_FILTER, DEFAULT_DIRECTION);
+	}
+
 	/**
 	 * Convenience constructor using default values for non-provided fields.
 	 */
@@ -66,5 +70,13 @@ public abstract class TraversalAlgorithm {
 		this.maxDistance = maxDistance;
 		this.edgeFilter = edgeFilter;
 		this.direction = direction;
+	}
+
+	public Graph getGraph() {
+		return graph;
+	}
+
+	public void setGraph(Graph graph) {
+		this.graph = graph;
 	}
 }
