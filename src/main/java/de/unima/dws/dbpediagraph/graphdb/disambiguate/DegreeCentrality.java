@@ -4,19 +4,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNaive;
 
 /**
  * Degree Centrality Disambiguator that only takes into account the degree of edges in the subgraph.
@@ -25,25 +18,6 @@ import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNaive;
  * 
  */
 public class DegreeCentrality implements LocalDisambiguator {
-	private static final Logger logger = LoggerFactory.getLogger(DegreeCentrality.class);
-
-	public static void main(String[] args) {
-		Graph graph = GraphProvider.getInstance().getGraph();
-
-		SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
-		Set<Vertex> vertices = GraphUtil.getTestVertices(graph);
-		Graph subGraph = sc.createSubgraph(vertices);
-
-		Disambiguator dc = new DegreeCentrality(Direction.BOTH);
-		List<WeightedUri> weightedUris = dc.disambiguate(GraphUtil.getUrisOfVertices(vertices), subGraph);
-		for (WeightedUri wUri : weightedUris) {
-			logger.info("uri: {} weight: {}", wUri.getUri(), wUri.getWeight());
-		}
-
-		graph.shutdown();
-
-	}
-
 	private final Direction direction;
 
 	/**
