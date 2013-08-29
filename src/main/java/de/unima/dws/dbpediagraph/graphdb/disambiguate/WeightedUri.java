@@ -34,4 +34,9 @@ public class WeightedUri implements Comparable<WeightedUri> {
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
+
+	@Override
+	public String toString() {
+		return uri + "->" + weight;
+	}
 }

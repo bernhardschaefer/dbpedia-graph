@@ -7,21 +7,25 @@ import java.util.List;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 
+//TODO evaluate GraphStream https://github.com/graphstream/gs-algo/blob/master/src/org/graphstream/algorithm/BetweennessCentrality.java
+// http://www.javacodegeeks.com/2013/07/mini-search-engine-just-the-basics-using-neo4j-crawler4j-graphstream-and-encog.html
 public class BetweennessCentrality implements LocalDisambiguator {
 
 	@Override
 	public List<WeightedUri> disambiguate(Collection<String> uris, Graph subgraph) {
-		edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge> hits = new edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge>(
-				new GraphJung<Graph>(subgraph));
+		edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge> betweenness = new edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge>(
+				new GraphJungUndirected(subgraph));
+		int vertCount = GraphUtil.getNumberOfVertices(subgraph);
 
 		List<WeightedUri> wUris = new ArrayList<>();
 		for (String uri : uris) {
-			double weight = hits.getVertexScore(GraphUtil.getVertexByUri(subgraph, uri));
-			wUris.add(new WeightedUri(uri, weight));
+			double score = betweenness.getVertexScore(GraphUtil.getVertexByUri(subgraph, uri));
+			double normalizedScore = score / ((vertCount - 1) * (vertCount - 2));
+			wUris.add(new WeightedUri(uri, normalizedScore));
 		}
 		return wUris;
 	}

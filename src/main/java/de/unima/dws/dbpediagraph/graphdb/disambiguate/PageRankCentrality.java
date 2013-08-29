@@ -7,13 +7,13 @@ import java.util.List;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 
 public class PageRankCentrality implements LocalDisambiguator {
-	private static final int DEFAULT_ITERATIONS = 100;
+	private static final int DEFAULT_ITERATIONS = 10;
 
 	private final double alpha;
 	private final int iterations;
@@ -30,14 +30,23 @@ public class PageRankCentrality implements LocalDisambiguator {
 
 	@Override
 	public List<WeightedUri> disambiguate(Collection<String> uris, Graph subgraph) {
-		PageRank<Vertex, Edge> pageRank = new PageRank<Vertex, Edge>(new GraphJung<Graph>(subgraph), alpha);
+		PageRank<Vertex, Edge> pageRank = new PageRank<Vertex, Edge>(new GraphJungUndirected(subgraph), alpha);
 		pageRank.setMaxIterations(iterations);
 		pageRank.evaluate();
 
+		// VertexProgram pr = PageRankProgram.create().alpha(alpha).iterations(iterations).build();
+		// GraphComputer computer = new SerialGraphComputer(subgraph, pr, Isolation.BSP);
+		// computer.execute();
+		// VertexMemory vertexMemory = computer.getVertexMemory();
+
 		List<WeightedUri> wUris = new ArrayList<>();
 		for (String uri : uris) {
-			double weight = pageRank.getVertexScore(GraphUtil.getVertexByUri(subgraph, uri));
-			wUris.add(new WeightedUri(uri, weight));
+			Vertex vertex = GraphUtil.getVertexByUri(subgraph, uri);
+			double rank = pageRank.getVertexScore(vertex);
+
+			// double rank = vertexMemory.getProperty(vertex, PageRankProgram.PAGE_RANK);
+			// double edgeCount = vertexMemory.getProperty(vertex, PageRankProgram.EDGE_COUNT);
+			wUris.add(new WeightedUri(uri, rank));
 		}
 		return wUris;
 	}

@@ -1,8 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.wrapper;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
@@ -20,16 +18,12 @@ public class GraphJungUndirected extends GraphJung<Graph> {
 
 	@Override
 	public Collection<Edge> getInEdges(final Vertex vertex) {
-		final Iterable<Edge> itty = vertex.getEdges(Direction.BOTH);
-		if (itty instanceof Collection) {
-			return (Collection<Edge>) itty;
-		} else {
-			final List<Edge> edges = new ArrayList<Edge>();
-			for (final Edge edge : itty) {
-				edges.add(edge);
-			}
-			return edges;
-		}
+		return GraphUtil.getEdgesOfVertex(vertex, Direction.BOTH);
+	}
+
+	@Override
+	public Collection<Edge> getOutEdges(final Vertex vertex) {
+		return GraphUtil.getEdgesOfVertex(vertex, Direction.BOTH);
 	}
 
 	@Override

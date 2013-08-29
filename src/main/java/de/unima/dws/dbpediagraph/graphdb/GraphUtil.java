@@ -22,8 +22,6 @@ public class GraphUtil {
 	private static final Logger logger = LoggerFactory.getLogger(GraphUtil.class);
 
 	public static void addEdgeIfNonExistent(Graph graph, Edge edge, Vertex outVertex, Vertex inVertex) {
-		// TODO check if this works; maybe the graph implementation ignores the
-		// edge ids
 		if (graph.getEdge(edge.getId()) == null) {
 			graph.addEdge(edge.getId(), outVertex, inVertex, edge.getLabel());
 		}
@@ -59,7 +57,7 @@ public class GraphUtil {
 		}
 	}
 
-	public static Collection<Vertex> getConnectedVerticesBothDirections(Vertex vertex) {
+	public static Set<Vertex> getConnectedVerticesBothDirections(Vertex vertex) {
 		final Set<Vertex> vertices = new HashSet<Vertex>();
 		for (final Edge edge : vertex.getEdges(Direction.BOTH)) {
 			Vertex other = GraphUtil.getOtherVertex(edge, vertex);
@@ -68,11 +66,23 @@ public class GraphUtil {
 		return vertices;
 	}
 
-	public static Collection<Edge> getEdgesOfVertex(Vertex v, Direction d, String... labels) {
-		List<Edge> edges = new ArrayList<Edge>();
-		for (Edge e : v.getEdges(d, labels)) {
-			edges.add(e);
+	public static Collection<Edge> getEdgesOfVertex(Vertex vertex, Direction direction, String... labels) {
+		Collection<Edge> edges;
+		final Iterable<Edge> itty = vertex.getEdges(direction);
+		if (itty instanceof Collection) {
+			edges = (Collection<Edge>) itty;
+		} else {
+			edges = new ArrayList<Edge>();
+			for (final Edge edge : itty) {
+				edges.add(edge);
+			}
 		}
+
+		// if direction==BOTH, collapse edges (u,v) and (v,u) to a single edge
+		if (direction == Direction.BOTH) {
+			// TODO implement
+		}
+
 		return edges;
 	}
 
@@ -85,12 +95,12 @@ public class GraphUtil {
 		return counter;
 	}
 
-	public static int getNumberOfEdges(Graph subGraph) {
-		return getIterItemCount(subGraph.getEdges().iterator());
+	public static int getNumberOfEdges(Graph subgraph) {
+		return getIterItemCount(subgraph.getEdges().iterator());
 	}
 
-	public static int getNumberOfVertices(Graph subGraph) {
-		return getIterItemCount(subGraph.getVertices().iterator());
+	public static int getNumberOfVertices(Graph subgraph) {
+		return getIterItemCount(subgraph.getVertices().iterator());
 	}
 
 	public static Vertex getOtherVertex(Edge edge, Vertex vertex) {
