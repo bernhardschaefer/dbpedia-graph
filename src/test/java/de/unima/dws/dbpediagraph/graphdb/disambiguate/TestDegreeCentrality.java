@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.tinkerpop.blueprints.Direction;
 
 import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.DegreeCentrality;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class TestDegreeCentrality {

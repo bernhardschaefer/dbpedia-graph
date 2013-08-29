@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.BetweennessCentrality;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class TestBetweennessCentrality {
