@@ -59,6 +59,15 @@ public class GraphUtil {
 		}
 	}
 
+	public static Collection<Vertex> getConnectedVerticesBothDirections(Vertex vertex) {
+		final Set<Vertex> vertices = new HashSet<Vertex>();
+		for (final Edge edge : vertex.getEdges(Direction.BOTH)) {
+			Vertex other = GraphUtil.getOtherVertex(edge, vertex);
+			vertices.add(other);
+		}
+		return vertices;
+	}
+
 	public static Collection<Edge> getEdgesOfVertex(Vertex v, Direction d, String... labels) {
 		List<Edge> edges = new ArrayList<Edge>();
 		for (Edge e : v.getEdges(d, labels)) {
@@ -82,6 +91,18 @@ public class GraphUtil {
 
 	public static int getNumberOfVertices(Graph subGraph) {
 		return getIterItemCount(subGraph.getVertices().iterator());
+	}
+
+	public static Vertex getOtherVertex(Edge edge, Vertex vertex) {
+		Vertex in = edge.getVertex(Direction.IN);
+		Vertex out = edge.getVertex(Direction.OUT);
+		if (vertex.equals(in)) {
+			return out;
+		} else if (vertex.equals(out)) {
+			return in;
+		} else {
+			throw new IllegalArgumentException(String.format("Vertex %s is not part of edge %s", vertex.getId(), edge));
+		}
 	}
 
 	/**
