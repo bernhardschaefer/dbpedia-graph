@@ -12,6 +12,12 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
+/**
+ * Graph Entropy global connectivity measure implemented as described in Navigli&Lapata (2010).
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class GraphEntropy extends AbstractGlobalDisambiguator {
 
 	@Override
@@ -26,6 +32,7 @@ public class GraphEntropy extends AbstractGlobalDisambiguator {
 		subgraphConstruction.setGraph(subgraph);
 		Graph sensegraph = subgraphConstruction.createSubgraph(GraphUtil.getVerticesByUri(subgraph, senseAssignments));
 
+		int totalVertices = GraphUtil.getNumberOfVertices(sensegraph);
 		int totalEdges = GraphUtil.getNumberOfEdges(sensegraph);
 
 		double graphEntropy = 0;
@@ -33,9 +40,11 @@ public class GraphEntropy extends AbstractGlobalDisambiguator {
 		for (Vertex vertex : sensegraph.getVertices()) {
 			double degree = GraphUtil.getEdgesOfVertex(vertex, Direction.BOTH).size();
 			double vertexProbability = degree / (2.0 * totalEdges);
-			graphEntropy += vertexProbability * Math.log10(vertexProbability);
+			graphEntropy += vertexProbability * Math.log(vertexProbability);
 		}
 		graphEntropy *= -1;
+
+		graphEntropy /= Math.log(totalVertices);
 
 		sensegraph.shutdown();
 		return graphEntropy;

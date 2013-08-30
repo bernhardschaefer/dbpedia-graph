@@ -37,7 +37,7 @@ public class GlobalDisambiguationTestData extends AbstractDisambiguationTestData
 
 			double actual = disambiguator.globalConnectivityMeasure(Arrays.asList(senses), subgraph);
 			logger.info("senses: {} actual score: {} expected score: {}", senses, actual, expected);
-			Assert.assertEquals(expected, actual, 1);
+			Assert.assertEquals(expected, actual, DELTA);
 		}
 	}
 }
