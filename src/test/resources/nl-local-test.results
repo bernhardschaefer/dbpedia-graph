@@ -1,3 +1,4 @@
+# Note: The name of the global measures are exactly the same as in de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalConnectivityMeasure
 Node	Degree	KPP		HITS	PR		Betweenness
 drink1v	0.21	0.45	0.39	0.08	0.013
 drink2v	0.14	0.37	0.23	0.05	0.005

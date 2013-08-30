@@ -6,15 +6,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTestData;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class TestKPPCentrality {
-	private static DisambiguationTestData data;
+	private static LocalDisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
-		data = new DisambiguationTestData(new KPPCentrality(), new SubgraphConstructionNavigliOld());
+		data = new LocalDisambiguationTestData(new KPPCentrality(), new SubgraphConstructionNavigliOld());
 	}
 
 	@AfterClass
@@ -25,7 +25,7 @@ public class TestKPPCentrality {
 
 	@Test
 	public void testDisambiguateValues() {
-		data.checkWeightedUris();
+		data.checkDisambiguationResults();
 	}
 
 	@Test

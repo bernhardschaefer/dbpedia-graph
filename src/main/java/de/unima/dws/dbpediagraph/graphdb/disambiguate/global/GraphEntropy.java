@@ -1,6 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate.global;
 
-import java.util.Set;
+import java.util.Collection;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
@@ -8,13 +8,19 @@ import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class GraphEntropy extends AbstractGlobalDisambiguator {
 
 	@Override
-	public Double globalConnectivityMeasure(Set<String> senseAssignments, Graph subgraph) {
+	public ConnectivityMeasure getType() {
+		return ConnectivityMeasure.GraphEntropy;
+	}
+
+	@Override
+	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph subgraph) {
 
 		SubgraphConstruction subgraphConstruction = new SubgraphConstructionNavigliOld(subgraph, 10);
 		subgraphConstruction.setGraph(subgraph);

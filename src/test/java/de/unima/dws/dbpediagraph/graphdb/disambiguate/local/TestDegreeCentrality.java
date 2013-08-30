@@ -8,16 +8,16 @@ import org.junit.Test;
 
 import com.tinkerpop.blueprints.Direction;
 
-import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTestData;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class TestDegreeCentrality {
-	private static DisambiguationTestData data;
+	private static LocalDisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
 		Direction direction = Direction.BOTH;
-		data = new DisambiguationTestData(new DegreeCentrality(direction), new SubgraphConstructionNavigliOld());
+		data = new LocalDisambiguationTestData(new DegreeCentrality(direction), new SubgraphConstructionNavigliOld());
 	}
 
 	@AfterClass
@@ -28,7 +28,7 @@ public class TestDegreeCentrality {
 
 	@Test
 	public void testDisambiguateValues() {
-		data.checkWeightedUris();
+		data.checkDisambiguationResults();
 	}
 
 	@Test

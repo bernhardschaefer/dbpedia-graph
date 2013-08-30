@@ -21,6 +21,11 @@
 	<logger name="de.unima">
 		<level value="info" />
 	</logger>
+	
+	<logger name="de.unima.dws.dbpediagraph.graphdb.subgraph">
+		<level value="warn" />
+	</logger>
+	
 
 	<root>
 		<priority value="info" />

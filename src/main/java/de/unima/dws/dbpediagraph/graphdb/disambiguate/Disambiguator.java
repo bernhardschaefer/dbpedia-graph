@@ -7,4 +7,6 @@ import com.tinkerpop.blueprints.Graph;
 
 public interface Disambiguator {
 	List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph);
+
+	public ConnectivityMeasure getType();
 }

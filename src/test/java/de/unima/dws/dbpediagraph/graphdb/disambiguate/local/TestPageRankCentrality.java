@@ -6,16 +6,16 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTestData;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class TestPageRankCentrality {
-	private static DisambiguationTestData data;
+	private static LocalDisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
 		double alpha = 0.15;
-		data = new DisambiguationTestData(new PageRankCentrality(alpha), new SubgraphConstructionNavigliOld());
+		data = new LocalDisambiguationTestData(new PageRankCentrality(alpha), new SubgraphConstructionNavigliOld());
 	}
 
 	@AfterClass
@@ -26,7 +26,7 @@ public class TestPageRankCentrality {
 
 	@Test
 	public void testDisambiguateValues() {
-		data.checkWeightedUris();
+		data.checkDisambiguationResults();
 	}
 
 	@Test

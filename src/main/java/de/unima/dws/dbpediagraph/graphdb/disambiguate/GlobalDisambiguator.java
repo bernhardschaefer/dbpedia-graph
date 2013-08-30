@@ -1,11 +1,11 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import com.tinkerpop.blueprints.Graph;
 
-public interface GlobalDisambiguator {
+public interface GlobalDisambiguator extends Disambiguator {
 
 	/**
 	 * Use a global connectivity measure to find the sense assignments with the highest scores.
@@ -27,6 +27,6 @@ public interface GlobalDisambiguator {
 	 * @param subgraph
 	 * @return the score
 	 */
-	public Double globalConnectivityMeasure(Set<String> senseAssignments, Graph subgraph);
+	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph subgraph);
 
 }

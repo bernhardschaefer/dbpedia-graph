@@ -1,11 +1,16 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import com.tinkerpop.blueprints.Graph;
 
 public abstract class AbstractGlobalDisambiguator implements GlobalDisambiguator {
+
+	@Override
+	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
+		throw new UnsupportedOperationException("This operation is not supported for global disambiguators.");
+	}
 
 	@Override
 	public List<WeightedSenseAssignments> disambiguateGlobal(List<List<String>> allWordsSenses, Graph subgraph) {
@@ -24,6 +29,5 @@ public abstract class AbstractGlobalDisambiguator implements GlobalDisambiguator
 	}
 
 	@Override
-	abstract public Double globalConnectivityMeasure(Set<String> senseAssignments, Graph subgraph);
-
+	abstract public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph subgraph);
 }

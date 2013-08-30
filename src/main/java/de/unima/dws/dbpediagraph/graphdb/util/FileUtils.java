@@ -9,9 +9,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
 
 /**
  * Basic File Utilities.
@@ -40,6 +45,42 @@ public class FileUtils {
 			}
 		}
 		return files;
+	}
+
+	/**
+	 * Parse all non-empty and non-comment lines (comment lines start with '#') from a test results file into a map.
+	 * 
+	 * @param clazz
+	 *            the class whose classpath will be used.
+	 */
+	public static Map<String, Map<ConnectivityMeasure, Double>> parseDisambiguationResults(String fileName,
+			Class<?> clazz) throws IOException, URISyntaxException {
+
+		Map<String, Map<ConnectivityMeasure, Double>> results = new HashMap<>();
+
+		List<String> lines = FileUtils.readLinesFromFile(clazz, fileName);
+		if (lines.isEmpty())
+			throw new RuntimeException(fileName + "file shouldnt be empty.");
+
+		// multiple tabs as delimiters
+		String delimiterRegex = "\t+";
+		String[] headers = lines.remove(0).split(delimiterRegex);
+
+		for (String line : lines) {
+			String[] values = line.split(delimiterRegex);
+			String uri = values[0];
+
+			Map<ConnectivityMeasure, Double> map = new EnumMap<>(ConnectivityMeasure.class);
+
+			for (int i = 1; i < values.length; i++) {
+				Double value = Double.parseDouble(values[i]);
+				ConnectivityMeasure measure = ConnectivityMeasure.valueOf(headers[i]);
+				map.put(measure, value);
+			}
+
+			results.put(uri, map);
+		}
+		return results;
 	}
 
 	/**

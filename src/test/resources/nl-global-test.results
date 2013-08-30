@@ -1,0 +1,8 @@
+# Note: The name of the global measures are exactly the same as in de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalConnectivityMeasure
+SenseAssignments	Compactness	GraphEntropy	EdgeDensity
+drink1v,milk1n		0.90		0.94			0.60
+drink2v,milk1n		0.85		0.97			0.50
+drink5v,milk1n		0.85		0.97			0.50
+drink1v,milk2n		0.82		0.96			0.38
+drink2v,milk2n		0.79		0.98			0.33
+drink5v,milk2n		0.79		0.98			0.33
