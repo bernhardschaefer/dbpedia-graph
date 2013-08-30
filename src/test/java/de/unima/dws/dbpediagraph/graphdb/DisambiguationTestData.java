@@ -23,7 +23,7 @@ public class DisambiguationTestData extends SubgraphTestData {
 	private static final Logger logger = LoggerFactory.getLogger(DisambiguationTestData.class);
 	private static final double DELTA = 0.005;
 	/** Local Connectivity Measure Results for the example from Navigli&Lapata (2010) */
-	private static final String NL_RESULTS = "/nl-test.results";
+	private static final String NL_LOCAL_RESULTS = "/nl-local-test.results";
 
 	private final Graph subgraph;
 	private final List<WeightedSense> weightedUris;
@@ -74,7 +74,7 @@ public class DisambiguationTestData extends SubgraphTestData {
 	private void setUpDisambiguationResults() throws IOException, URISyntaxException {
 		String delimiterRegex = "\\s+";
 		localMeasureResults = new HashMap<>();
-		List<String> lines = FileUtils.readLinesFromFile(this.getClass(), NL_RESULTS);
+		List<String> lines = FileUtils.readLinesFromFile(this.getClass(), NL_LOCAL_RESULTS);
 		if (lines.isEmpty())
 			throw new RuntimeException("test.results file shouldnt be empty.");
 
