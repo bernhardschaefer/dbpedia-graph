@@ -29,5 +29,5 @@ public abstract class AbstractGlobalDisambiguator implements GlobalDisambiguator
 	}
 
 	@Override
-	abstract public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph subgraph);
+	abstract public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph);
 }

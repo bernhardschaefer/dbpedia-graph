@@ -9,8 +9,6 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 /**
  * Graph Entropy global connectivity measure implemented as described in Navigli&Lapata (2010).
@@ -26,11 +24,7 @@ public class GraphEntropy extends AbstractGlobalDisambiguator {
 	}
 
 	@Override
-	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph subgraph) {
-
-		SubgraphConstruction subgraphConstruction = new SubgraphConstructionNavigliOld(subgraph, 10);
-		subgraphConstruction.setGraph(subgraph);
-		Graph sensegraph = subgraphConstruction.createSubgraph(GraphUtil.getVerticesByUri(subgraph, senseAssignments));
+	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph) {
 
 		int totalVertices = GraphUtil.getNumberOfVertices(sensegraph);
 		int totalEdges = GraphUtil.getNumberOfEdges(sensegraph);
@@ -46,7 +40,6 @@ public class GraphEntropy extends AbstractGlobalDisambiguator {
 
 		graphEntropy /= Math.log(totalVertices);
 
-		sensegraph.shutdown();
 		return graphEntropy;
 	}
 

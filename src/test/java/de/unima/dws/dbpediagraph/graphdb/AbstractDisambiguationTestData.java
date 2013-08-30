@@ -20,7 +20,7 @@ public abstract class AbstractDisambiguationTestData extends SubgraphTestData {
 	public AbstractDisambiguationTestData(SubgraphConstruction subgraphConstruction, String testResultsFileName) {
 		super();
 		subgraphConstruction.setGraph(graph);
-		subgraph = subgraphConstruction.createSubgraph(senses);
+		subgraph = subgraphConstruction.createSubgraph(allWordsSenses);
 
 		measureResults = createMeasureResults(testResultsFileName);
 	}

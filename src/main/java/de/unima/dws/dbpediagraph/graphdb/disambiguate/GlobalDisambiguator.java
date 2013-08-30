@@ -24,9 +24,9 @@ public interface GlobalDisambiguator extends Disambiguator {
 	 * 
 	 * @param senseAssignments
 	 *            the sense assignments
-	 * @param subgraph
-	 * @return the score
+	 * @param sensegraph
+	 *            the sense graph consists of all paths between the sense assignments
+	 * @return the score for the provided assignments
 	 */
-	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph subgraph);
-
+	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph);
 }

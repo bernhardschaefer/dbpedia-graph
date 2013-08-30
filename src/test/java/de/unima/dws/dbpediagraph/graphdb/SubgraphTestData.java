@@ -27,7 +27,7 @@ public class SubgraphTestData {
 
 	protected Graph graph;
 
-	protected Collection<Vertex> senses;
+	protected Collection<Vertex> allWordsSenses;
 
 	protected List<String> vertices;
 
@@ -35,8 +35,8 @@ public class SubgraphTestData {
 
 	public SubgraphTestData() {
 		try {
-			graph = setUpTestGraph();
-			senses = setUpSenses(graph);
+			graph = parseTestGraph();
+			allWordsSenses = parseAllWordsSenses(graph);
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException("Error while trying to construct test graph.", e);
 		}
@@ -56,14 +56,14 @@ public class SubgraphTestData {
 	}
 
 	public Collection<Vertex> getSenses() {
-		return senses;
+		return allWordsSenses;
 	}
 
 	public List<String> getVertices() {
 		return vertices;
 	}
 
-	private Collection<Vertex> setUpSenses(Graph graph) throws IOException, URISyntaxException {
+	private Collection<Vertex> parseAllWordsSenses(Graph graph) throws IOException, URISyntaxException {
 		List<Vertex> senses = new ArrayList<>();
 
 		List<String> senseStrings = FileUtils.readLinesFromFile(this.getClass(), NL_SENSES);
@@ -75,7 +75,7 @@ public class SubgraphTestData {
 		return Collections.unmodifiableList(senses);
 	}
 
-	private Graph setUpTestGraph() throws IOException, URISyntaxException {
+	private Graph parseTestGraph() throws IOException, URISyntaxException {
 		Graph graph = new TinkerGraph();
 
 		vertices = FileUtils.readLinesFromFile(this.getClass(), NL_VERTICES);
