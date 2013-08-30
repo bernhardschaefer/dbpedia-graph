@@ -9,6 +9,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
 
 /**
  * Graph Entropy global connectivity measure implemented as described in Navigli&Lapata (2010).
@@ -16,7 +17,7 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
  * @author Bernhard Schäfer
  * 
  */
-public class GraphEntropy extends AbstractGlobalDisambiguator {
+public class GraphEntropy extends AbstractGlobalDisambiguator implements GlobalDisambiguator {
 
 	@Override
 	public ConnectivityMeasure getType() {
