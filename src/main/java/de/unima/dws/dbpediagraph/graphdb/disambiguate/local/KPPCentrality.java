@@ -13,7 +13,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedUri;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 import edu.uci.ics.jung.algorithms.scoring.DistanceCentralityScorer;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
@@ -28,15 +28,15 @@ public class KPPCentrality implements LocalDisambiguator {
 	}
 
 	@Override
-	public List<WeightedUri> disambiguate(Collection<String> uris, Graph subgraph) {
+	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
 		// ClosenessCentrality<Vertex, Edge>
 		Distance<Vertex> sp = new UnweightedShortestPath<>(new GraphJungUndirected(subgraph));
 		int numberOfVertices = GraphUtil.getNumberOfVertices(subgraph);
 
 		// KPPScorer kpp = new KPPScorer(new GraphJung<Graph>(subgraph));
-		List<WeightedUri> weightedUris = new LinkedList<>();
-		for (String uri : uris) {
-			Vertex v = GraphUtil.getVertexByUri(subgraph, uri);
+		List<WeightedSense> weightedUris = new LinkedList<>();
+		for (String sense : senses) {
+			Vertex v = GraphUtil.getVertexByUri(subgraph, sense);
 			// double score = kpp.getVertexScore(v);
 			Map<Vertex, Number> distances = sp.getDistanceMap(v);
 			double sumInverseShortestDistances = 0;
@@ -54,7 +54,7 @@ public class KPPCentrality implements LocalDisambiguator {
 			}
 
 			double score = sumInverseShortestDistances / (numberOfVertices - 1);
-			weightedUris.add(new WeightedUri(uri, score));
+			weightedUris.add(new WeightedSense(sense, score));
 		}
 
 		Collections.sort(weightedUris);

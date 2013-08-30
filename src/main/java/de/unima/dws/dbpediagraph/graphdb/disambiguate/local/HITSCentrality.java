@@ -12,21 +12,21 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedUri;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import edu.uci.ics.jung.algorithms.scoring.HITS;
 import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
 
 public class HITSCentrality implements LocalDisambiguator {
 
 	@Override
-	public List<WeightedUri> disambiguate(Collection<String> uris, Graph subgraph) {
+	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
 		HITS<Vertex, Edge> hits = new HITS<Vertex, Edge>(new GraphJung<Graph>(subgraph));
 		hits.evaluate();
 
-		List<WeightedUri> wUris = new ArrayList<>();
-		for (String uri : uris) {
+		List<WeightedSense> wUris = new ArrayList<>();
+		for (String uri : senses) {
 			Scores scores = hits.getVertexScore(GraphUtil.getVertexByUri(subgraph, uri));
-			wUris.add(new WeightedUri(uri, scores.authority));
+			wUris.add(new WeightedSense(uri, scores.authority));
 		}
 		return wUris;
 	}

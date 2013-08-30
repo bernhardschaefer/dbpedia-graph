@@ -6,5 +6,5 @@ import java.util.List;
 import com.tinkerpop.blueprints.Graph;
 
 public interface Disambiguator {
-	List<WeightedUri> disambiguate(Collection<String> uris, Graph subgraph);
+	List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph);
 }

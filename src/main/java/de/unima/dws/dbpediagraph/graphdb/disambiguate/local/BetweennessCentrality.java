@@ -11,7 +11,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedUri;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 
 //TODO evaluate GraphStream https://github.com/graphstream/gs-algo/blob/master/src/org/graphstream/algorithm/BetweennessCentrality.java
@@ -19,18 +19,18 @@ import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 public class BetweennessCentrality implements LocalDisambiguator {
 
 	@Override
-	public List<WeightedUri> disambiguate(Collection<String> uris, Graph subgraph) {
+	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
 		edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge> betweenness = new edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge>(
 				new GraphJungUndirected(subgraph));
 		int vertCount = GraphUtil.getNumberOfVertices(subgraph);
 
-		List<WeightedUri> wUris = new ArrayList<>();
-		for (String uri : uris) {
-			double score = betweenness.getVertexScore(GraphUtil.getVertexByUri(subgraph, uri));
+		List<WeightedSense> wSenses = new ArrayList<>();
+		for (String sense : senses) {
+			double score = betweenness.getVertexScore(GraphUtil.getVertexByUri(subgraph, sense));
 			double normalizedScore = score / ((vertCount - 1) * (vertCount - 2));
-			wUris.add(new WeightedUri(uri, normalizedScore));
+			wSenses.add(new WeightedSense(sense, normalizedScore));
 		}
-		return wUris;
+		return wSenses;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.disambiguate;
+package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,15 +7,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.KPPCentrality;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
-public class TestKPPCentrality {
+public class TestPageRankCentrality {
 	private static DisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
-		data = new DisambiguationTestData(new KPPCentrality(), new SubgraphConstructionNavigliOld());
+		double alpha = 0.15;
+		data = new DisambiguationTestData(new PageRankCentrality(alpha), new SubgraphConstructionNavigliOld());
 	}
 
 	@AfterClass
@@ -33,4 +33,5 @@ public class TestKPPCentrality {
 	public void testWeightedUrisSize() {
 		assertEquals(data.getWeightedUris().size(), data.getSenses().size());
 	}
+
 }

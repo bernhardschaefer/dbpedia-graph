@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.disambiguate;
+package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,15 +7,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
-public class TestHITSCentrality {
+public class TestBetweennessCentrality {
 	private static DisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
-		data = new DisambiguationTestData(new HITSCentrality(), new SubgraphConstructionNavigliOld());
+		data = new DisambiguationTestData(new BetweennessCentrality(), new SubgraphConstructionNavigliOld());
 	}
 
 	@AfterClass
@@ -33,5 +32,4 @@ public class TestHITSCentrality {
 	public void testWeightedUrisSize() {
 		assertEquals(data.getWeightedUris().size(), data.getSenses().size());
 	}
-
 }

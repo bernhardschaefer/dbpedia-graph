@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.disambiguate;
+package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,16 +7,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.PageRankCentrality;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
-public class TestPageRankCentrality {
+public class TestHITSCentrality {
 	private static DisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
-		double alpha = 0.15;
-		data = new DisambiguationTestData(new PageRankCentrality(alpha), new SubgraphConstructionNavigliOld());
+		data = new DisambiguationTestData(new HITSCentrality(), new SubgraphConstructionNavigliOld());
 	}
 
 	@AfterClass

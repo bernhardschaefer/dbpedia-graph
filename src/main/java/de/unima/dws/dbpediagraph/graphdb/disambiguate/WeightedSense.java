@@ -1,17 +1,17 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 
-public class WeightedUri implements Comparable<WeightedUri> {
-	private String uri;
+public class WeightedSense implements Comparable<WeightedSense> {
+	private String sense;
 	private double weight;
 
-	public WeightedUri(String uri, double weight) {
+	public WeightedSense(String sense, double weight) {
 		super();
-		this.uri = uri;
+		this.sense = sense;
 		this.weight = weight;
 	}
 
 	@Override
-	public int compareTo(WeightedUri o) {
+	public int compareTo(WeightedSense o) {
 		double epsilon = 0.001;
 		if (Math.abs(weight - o.weight) < epsilon) {
 			return 0;
@@ -19,16 +19,16 @@ public class WeightedUri implements Comparable<WeightedUri> {
 		return weight < o.weight ? -1 : 1;
 	}
 
-	public String getUri() {
-		return uri;
+	public String getSense() {
+		return sense;
 	}
 
 	public double getWeight() {
 		return weight;
 	}
 
-	public void setUri(String uri) {
-		this.uri = uri;
+	public void setSense(String sense) {
+		this.sense = sense;
 	}
 
 	public void setWeight(double weight) {
@@ -37,6 +37,6 @@ public class WeightedUri implements Comparable<WeightedUri> {
 
 	@Override
 	public String toString() {
-		return uri + "->" + weight;
+		return sense + "->" + weight;
 	}
 }

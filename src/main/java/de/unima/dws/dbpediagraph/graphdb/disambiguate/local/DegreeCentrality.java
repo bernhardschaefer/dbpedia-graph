@@ -12,7 +12,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedUri;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 
 /**
  * Degree Centrality Disambiguator that only takes into account the degree of edges in the subgraph.
@@ -32,21 +32,21 @@ public class DegreeCentrality implements LocalDisambiguator {
 	}
 
 	@Override
-	public List<WeightedUri> disambiguate(Collection<String> uris, Graph subgraph) {
+	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
 		int numberOfVertices = GraphUtil.getNumberOfVertices(subgraph);
 
-		List<WeightedUri> weightedUris = new LinkedList<>();
-		for (String uri : uris) {
-			Vertex v = GraphUtil.getVertexByUri(subgraph, uri);
+		List<WeightedSense> weightedSenses = new LinkedList<>();
+		for (String sense : senses) {
+			Vertex v = GraphUtil.getVertexByUri(subgraph, sense);
 			double inDegree = GraphUtil.getEdgesOfVertex(v, direction).size();
 			double centrality = inDegree / (numberOfVertices - 1);
-			weightedUris.add(new WeightedUri(uri, centrality));
+			weightedSenses.add(new WeightedSense(sense, centrality));
 		}
 
-		Collections.sort(weightedUris);
-		Collections.reverse(weightedUris);
+		Collections.sort(weightedSenses);
+		Collections.reverse(weightedSenses);
 
-		return weightedUris;
+		return weightedSenses;
 	}
 
 	@Override

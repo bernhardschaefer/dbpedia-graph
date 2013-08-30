@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.disambiguate;
+package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,19 +6,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.tinkerpop.blueprints.Direction;
-
 import de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.DegreeCentrality;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
-public class TestDegreeCentrality {
+public class TestKPPCentrality {
 	private static DisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
-		Direction direction = Direction.BOTH;
-		data = new DisambiguationTestData(new DegreeCentrality(direction), new SubgraphConstructionNavigliOld());
+		data = new DisambiguationTestData(new KPPCentrality(), new SubgraphConstructionNavigliOld());
 	}
 
 	@AfterClass
@@ -36,5 +32,4 @@ public class TestDegreeCentrality {
 	public void testWeightedUrisSize() {
 		assertEquals(data.getWeightedUris().size(), data.getSenses().size());
 	}
-
 }
