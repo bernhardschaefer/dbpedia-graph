@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.subgraph;
+package de.unima.dws.dbpediagraph.graphdb.demo;
 
 import java.awt.Dimension;
 import java.util.Collections;
@@ -17,6 +17,8 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
