@@ -9,7 +9,6 @@ import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
 
 /**
@@ -19,11 +18,6 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
  * 
  */
 public class EdgeDensity extends AbstractGlobalDisambiguator implements GlobalDisambiguator {
-
-	@Override
-	public ConnectivityMeasure getType() {
-		return ConnectivityMeasure.EdgeDensity;
-	}
 
 	@Override
 	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph) {

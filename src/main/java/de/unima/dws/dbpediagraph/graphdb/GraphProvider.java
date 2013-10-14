@@ -13,37 +13,27 @@ import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 /**
- * Singleton that provides graph instances.
+ * Noninstantiable graph provider class that provides graph instances.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public class GraphProvider {
-	/**
-	 * Holder for the singleton.
-	 */
-	private static class Holder {
-		public static final GraphProvider INSTANCE = new GraphProvider();
-	}
+public final class GraphProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(GraphProvider.class);
 
-	public static GraphProvider getInstance() {
-		return Holder.INSTANCE;
-	}
-
-	private final TransactionalGraph graph;
-
-	private GraphProvider() {
-		graph = openGraph();
-	}
+	private static final TransactionalGraph graph = openGraph();
 
 	/**
-	 * Creates and returns a graph implementation. The graph is created for batch inserts using the provided buffer
-	 * size.
+	 * Returns the batch graph instance that can be used for bulk inserting nodes and vertices into the dbpedia graph.
+	 * If a persisted dbpedia graph exists already it is returned, otherwise a new graph is created.
+	 * 
+	 * @param bufferSize
+	 *            the buffer size used for the batch inserts.
+	 * @return
 	 */
-	public Graph getBatchGraph(long bufferSize) {
-		BatchGraph<TransactionalGraph> bgraph = new BatchGraph<TransactionalGraph>(graph, bufferSize);
+	public static BatchGraph<? extends TransactionalGraph> getBatchGraph(long bufferSize) {
+		BatchGraph<TransactionalGraph> bgraph = new BatchGraph<>(graph, bufferSize);
 
 		// check if graph exists already
 		long verticesCount = new GremlinPipeline<Object, Object>(graph.getVertices()).count();
@@ -56,24 +46,29 @@ public class GraphProvider {
 		return bgraph;
 	}
 
-	public TransactionalGraph getGraph() {
+	/**
+	 * Accessor for the dbpedia graph.
+	 * 
+	 * @return the dbpedia graph
+	 */
+	public static TransactionalGraph getDBpediaGraph() {
 		return graph;
 	}
 
 	/**
 	 * Return a new non-persistent graph instance.
 	 */
-	public Graph getNewEmptyGraph() {
+	public static Graph newInMemoryGraph() {
 		return new TinkerGraph();
 	}
 
 	/**
 	 * Open a graph based on configuration settings.
 	 */
-	private TransactionalGraph openGraph() {
+	private static TransactionalGraph openGraph() {
 		long startTime = System.currentTimeMillis();
 
-		Graph graph = GraphFactory.open(GraphConfig.getInstance().getConfig());
+		Graph graph = GraphFactory.open(GraphConfig.config());
 		if (graph instanceof Neo4jGraph) {
 			Neo4jGraph nGraph = (Neo4jGraph) graph;
 			nGraph.createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
@@ -85,5 +80,10 @@ public class GraphProvider {
 		} else {
 			throw new IllegalArgumentException("Graph specified in properties needs to be a transactional graph.");
 		}
+	}
+
+	// Suppress default constructor for noninstantiability
+	private GraphProvider() {
+		throw new AssertionError();
 	}
 }

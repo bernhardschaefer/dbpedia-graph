@@ -46,7 +46,7 @@ public class SubgraphConstructionNaive implements SubgraphConstruction {
 	public Graph createSubgraph(Collection<Vertex> senses) {
 		long startTime = System.currentTimeMillis();
 
-		Graph subGraph = GraphProvider.getInstance().getNewEmptyGraph();
+		Graph subGraph = GraphProvider.newInMemoryGraph();
 
 		GraphUtil.addVerticesByUrisOfVertices(subGraph, senses);
 

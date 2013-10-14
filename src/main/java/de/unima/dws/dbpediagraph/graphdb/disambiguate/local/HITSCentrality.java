@@ -10,7 +10,6 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import edu.uci.ics.jung.algorithms.scoring.HITS;
@@ -29,11 +28,6 @@ public class HITSCentrality implements LocalDisambiguator {
 			wUris.add(new WeightedSense(uri, scores.authority));
 		}
 		return wUris;
-	}
-
-	@Override
-	public ConnectivityMeasure getType() {
-		return ConnectivityMeasure.HITS;
 	}
 
 }

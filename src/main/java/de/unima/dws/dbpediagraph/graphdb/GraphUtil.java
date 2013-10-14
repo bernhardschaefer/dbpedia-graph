@@ -18,7 +18,13 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-public class GraphUtil {
+/**
+ * Noninstantiable utility class for performing various graph operations. All operations are static.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
+public final class GraphUtil {
 	private static final Logger logger = LoggerFactory.getLogger(GraphUtil.class);
 
 	public static void addEdgeIfNonExistent(Graph graph, Edge edge, Vertex outVertex, Vertex inVertex) {
@@ -229,6 +235,11 @@ public class GraphUtil {
 				logger.info("vertex vid: {} has been deleted", v.getId());
 			}
 		}
+	}
+
+	// Suppress default constructor for noninstantiability
+	private GraphUtil() {
+		throw new AssertionError();
 	}
 
 }

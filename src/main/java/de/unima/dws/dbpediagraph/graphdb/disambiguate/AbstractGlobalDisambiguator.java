@@ -25,6 +25,7 @@ public abstract class AbstractGlobalDisambiguator implements GlobalDisambiguator
 
 		// calculate global connectivity measure and add to result list
 
+		// TODO implement genetic and simulated annealing functionality
 		return null;
 	}
 

@@ -14,6 +14,8 @@ public class WeightedSenseAssignments implements Comparable<WeightedSenseAssignm
 
 	@Override
 	public int compareTo(WeightedSenseAssignments o) {
+		// TODO change and test
+		// return Double.compare(weight, o.weight);
 		double epsilon = 0.001;
 		if (Math.abs(weight - o.weight) < epsilon) {
 			return 0;

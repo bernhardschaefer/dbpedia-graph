@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Graph;
 
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 
@@ -21,13 +20,16 @@ public class GlobalDisambiguationTestData extends AbstractDisambiguationTestData
 	/** Global Connectivity Measure Results for the example from Navigli&Lapata (2010) */
 	private static final String NL_GLOBAL_RESULTS = "/nl-global-test.results";
 
+	/** Name of the package where the local disambiguator classes reside. */
+	private static final String GLOBAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.graphdb.disambiguate.global";
+
 	private static final String SENSES_DELIMITER = ",";
 
 	private final GlobalDisambiguator disambiguator;
 	private final SubgraphConstruction subgraphConstruction;
 
 	public GlobalDisambiguationTestData(GlobalDisambiguator disambiguator, SubgraphConstruction subgraphConstruction) {
-		super(subgraphConstruction, NL_GLOBAL_RESULTS);
+		super(subgraphConstruction, NL_GLOBAL_RESULTS, GLOBAL_PACKAGE_NAME);
 		this.disambiguator = disambiguator;
 
 		subgraphConstruction.setGraph(subgraph);
@@ -36,7 +38,7 @@ public class GlobalDisambiguationTestData extends AbstractDisambiguationTestData
 
 	@Override
 	public void checkDisambiguationResults() {
-		for (Entry<String, Map<ConnectivityMeasure, Double>> measureEntry : measureResults.entrySet()) {
+		for (Entry<String, Map<Class<?>, Double>> measureEntry : measureResults.entrySet()) {
 			List<String> senseAssignments = Arrays.asList(measureEntry.getKey().split(SENSES_DELIMITER));
 
 			// create sense graph based on the sense assignments
@@ -45,7 +47,7 @@ public class GlobalDisambiguationTestData extends AbstractDisambiguationTestData
 			double actual = disambiguator.globalConnectivityMeasure(senseAssignments, sensegraph);
 			sensegraph.shutdown();
 
-			double expected = measureEntry.getValue().get(disambiguator.getType());
+			double expected = measureEntry.getValue().get(disambiguator.getClass());
 
 			logger.info("senses: {} actual score: {} expected score: {}", senseAssignments, actual, expected);
 			Assert.assertEquals(expected, actual, DELTA);

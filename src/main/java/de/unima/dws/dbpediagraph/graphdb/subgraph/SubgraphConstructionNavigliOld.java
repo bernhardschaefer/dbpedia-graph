@@ -92,7 +92,7 @@ public class SubgraphConstructionNavigliOld extends TraversalAlgorithm implement
 		}
 
 		// build sub graph based on V and E
-		Graph subGraph = GraphProvider.getInstance().getNewEmptyGraph();
+		Graph subGraph = GraphProvider.newInMemoryGraph();
 		GraphUtil.addVerticesByUrisOfVertices(subGraph, senses);
 		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, edges);
 

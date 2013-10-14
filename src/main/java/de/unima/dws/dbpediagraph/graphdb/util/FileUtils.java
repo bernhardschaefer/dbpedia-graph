@@ -9,14 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
 
 /**
  * Basic File Utilities.
@@ -24,7 +21,7 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
  * @author Bernhard Schäfer
  * 
  */
-public class FileUtils {
+public final class FileUtils {
 
 	/**
 	 * Extract a collection of all files from a list of arguments. For each argument, it is checked whether the argument
@@ -52,11 +49,12 @@ public class FileUtils {
 	 * 
 	 * @param clazz
 	 *            the class whose classpath will be used.
+	 * @throws ClassNotFoundException
 	 */
-	public static Map<String, Map<ConnectivityMeasure, Double>> parseDisambiguationResults(String fileName,
-			Class<?> clazz) throws IOException, URISyntaxException {
+	public static Map<String, Map<Class<?>, Double>> parseDisambiguationResults(String fileName, Class<?> clazz,
+			String packageNameDisambiguator) throws IOException, URISyntaxException, ClassNotFoundException {
 
-		Map<String, Map<ConnectivityMeasure, Double>> results = new HashMap<>();
+		Map<String, Map<Class<?>, Double>> results = new HashMap<>();
 
 		List<String> lines = FileUtils.readLinesFromFile(clazz, fileName);
 		if (lines.isEmpty())
@@ -70,18 +68,55 @@ public class FileUtils {
 			String[] values = line.split(delimiterRegex);
 			String uri = values[0];
 
-			Map<ConnectivityMeasure, Double> map = new EnumMap<>(ConnectivityMeasure.class);
+			Map<Class<?>, Double> map = new HashMap<>();
 
 			for (int i = 1; i < values.length; i++) {
 				Double value = Double.parseDouble(values[i]);
-				ConnectivityMeasure measure = ConnectivityMeasure.valueOf(headers[i]);
-				map.put(measure, value);
+				String fullClassName = packageNameDisambiguator + "." + headers[i];
+				Class<?> keyClazz = Class.forName(fullClassName);
+				map.put(keyClazz, value);
 			}
 
 			results.put(uri, map);
 		}
 		return results;
 	}
+
+	/**
+	 * Parse all non-empty and non-comment lines (comment lines start with '#') from a test results file into a map.
+	 * 
+	 * @param clazz
+	 *            the class whose classpath will be used.
+	 */
+	// public static Map<String, Map<ConnectivityMeasure, Double>> parseDisambiguationResultsOld(String fileName,
+	// Class<?> clazz) throws IOException, URISyntaxException {
+	//
+	// Map<String, Map<ConnectivityMeasure, Double>> results = new HashMap<>();
+	//
+	// List<String> lines = FileUtils.readLinesFromFile(clazz, fileName);
+	// if (lines.isEmpty())
+	// throw new RuntimeException(fileName + "file shouldnt be empty.");
+	//
+	// // multiple tabs as delimiters
+	// String delimiterRegex = "\t+";
+	// String[] headers = lines.remove(0).split(delimiterRegex);
+	//
+	// for (String line : lines) {
+	// String[] values = line.split(delimiterRegex);
+	// String uri = values[0];
+	//
+	// Map<ConnectivityMeasure, Double> map = new EnumMap<>(ConnectivityMeasure.class);
+	//
+	// for (int i = 1; i < values.length; i++) {
+	// Double value = Double.parseDouble(values[i]);
+	// ConnectivityMeasure measure = ConnectivityMeasure.valueOf(headers[i]);
+	// map.put(measure, value);
+	// }
+	//
+	// results.put(uri, map);
+	// }
+	// return results;
+	// }
 
 	/**
 	 * Read all lines from a file and return all non-empty and non-comment lines (comment lines start with '#').
@@ -101,6 +136,11 @@ public class FileUtils {
 				iter.remove();
 		}
 		return lines;
+	}
+
+	// Suppress default constructor for noninstantiability
+	private FileUtils() {
+		throw new AssertionError();
 	}
 
 }

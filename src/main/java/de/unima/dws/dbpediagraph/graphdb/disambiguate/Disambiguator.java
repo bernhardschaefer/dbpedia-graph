@@ -5,6 +5,12 @@ import java.util.List;
 
 import com.tinkerpop.blueprints.Graph;
 
+/**
+ * Disambiguator interface for disambiguation methods.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public interface Disambiguator {
 	/**
 	 * 
@@ -15,5 +21,4 @@ public interface Disambiguator {
 	 */
 	List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph);
 
-	public ConnectivityMeasure getType();
 }

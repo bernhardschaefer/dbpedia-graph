@@ -10,7 +10,6 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.ConnectivityMeasure;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 
@@ -47,11 +46,6 @@ public class DegreeCentrality implements LocalDisambiguator {
 		Collections.reverse(weightedSenses);
 
 		return weightedSenses;
-	}
-
-	@Override
-	public ConnectivityMeasure getType() {
-		return ConnectivityMeasure.Degree;
 	}
 
 }

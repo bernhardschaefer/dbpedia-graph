@@ -23,7 +23,7 @@ public class DemoSubgraphConstruction {
 	private static final int SIZE = 800;
 
 	public static void main(String[] args) {
-		Graph graph = GraphProvider.getInstance().getGraph();
+		Graph graph = GraphProvider.getDBpediaGraph();
 
 		// SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
 		SubgraphConstruction sc = new SubgraphConstructionNavigliOld(graph, 3);

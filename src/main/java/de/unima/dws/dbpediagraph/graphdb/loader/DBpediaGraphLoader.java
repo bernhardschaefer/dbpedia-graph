@@ -77,14 +77,13 @@ public class DBpediaGraphLoader {
 		LoadingMetrics globalMetric = new LoadingMetrics("OVERALL");
 		List<LoadingMetrics> metrics = new LinkedList<LoadingMetrics>();
 
-		Graph graph = GraphProvider.getInstance().getBatchGraph(BUFFER_SIZE);
+		Graph graph = GraphProvider.getBatchGraph(BUFFER_SIZE);
 
 		for (File f : files) {
 			LoadingMetrics metric = new LoadingMetrics(f.getName());
 
 			// get appropriate handler
-			LoadingStatementFilter filter = LoadingStatementFilterFactory
-					.getImpl(GraphConfig.getInstance().getConfig());
+			LoadingStatementFilter filter = LoadingStatementFilterFactory.getImpl(GraphConfig.config());
 			RDFHandlerVerbose handler = new BatchHandler(graph, filter);
 
 			// get appropriate parser
