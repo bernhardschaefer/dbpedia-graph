@@ -147,24 +147,6 @@ public final class GraphUtil {
 		return pathFromEndToStart;
 	}
 
-	// TODO put this somewhere else
-	public static Set<Vertex> getTestVertices(Graph graph) {
-		// http://en.wikipedia.org/wiki/Michael_I._Jordan
-		// Michael I. Jordan is a leading researcher in machine learning and
-		// artificial intelligence.
-
-		String[] resources = new String[] { "Michael_I._Jordan", "Michael_Jordan", "Machine_learning",
-				"Artificial_intelligence", "Basketball" };
-
-		Set<Vertex> vertices = new HashSet<>();
-		for (String resource : resources) {
-			String uri = GraphConfig.DBPEDIA_RESOURCE_PREFIX + resource;
-			vertices.add(GraphUtil.getVertexByUri(graph, uri));
-		}
-
-		return Collections.unmodifiableSet(vertices);
-	}
-
 	private static String getUriOfVertex(Vertex v) {
 		return v.getProperty(GraphConfig.URI_PROPERTY).toString();
 	}

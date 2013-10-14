@@ -1,6 +1,8 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
 import java.awt.Dimension;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -22,12 +24,29 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 public class DemoSubgraphConstruction {
 	private static final int SIZE = 800;
 
+	public static Set<Vertex> getTestVertices(Graph graph) {
+		// http://en.wikipedia.org/wiki/Michael_I._Jordan
+		// Michael I. Jordan is a leading researcher in machine learning and
+		// artificial intelligence.
+
+		String[] resources = new String[] { "Michael_I._Jordan", "Michael_Jordan", "Machine_learning",
+				"Artificial_intelligence", "Basketball" };
+
+		Set<Vertex> vertices = new HashSet<>();
+		for (String resource : resources) {
+			String uri = GraphConfig.DBPEDIA_RESOURCE_PREFIX + resource;
+			vertices.add(GraphUtil.getVertexByUri(graph, uri));
+		}
+
+		return Collections.unmodifiableSet(vertices);
+	}
+
 	public static void main(String[] args) {
 		Graph graph = GraphProvider.getDBpediaGraph();
 
 		// SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
 		SubgraphConstruction sc = new SubgraphConstructionNavigliOld(graph, 3);
-		Set<Vertex> vertices = GraphUtil.getTestVertices(graph);
+		Set<Vertex> vertices = getTestVertices(graph);
 		Graph subGraph = sc.createSubgraph(vertices);
 		// GraphPrinter.printGraphStatistics(subGraph);
 
