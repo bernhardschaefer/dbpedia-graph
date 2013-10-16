@@ -38,16 +38,12 @@ class SubgraphConstructionNavigliNew implements SubgraphConstruction {
 
 	private final SubgraphConstructionSettings settings;
 
-	public SubgraphConstructionNavigliNew() {
-		settings = SubgraphConstructionSettings.getDefault();
-	}
-
-	public SubgraphConstructionNavigliNew(Graph graph) {
-		this(graph, SubgraphConstructionSettings.getDefault());
-	}
-
 	public SubgraphConstructionNavigliNew(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
+		this.settings = settings;
+	}
+
+	public SubgraphConstructionNavigliNew(SubgraphConstructionSettings settings) {
 		this.settings = settings;
 	}
 

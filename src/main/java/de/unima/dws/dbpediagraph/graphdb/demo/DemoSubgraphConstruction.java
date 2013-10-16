@@ -20,7 +20,8 @@ import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
@@ -50,10 +51,10 @@ public class DemoSubgraphConstruction {
 	public static void main(String[] args) {
 		Graph graph = GraphProvider.getDBpediaGraph();
 
-		int maxDepth = 5;
+		int maxDepth = 3;
 
-		// SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
-		SubgraphConstruction sc = new SubgraphConstructionNavigliOld(graph, maxDepth);
+		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
+				new SubgraphConstructionSettings().maxDistance(maxDepth));
 		Set<Vertex> vertices = getTestVertices(graph);
 
 		long timeBefore = System.currentTimeMillis();
