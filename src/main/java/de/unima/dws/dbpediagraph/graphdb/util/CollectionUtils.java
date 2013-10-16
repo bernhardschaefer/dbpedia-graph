@@ -12,6 +12,9 @@ public class CollectionUtils {
 		return combinedCollections;
 	}
 
+	/**
+	 * Remove all entries from collection a that are in collection b and return a new collection.
+	 */
 	public static <T> Collection<T> removeAll(Collection<T> a, Collection<T> b) {
 		Collection<T> c = new ArrayList<T>(a);
 		c.removeAll(b);
