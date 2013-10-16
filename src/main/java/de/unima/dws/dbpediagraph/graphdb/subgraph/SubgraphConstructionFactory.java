@@ -4,11 +4,11 @@ import com.tinkerpop.blueprints.Graph;
 
 public final class SubgraphConstructionFactory {
 	public static SubgraphConstruction newDefaultImplementation() {
-		return new SubgraphConstructionNavigliNew(SubgraphConstructionSettings.getDefault());
+		return new SubgraphConstructionDirected(SubgraphConstructionSettings.getDefault());
 	}
 
 	public static SubgraphConstruction newDefaultImplementation(Graph graph, SubgraphConstructionSettings settings) {
-		return new SubgraphConstructionNavigliNew(graph, settings);
+		return new SubgraphConstructionDirected(graph, settings);
 	}
 
 	// Suppress default constructor for noninstantiability

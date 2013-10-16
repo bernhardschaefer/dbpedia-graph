@@ -51,4 +51,9 @@ public class KPPCentrality implements LocalDisambiguator {
 		return weightedUris;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+
 }

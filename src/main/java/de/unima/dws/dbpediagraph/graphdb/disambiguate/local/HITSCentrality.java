@@ -30,4 +30,8 @@ public class HITSCentrality implements LocalDisambiguator {
 		return wUris;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

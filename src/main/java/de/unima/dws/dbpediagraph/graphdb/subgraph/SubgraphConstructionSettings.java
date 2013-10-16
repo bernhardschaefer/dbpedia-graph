@@ -8,22 +8,15 @@ import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 public final class SubgraphConstructionSettings {
 
 	// parameters are initialized to default values
+	EdgeFilter edgeFilter = new DummyEdgeFilter();
+	Direction direction = Direction.OUT; // TODO implement using direction in findPath()
 	/**
 	 * "the distance between two vertices in a graph is the <i>number of edges</i> in a shortest path connecting them."
 	 * 
 	 * @see <a
 	 *      href="http://en.wikipedia.org/wiki/Distance_(graph_theory)">http://en.wikipedia.org/wiki/Distance_(graph_theory)</a>
 	 */
-	int maxDistance = DEFAULT_MAX_DISTANCE;
-
-	EdgeFilter edgeFilter = DEFAULT_EDGE_FILTER;
-
-	// TODO implement using direction in findPath()
-	Direction direction = DEFAULT_DIRECTION;
-
-	private static final int DEFAULT_MAX_DISTANCE = 5;
-	private static final EdgeFilter DEFAULT_EDGE_FILTER = new DummyEdgeFilter();
-	private static final Direction DEFAULT_DIRECTION = Direction.OUT;
+	int maxDistance = 5;
 
 	private static final SubgraphConstructionSettings DEFAULT = new SubgraphConstructionSettings();
 

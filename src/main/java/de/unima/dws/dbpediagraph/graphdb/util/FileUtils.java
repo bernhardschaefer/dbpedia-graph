@@ -144,7 +144,7 @@ public final class FileUtils {
 		Collection<Collection<String>> wordsSenses = new ArrayList<>();
 		List<String> lines = readRelevantLinesFromFile(clazz, fileName);
 		for (String line : lines) {
-			String[] wordSenses = line.split(" ");
+			String[] wordSenses = line.split("\\s+");
 			for (int i = 0; i < wordSenses.length; i++) {
 				wordSenses[i] = uriPrefix + wordSenses[i];
 			}

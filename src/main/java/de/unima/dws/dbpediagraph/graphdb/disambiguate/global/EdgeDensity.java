@@ -29,4 +29,8 @@ public class EdgeDensity extends AbstractGlobalDisambiguator implements GlobalDi
 		return totalEdges / edgesCompleteGraph;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

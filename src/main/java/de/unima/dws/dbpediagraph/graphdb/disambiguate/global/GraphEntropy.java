@@ -38,4 +38,9 @@ public class GraphEntropy extends AbstractGlobalDisambiguator implements GlobalD
 		return graphEntropy;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+
 }

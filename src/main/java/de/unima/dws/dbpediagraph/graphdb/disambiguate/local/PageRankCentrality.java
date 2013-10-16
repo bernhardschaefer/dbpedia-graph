@@ -20,6 +20,8 @@ public class PageRankCentrality implements LocalDisambiguator {
 	private final double alpha;
 	private final int iterations;
 
+	private String name;
+
 	public PageRankCentrality(double alpha) {
 		this.alpha = alpha;
 		this.iterations = DEFAULT_ITERATIONS;
@@ -51,6 +53,15 @@ public class PageRankCentrality implements LocalDisambiguator {
 			wSenses.add(new WeightedSense(sense, rank));
 		}
 		return wSenses;
+	}
+
+	@Override
+	public String toString() {
+		if (name == null) {
+			name = new StringBuilder(this.getClass().getSimpleName()).append(" (alpha: ").append(alpha)
+					.append(", iterations: ").append(iterations).append(")").toString();
+		}
+		return name;
 	}
 
 }

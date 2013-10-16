@@ -42,4 +42,9 @@ public class Compactness extends AbstractGlobalDisambiguator implements GlobalDi
 		return compactness;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+
 }

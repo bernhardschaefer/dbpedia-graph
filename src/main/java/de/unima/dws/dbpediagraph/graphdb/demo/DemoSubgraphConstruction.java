@@ -45,19 +45,19 @@ public class DemoSubgraphConstruction {
 		Graph graph = GraphProvider.getDBpediaGraph();
 
 		Collection<Collection<String>> wordsSensesString = FileUtils.readUrisFromFile(DemoSubgraphConstruction.class,
-				"/sentence-test", GraphConfig.DBPEDIA_RESOURCE_PREFIX);
+				"/napoleon-sentence-test", GraphConfig.DBPEDIA_RESOURCE_PREFIX);
 		Collection<Collection<Vertex>> wordsSenses = GraphUtil.getWordsVerticesByUri(graph, wordsSensesString);
 		Collection<String> allSensesString = CollectionUtils.combine(wordsSensesString);
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
-				new SubgraphConstructionSettings().maxDistance(5));
+				new SubgraphConstructionSettings().maxDistance(4));
 		Graph subGraph = sc.createSubgraphFromSenses(wordsSenses);
 
 		Disambiguator[] disambiguators = new LocalDisambiguator[] { new BetweennessCentrality(),
 				new DegreeCentrality(Direction.BOTH), new HITSCentrality(), new KPPCentrality(),
 				new PageRankCentrality(0.08) };
 		for (Disambiguator d : disambiguators) {
-			System.out.println(d.getClass().getSimpleName());
+			System.out.println(d);
 			List<WeightedSense> weightedSenses = d.disambiguate(allSensesString, subGraph);
 			Collections.sort(weightedSenses);
 			for (WeightedSense sense : weightedSenses) {

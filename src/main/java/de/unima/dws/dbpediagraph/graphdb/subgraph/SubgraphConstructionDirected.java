@@ -31,21 +31,19 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
  * @author Bernhard Schäfer
  * 
  */
-class SubgraphConstructionNavigliNew implements SubgraphConstruction {
-	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNavigliNew.class);
+class SubgraphConstructionDirected implements SubgraphConstruction {
+	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionDirected.class);
 
 	private Graph graph;
-
 	private final SubgraphConstructionSettings settings;
-
 	private int traversedNodes;
 
-	public SubgraphConstructionNavigliNew(Graph graph, SubgraphConstructionSettings settings) {
+	public SubgraphConstructionDirected(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
 		this.settings = settings;
 	}
 
-	public SubgraphConstructionNavigliNew(SubgraphConstructionSettings settings) {
+	public SubgraphConstructionDirected(SubgraphConstructionSettings settings) {
 		this.settings = settings;
 	}
 
@@ -139,9 +137,8 @@ class SubgraphConstructionNavigliNew implements SubgraphConstruction {
 		GraphUtil.addVerticesByUrisOfVertices(subGraph, allSenses);
 		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, edges);
 
-		logger.info("subgraph construction. time {} sec., traversed nodes: {}, maxDepth: {}, direction-mode: {}",
-				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, settings.maxDistance,
-				settings.direction);
+		logger.info("subgraph construction. time {} sec., traversed nodes: {}, maxDepth: {}",
+				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, settings.maxDistance);
 		return subGraph;
 	}
 
@@ -199,7 +196,7 @@ class SubgraphConstructionNavigliNew implements SubgraphConstruction {
 				continue;
 			}
 
-			for (Edge edge : next.getEdges(settings.direction)) {
+			for (Edge edge : next.getEdges(Direction.OUT)) {
 				if (!settings.edgeFilter.isValidEdge(edge)) {
 					// check if edge is relevant for subgraph
 					continue;

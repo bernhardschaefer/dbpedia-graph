@@ -48,4 +48,9 @@ public class DegreeCentrality implements LocalDisambiguator {
 		return weightedSenses;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " (direction: " + direction + " )";
+	}
+
 }
