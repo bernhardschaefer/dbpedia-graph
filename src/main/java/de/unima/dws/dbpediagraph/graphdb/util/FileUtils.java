@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -136,6 +137,20 @@ public final class FileUtils {
 				iter.remove();
 		}
 		return lines;
+	}
+
+	public static Collection<Collection<String>> readUrisFromFile(Class<?> clazz, String fileName, String uriPrefix)
+			throws IOException, URISyntaxException {
+		Collection<Collection<String>> wordsSenses = new ArrayList<>();
+		List<String> lines = readRelevantLinesFromFile(clazz, fileName);
+		for (String line : lines) {
+			String[] wordSenses = line.split(" ");
+			for (int i = 0; i < wordSenses.length; i++) {
+				wordSenses[i] = uriPrefix + wordSenses[i];
+			}
+			wordsSenses.add(Arrays.asList(wordSenses));
+		}
+		return wordsSenses;
 	}
 
 	// Suppress default constructor for noninstantiability

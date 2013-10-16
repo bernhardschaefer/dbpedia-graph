@@ -38,6 +38,8 @@ class SubgraphConstructionNavigliNew implements SubgraphConstruction {
 
 	private final SubgraphConstructionSettings settings;
 
+	private int traversedNodes;
+
 	public SubgraphConstructionNavigliNew(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
 		this.settings = settings;
@@ -137,7 +139,9 @@ class SubgraphConstructionNavigliNew implements SubgraphConstruction {
 		GraphUtil.addVerticesByUrisOfVertices(subGraph, allSenses);
 		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, edges);
 
-		logger.info("Total time for creating subgraph: {} sec.", (System.currentTimeMillis() - startTime) / 1000.0);
+		logger.info("subgraph construction. time {} sec., traversed nodes: {}, maxDepth: {}, direction-mode: {}",
+				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, settings.maxDistance,
+				settings.direction);
 		return subGraph;
 	}
 
@@ -159,8 +163,8 @@ class SubgraphConstructionNavigliNew implements SubgraphConstruction {
 	 */
 	private void performDepthFirstSearch(Vertex start, Collection<Vertex> otherSenses, Set<Vertex> vertices,
 			Set<Edge> edges) {
-		logger.info("");
-		logger.info("DFS starting point: vid: {} uri: {}", start.getId(), start.getProperty(GraphConfig.URI_PROPERTY));
+		logger.debug("");
+		logger.debug("DFS starting point: vid: {} uri: {}", start.getId(), start.getProperty(GraphConfig.URI_PROPERTY));
 
 		Stack<Vertex> stack = new Stack<>();
 		// track the path we used
@@ -175,6 +179,7 @@ class SubgraphConstructionNavigliNew implements SubgraphConstruction {
 		visited.add(start);
 		while (!stack.isEmpty()) {
 			Vertex next = stack.pop();
+			traversedNodes++;
 
 			// check limit
 			int depthNext = vertexDepth.get(next);
@@ -226,8 +231,8 @@ class SubgraphConstructionNavigliNew implements SubgraphConstruction {
 		// E = E.append({{v,v1},...,{vk,v'}})
 		edges.addAll(path);
 
-		logger.info("Found sense vid: {} uri: {}", end.getId(), end.getProperty(GraphConfig.URI_PROPERTY));
-		logger.info(GraphPrinter.toStringPath(path, start, end));
+		logger.debug("Found sense vid: {} uri: {}", end.getId(), end.getProperty(GraphConfig.URI_PROPERTY));
+		logger.debug(GraphPrinter.toStringPath(path, start, end));
 
 	}
 

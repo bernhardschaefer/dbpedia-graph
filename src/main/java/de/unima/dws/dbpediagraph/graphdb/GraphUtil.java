@@ -209,6 +209,15 @@ public final class GraphUtil {
 		return vertices;
 	}
 
+	public static Collection<Collection<Vertex>> getWordsVerticesByUri(Graph graph,
+			Collection<Collection<String>> wordsSensesString) {
+		Collection<Collection<Vertex>> wordVertices = new ArrayList<>();
+		for (Collection<String> uris : wordsSensesString) {
+			wordVertices.add(getVerticesByUri(graph, uris));
+		}
+		return wordVertices;
+	}
+
 	public static void removeVerticesWithoutUri(Graph graph) {
 		for (Vertex v : graph.getVertices()) {
 			String uriProperty = v.getProperty(GraphConfig.URI_PROPERTY);

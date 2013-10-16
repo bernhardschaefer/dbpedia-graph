@@ -23,7 +23,7 @@
 	</logger>
 	
 	<logger name="de.unima.dws.dbpediagraph.graphdb.subgraph">
-		<level value="warn" />
+		<level value="info" />
 	</logger>
 	
 

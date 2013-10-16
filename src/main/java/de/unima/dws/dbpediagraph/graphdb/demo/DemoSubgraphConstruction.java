@@ -1,16 +1,18 @@
 package de.unima.dws.dbpediagraph.graphdb.demo;
 
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.swing.JFrame;
 
 import org.apache.commons.collections15.Transformer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
@@ -19,50 +21,50 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.UriShortener;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.BetweennessCentrality;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.DegreeCentrality;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.KPPCentrality;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.PageRankCentrality;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
+import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
+import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 
 public class DemoSubgraphConstruction {
-	private static final Logger logger = LoggerFactory.getLogger(DemoSubgraphConstruction.class);
 
-	private static final int SIZE = 800;
-
-	public static Set<Vertex> getTestVertices(Graph graph) {
-		// http://en.wikipedia.org/wiki/Michael_I._Jordan
-		// Michael I. Jordan is a leading researcher in machine learning and
-		// artificial intelligence.
-
-		String[] resources = new String[] { "Michael_I._Jordan", "Michael_Jordan", "Machine_learning",
-				"Artificial_intelligence", "Basketball" };
-
-		Set<Vertex> vertices = new HashSet<>();
-		for (String resource : resources) {
-			String uri = GraphConfig.DBPEDIA_RESOURCE_PREFIX + resource;
-			vertices.add(GraphUtil.getVertexByUri(graph, uri));
-		}
-
-		return Collections.unmodifiableSet(vertices);
-	}
-
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, URISyntaxException {
 		Graph graph = GraphProvider.getDBpediaGraph();
 
-		int maxDepth = 3;
+		Collection<Collection<String>> wordsSensesString = FileUtils.readUrisFromFile(DemoSubgraphConstruction.class,
+				"/sentence-test", GraphConfig.DBPEDIA_RESOURCE_PREFIX);
+		Collection<Collection<Vertex>> wordsSenses = GraphUtil.getWordsVerticesByUri(graph, wordsSensesString);
+		Collection<String> allSensesString = CollectionUtils.combine(wordsSensesString);
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
-				new SubgraphConstructionSettings().maxDistance(maxDepth));
-		Set<Vertex> vertices = getTestVertices(graph);
+				new SubgraphConstructionSettings().maxDistance(5));
+		Graph subGraph = sc.createSubgraphFromSenses(wordsSenses);
 
-		long timeBefore = System.currentTimeMillis();
-		Graph subGraph = sc.createSubgraph(vertices);
-		logger.info(String.format(" time for subgraph construction with max depth %d --> %.2f sec ", maxDepth,
-				(System.currentTimeMillis() - timeBefore) / 1000.0));
-
-		// GraphPrinter.printGraphStatistics(subGraph);
+		Disambiguator[] disambiguators = new LocalDisambiguator[] { new BetweennessCentrality(),
+				new DegreeCentrality(Direction.BOTH), new HITSCentrality(), new KPPCentrality(),
+				new PageRankCentrality(0.08) };
+		for (Disambiguator d : disambiguators) {
+			System.out.println(d.getClass().getSimpleName());
+			List<WeightedSense> weightedSenses = d.disambiguate(allSensesString, subGraph);
+			Collections.sort(weightedSenses);
+			for (WeightedSense sense : weightedSenses) {
+				System.out.printf("  %s (%.2f)", UriShortener.shorten(sense.getSense()), sense.getWeight());
+			}
+			System.out.println();
+		}
 
 		visualizeGraph(subGraph);
 
@@ -74,9 +76,12 @@ public class DemoSubgraphConstruction {
 		GraphJung<Graph> graphJung = new GraphJung<>(graph);
 		// Layout<Vertex, Edge> layout = new CircleLayout<Vertex, Edge>(graphJung);
 		Layout<Vertex, Edge> layout = new ISOMLayout<Vertex, Edge>(graphJung);
-		layout.setSize(new Dimension(SIZE, SIZE));
+
+		int height = (int) (0.9 * GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height);
+		int width = (int) (0.9 * GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width);
+		layout.setSize(new Dimension(width, height));
 		BasicVisualizationServer<Vertex, Edge> viz = new BasicVisualizationServer<Vertex, Edge>(layout);
-		viz.setPreferredSize(new Dimension(SIZE, SIZE));
+		viz.setPreferredSize(new Dimension(width, height));
 
 		Transformer<Vertex, String> vertexLabelTransformer = new Transformer<Vertex, String>() {
 			@Override
