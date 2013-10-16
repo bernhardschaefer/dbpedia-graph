@@ -7,14 +7,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTestData;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class TestHITSCentrality {
 	private static LocalDisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
-		data = new LocalDisambiguationTestData(new HITSCentrality(), new SubgraphConstructionNavigliOld());
+		data = new LocalDisambiguationTestData(new HITSCentrality());
 	}
 
 	@AfterClass

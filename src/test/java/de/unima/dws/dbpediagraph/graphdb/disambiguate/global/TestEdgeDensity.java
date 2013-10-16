@@ -5,14 +5,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.GlobalDisambiguationTestData;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class TestEdgeDensity {
 	private static GlobalDisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
-		data = new GlobalDisambiguationTestData(new EdgeDensity(), new SubgraphConstructionNavigliOld());
+		data = new GlobalDisambiguationTestData(new EdgeDensity());
 	}
 
 	@AfterClass

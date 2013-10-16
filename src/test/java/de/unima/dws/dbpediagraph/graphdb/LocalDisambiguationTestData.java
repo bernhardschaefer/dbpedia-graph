@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class LocalDisambiguationTestData extends AbstractDisambiguationTestData {
 	private static final Logger logger = LoggerFactory.getLogger(LocalDisambiguationTestData.class);
@@ -21,6 +22,10 @@ public class LocalDisambiguationTestData extends AbstractDisambiguationTestData 
 
 	private final LocalDisambiguator disambiguator;
 	protected List<WeightedSense> weightedUris;
+
+	public LocalDisambiguationTestData(LocalDisambiguator disambiguator) {
+		this(disambiguator, SubgraphConstructionFactory.newDefaultImplementation());
+	}
 
 	public LocalDisambiguationTestData(LocalDisambiguator disambiguator, SubgraphConstruction subgraphConstruction) {
 		super(subgraphConstruction, NL_LOCAL_RESULTS, LOCAL_PACKAGE_NAME);

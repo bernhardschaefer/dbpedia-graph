@@ -12,7 +12,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 
-public class DFS {
+class DFS {
 	private static final int MAX_DEPTH = 3;
 
 	public void createSubgraph(Graph subgraph, List<Vertex> vertices, List<Edge> edges, Set<Vertex> done, int depth,

@@ -14,6 +14,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
+import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
 /**
  * Non-optimized {@link SubgraphConstruction} implementation. Performs a limited shortest-path search between all
@@ -22,7 +23,7 @@ import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
  * @author Bernhard Schäfer
  * 
  */
-public class SubgraphConstructionNaive implements SubgraphConstruction {
+class SubgraphConstructionNaive implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNaive.class);
 
 	/**
@@ -63,6 +64,11 @@ public class SubgraphConstructionNaive implements SubgraphConstruction {
 
 		logger.info("Total time for creating subgraph: {} sec.", (System.currentTimeMillis() - startTime) / 1000.0);
 		return subGraph;
+	}
+
+	@Override
+	public Graph createSubgraphFromSenses(Collection<Collection<Vertex>> wordsSenses) {
+		return createSubgraph(CollectionUtils.combine(wordsSenses));
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
+import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
 /**
@@ -32,7 +33,7 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
  */
 // TODO this is currently not working; still needs to figured out how to implement for directed and undirected subgraph
 // construction
-public class SubgraphConstructionNavigli extends TraversalAlgorithm implements SubgraphConstruction {
+class SubgraphConstructionNavigli extends TraversalAlgorithm implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNavigli.class);
 
 	public SubgraphConstructionNavigli(Graph graph) {
@@ -97,6 +98,11 @@ public class SubgraphConstructionNavigli extends TraversalAlgorithm implements S
 		logger.info("Total time for creating subgraph: {} sec.", (System.currentTimeMillis() - startTime) / 1000.0);
 		return subGraph;
 
+	}
+
+	@Override
+	public Graph createSubgraphFromSenses(Collection<Collection<Vertex>> wordsSenses) {
+		return createSubgraph(CollectionUtils.combine(wordsSenses));
 	}
 
 	private Set<Edge> getConnectedUntraversedEdges(Vertex current, EdgeFilter edgeFilter, Direction direction,

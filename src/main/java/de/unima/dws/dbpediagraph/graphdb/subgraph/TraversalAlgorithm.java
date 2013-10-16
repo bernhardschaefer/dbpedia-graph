@@ -3,7 +3,7 @@ package de.unima.dws.dbpediagraph.graphdb.subgraph;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 
-import de.unima.dws.dbpediagraph.graphdb.filter.DefaultEdgeFilter;
+import de.unima.dws.dbpediagraph.graphdb.filter.DummyEdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 
 /**
@@ -13,7 +13,7 @@ import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
  * @author Bernhard Schäfer
  * 
  */
-public abstract class TraversalAlgorithm {
+abstract class TraversalAlgorithm {
 	/**
 	 * The graph to traverse on.
 	 */
@@ -40,7 +40,7 @@ public abstract class TraversalAlgorithm {
 	/**
 	 * default value for {@link #edgeFilter}
 	 */
-	protected static final EdgeFilter DEFAULT_EDGE_FILTER = new DefaultEdgeFilter();
+	protected static final EdgeFilter DEFAULT_EDGE_FILTER = new DummyEdgeFilter();
 
 	/**
 	 * default value for {@link #direction}
@@ -62,7 +62,7 @@ public abstract class TraversalAlgorithm {
 	 * Convenience constructor using default values for non-provided fields.
 	 */
 	public TraversalAlgorithm(Graph graph, int maxDistance) {
-		this(graph, maxDistance, new DefaultEdgeFilter(), Direction.BOTH);
+		this(graph, maxDistance, new DummyEdgeFilter(), Direction.BOTH);
 	}
 
 	public TraversalAlgorithm(Graph graph, int maxDistance, EdgeFilter edgeFilter, Direction direction) {

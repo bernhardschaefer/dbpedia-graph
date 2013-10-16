@@ -13,6 +13,7 @@ import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class GlobalDisambiguationTestData extends AbstractDisambiguationTestData {
 	private static final Logger logger = LoggerFactory.getLogger(GlobalDisambiguationTestData.class);
@@ -27,6 +28,10 @@ public class GlobalDisambiguationTestData extends AbstractDisambiguationTestData
 
 	private final GlobalDisambiguator disambiguator;
 	private final SubgraphConstruction subgraphConstruction;
+
+	public GlobalDisambiguationTestData(GlobalDisambiguator disambiguator) {
+		this(disambiguator, SubgraphConstructionFactory.newDefaultImplementation());
+	}
 
 	public GlobalDisambiguationTestData(GlobalDisambiguator disambiguator, SubgraphConstruction subgraphConstruction) {
 		super(subgraphConstruction, NL_GLOBAL_RESULTS, GLOBAL_PACKAGE_NAME);

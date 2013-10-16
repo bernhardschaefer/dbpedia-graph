@@ -10,7 +10,7 @@ import org.openrdf.model.Statement;
  * @author Bernhard Schäfer
  * 
  */
-public class DBpediaRelaxedLoadingStatementFilter implements LoadingStatementFilter {
+class DBpediaRelaxedLoadingStatementFilter implements LoadingStatementFilter {
 
 	@Override
 	public boolean isValidStatement(Statement st) {

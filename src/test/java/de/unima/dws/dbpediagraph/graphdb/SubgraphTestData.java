@@ -66,7 +66,7 @@ public class SubgraphTestData {
 	private Collection<Vertex> parseAllWordsSenses(Graph graph) throws IOException, URISyntaxException {
 		List<Vertex> senses = new ArrayList<>();
 
-		List<String> senseStrings = FileUtils.readLinesFromFile(this.getClass(), NL_SENSES);
+		List<String> senseStrings = FileUtils.readRelevantLinesFromFile(this.getClass(), NL_SENSES);
 		for (String s : senseStrings) {
 			Vertex v = graph.getVertex(s);
 			senses.add(v);
@@ -78,8 +78,8 @@ public class SubgraphTestData {
 	private Graph parseTestGraph() throws IOException, URISyntaxException {
 		Graph graph = new TinkerGraph();
 
-		vertices = FileUtils.readLinesFromFile(this.getClass(), NL_VERTICES);
-		edges = FileUtils.readLinesFromFile(this.getClass(), NL_EDGES);
+		vertices = FileUtils.readRelevantLinesFromFile(this.getClass(), NL_VERTICES);
+		edges = FileUtils.readRelevantLinesFromFile(this.getClass(), NL_EDGES);
 
 		for (String v : vertices) {
 			Vertex vertex = graph.addVertex(v);

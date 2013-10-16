@@ -5,14 +5,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.GlobalDisambiguationTestData;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class TestCompactness {
 	private static GlobalDisambiguationTestData data;
 
 	@BeforeClass
 	public static void setUp() {
-		data = new GlobalDisambiguationTestData(new Compactness(), new SubgraphConstructionNavigliOld());
+		data = new GlobalDisambiguationTestData(new Compactness());
 	}
 
 	@AfterClass

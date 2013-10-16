@@ -25,6 +25,15 @@ public interface SubgraphConstruction {
 	public Graph createSubgraph(Collection<Vertex> senses);
 
 	/**
+	 * Create a subgraph based on the provided senses.
+	 * 
+	 * @param senses
+	 *            a collection of word senses contains the concatenations of all senses (e.g. drink1, ... , drink5;
+	 *            milk1, ..., milk4)for each content word (e.g. drink, milk),
+	 */
+	public Graph createSubgraphFromSenses(Collection<Collection<Vertex>> wordsSenses);
+
+	/**
 	 * Get the graph this algorithm is working on.
 	 */
 	public Graph getGraph();

@@ -25,15 +25,14 @@ import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
 /**
- * Depth-first search with a depth limit. This class is mostly based on
- * {@link DepthFirstAlgorithm}, but has been modified to support a maxDepth
- * constraint and fixed a {@link NullPointerException} bug that occurred when no
- * path was found.
+ * Depth-first search with a depth limit. This class is mostly based on {@link DepthFirstAlgorithm}, but has been
+ * modified to support a maxDepth constraint and fixed a {@link NullPointerException} bug that occurred when no path was
+ * found.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public class LimitedDFS extends TraversalAlgorithm implements SearchAlgorithm {
+class LimitedDFS extends TraversalAlgorithm implements SearchAlgorithm {
 	private static final Logger logger = LoggerFactory.getLogger(LimitedDFS.class);
 
 	public LimitedDFS(Graph graph) {

@@ -12,7 +12,7 @@ import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
  * @author Bernhard Schäfer
  * 
  */
-public class DBpediaResourceLoadingStatementFilter implements LoadingStatementFilter {
+class DBpediaResourceLoadingStatementFilter implements LoadingStatementFilter {
 
 	@Override
 	public boolean isValidStatement(Statement st) {

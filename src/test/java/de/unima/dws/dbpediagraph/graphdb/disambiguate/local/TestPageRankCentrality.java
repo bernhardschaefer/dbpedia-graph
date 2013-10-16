@@ -7,7 +7,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTestData;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigliOld;
 
 public class TestPageRankCentrality {
 	private static LocalDisambiguationTestData data;
@@ -15,7 +14,7 @@ public class TestPageRankCentrality {
 	@BeforeClass
 	public static void setUp() {
 		double alpha = 0.15;
-		data = new LocalDisambiguationTestData(new PageRankCentrality(alpha), new SubgraphConstructionNavigliOld());
+		data = new LocalDisambiguationTestData(new PageRankCentrality(alpha));
 	}
 
 	@AfterClass

@@ -32,21 +32,21 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
  * @author Bernhard Schäfer
  * 
  */
-public class SubgraphConstructionNavigliOld extends TraversalAlgorithm implements SubgraphConstruction {
-	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNavigliOld.class);
+class SubgraphConstructionNavigliNew extends TraversalAlgorithm implements SubgraphConstruction {
+	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNavigliNew.class);
 
-	public SubgraphConstructionNavigliOld() {
+	public SubgraphConstructionNavigliNew() {
 	}
 
-	public SubgraphConstructionNavigliOld(Graph graph) {
+	public SubgraphConstructionNavigliNew(Graph graph) {
 		super(graph);
 	}
 
-	public SubgraphConstructionNavigliOld(Graph graph, int maxDistance) {
+	public SubgraphConstructionNavigliNew(Graph graph, int maxDistance) {
 		super(graph, maxDistance);
 	}
 
-	public SubgraphConstructionNavigliOld(Graph graph, int maxDistance, EdgeFilter edgeFilter, Direction direction) {
+	public SubgraphConstructionNavigliNew(Graph graph, int maxDistance, EdgeFilter edgeFilter, Direction direction) {
 		super(graph, maxDistance, edgeFilter, direction);
 	}
 
@@ -74,6 +74,19 @@ public class SubgraphConstructionNavigliOld extends TraversalAlgorithm implement
 						v.getProperty(GraphConfig.URI_PROPERTY)));
 			}
 		}
+	}
+
+	private void checkValidWordsSenses(Collection<Collection<Vertex>> wordsSenses) {
+		if (wordsSenses == null) {
+			throw new NullPointerException("The senses collection cannot be null.");
+		}
+		if (wordsSenses.size() == 0) {
+			throw new IllegalArgumentException("The senses collection cannot be empty.");
+		}
+		for (Collection<Vertex> senses : wordsSenses) {
+			checkValidSenses(senses);
+		}
+
 	}
 
 	@Override
@@ -104,7 +117,31 @@ public class SubgraphConstructionNavigliOld extends TraversalAlgorithm implement
 
 	@Override
 	public Graph createSubgraphFromSenses(Collection<Collection<Vertex>> wordsSenses) {
-		return createSubgraph(CollectionUtils.combine(wordsSenses));
+		checkValidWordsSenses(wordsSenses);
+		long startTime = System.currentTimeMillis();
+
+		// initialize
+		// V = senses
+		Set<Vertex> vertices = new HashSet<>();
+		// E = {}
+		Set<Edge> edges = new HashSet<>();
+
+		Collection<Vertex> allSenses = CollectionUtils.combine(wordsSenses);
+		for (Collection<Vertex> senses : wordsSenses) {
+			Collection<Vertex> otherSenses = CollectionUtils.removeAll(allSenses, senses);
+			for (Vertex v : senses) {
+				// perform a DFS for the sense
+				performDepthFirstSearch(v, otherSenses, vertices, edges);
+			}
+		}
+
+		// build sub graph based on V and E
+		Graph subGraph = GraphProvider.newInMemoryGraph();
+		GraphUtil.addVerticesByUrisOfVertices(subGraph, allSenses);
+		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, edges);
+
+		logger.info("Total time for creating subgraph: {} sec.", (System.currentTimeMillis() - startTime) / 1000.0);
+		return subGraph;
 	}
 
 	/**
@@ -118,7 +155,8 @@ public class SubgraphConstructionNavigliOld extends TraversalAlgorithm implement
 	 *            the other senses as possible target nodes.
 	 * @return the found path
 	 */
-	private void performDepthFirstSearch(Vertex start, Collection<Vertex> senses, Set<Vertex> vertices, Set<Edge> edges) {
+	private void performDepthFirstSearch(Vertex start, Collection<Vertex> otherSenses, Set<Vertex> vertices,
+			Set<Edge> edges) {
 		logger.info("");
 		logger.info("DFS starting point: vid: {} uri: {}", start.getId(), start.getProperty(GraphConfig.URI_PROPERTY));
 
@@ -144,19 +182,22 @@ public class SubgraphConstructionNavigliOld extends TraversalAlgorithm implement
 				continue;
 			}
 
-			if (!next.equals(start) && senses.contains(next)) {
+			if (otherSenses.contains(next)) { // we found a sense of another word
 				processFoundPath(start, next, vertices, edges, previousMap);
 			}
-			if (vertices.contains(next) && !senses.contains(next)) {
+			if (vertices.contains(next) && !otherSenses.contains(next)) {
 				// special case: we have a child belongs to a path already
 				processFoundPath(start, next, vertices, edges, previousMap);
 				// continue since we don't want to further explore on this vertex
 				continue;
 			}
 
-			edgeFilter.setIterator(next.getEdges(direction).iterator());
-			for (Edge edge : edgeFilter) {
-				Vertex child = edge.getVertex(Direction.IN);
+			for (Edge edge : next.getEdges(direction)) {
+				if (!edgeFilter.isValidEdge(edge)) {
+					// check if edge is relevant for subgraph
+					continue;
+				}
+				Vertex child = GraphUtil.getOtherVertex(edge, next);
 				if (!visited.contains(child) || vertices.contains(child)) {
 					// previous map edge is overwritten in case we find another path
 					// TODO check if this behavior is problematic

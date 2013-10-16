@@ -56,7 +56,7 @@ public final class FileUtils {
 
 		Map<String, Map<Class<?>, Double>> results = new HashMap<>();
 
-		List<String> lines = FileUtils.readLinesFromFile(clazz, fileName);
+		List<String> lines = FileUtils.readRelevantLinesFromFile(clazz, fileName);
 		if (lines.isEmpty())
 			throw new RuntimeException(fileName + "file shouldnt be empty.");
 
@@ -124,7 +124,7 @@ public final class FileUtils {
 	 * @param clazz
 	 *            the class whose classpath will be used.
 	 */
-	public static List<String> readLinesFromFile(Class<?> clazz, String fileName) throws IOException,
+	public static List<String> readRelevantLinesFromFile(Class<?> clazz, String fileName) throws IOException,
 			URISyntaxException {
 		URI uri = clazz.getResource(fileName).toURI();
 		List<String> lines = Files.readAllLines(Paths.get(uri), StandardCharsets.UTF_8);

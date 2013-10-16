@@ -5,17 +5,17 @@ import java.util.Iterator;
 import com.tinkerpop.blueprints.Edge;
 
 /**
- * Abstract edge filter implementation. Implementing classes only need to
- * implement the method {@link #isValidEdge(Edge)}.
+ * Abstract edge filter implementation. Implementing classes only need to implement the method
+ * {@link #isValidEdge(Edge)}.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public abstract class AbstractEdgeFilter implements EdgeFilter {
+abstract class AbstractEdgeFilter implements EdgeFilter {
 
 	/**
-	 * Iterator implementation. For each request it continues iterating on the
-	 * provided iterator until {@link #isValidEdge(Edge)} is satisfied.
+	 * Iterator implementation. For each request it continues iterating on the provided iterator until
+	 * {@link #isValidEdge(Edge)} is satisfied.
 	 * 
 	 * @author Bernhard Schäfer
 	 * 

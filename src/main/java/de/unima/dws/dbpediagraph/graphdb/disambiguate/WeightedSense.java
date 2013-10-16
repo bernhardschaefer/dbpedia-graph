@@ -1,11 +1,16 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 
+/**
+ * Immutable weighted sense class consisting of a sense (DBpedia Uri) of a word and an according weight.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class WeightedSense implements Comparable<WeightedSense> {
-	private String sense;
-	private double weight;
+	private final String sense;
+	private final double weight;
 
 	public WeightedSense(String sense, double weight) {
-		super();
 		this.sense = sense;
 		this.weight = weight;
 	}
@@ -27,14 +32,6 @@ public class WeightedSense implements Comparable<WeightedSense> {
 
 	public double getWeight() {
 		return weight;
-	}
-
-	public void setSense(String sense) {
-		this.sense = sense;
-	}
-
-	public void setWeight(double weight) {
-		this.weight = weight;
 	}
 
 	@Override

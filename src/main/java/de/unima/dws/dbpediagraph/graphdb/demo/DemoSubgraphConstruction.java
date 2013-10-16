@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.swing.JFrame;
 
 import org.apache.commons.collections15.Transformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
@@ -24,6 +26,8 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 
 public class DemoSubgraphConstruction {
+	private static final Logger logger = LoggerFactory.getLogger(DemoSubgraphConstruction.class);
+
 	private static final int SIZE = 800;
 
 	public static Set<Vertex> getTestVertices(Graph graph) {
@@ -46,10 +50,17 @@ public class DemoSubgraphConstruction {
 	public static void main(String[] args) {
 		Graph graph = GraphProvider.getDBpediaGraph();
 
+		int maxDepth = 5;
+
 		// SubgraphConstruction sc = new SubgraphConstructionNaive(graph);
-		SubgraphConstruction sc = new SubgraphConstructionNavigliOld(graph, 3);
+		SubgraphConstruction sc = new SubgraphConstructionNavigliOld(graph, maxDepth);
 		Set<Vertex> vertices = getTestVertices(graph);
+
+		long timeBefore = System.currentTimeMillis();
 		Graph subGraph = sc.createSubgraph(vertices);
+		logger.info(String.format(" time for subgraph construction with max depth %d --> %.2f sec ", maxDepth,
+				(System.currentTimeMillis() - timeBefore) / 1000.0));
+
 		// GraphPrinter.printGraphStatistics(subGraph);
 
 		visualizeGraph(subGraph);

@@ -7,7 +7,6 @@ public class WeightedSenseAssignments implements Comparable<WeightedSenseAssignm
 	private final double weight;
 
 	public WeightedSenseAssignments(Set<String> senseAssignments, double weight) {
-		super();
 		this.senseAssignments = senseAssignments;
 		this.weight = weight;
 	}

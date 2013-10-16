@@ -5,16 +5,16 @@ import java.util.Iterator;
 import com.tinkerpop.blueprints.Edge;
 
 /**
- * Default edge filter that yields all edges as valid.
+ * Dummy edge filter that yields all edges as valid.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public class DefaultEdgeFilter extends AbstractEdgeFilter {
-	public DefaultEdgeFilter() {
+public class DummyEdgeFilter extends AbstractEdgeFilter {
+	public DummyEdgeFilter() {
 	}
 
-	public DefaultEdgeFilter(Iterable<Edge> iterable) {
+	public DummyEdgeFilter(Iterable<Edge> iterable) {
 		super(iterable);
 	}
 

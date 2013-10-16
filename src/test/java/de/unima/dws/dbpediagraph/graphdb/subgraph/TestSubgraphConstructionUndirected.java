@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 
-import de.unima.dws.dbpediagraph.graphdb.filter.DefaultEdgeFilter;
+import de.unima.dws.dbpediagraph.graphdb.filter.DummyEdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigli;
 
@@ -23,7 +23,7 @@ public class TestSubgraphConstructionUndirected extends AbstractTestSubgraphCons
 
 	@Before
 	public void setUp() throws Exception {
-		SubgraphConstruction scUndirected = new SubgraphConstructionNavigli(graph, 5, new DefaultEdgeFilter(),
+		SubgraphConstruction scUndirected = new SubgraphConstructionNavigli(graph, 5, new DummyEdgeFilter(),
 				Direction.BOTH);
 		undirectedSubgraph = scUndirected.createSubgraph(senses);
 	}
