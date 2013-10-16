@@ -19,7 +19,6 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
-import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
@@ -32,22 +31,24 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
  * @author Bernhard Schäfer
  * 
  */
-class SubgraphConstructionNavigliNew extends TraversalAlgorithm implements SubgraphConstruction {
+class SubgraphConstructionNavigliNew implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionNavigliNew.class);
 
+	private Graph graph;
+
+	private final SubgraphConstructionSettings settings;
+
 	public SubgraphConstructionNavigliNew() {
+		settings = SubgraphConstructionSettings.getDefault();
 	}
 
 	public SubgraphConstructionNavigliNew(Graph graph) {
-		super(graph);
+		this(graph, SubgraphConstructionSettings.getDefault());
 	}
 
-	public SubgraphConstructionNavigliNew(Graph graph, int maxDistance) {
-		super(graph, maxDistance);
-	}
-
-	public SubgraphConstructionNavigliNew(Graph graph, int maxDistance, EdgeFilter edgeFilter, Direction direction) {
-		super(graph, maxDistance, edgeFilter, direction);
+	public SubgraphConstructionNavigliNew(Graph graph, SubgraphConstructionSettings settings) {
+		this.graph = graph;
+		this.settings = settings;
 	}
 
 	private void addIntermediateNodes(List<Edge> path, Set<Vertex> vertices) {
@@ -144,6 +145,11 @@ class SubgraphConstructionNavigliNew extends TraversalAlgorithm implements Subgr
 		return subGraph;
 	}
 
+	@Override
+	public Graph getGraph() {
+		return graph;
+	}
+
 	/**
 	 * Perform a limited depth-first-search searching for other senses.
 	 * 
@@ -176,7 +182,7 @@ class SubgraphConstructionNavigliNew extends TraversalAlgorithm implements Subgr
 
 			// check limit
 			int depthNext = vertexDepth.get(next);
-			if (depthNext > maxDistance) {
+			if (depthNext > settings.maxDistance) {
 				// logger.debug("vid: {} uri: {} out of limit", next.getId(),
 				// next.getProperty(GraphConfig.URI_PROPERTY));
 				continue;
@@ -192,8 +198,8 @@ class SubgraphConstructionNavigliNew extends TraversalAlgorithm implements Subgr
 				continue;
 			}
 
-			for (Edge edge : next.getEdges(direction)) {
-				if (!edgeFilter.isValidEdge(edge)) {
+			for (Edge edge : next.getEdges(settings.direction)) {
+				if (!settings.edgeFilter.isValidEdge(edge)) {
 					// check if edge is relevant for subgraph
 					continue;
 				}
@@ -227,6 +233,11 @@ class SubgraphConstructionNavigliNew extends TraversalAlgorithm implements Subgr
 		logger.info("Found sense vid: {} uri: {}", end.getId(), end.getProperty(GraphConfig.URI_PROPERTY));
 		logger.info(GraphPrinter.toStringPath(path, start, end));
 
+	}
+
+	@Override
+	public void setGraph(Graph graph) {
+		this.graph = graph;
 	}
 
 }

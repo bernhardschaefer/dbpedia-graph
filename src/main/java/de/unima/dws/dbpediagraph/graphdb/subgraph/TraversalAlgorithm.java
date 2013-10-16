@@ -13,6 +13,7 @@ import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
  * @author Bernhard Schäfer
  * 
  */
+@Deprecated
 abstract class TraversalAlgorithm {
 	/**
 	 * The graph to traverse on.
