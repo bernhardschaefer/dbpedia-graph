@@ -21,7 +21,7 @@ public class TestSubgraphConstructionUndirected extends AbstractTestSubgraphCons
 	public void setUp() throws Exception {
 		SubgraphConstruction scUndirected = SubgraphConstructionFactory.newDefaultImplementation(data.graph,
 				new SubgraphConstructionSettings().direction(Direction.BOTH));
-		undirectedSubgraph = scUndirected.createSubgraphFromSenses(data.allWordsSenses);
+		undirectedSubgraph = scUndirected.createSubgraph(data.allWordsSenses);
 	}
 
 	@After

@@ -13,7 +13,7 @@ public class TestSubgraphConstructionDirected extends AbstractTestSubgraphConstr
 	public void setUp() {
 		SubgraphConstruction scDirected = SubgraphConstructionFactory.newDefaultImplementation(data.graph,
 				SubgraphConstructionSettings.getDefault());
-		directedSubgraph = scDirected.createSubgraphFromSenses(data.allWordsSenses);
+		directedSubgraph = scDirected.createSubgraph(data.allWordsSenses);
 	}
 
 	@After

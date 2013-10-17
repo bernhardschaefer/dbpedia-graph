@@ -51,7 +51,7 @@ public class GlobalDisambiguationTestData extends AbstractDisambiguationTestData
 					senseAssignments));
 
 			// create sense graph based on the sense assignments
-			Graph sensegraph = subgraphConstruction.createSubgraphFromSenses(wordsSenses);
+			Graph sensegraph = subgraphConstruction.createSubgraph(wordsSenses);
 			double actual = disambiguator.globalConnectivityMeasure(senseAssignments, sensegraph);
 			sensegraph.shutdown();
 

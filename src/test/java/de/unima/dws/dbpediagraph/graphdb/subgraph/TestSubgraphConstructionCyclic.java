@@ -38,7 +38,7 @@ public class TestSubgraphConstructionCyclic {
 
 		Collection<Collection<Vertex>> wordsSenses = GraphUtil.getWordsVerticesByUri(graph,
 				FileUtils.readUrisFromFile(getClass(), PKG + "/senses", ""));
-		subGraph = sc.createSubgraphFromSenses(wordsSenses);
+		subGraph = sc.createSubgraph(wordsSenses);
 
 		expectedVertices = FileUtils.readRelevantLinesFromFile(getClass(), PKG + "/subgraph-vertices");
 		expectedEdges = FileUtils.readRelevantLinesFromFile(getClass(), PKG + "/subgraph-edges");

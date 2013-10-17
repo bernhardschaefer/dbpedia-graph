@@ -48,12 +48,7 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 	}
 
 	@Override
-	public Graph createSubgraph(Collection<Vertex> senses) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Graph createSubgraphFromSenses(Collection<Collection<Vertex>> wordsSenses) {
+	public Graph createSubgraph(Collection<Collection<Vertex>> wordsSenses) {
 		SubgraphConstructionHelper.checkValidWordsSenses(graph, wordsSenses);
 		long startTime = System.currentTimeMillis();
 

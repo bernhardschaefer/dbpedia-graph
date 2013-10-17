@@ -68,7 +68,7 @@ public class DemoSubgraphConstruction {
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE));
-		Graph subGraph = sc.createSubgraphFromSenses(wordsSenses);
+		Graph subGraph = sc.createSubgraph(wordsSenses);
 
 		Disambiguator[] disambiguators = new LocalDisambiguator[] { new BetweennessCentrality(),
 				new DegreeCentrality(Direction.BOTH), new HITSCentrality(), new KPPCentrality(),

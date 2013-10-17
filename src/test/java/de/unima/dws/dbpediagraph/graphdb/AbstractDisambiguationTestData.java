@@ -27,7 +27,7 @@ public abstract class AbstractDisambiguationTestData {
 			String packageNameDisambiguator) {
 		testData = SubgraphTestData.newNavigliTestData();
 		subgraphConstruction.setGraph(testData.graph);
-		subgraph = subgraphConstruction.createSubgraphFromSenses(testData.allWordsSenses);
+		subgraph = subgraphConstruction.createSubgraph(testData.allWordsSenses);
 
 		measureResults = createMeasureResults(testResultsFileName, packageNameDisambiguator);
 	}
