@@ -29,6 +29,6 @@ public class TestKPPCentrality {
 
 	@Test
 	public void testWeightedUrisSize() {
-		assertEquals(data.getWeightedUris().size(), data.getSenses().size());
+		assertEquals(data.getWeightedUris().size(), data.allSenses.size());
 	}
 }

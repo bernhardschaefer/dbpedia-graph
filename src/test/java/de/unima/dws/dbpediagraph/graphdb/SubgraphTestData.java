@@ -2,9 +2,7 @@ package de.unima.dws.dbpediagraph.graphdb;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import com.tinkerpop.blueprints.Edge;
@@ -12,6 +10,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 
+import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
 public class SubgraphTestData {
@@ -25,18 +24,20 @@ public class SubgraphTestData {
 	/** Test edges from Navigli&Lapata (2010) */
 	private static final String NL_EDGES = "/nl-test.edges";
 
-	protected Graph graph;
+	public Graph graph;
 
-	protected Collection<Vertex> allWordsSenses;
+	public Collection<Collection<Vertex>> allWordsSenses;
+	public Collection<Vertex> allSenses;
 
-	protected List<String> vertices;
+	public List<String> vertices;
 
-	protected List<String> edges;
+	public List<String> edges;
 
 	public SubgraphTestData() {
 		try {
 			graph = parseTestGraph();
-			allWordsSenses = parseAllWordsSenses(graph);
+			allWordsSenses = FileUtils.parseAllWordsSenses(graph, NL_SENSES, getClass(), "");
+			allSenses = CollectionUtils.combine(allWordsSenses);
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException("Error while trying to construct test graph.", e);
 		}
@@ -45,34 +46,6 @@ public class SubgraphTestData {
 	public void close() {
 		if (graph != null)
 			graph.shutdown();
-	}
-
-	public List<String> getEdges() {
-		return edges;
-	}
-
-	public Graph getGraph() {
-		return graph;
-	}
-
-	public Collection<Vertex> getSenses() {
-		return allWordsSenses;
-	}
-
-	public List<String> getVertices() {
-		return vertices;
-	}
-
-	private Collection<Vertex> parseAllWordsSenses(Graph graph) throws IOException, URISyntaxException {
-		List<Vertex> senses = new ArrayList<>();
-
-		List<String> senseStrings = FileUtils.readRelevantLinesFromFile(this.getClass(), NL_SENSES);
-		for (String s : senseStrings) {
-			Vertex v = graph.getVertex(s);
-			senses.add(v);
-		}
-
-		return Collections.unmodifiableList(senses);
 	}
 
 	private Graph parseTestGraph() throws IOException, URISyntaxException {

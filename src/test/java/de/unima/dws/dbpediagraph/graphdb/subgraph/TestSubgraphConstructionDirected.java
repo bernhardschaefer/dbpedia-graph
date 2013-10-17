@@ -6,16 +6,14 @@ import org.junit.Test;
 
 import com.tinkerpop.blueprints.Graph;
 
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionNavigli;
-
 public class TestSubgraphConstructionDirected extends AbstractTestSubgraphConstruction {
 	private Graph directedSubgraph;
 
 	@Before
 	public void setUp() {
-		SubgraphConstruction scDirected = new SubgraphConstructionNavigli(graph);
-		directedSubgraph = scDirected.createSubgraph(senses);
+		SubgraphConstruction scDirected = SubgraphConstructionFactory.newDefaultImplementation(data.graph,
+				SubgraphConstructionSettings.getDefault());
+		directedSubgraph = scDirected.createSubgraphFromSenses(data.allWordsSenses);
 	}
 
 	@After

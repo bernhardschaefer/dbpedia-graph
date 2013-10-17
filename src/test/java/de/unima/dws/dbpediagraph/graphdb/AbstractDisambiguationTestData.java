@@ -25,7 +25,7 @@ public abstract class AbstractDisambiguationTestData extends SubgraphTestData {
 			String packageNameDisambiguator) {
 		super();
 		subgraphConstruction.setGraph(graph);
-		subgraph = subgraphConstruction.createSubgraph(allWordsSenses);
+		subgraph = subgraphConstruction.createSubgraphFromSenses(allWordsSenses);
 
 		measureResults = createMeasureResults(testResultsFileName, packageNameDisambiguator);
 	}

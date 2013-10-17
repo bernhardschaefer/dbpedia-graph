@@ -29,7 +29,7 @@ import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
  * @author Bernhard Schäfer
  * 
  */
-class SubgraphConstructionDirected implements SubgraphConstruction {
+class SubgraphConstructionDirectedOld implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionDirected.class);
 
 	private Graph graph;
@@ -38,18 +38,39 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 
 	private int traversedNodes;
 
-	public SubgraphConstructionDirected(Graph graph, SubgraphConstructionSettings settings) {
+	public SubgraphConstructionDirectedOld(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
 		this.settings = settings;
 	}
 
-	public SubgraphConstructionDirected(SubgraphConstructionSettings settings) {
+	public SubgraphConstructionDirectedOld(SubgraphConstructionSettings settings) {
 		this.settings = settings;
 	}
 
 	@Override
 	public Graph createSubgraph(Collection<Vertex> senses) {
-		throw new UnsupportedOperationException();
+		SubgraphConstructionHelper.checkValidSenses(graph, senses);
+		long startTime = System.currentTimeMillis();
+
+		// initialize
+		// V = senses
+		Set<Vertex> vertices = new HashSet<>();
+		// E = {}
+		Set<Edge> edges = new HashSet<>();
+
+		for (Vertex v : senses) {
+			// perform a DFS for the sense
+			performDepthFirstSearch(v, senses, vertices, edges);
+		}
+
+		// build sub graph based on V and E
+		Graph subGraph = GraphProvider.newInMemoryGraph();
+		GraphUtil.addVerticesByUrisOfVertices(subGraph, senses);
+		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, edges);
+
+		logger.info("Total time for creating subgraph: {} sec.", (System.currentTimeMillis() - startTime) / 1000.0);
+		return subGraph;
+
 	}
 
 	@Override
@@ -57,19 +78,25 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 		SubgraphConstructionHelper.checkValidWordsSenses(graph, wordsSenses);
 		long startTime = System.currentTimeMillis();
 
+		// initialize
+		// V = senses
+		Set<Vertex> vertices = new HashSet<>();
+		// E = {}
+		Set<Edge> edges = new HashSet<>();
+
 		Collection<Vertex> allSenses = CollectionUtils.combine(wordsSenses);
-
-		// initialize subgraph with all senses of all words
-		Graph subGraph = GraphProvider.newInMemoryGraph();
-		GraphUtil.addVerticesByUrisOfVertices(subGraph, allSenses);
-
-		// perform a DFS for each sense trying to find path to senses of other words
 		for (Collection<Vertex> senses : wordsSenses) {
 			Collection<Vertex> otherSenses = CollectionUtils.removeAll(allSenses, senses);
-			for (Vertex start : senses) {
-				performDepthFirstSearch(start, otherSenses, subGraph);
+			for (Vertex v : senses) {
+				// perform a DFS for the sense
+				performDepthFirstSearch(v, otherSenses, vertices, edges);
 			}
 		}
+
+		// build sub graph based on V and E
+		Graph subGraph = GraphProvider.newInMemoryGraph();
+		GraphUtil.addVerticesByUrisOfVertices(subGraph, allSenses);
+		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, edges);
 
 		logger.info("subgraph construction. time {} sec., traversed nodes: {}, maxDepth: {}",
 				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, settings.maxDistance);
@@ -82,17 +109,18 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 	}
 
 	/**
-	 * Performs a DFS starting at the start vertex. The goal is to find all paths within the max distance to the other
-	 * provided senses. Found paths are inserted into the subgraph.
+	 * Perform a limited depth-first-search searching for other senses.
 	 * 
 	 * @param start
-	 *            the vertex the DFS starts with
+	 *            the starting vertex
+	 * @param visited
+	 *            the vertex that have already been visited by other DFS iterations
 	 * @param otherSenses
-	 *            the target senses
-	 * @param subGraph
-	 *            the subgraph where the paths are inserted to
+	 *            the other senses as possible target nodes.
+	 * @return the found path
 	 */
-	private void performDepthFirstSearch(Vertex start, Collection<Vertex> otherSenses, Graph subGraph) {
+	private void performDepthFirstSearch(Vertex start, Collection<Vertex> otherSenses, Set<Vertex> vertices,
+			Set<Edge> edges) {
 		logger.debug("");
 		logger.debug("DFS starting point: vid: {} uri: {}", start.getId(), start.getProperty(GraphConfig.URI_PROPERTY));
 
@@ -114,16 +142,28 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 			// check limit
 			int depthNext = vertexDepth.get(next);
 			if (depthNext > settings.maxDistance) {
+				// logger.debug("vid: {} uri: {} out of limit", next.getId(),
+				// next.getProperty(GraphConfig.URI_PROPERTY));
 				continue;
 			}
 
 			if (otherSenses.contains(next)) { // we found a sense of another word
-				SubgraphConstructionHelper.processFoundPath(start, next, previousMap, subGraph);
+				SubgraphConstructionHelper.processFoundPath(start, next, vertices, edges, previousMap);
+			}
+			if (vertices.contains(next) && !otherSenses.contains(next)) {
+				// special case: we have a child belongs to a path already
+				SubgraphConstructionHelper.processFoundPath(start, next, vertices, edges, previousMap);
+				// continue since we don't want to further explore on this vertex
+				continue;
 			}
 
 			for (Edge edge : next.getEdges(Direction.OUT)) {
-				Vertex child = edge.getVertex(Direction.IN);
-				if (!visited.contains(child) || GraphUtil.isVertexInGraph(child, subGraph)) {
+				if (!settings.edgeFilter.isValidEdge(edge)) {
+					// check if edge is relevant for subgraph
+					continue;
+				}
+				Vertex child = GraphUtil.getOtherVertex(edge, next);
+				if (!visited.contains(child) || vertices.contains(child)) {
 					// previous map edge is overwritten in case we find another path
 					// TODO check if this behavior is problematic
 					previousMap.put(child, edge);

@@ -2,8 +2,8 @@ package de.unima.dws.dbpediagraph.graphdb.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,12 +16,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Graph;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
+
+import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
+import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+
 /**
  * Basic File Utilities.
  * 
  * @author Bernhard Schäfer
  * 
  */
+// TODO think about where to put methods such as lineToLabel
 public final class FileUtils {
 
 	/**
@@ -43,6 +52,52 @@ public final class FileUtils {
 			}
 		}
 		return files;
+	}
+
+	/**
+	 * Parse all non-empty and non-comment lines (comment lines start with '#') from a test results file into a map.
+	 * 
+	 * @param clazz
+	 *            the class whose classpath will be used.
+	 */
+	// public static Map<String, Map<ConnectivityMeasure, Double>> parseDisambiguationResultsOld(String fileName,
+	// Class<?> clazz) throws IOException, URISyntaxException {
+	//
+	// Map<String, Map<ConnectivityMeasure, Double>> results = new HashMap<>();
+	//
+	// List<String> lines = FileUtils.readLinesFromFile(clazz, fileName);
+	// if (lines.isEmpty())
+	// throw new RuntimeException(fileName + "file shouldnt be empty.");
+	//
+	// // multiple tabs as delimiters
+	// String delimiterRegex = "\t+";
+	// String[] headers = lines.remove(0).split(delimiterRegex);
+	//
+	// for (String line : lines) {
+	// String[] values = line.split(delimiterRegex);
+	// String uri = values[0];
+	//
+	// Map<ConnectivityMeasure, Double> map = new EnumMap<>(ConnectivityMeasure.class);
+	//
+	// for (int i = 1; i < values.length; i++) {
+	// Double value = Double.parseDouble(values[i]);
+	// ConnectivityMeasure measure = ConnectivityMeasure.valueOf(headers[i]);
+	// map.put(measure, value);
+	// }
+	//
+	// results.put(uri, map);
+	// }
+	// return results;
+	// }
+
+	public static String lineToLabel(String line) {
+		return line.replaceAll(" ", "");
+	}
+
+	public static Collection<Collection<Vertex>> parseAllWordsSenses(Graph graph, String fileName, Class<?> clazz,
+			String uriPrefix) throws IOException, URISyntaxException {
+		Collection<Collection<String>> wordsSensesString = readUrisFromFile(clazz, fileName, uriPrefix);
+		return GraphUtil.getWordsVerticesByUri(graph, wordsSensesString);
 	}
 
 	/**
@@ -84,40 +139,29 @@ public final class FileUtils {
 	}
 
 	/**
-	 * Parse all non-empty and non-comment lines (comment lines start with '#') from a test results file into a map.
-	 * 
-	 * @param clazz
-	 *            the class whose classpath will be used.
+	 * Parse an in-memory graph from text files.
 	 */
-	// public static Map<String, Map<ConnectivityMeasure, Double>> parseDisambiguationResultsOld(String fileName,
-	// Class<?> clazz) throws IOException, URISyntaxException {
-	//
-	// Map<String, Map<ConnectivityMeasure, Double>> results = new HashMap<>();
-	//
-	// List<String> lines = FileUtils.readLinesFromFile(clazz, fileName);
-	// if (lines.isEmpty())
-	// throw new RuntimeException(fileName + "file shouldnt be empty.");
-	//
-	// // multiple tabs as delimiters
-	// String delimiterRegex = "\t+";
-	// String[] headers = lines.remove(0).split(delimiterRegex);
-	//
-	// for (String line : lines) {
-	// String[] values = line.split(delimiterRegex);
-	// String uri = values[0];
-	//
-	// Map<ConnectivityMeasure, Double> map = new EnumMap<>(ConnectivityMeasure.class);
-	//
-	// for (int i = 1; i < values.length; i++) {
-	// Double value = Double.parseDouble(values[i]);
-	// ConnectivityMeasure measure = ConnectivityMeasure.valueOf(headers[i]);
-	// map.put(measure, value);
-	// }
-	//
-	// results.put(uri, map);
-	// }
-	// return results;
-	// }
+	public static Graph parseGraph(String verticesFile, String edgesFile) throws IOException, URISyntaxException {
+		Graph graph = new TinkerGraph();
+
+		List<String> vertices = FileUtils.readRelevantLinesFromFile(FileUtils.class, verticesFile);
+		List<String> edges = FileUtils.readRelevantLinesFromFile(FileUtils.class, edgesFile);
+
+		for (String v : vertices) {
+			Vertex vertex = graph.addVertex(v);
+			vertex.setProperty(GraphConfig.URI_PROPERTY, v);
+		}
+
+		for (String line : edges) {
+			String[] srcDest = line.split("\\s+");
+			Vertex outVertex = graph.getVertex(srcDest[0]);
+			Vertex inVertex = graph.getVertex(srcDest[1]);
+			String label = lineToLabel(line);
+			Edge e = graph.addEdge(label, outVertex, inVertex, label);
+			e.setProperty(GraphConfig.URI_PROPERTY, label);
+		}
+		return graph;
+	}
 
 	/**
 	 * Read all lines from a file and return all non-empty and non-comment lines (comment lines start with '#').
@@ -127,8 +171,11 @@ public final class FileUtils {
 	 */
 	public static List<String> readRelevantLinesFromFile(Class<?> clazz, String fileName) throws IOException,
 			URISyntaxException {
-		URI uri = clazz.getResource(fileName).toURI();
-		List<String> lines = Files.readAllLines(Paths.get(uri), StandardCharsets.UTF_8);
+		URL url = clazz.getResource(fileName);
+		if (url == null) {
+			throw new IllegalArgumentException("File cannot be found: " + fileName);
+		}
+		List<String> lines = Files.readAllLines(Paths.get(url.toURI()), StandardCharsets.UTF_8);
 
 		Iterator<String> iter = lines.iterator();
 		while (iter.hasNext()) {

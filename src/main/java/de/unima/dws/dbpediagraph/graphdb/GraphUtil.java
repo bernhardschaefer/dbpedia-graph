@@ -147,7 +147,7 @@ public final class GraphUtil {
 		return pathFromEndToStart;
 	}
 
-	private static String getUriOfVertex(Vertex v) {
+	public static String getUriOfVertex(Vertex v) {
 		return v.getProperty(GraphConfig.URI_PROPERTY).toString();
 	}
 
@@ -189,6 +189,9 @@ public final class GraphUtil {
 		return String.format("vid: %s uri: %s", v.getId().toString(), uri);
 	}
 
+	/**
+	 * Converts the uris to vertices. Omits uris that cannot be found in the provided graph.
+	 */
 	public static List<Vertex> getVerticesByUri(Graph graph, Collection<String> uris) {
 		List<Vertex> vertices = new LinkedList<Vertex>();
 		for (String uri : uris) {
@@ -216,6 +219,20 @@ public final class GraphUtil {
 			wordVertices.add(getVerticesByUri(graph, uris));
 		}
 		return wordVertices;
+	}
+
+	public static boolean isNodeOnPath(Vertex child, Collection<Edge> path) {
+		for (Edge edge : path) {
+			if (child.equals(edge.getVertex(Direction.IN)) || child.equals(edge.getVertex(Direction.OUT)))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isVertexInGraph(Vertex v, Graph subGraph) {
+		String uri = GraphUtil.getUriOfVertex(v);
+		Vertex subGraphVertex = getVertexByUri(subGraph, uri);
+		return subGraphVertex != null;
 	}
 
 	public static void removeVerticesWithoutUri(Graph graph) {

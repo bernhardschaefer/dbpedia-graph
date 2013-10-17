@@ -30,7 +30,7 @@ public class LocalDisambiguationTestData extends AbstractDisambiguationTestData 
 	public LocalDisambiguationTestData(LocalDisambiguator disambiguator, SubgraphConstruction subgraphConstruction) {
 		super(subgraphConstruction, NL_LOCAL_RESULTS, LOCAL_PACKAGE_NAME);
 		this.disambiguator = disambiguator;
-		weightedUris = disambiguator.disambiguate(GraphUtil.getUrisOfVertices(allWordsSenses), subgraph);
+		weightedUris = disambiguator.disambiguate(GraphUtil.getUrisOfVertices(allSenses), subgraph);
 	}
 
 	@Override

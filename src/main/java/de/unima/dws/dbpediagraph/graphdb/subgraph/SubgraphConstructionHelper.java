@@ -60,18 +60,24 @@ public class SubgraphConstructionHelper {
 	}
 
 	public static void processFoundPath(Vertex start, Vertex end, Map<Vertex, Edge> previousMap, Graph subGraph) {
-		// found path v,v1,...,vk,v'
 		List<Edge> path = GraphUtil.getPathFromTraversalMap(start, end, previousMap);
 
-		// add all intermediate nodes and edges on the path
+		if (path == null || path.size() == 0) {
+			logger.debug("Empty path");
+			return;
+		}
 
-		// V = V.append(v1,...,vk)
-		// E = E.append({{v,v1},...,{vk,v'}})
+		Vertex first = path.get(0).getVertex(Direction.OUT);
+		Vertex last = path.get(path.size() - 1).getVertex(Direction.IN);
+		if (!first.equals(start) || !last.equals(end)) {
+			logger.debug("Invalid path.");
+			return;
+		}
+
 		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, path);
 
 		logger.debug("Found sense vid: {} uri: {}", end.getId(), end.getProperty(GraphConfig.URI_PROPERTY));
 		logger.debug(GraphPrinter.toStringPath(path, start, end));
-
 	}
 
 	public static void processFoundPath(Vertex start, Vertex end, Set<Vertex> vertices, Set<Edge> edges,

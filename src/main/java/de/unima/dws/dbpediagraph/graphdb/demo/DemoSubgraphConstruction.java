@@ -41,16 +41,33 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 
 public class DemoSubgraphConstruction {
 
-	public static void main(String[] args) throws IOException, URISyntaxException {
+	private static final int MAX_DISTANCE = 4;
+
+	private static final Dimension SCREEN_DIMENSION;
+	static {
+		double percentageOfScreen = 0.95;
+		int height = (int) (percentageOfScreen * GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getMaximumWindowBounds().height);
+		int width = (int) (percentageOfScreen * GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getMaximumWindowBounds().width);
+		SCREEN_DIMENSION = new Dimension(width, height);
+	}
+
+	public static void dbpediaDemo() throws IOException, URISyntaxException {
 		Graph graph = GraphProvider.getDBpediaGraph();
 
 		Collection<Collection<String>> wordsSensesString = FileUtils.readUrisFromFile(DemoSubgraphConstruction.class,
 				"/napoleon-sentence-test", GraphConfig.DBPEDIA_RESOURCE_PREFIX);
+
+		demo(graph, wordsSensesString);
+	}
+
+	private static void demo(Graph graph, Collection<Collection<String>> wordsSensesString) {
 		Collection<Collection<Vertex>> wordsSenses = GraphUtil.getWordsVerticesByUri(graph, wordsSensesString);
 		Collection<String> allSensesString = CollectionUtils.combine(wordsSensesString);
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
-				new SubgraphConstructionSettings().maxDistance(4));
+				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE));
 		Graph subGraph = sc.createSubgraphFromSenses(wordsSenses);
 
 		Disambiguator[] disambiguators = new LocalDisambiguator[] { new BetweennessCentrality(),
@@ -66,22 +83,24 @@ public class DemoSubgraphConstruction {
 			System.out.println();
 		}
 
-		visualizeGraph(subGraph);
+		visualizeGraph(subGraph, sc.getClass().getSimpleName() + " (max distance: " + MAX_DISTANCE + ")");
 
 		subGraph.shutdown();
 		graph.shutdown();
 	}
 
-	private static void visualizeGraph(Graph graph) {
+	public static void main(String[] args) throws IOException, URISyntaxException {
+		dbpediaDemo();
+	}
+
+	private static void visualizeGraph(Graph graph, String frameTitle) {
 		GraphJung<Graph> graphJung = new GraphJung<>(graph);
 		// Layout<Vertex, Edge> layout = new CircleLayout<Vertex, Edge>(graphJung);
 		Layout<Vertex, Edge> layout = new ISOMLayout<Vertex, Edge>(graphJung);
 
-		int height = (int) (0.9 * GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height);
-		int width = (int) (0.9 * GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width);
-		layout.setSize(new Dimension(width, height));
+		layout.setSize(SCREEN_DIMENSION);
 		BasicVisualizationServer<Vertex, Edge> viz = new BasicVisualizationServer<Vertex, Edge>(layout);
-		viz.setPreferredSize(new Dimension(width, height));
+		viz.setPreferredSize(SCREEN_DIMENSION);
 
 		Transformer<Vertex, String> vertexLabelTransformer = new Transformer<Vertex, String>() {
 			@Override
@@ -101,7 +120,7 @@ public class DemoSubgraphConstruction {
 		viz.getRenderContext().setEdgeLabelTransformer(edgeLabelTransformer);
 		viz.getRenderContext().setVertexLabelTransformer(vertexLabelTransformer);
 
-		JFrame frame = new JFrame("TinkerPop");
+		JFrame frame = new JFrame(frameTitle);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(viz);
 		frame.pack();

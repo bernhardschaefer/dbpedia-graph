@@ -16,6 +16,7 @@ public class CollectionUtils {
 	 * Remove all entries from collection a that are in collection b and return a new collection.
 	 */
 	public static <T> Collection<T> removeAll(Collection<T> a, Collection<T> b) {
+		// TODO use hash set to improve performance since returned collection is mostly used with contains()
 		Collection<T> c = new ArrayList<T>(a);
 		c.removeAll(b);
 		return c;
