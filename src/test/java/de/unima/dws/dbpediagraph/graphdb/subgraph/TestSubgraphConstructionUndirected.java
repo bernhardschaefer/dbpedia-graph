@@ -8,7 +8,7 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 
 /**
- * Test class for {@link SubgraphConstructionNavigli}.
+ * Test class for {@link SubgraphConstruction}.
  * 
  * @author Bernhard Schäfer
  * 

@@ -12,29 +12,30 @@ import com.tinkerpop.blueprints.Graph;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
-public abstract class AbstractDisambiguationTestData extends SubgraphTestData {
+public abstract class AbstractDisambiguationTestData {
 	protected static final double DELTA = 0.005;
 
 	protected final Graph subgraph;
 
 	protected Map<String, Map<Class<?>, Double>> measureResults;
 
+	private final SubgraphTestData testData;
+
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDisambiguationTestData.class);
 
 	public AbstractDisambiguationTestData(SubgraphConstruction subgraphConstruction, String testResultsFileName,
 			String packageNameDisambiguator) {
-		super();
-		subgraphConstruction.setGraph(graph);
-		subgraph = subgraphConstruction.createSubgraphFromSenses(allWordsSenses);
+		testData = SubgraphTestData.newNavigliTestData();
+		subgraphConstruction.setGraph(testData.graph);
+		subgraph = subgraphConstruction.createSubgraphFromSenses(testData.allWordsSenses);
 
 		measureResults = createMeasureResults(testResultsFileName, packageNameDisambiguator);
 	}
 
 	public abstract void checkDisambiguationResults();
 
-	@Override
 	public void close() {
-		super.close();
+		testData.close();
 		if (subgraph != null)
 			subgraph.shutdown();
 	}
@@ -55,6 +56,10 @@ public abstract class AbstractDisambiguationTestData extends SubgraphTestData {
 
 	public Graph getSubgraph() {
 		return subgraph;
+	}
+
+	public SubgraphTestData getTestData() {
+		return testData;
 	}
 
 }

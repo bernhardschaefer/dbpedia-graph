@@ -31,7 +31,7 @@ public class TestSubgraphConstructionCyclic {
 
 	@Before
 	public void setUp() throws IOException, URISyntaxException {
-		graph = FileUtils.parseGraph(PKG + "/vertices", PKG + "/edges");
+		graph = FileUtils.parseGraph(PKG + "/vertices", PKG + "/edges", getClass());
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE));

@@ -41,7 +41,7 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 
 public class DemoSubgraphConstruction {
 
-	private static final int MAX_DISTANCE = 4;
+	private static final int MAX_DISTANCE = 6;
 
 	private static final Dimension SCREEN_DIMENSION;
 	static {

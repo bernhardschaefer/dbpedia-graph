@@ -15,7 +15,7 @@ public class LocalDisambiguationTestData extends AbstractDisambiguationTestData 
 	private static final Logger logger = LoggerFactory.getLogger(LocalDisambiguationTestData.class);
 
 	/** Local Connectivity Measure Results for the example from Navigli&Lapata (2010) */
-	private static final String NL_LOCAL_RESULTS = "/nl-local-test.results";
+	private static final String NL_LOCAL_RESULTS = SubgraphTestData.NL_PKG + "/nl-local-test.results";
 
 	/** Name of the package where the local disambiguator classes reside. */
 	private static final String LOCAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.graphdb.disambiguate.local";
@@ -30,7 +30,7 @@ public class LocalDisambiguationTestData extends AbstractDisambiguationTestData 
 	public LocalDisambiguationTestData(LocalDisambiguator disambiguator, SubgraphConstruction subgraphConstruction) {
 		super(subgraphConstruction, NL_LOCAL_RESULTS, LOCAL_PACKAGE_NAME);
 		this.disambiguator = disambiguator;
-		weightedUris = disambiguator.disambiguate(GraphUtil.getUrisOfVertices(allSenses), subgraph);
+		weightedUris = disambiguator.disambiguate(GraphUtil.getUrisOfVertices(getTestData().allSenses), subgraph);
 	}
 
 	@Override

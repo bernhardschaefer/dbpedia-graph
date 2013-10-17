@@ -29,7 +29,7 @@ public class TestHITSCentrality {
 
 	@Test
 	public void testWeightedUrisSize() {
-		assertEquals(data.getWeightedUris().size(), data.allSenses.size());
+		assertEquals(data.getWeightedUris().size(), data.getTestData().allSenses.size());
 	}
 
 }

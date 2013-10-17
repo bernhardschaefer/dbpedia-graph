@@ -14,16 +14,15 @@ public abstract class AbstractTestSubgraphConstruction {
 	protected final SubgraphTestData data;
 
 	public AbstractTestSubgraphConstruction() {
-		data = new SubgraphTestData();
-
+		data = SubgraphTestData.newNavigliTestData();
 	}
 
 	public void allEdgesContained(Graph g) {
-		assertEquals(data.edges.size(), GraphUtil.getNumberOfEdges(g));
+		assertEquals(data.expectedEdges.size(), GraphUtil.getNumberOfEdges(g));
 	}
 
 	public void allNodesContained(Graph g) {
-		assertEquals(data.vertices.size(), GraphUtil.getNumberOfVertices(g));
+		assertEquals(data.expectedVertices.size(), GraphUtil.getNumberOfVertices(g));
 	}
 
 	public void close() {

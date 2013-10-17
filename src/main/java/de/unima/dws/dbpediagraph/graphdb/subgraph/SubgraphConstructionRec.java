@@ -72,6 +72,9 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 		for (Collection<Vertex> senses : wordsSenses) {
 			Collection<Vertex> otherSenses = CollectionUtils.removeAll(allSenses, senses);
 			for (Vertex start : senses) {
+				logger.debug("");
+				logger.debug("DFS starting point: vid: {} uri: {}", start.getId(),
+						start.getProperty(GraphConfig.URI_PROPERTY));
 				dfs(start, new ArrayList<Edge>(), otherSenses, subGraph);
 			}
 		}
@@ -82,10 +85,6 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 	}
 
 	private void dfs(Vertex current, List<Edge> path, Collection<Vertex> targets, Graph subGraph) {
-		logger.debug("");
-		logger.debug("DFS starting point: vid: {} uri: {}", current.getId(),
-				current.getProperty(GraphConfig.URI_PROPERTY));
-
 		traversedNodes++;
 
 		// check limit
@@ -107,7 +106,6 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 				dfs(child, newPath, targets, subGraph);
 			}
 		}
-
 	}
 
 	@Override

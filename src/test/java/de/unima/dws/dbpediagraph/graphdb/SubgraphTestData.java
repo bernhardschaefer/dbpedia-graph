@@ -5,39 +5,70 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 
-import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
 public class SubgraphTestData {
 
-	/** Test senses from Navigli&Lapata (2010) */
-	private static final String NL_SENSES = "/nl-test.senses";
+	public static class FileNames {
+		String verticesFile;
+		String edgesFile;
+		String sensesFile;
+		String expectedVerticesFile;
+		String expectedEdgesFile;
 
-	/** Test vertices from Navigli&Lapata (2010) */
-	private static final String NL_VERTICES = "/nl-test.vertices";
+		public static final FileNames NAVIGLI_FILE_NAMES = new FileNames(NL_VERTICES, NL_EDGES, NL_SENSES,
+				NL_EXPECTED_VERTICES, NL_EXPECTED_EDGES);
 
-	/** Test edges from Navigli&Lapata (2010) */
-	private static final String NL_EDGES = "/nl-test.edges";
+		public FileNames(String verticesFile, String edgesFile, String sensesFile, String expectedVerticesFile,
+				String expectedEdgesFile) {
+			this.verticesFile = verticesFile;
+			this.edgesFile = edgesFile;
+			this.sensesFile = sensesFile;
+			this.expectedVerticesFile = expectedVerticesFile;
+			this.expectedEdgesFile = expectedEdgesFile;
+		}
+	}
 
-	public Graph graph;
+	/** Test Setup from Navigli&Lapata (2010) */
+	public static final String NL_PKG = "/test-navigli";
 
-	public Collection<Collection<Vertex>> allWordsSenses;
-	public Collection<Vertex> allSenses;
+	private static final String NL_SENSES = NL_PKG + "/nl-test.senses";
+	private static final String NL_VERTICES = NL_PKG + "/nl-test.vertices";
+	private static final String NL_EDGES = NL_PKG + "/nl-test.edges";
 
-	public List<String> vertices;
+	private static final String NL_EXPECTED_VERTICES = NL_PKG + "/nl-expected-vertices";
+	private static final String NL_EXPECTED_EDGES = NL_PKG + "/nl-expected-edges";
 
-	public List<String> edges;
+	public static final SubgraphTestData newNavigliTestData() {
+		return new SubgraphTestData(FileNames.NAVIGLI_FILE_NAMES);
+	}
 
-	public SubgraphTestData() {
+	public final Graph graph;
+	public final Collection<Collection<Vertex>> allWordsSenses;
+	public final Collection<Vertex> allSenses;
+
+	public final List<String> expectedEdges;
+	public final List<String> expectedVertices;
+
+	public SubgraphTestData(FileNames fileNames) {
+		this(fileNames.verticesFile, fileNames.edgesFile, fileNames.sensesFile, fileNames.expectedVerticesFile,
+				fileNames.expectedEdgesFile);
+	}
+
+	public SubgraphTestData(String verticesFile, String edgesFile, String sensesFile, String expectedVerticesFile,
+			String expectedEdgesFile) {
 		try {
-			graph = parseTestGraph();
-			allWordsSenses = FileUtils.parseAllWordsSenses(graph, NL_SENSES, getClass(), "");
+			graph = FileUtils.parseGraph(verticesFile, edgesFile, getClass());
+			allWordsSenses = FileUtils.parseAllWordsSenses(graph, sensesFile, getClass(), "");
 			allSenses = CollectionUtils.combine(allWordsSenses);
+
+			expectedVertices = FileUtils.readRelevantLinesFromFile(getClass(), expectedVerticesFile);
+			expectedEdges = FileUtils.readRelevantLinesFromFile(getClass(), expectedEdgesFile);
+
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException("Error while trying to construct test graph.", e);
 		}
@@ -46,28 +77,6 @@ public class SubgraphTestData {
 	public void close() {
 		if (graph != null)
 			graph.shutdown();
-	}
-
-	private Graph parseTestGraph() throws IOException, URISyntaxException {
-		Graph graph = new TinkerGraph();
-
-		vertices = FileUtils.readRelevantLinesFromFile(this.getClass(), NL_VERTICES);
-		edges = FileUtils.readRelevantLinesFromFile(this.getClass(), NL_EDGES);
-
-		for (String v : vertices) {
-			Vertex vertex = graph.addVertex(v);
-			vertex.setProperty(GraphConfig.URI_PROPERTY, v);
-		}
-
-		for (String line : edges) {
-			String[] srcDest = line.split("\\s+");
-			Vertex outVertex = graph.getVertex(srcDest[0]);
-			Vertex inVertex = graph.getVertex(srcDest[1]);
-			String label = line.replaceAll(" ", "");
-			Edge e = graph.addEdge(label, outVertex, inVertex, label);
-			e.setProperty(GraphConfig.URI_PROPERTY, label);
-		}
-		return graph;
 	}
 
 }

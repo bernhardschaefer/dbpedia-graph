@@ -141,11 +141,12 @@ public final class FileUtils {
 	/**
 	 * Parse an in-memory graph from text files.
 	 */
-	public static Graph parseGraph(String verticesFile, String edgesFile) throws IOException, URISyntaxException {
+	public static Graph parseGraph(String verticesFileName, String edgesFileName, Class<?> clazz) throws IOException,
+			URISyntaxException {
 		Graph graph = new TinkerGraph();
 
-		List<String> vertices = FileUtils.readRelevantLinesFromFile(FileUtils.class, verticesFile);
-		List<String> edges = FileUtils.readRelevantLinesFromFile(FileUtils.class, edgesFile);
+		List<String> vertices = FileUtils.readRelevantLinesFromFile(clazz, verticesFileName);
+		List<String> edges = FileUtils.readRelevantLinesFromFile(clazz, edgesFileName);
 
 		for (String v : vertices) {
 			Vertex vertex = graph.addVertex(v);
