@@ -13,7 +13,6 @@ import com.tinkerpop.blueprints.Vertex;
  * @author Bernhard Schäfer
  * 
  */
-// TODO remove get and set graph to make construction classes immutable
 public interface SubgraphConstruction {
 
 	/**
@@ -24,14 +23,4 @@ public interface SubgraphConstruction {
 	 *            {milk1, ..., milk4} ) for each content word (e.g. drink, milk),
 	 */
 	public Graph createSubgraph(Collection<Collection<Vertex>> wordsSenses);
-
-	/**
-	 * Get the graph this algorithm is working on.
-	 */
-	public Graph getGraph();
-
-	/**
-	 * Set the graph this algorithm should work on.
-	 */
-	public void setGraph(Graph graph);
 }

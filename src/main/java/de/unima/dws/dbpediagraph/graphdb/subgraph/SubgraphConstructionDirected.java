@@ -71,11 +71,6 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 		return subGraph;
 	}
 
-	@Override
-	public Graph getGraph() {
-		return graph;
-	}
-
 	/**
 	 * Performs a DFS starting at the start vertex. The goal is to find all paths within the max distance to the other
 	 * provided senses. Found paths are inserted into the subgraph.
@@ -129,11 +124,6 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 			}
 		}
 
-	}
-
-	@Override
-	public void setGraph(Graph graph) {
-		this.graph = graph;
 	}
 
 }

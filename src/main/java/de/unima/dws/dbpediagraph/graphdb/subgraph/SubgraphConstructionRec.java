@@ -41,7 +41,7 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 		addPathToSubGraph(current, path.getEdges(), subGraph);
 	}
 
-	private Graph graph;
+	private final Graph graph;
 
 	private final SubgraphConstructionSettings settings;
 
@@ -54,8 +54,10 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 
 	@Override
 	public Graph createSubgraph(Collection<Collection<Vertex>> wordsSenses) {
-		SubgraphConstructionHelper.checkValidWordsSenses(graph, wordsSenses);
 		long startTime = System.currentTimeMillis();
+
+		SubgraphConstructionHelper.checkValidWordsSenses(graph, wordsSenses);
+		traversedNodes = 0;
 
 		Collection<Vertex> allSenses = CollectionUtils.combine(wordsSenses);
 
@@ -126,16 +128,6 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 				dfs(child, newPath, targets, subGraph);
 			}
 		}
-	}
-
-	@Override
-	public Graph getGraph() {
-		return graph;
-	}
-
-	@Override
-	public void setGraph(Graph graph) {
-		this.graph = graph;
 	}
 
 }

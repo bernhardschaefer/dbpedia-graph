@@ -4,17 +4,21 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.tinkerpop.blueprints.Graph;
 
+/**
+ * Instance-controlled factory class for retrieving a {@link SubgraphConstruction} implementation.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public final class SubgraphConstructionFactory {
-	public static Class<? extends SubgraphConstruction> defaultClass() {
-		return SubgraphConstructionRec.class;
-	}
+	private static final Class<? extends SubgraphConstruction> DEFAULT_SUBGRAPH_CONSTRUCTION = SubgraphConstructionRec.class;
 
-	public static SubgraphConstruction newDefaultImplementation() {
-		return newDefaultImplementation(null, SubgraphConstructionSettings.getDefault());
+	public static Class<? extends SubgraphConstruction> defaultClass() {
+		return DEFAULT_SUBGRAPH_CONSTRUCTION;
 	}
 
 	public static SubgraphConstruction newDefaultImplementation(Graph graph, SubgraphConstructionSettings settings) {
-		return new SubgraphConstructionRec(graph, settings);
+		return newInstance(defaultClass(), settings, graph);
 	}
 
 	public static SubgraphConstruction newInstance(Class<? extends SubgraphConstruction> subgraphConstructionClass,
