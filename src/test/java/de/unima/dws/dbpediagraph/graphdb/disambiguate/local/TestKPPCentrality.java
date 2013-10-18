@@ -7,19 +7,24 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
+import de.unima.dws.dbpediagraph.graphdb.TestSet;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestKPPCentrality {
 	private static LocalDisambiguationTestData data;
+	private static SubgraphTester subGraphData;
 
 	@BeforeClass
 	public static void setUp() {
-		data = new LocalDisambiguationTestData(new KPPCentrality());
+		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
+		data = new LocalDisambiguationTestData(new KPPCentrality(), subGraphData);
 	}
 
 	@AfterClass
 	public static void tearDown() {
-		if (data != null)
-			data.close();
+		if (subGraphData != null)
+			subGraphData.close();
 	}
 
 	@Test
@@ -29,6 +34,6 @@ public class TestKPPCentrality {
 
 	@Test
 	public void testWeightedUrisSize() {
-		assertEquals(data.getWeightedUris().size(), data.getTestData().allSenses.size());
+		assertEquals(data.getWeightedUris().size(), subGraphData.allSenses.size());
 	}
 }

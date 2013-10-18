@@ -1,79 +1,61 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collection;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
-
 import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
+import de.unima.dws.dbpediagraph.graphdb.TestSet;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
 public class TestSubgraphConstructionCyclic {
-
-	private static final String PKG = "/test-cyclic";
-
 	private static final int MAX_DISTANCE = 10;
 
-	private Graph graph;
-	private Graph subGraph;
+	private static SubgraphTester subGraphData;
 
-	private Collection<String> expectedVertices;
-	private Collection<String> expectedEdges;
-
-	@Before
-	public void setUp() throws IOException, URISyntaxException {
-		graph = FileUtils.parseGraph(PKG + "/vertices", PKG + "/edges", getClass());
-
-		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
+	@BeforeClass
+	public static void setUpBeforeClass() throws IOException, URISyntaxException {
+		subGraphData = new SubgraphTester(TestSet.CYCLIC_FILE_NAMES, SubgraphConstructionFactory.defaultClass(),
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE));
-
-		Collection<Collection<Vertex>> wordsSenses = GraphUtil.getWordsVerticesByUri(graph,
-				FileUtils.readUrisFromFile(getClass(), PKG + "/senses", ""));
-		subGraph = sc.createSubgraph(wordsSenses);
-
-		expectedVertices = FileUtils.readRelevantLinesFromFile(getClass(), PKG + "/subgraph-vertices");
-		expectedEdges = FileUtils.readRelevantLinesFromFile(getClass(), PKG + "/subgraph-edges");
 	}
 
-	@After
-	public void tearDown() {
-		subGraph.shutdown();
-		graph.shutdown();
+	@AfterClass
+	public static void tearDownAfterClass() {
+		subGraphData.close();
 	}
 
 	@Test
 	public void testContainedEdges() {
-		for (String edgeName : expectedEdges) {
-			Assert.assertNotNull("Edge should be contained in subgraph: " + edgeName,
-					subGraph.getEdge(FileUtils.lineToLabel(edgeName)));
+		for (String edgeName : subGraphData.expectedSubgraphEdges) {
+			assertNotNull("Edge should be contained in subgraph: " + edgeName,
+					subGraphData.getSubgraph().getEdge(FileUtils.lineToLabel(edgeName)));
 		}
 	}
 
 	@Test
 	public void testContainedVertices() {
-		for (String vertexName : expectedVertices) {
-			Assert.assertNotNull("Vertex should be contained in subgraph: " + vertexName,
-					subGraph.getVertex(vertexName));
+		for (String vertexName : subGraphData.expectedSubgraphVertices) {
+			assertNotNull("Vertex should be contained in subgraph: " + vertexName, subGraphData.getSubgraph()
+					.getVertex(vertexName));
 		}
 	}
 
 	@Test
 	public void testNumberOfEdges() {
-		assertEquals(expectedEdges.size(), GraphUtil.getNumberOfEdges(subGraph));
+		assertEquals(subGraphData.expectedSubgraphEdges.size(), GraphUtil.getNumberOfEdges(subGraphData.getSubgraph()));
 	}
 
 	@Test
 	public void testNumberOfVertices() {
-		assertEquals(expectedVertices.size(), GraphUtil.getNumberOfVertices(subGraph));
+		assertEquals(subGraphData.expectedSubgraphVertices.size(),
+				GraphUtil.getNumberOfVertices(subGraphData.getSubgraph()));
 	}
 
 }

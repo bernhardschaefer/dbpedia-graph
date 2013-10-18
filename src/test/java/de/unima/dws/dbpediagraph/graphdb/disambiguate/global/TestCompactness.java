@@ -5,19 +5,24 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graphdb.GlobalDisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
+import de.unima.dws.dbpediagraph.graphdb.TestSet;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestCompactness {
 	private static GlobalDisambiguationTestData data;
+	private static SubgraphTester subGraphData;
 
 	@BeforeClass
 	public static void setUp() {
-		data = new GlobalDisambiguationTestData(new Compactness());
+		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
+		data = new GlobalDisambiguationTestData(new Compactness(), subGraphData);
 	}
 
 	@AfterClass
 	public static void tearDown() {
-		if (data != null)
-			data.close();
+		if (subGraphData != null)
+			subGraphData.close();
 	}
 
 	@Test

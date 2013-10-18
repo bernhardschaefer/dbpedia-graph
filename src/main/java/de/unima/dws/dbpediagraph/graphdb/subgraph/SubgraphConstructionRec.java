@@ -52,10 +52,6 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 		this.settings = settings;
 	}
 
-	public SubgraphConstructionRec(SubgraphConstructionSettings settings) {
-		this.settings = settings;
-	}
-
 	@Override
 	public Graph createSubgraph(Collection<Collection<Vertex>> wordsSenses) {
 		SubgraphConstructionHelper.checkValidWordsSenses(graph, wordsSenses);

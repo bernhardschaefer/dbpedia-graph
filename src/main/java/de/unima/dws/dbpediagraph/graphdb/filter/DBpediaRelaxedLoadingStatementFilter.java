@@ -5,7 +5,8 @@ import org.openrdf.model.Statement;
 
 /**
  * Filter that yields all statement with a DBpedia URI as object (http://dbpedia.org/*). This means that statements with
- * DBpedia resources, ontologies, or yago classes as object are included.
+ * DBpedia resources, ontologies, or yago classes as object are included. NOTE: The class hierarchy is only partly
+ * contained (e.g. foaf:Person missing)
  * 
  * @author Bernhard Schäfer
  * 

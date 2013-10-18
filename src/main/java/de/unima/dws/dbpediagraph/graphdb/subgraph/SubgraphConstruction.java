@@ -13,6 +13,7 @@ import com.tinkerpop.blueprints.Vertex;
  * @author Bernhard Schäfer
  * 
  */
+// TODO remove get and set graph to make construction classes immutable
 public interface SubgraphConstruction {
 
 	/**
