@@ -9,7 +9,7 @@ import java.util.Map;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
@@ -21,11 +21,11 @@ public class KPPCentrality implements LocalDisambiguator {
 	@Override
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
 		Distance<Vertex> distances = new UnweightedShortestPath<>(new GraphJungUndirected(subgraph));
-		int numberOfVertices = GraphUtil.getNumberOfVertices(subgraph);
+		int numberOfVertices = Graphs.getNumberOfVertices(subgraph);
 
 		List<WeightedSense> weightedUris = new LinkedList<>();
 		for (String sense : senses) {
-			Vertex v = GraphUtil.getVertexByUri(subgraph, sense);
+			Vertex v = Graphs.getVertexByUri(subgraph, sense);
 			Map<Vertex, Number> distancesFromVertex = distances.getDistanceMap(v);
 			double sumInverseShortestDistances = 0;
 			for (Vertex otherVertex : subgraph.getVertices()) {

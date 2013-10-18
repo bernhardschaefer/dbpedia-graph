@@ -18,14 +18,17 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
+import de.unima.dws.dbpediagraph.graphdb.subgraph.Path;
+import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
+
 /**
  * Noninstantiable utility class for performing various graph operations. All operations are static.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public final class GraphUtil {
-	private static final Logger logger = LoggerFactory.getLogger(GraphUtil.class);
+public final class Graphs {
+	private static final Logger logger = LoggerFactory.getLogger(Graphs.class);
 
 	public static void addEdgeIfNonExistent(Graph graph, Edge edge, Vertex outVertex, Vertex inVertex) {
 		if (graph.getEdge(edge.getId()) == null) {
@@ -43,6 +46,17 @@ public final class GraphUtil {
 
 			addEdgeIfNonExistent(graph, edge, outVertex, inVertex);
 		}
+	}
+
+	public static void addPathToSubGraph(Vertex current, List<Edge> path, Graph subGraph) {
+		Vertex start = path.get(0).getVertex(Direction.OUT);
+		logger.debug("Found sense vid: {} uri: {}", current.getId(), current.getProperty(GraphConfig.URI_PROPERTY));
+		logger.debug(GraphPrinter.toStringPath(path, start, current));
+		Graphs.addNodeAndEdgesIfNonExistent(subGraph, path);
+	}
+
+	public static void addPathToSubGraph(Vertex current, Path path, Graph subGraph) {
+		addPathToSubGraph(current, path.getEdges(), subGraph);
 	}
 
 	/**
@@ -66,7 +80,7 @@ public final class GraphUtil {
 	public static Set<Vertex> getConnectedVerticesBothDirections(Vertex vertex) {
 		final Set<Vertex> vertices = new HashSet<Vertex>();
 		for (final Edge edge : vertex.getEdges(Direction.BOTH)) {
-			Vertex other = GraphUtil.getOtherVertex(edge, vertex);
+			Vertex other = Graphs.getOtherVertex(edge, vertex);
 			vertices.add(other);
 		}
 		return vertices;
@@ -230,7 +244,7 @@ public final class GraphUtil {
 	}
 
 	public static boolean isVertexInGraph(Vertex v, Graph subGraph) {
-		String uri = GraphUtil.getUriOfVertex(v);
+		String uri = Graphs.getUriOfVertex(v);
 		Vertex subGraphVertex = getVertexByUri(subGraph, uri);
 		return subGraphVertex != null;
 	}
@@ -246,7 +260,7 @@ public final class GraphUtil {
 	}
 
 	// Suppress default constructor for noninstantiability
-	private GraphUtil() {
+	private Graphs() {
 		throw new AssertionError();
 	}
 

@@ -14,7 +14,7 @@ import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
@@ -27,27 +27,15 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
  * @author Bernhard Schäfer
  * 
  */
-class SubgraphConstructionRec implements SubgraphConstruction {
-	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionDirected.class);
-
-	private static void addPathToSubGraph(Vertex current, List<Edge> path, Graph subGraph) {
-		Vertex start = path.get(0).getVertex(Direction.OUT);
-		logger.debug("Found sense vid: {} uri: {}", current.getId(), current.getProperty(GraphConfig.URI_PROPERTY));
-		logger.debug(GraphPrinter.toStringPath(path, start, current));
-		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, path);
-	}
-
-	private static void addPathToSubGraph(Vertex current, Path<Vertex, Edge> path, Graph subGraph) {
-		addPathToSubGraph(current, path.getEdges(), subGraph);
-	}
+class SubgraphConstructionDirectedRecursive implements SubgraphConstruction {
+	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionDirectedIterative.class);
 
 	private final Graph graph;
-
 	private final SubgraphConstructionSettings settings;
 
 	private int traversedNodes;
 
-	public SubgraphConstructionRec(Graph graph, SubgraphConstructionSettings settings) {
+	public SubgraphConstructionDirectedRecursive(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
 		this.settings = settings;
 	}
@@ -63,7 +51,7 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 
 		// initialize subgraph with all senses of all words
 		Graph subGraph = GraphProvider.newInMemoryGraph();
-		GraphUtil.addVerticesByUrisOfVertices(subGraph, allSenses);
+		Graphs.addVerticesByUrisOfVertices(subGraph, allSenses);
 
 		// perform a DFS for each sense trying to find path to senses of other words
 		for (Collection<Vertex> senses : wordsSenses) {
@@ -71,13 +59,14 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 			for (Vertex start : senses) {
 				logger.info("Starting DFS with vid: {}, uri: {}", start.getId(),
 						start.getProperty(GraphConfig.URI_PROPERTY));
-				dfs(start, new Path<Vertex, Edge>(), otherSenses, subGraph);
+				dfs(start, new Path(), otherSenses, subGraph);
 				// dfs(start, new ArrayList<Edge>(), otherSenses, subGraph);
 			}
 		}
 
-		logger.info("subgraph construction. time {} sec., traversed nodes: {}, maxDepth: {}",
-				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, settings.maxDistance);
+		GraphPrinter.logSubgraphConstructionStats(logger, getClass(), subGraph, startTime, traversedNodes,
+				settings.maxDistance);
+
 		return subGraph;
 	}
 
@@ -91,13 +80,13 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 
 		// check if target node
 		if (targets.contains(current)) {
-			addPathToSubGraph(current, path, subGraph);
+			Graphs.addPathToSubGraph(current, path, subGraph);
 		}
 
 		// explore further
 		for (Edge edge : current.getEdges(Direction.OUT)) {
 			Vertex child = edge.getVertex(Direction.IN);
-			if (!GraphUtil.isNodeOnPath(child, path)) { // this is slow (linear time)
+			if (!Graphs.isNodeOnPath(child, path)) { // this is slow (linear time)
 				List<Edge> newPath = new ArrayList<>(path);
 				newPath.add(edge);
 				dfs(child, newPath, targets, subGraph);
@@ -105,7 +94,7 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 		}
 	}
 
-	protected void dfs(Vertex current, Path<Vertex, Edge> path, Collection<Vertex> targets, Graph subGraph) {
+	protected void dfs(Vertex current, Path path, Collection<Vertex> targets, Graph subGraph) {
 		traversedNodes++;
 
 		// check limit
@@ -115,14 +104,14 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 
 		// check if target node
 		if (targets.contains(current)) {
-			addPathToSubGraph(current, path, subGraph);
+			Graphs.addPathToSubGraph(current, path, subGraph);
 		}
 
 		// explore further
 		for (Edge edge : current.getEdges(Direction.OUT)) {
 			Vertex child = edge.getVertex(Direction.IN);
 			if (!path.getVertices().contains(child)) {
-				Path<Vertex, Edge> newPath = new Path<>(path);
+				Path newPath = new Path(path);
 				newPath.getVertices().add(child);
 				newPath.getEdges().add(edge);
 				dfs(child, newPath, targets, subGraph);

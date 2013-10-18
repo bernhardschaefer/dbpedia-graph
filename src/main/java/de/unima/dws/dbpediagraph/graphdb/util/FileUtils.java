@@ -22,7 +22,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
 /**
  * Basic File Utilities.
@@ -97,7 +97,7 @@ public final class FileUtils {
 	public static Collection<Collection<Vertex>> parseAllWordsSenses(Graph graph, String fileName, Class<?> clazz,
 			String uriPrefix) throws IOException, URISyntaxException {
 		Collection<Collection<String>> wordsSensesString = readUrisFromFile(clazz, fileName, uriPrefix);
-		return GraphUtil.getWordsVerticesByUri(graph, wordsSensesString);
+		return Graphs.getWordsVerticesByUri(graph, wordsSensesString);
 	}
 
 	/**

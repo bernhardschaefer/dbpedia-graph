@@ -1,11 +1,8 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.Deque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +14,9 @@ import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
+import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
 /**
  * Construct subgraph based on algorithm described in paper by Navigli and Lapata (2010). NOTE: This implementation only
@@ -29,21 +27,16 @@ import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
  * @author Bernhard Schäfer
  * 
  */
-class SubgraphConstructionDirected implements SubgraphConstruction {
-	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionDirected.class);
+class SubgraphConstructionDirectedIterative implements SubgraphConstruction {
+	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionDirectedIterative.class);
 
-	private Graph graph;
-
+	private final Graph graph;
 	private final SubgraphConstructionSettings settings;
 
 	private int traversedNodes;
 
-	public SubgraphConstructionDirected(Graph graph, SubgraphConstructionSettings settings) {
+	public SubgraphConstructionDirectedIterative(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
-		this.settings = settings;
-	}
-
-	public SubgraphConstructionDirected(SubgraphConstructionSettings settings) {
 		this.settings = settings;
 	}
 
@@ -56,7 +49,7 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 
 		// initialize subgraph with all senses of all words
 		Graph subGraph = GraphProvider.newInMemoryGraph();
-		GraphUtil.addVerticesByUrisOfVertices(subGraph, allSenses);
+		Graphs.addVerticesByUrisOfVertices(subGraph, allSenses);
 
 		// perform a DFS for each sense trying to find path to senses of other words
 		for (Collection<Vertex> senses : wordsSenses) {
@@ -66,8 +59,9 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 			}
 		}
 
-		logger.info("subgraph construction. time {} sec., traversed nodes: {}, maxDepth: {}",
-				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, settings.maxDistance);
+		GraphPrinter.logSubgraphConstructionStats(logger, getClass(), subGraph, startTime, traversedNodes,
+				settings.maxDistance);
+
 		return subGraph;
 	}
 
@@ -82,48 +76,37 @@ class SubgraphConstructionDirected implements SubgraphConstruction {
 	 * @param subGraph
 	 *            the subgraph where the paths are inserted to
 	 */
-	private void performDepthFirstSearch(Vertex start, Collection<Vertex> otherSenses, Graph subGraph) {
-		logger.debug("");
+	private void performDepthFirstSearch(Vertex start, Collection<Vertex> targets, Graph subGraph) {
 		logger.debug("DFS starting point: vid: {} uri: {}", start.getId(), start.getProperty(GraphConfig.URI_PROPERTY));
 
-		Stack<Vertex> stack = new Stack<>();
-		// track the path we used
-		// stores the edge that have been traversed to reach the vertex
-		Map<Vertex, Edge> previousMap = new HashMap<>();
-		Set<Vertex> visited = new HashSet<>();
-		Map<Vertex, Integer> vertexDepth = new HashMap<>();
-
-		vertexDepth.put(start, 0);
-
-		stack.add(start);
-		visited.add(start);
+		Deque<Path> stack = new ArrayDeque<>();
+		stack.push(new Path(start));
 		while (!stack.isEmpty()) {
-			Vertex next = stack.pop();
 			traversedNodes++;
 
+			Path path = stack.pop();
+			Vertex current = path.getLastVertex();
+
 			// check limit
-			int depthNext = vertexDepth.get(next);
-			if (depthNext > settings.maxDistance) {
+			if (path.getEdges().size() > settings.maxDistance) {
 				continue;
 			}
 
-			if (otherSenses.contains(next)) { // we found a sense of another word
-				SubgraphConstructionHelper.processFoundPath(start, next, previousMap, subGraph);
+			// check if target node
+			if (targets.contains(current)) {
+				Graphs.addPathToSubGraph(current, path, subGraph);
 			}
 
-			for (Edge edge : next.getEdges(Direction.OUT)) {
+			// explore further
+			for (Edge edge : current.getEdges(Direction.OUT)) {
 				Vertex child = edge.getVertex(Direction.IN);
-				if (!visited.contains(child) || GraphUtil.isVertexInGraph(child, subGraph)) {
-					// previous map edge is overwritten in case we find another path
-					// TODO check if this behavior is problematic
-					previousMap.put(child, edge);
-					visited.add(child);
-					stack.add(child);
-					vertexDepth.put(child, depthNext + 1);
+				if (!path.getVertices().contains(child)) {
+					Path newPath = new Path(path);
+					newPath.getVertices().add(child);
+					newPath.getEdges().add(edge);
+					stack.push(newPath);
 				}
 			}
 		}
-
 	}
-
 }

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
 
@@ -29,13 +29,13 @@ public class TestSubgraphConstructionNavigli {
 
 	@Test
 	public void testAllEdgesContainedDirected() {
-		assertEquals(subGraphData.expectedSubgraphEdges.size(), GraphUtil.getNumberOfEdges(subGraphData.getSubgraph()));
+		assertEquals(subGraphData.expectedSubgraphEdges.size(), Graphs.getNumberOfEdges(subGraphData.getSubgraph()));
 	}
 
 	@Test
 	public void testAllNodesContainedDirected() {
 		assertEquals(subGraphData.expectedSubgraphVertices.size(),
-				GraphUtil.getNumberOfVertices(subGraphData.getSubgraph()));
+				Graphs.getNumberOfVertices(subGraphData.getSubgraph()));
 	}
 
 	@Test

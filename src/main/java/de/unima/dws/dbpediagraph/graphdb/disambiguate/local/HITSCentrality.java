@@ -9,7 +9,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import edu.uci.ics.jung.algorithms.scoring.HITS;
@@ -24,7 +24,7 @@ public class HITSCentrality implements LocalDisambiguator {
 
 		List<WeightedSense> wUris = new ArrayList<>();
 		for (String uri : senses) {
-			Scores scores = hits.getVertexScore(GraphUtil.getVertexByUri(subgraph, uri));
+			Scores scores = hits.getVertexScore(Graphs.getVertexByUri(subgraph, uri));
 			wUris.add(new WeightedSense(uri, scores.authority));
 		}
 		return wUris;

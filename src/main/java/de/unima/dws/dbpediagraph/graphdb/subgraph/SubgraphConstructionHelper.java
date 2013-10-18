@@ -14,7 +14,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
 public class SubgraphConstructionHelper {
@@ -60,7 +60,7 @@ public class SubgraphConstructionHelper {
 	}
 
 	public static void processFoundPath(Vertex start, Vertex end, Map<Vertex, Edge> previousMap, Graph subGraph) {
-		List<Edge> path = GraphUtil.getPathFromTraversalMap(start, end, previousMap);
+		List<Edge> path = Graphs.getPathFromTraversalMap(start, end, previousMap);
 
 		if (path == null || path.size() == 0) {
 			logger.debug("Empty path");
@@ -74,7 +74,7 @@ public class SubgraphConstructionHelper {
 			return;
 		}
 
-		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, path);
+		Graphs.addNodeAndEdgesIfNonExistent(subGraph, path);
 
 		logger.debug("Found sense vid: {} uri: {}", end.getId(), end.getProperty(GraphConfig.URI_PROPERTY));
 		logger.debug(GraphPrinter.toStringPath(path, start, end));
@@ -83,7 +83,7 @@ public class SubgraphConstructionHelper {
 	public static void processFoundPath(Vertex start, Vertex end, Set<Vertex> vertices, Set<Edge> edges,
 			Map<Vertex, Edge> previousMap) {
 		// found path v,v1,...,vk,v'
-		List<Edge> path = GraphUtil.getPathFromTraversalMap(start, end, previousMap);
+		List<Edge> path = Graphs.getPathFromTraversalMap(start, end, previousMap);
 
 		// add all intermediate nodes and edges on the path
 

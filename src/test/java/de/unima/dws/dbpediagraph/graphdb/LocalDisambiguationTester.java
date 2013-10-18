@@ -23,7 +23,7 @@ public class LocalDisambiguationTester implements DisambiguationTester {
 		expectedDisambiguationResults = new ExpectedDisambiguationResults(TestSet.NavigliTestSet.NL_LOCAL_RESULTS,
 				LOCAL_PACKAGE_NAME);
 		this.disambiguator = disambiguator;
-		actualDisambiguationResults = disambiguator.disambiguate(GraphUtil.getUrisOfVertices(subgraphData.allSenses),
+		actualDisambiguationResults = disambiguator.disambiguate(Graphs.getUrisOfVertices(subgraphData.allSenses),
 				subgraphData.getSubgraph());
 	}
 

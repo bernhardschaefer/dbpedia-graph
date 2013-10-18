@@ -9,7 +9,7 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 
@@ -32,12 +32,12 @@ public class DegreeCentrality implements LocalDisambiguator {
 
 	@Override
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
-		int numberOfVertices = GraphUtil.getNumberOfVertices(subgraph);
+		int numberOfVertices = Graphs.getNumberOfVertices(subgraph);
 
 		List<WeightedSense> weightedSenses = new LinkedList<>();
 		for (String sense : senses) {
-			Vertex v = GraphUtil.getVertexByUri(subgraph, sense);
-			double inDegree = GraphUtil.getEdgesOfVertex(v, direction).size();
+			Vertex v = Graphs.getVertexByUri(subgraph, sense);
+			double inDegree = Graphs.getEdgesOfVertex(v, direction).size();
 			double centrality = inDegree / (numberOfVertices - 1);
 			weightedSenses.add(new WeightedSense(sense, centrality));
 		}

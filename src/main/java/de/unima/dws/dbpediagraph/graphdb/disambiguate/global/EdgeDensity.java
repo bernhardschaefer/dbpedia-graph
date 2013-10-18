@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import com.tinkerpop.blueprints.Graph;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
 
@@ -21,9 +21,9 @@ public class EdgeDensity extends AbstractGlobalDisambiguator implements GlobalDi
 
 	@Override
 	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph) {
-		int totalEdges = GraphUtil.getNumberOfEdges(checkNotNull(sensegraph));
+		int totalEdges = Graphs.getNumberOfEdges(checkNotNull(sensegraph));
 		checkArgument(totalEdges != 0, " the provided graph cannot contain 0 vertices.");
-		int totalVertices = GraphUtil.getNumberOfVertices(sensegraph);
+		int totalVertices = Graphs.getNumberOfVertices(sensegraph);
 		// binomial (v over 2) === v * (v-1) / 2
 		double edgesCompleteGraph = (totalVertices * (totalVertices - 1)) / 2.0;
 		return totalEdges / edgesCompleteGraph;

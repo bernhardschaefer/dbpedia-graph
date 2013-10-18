@@ -20,7 +20,7 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.UriShortener;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
@@ -39,9 +39,15 @@ import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 
+/**
+ * {@link SubgraphConstruction} demo for visualizing the created subgraph.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class DemoSubgraphConstruction {
 
-	private static final int MAX_DISTANCE = 4;
+	private static final int MAX_DISTANCE = 6;
 
 	private static final Dimension SCREEN_DIMENSION;
 	static {
@@ -63,7 +69,7 @@ public class DemoSubgraphConstruction {
 	}
 
 	private static void demo(Graph graph, Collection<Collection<String>> wordsSensesString) {
-		Collection<Collection<Vertex>> wordsSenses = GraphUtil.getWordsVerticesByUri(graph, wordsSensesString);
+		Collection<Collection<Vertex>> wordsSenses = Graphs.getWordsVerticesByUri(graph, wordsSensesString);
 		Collection<String> allSensesString = CollectionUtils.combine(wordsSensesString);
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,

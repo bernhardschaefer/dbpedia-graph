@@ -8,7 +8,7 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
@@ -45,7 +45,7 @@ public class PageRankCentrality implements LocalDisambiguator {
 
 		List<WeightedSense> wSenses = new ArrayList<>();
 		for (String sense : senses) {
-			Vertex vertex = GraphUtil.getVertexByUri(subgraph, sense);
+			Vertex vertex = Graphs.getVertexByUri(subgraph, sense);
 			double rank = pageRank.getVertexScore(vertex);
 
 			// double rank = vertexMemory.getProperty(vertex, PageRankProgram.PAGE_RANK);

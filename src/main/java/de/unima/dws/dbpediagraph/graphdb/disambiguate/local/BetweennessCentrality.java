@@ -8,7 +8,7 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
@@ -21,11 +21,11 @@ public class BetweennessCentrality implements LocalDisambiguator {
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
 		edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge> betweenness = new edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge>(
 				new GraphJungUndirected(subgraph));
-		int vertCount = GraphUtil.getNumberOfVertices(subgraph);
+		int vertCount = Graphs.getNumberOfVertices(subgraph);
 
 		List<WeightedSense> wSenses = new ArrayList<>();
 		for (String sense : senses) {
-			double score = betweenness.getVertexScore(GraphUtil.getVertexByUri(subgraph, sense));
+			double score = betweenness.getVertexScore(Graphs.getVertexByUri(subgraph, sense));
 			double normalizedScore = score / ((vertCount - 1) * (vertCount - 2));
 			wSenses.add(new WeightedSense(sense, normalizedScore));
 		}

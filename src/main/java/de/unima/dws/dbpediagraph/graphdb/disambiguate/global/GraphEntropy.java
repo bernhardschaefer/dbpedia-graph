@@ -6,7 +6,7 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
 
@@ -21,13 +21,13 @@ public class GraphEntropy extends AbstractGlobalDisambiguator implements GlobalD
 	@Override
 	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph) {
 
-		int totalVertices = GraphUtil.getNumberOfVertices(sensegraph);
-		int totalEdges = GraphUtil.getNumberOfEdges(sensegraph);
+		int totalVertices = Graphs.getNumberOfVertices(sensegraph);
+		int totalEdges = Graphs.getNumberOfEdges(sensegraph);
 
 		double graphEntropy = 0;
 
 		for (Vertex vertex : sensegraph.getVertices()) {
-			double degree = GraphUtil.getEdgesOfVertex(vertex, Direction.BOTH).size();
+			double degree = Graphs.getEdgesOfVertex(vertex, Direction.BOTH).size();
 			double vertexProbability = degree / (2.0 * totalEdges);
 			graphEntropy += vertexProbability * Math.log(vertexProbability);
 		}

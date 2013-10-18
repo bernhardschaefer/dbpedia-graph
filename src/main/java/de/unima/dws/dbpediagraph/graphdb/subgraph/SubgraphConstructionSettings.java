@@ -38,4 +38,5 @@ public final class SubgraphConstructionSettings {
 		this.maxDistance = maxDistance;
 		return this;
 	}
+
 }

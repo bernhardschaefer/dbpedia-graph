@@ -46,7 +46,7 @@ public class GlobalDisambiguationTester implements DisambiguationTester {
 	public void compareDisambiguationResults() {
 		for (Entry<String, Map<Class<?>, Double>> measureEntry : expectedDisambiguationData.getResults().entrySet()) {
 			Collection<String> senseAssignments = Arrays.asList(measureEntry.getKey().split(SENSES_DELIMITER));
-			Collection<Collection<Vertex>> wordsSenses = CollectionUtils.split(GraphUtil.getVerticesByUri(
+			Collection<Collection<Vertex>> wordsSenses = CollectionUtils.split(Graphs.getVerticesByUri(
 					subgraphData.getSubgraph(), senseAssignments));
 
 			// create sense graph based on the sense assignments

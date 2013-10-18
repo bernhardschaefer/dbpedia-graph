@@ -6,7 +6,7 @@ import java.util.Map;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
@@ -33,7 +33,7 @@ public class Compactness extends AbstractGlobalDisambiguator implements GlobalDi
 			}
 		}
 
-		int totalVertices = GraphUtil.getNumberOfVertices(sensegraph);
+		int totalVertices = Graphs.getNumberOfVertices(sensegraph);
 		int min = totalVertices * (totalVertices - 1);
 		int K = totalVertices; // TODO find out what k actually means
 		int max = K * min;

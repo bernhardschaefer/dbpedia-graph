@@ -8,7 +8,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphUtil;
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
 public class GraphJungUndirected extends GraphJung<Graph> {
 
@@ -18,16 +18,16 @@ public class GraphJungUndirected extends GraphJung<Graph> {
 
 	@Override
 	public Collection<Edge> getInEdges(final Vertex vertex) {
-		return GraphUtil.getEdgesOfVertex(vertex, Direction.BOTH);
+		return Graphs.getEdgesOfVertex(vertex, Direction.BOTH);
 	}
 
 	@Override
 	public Collection<Edge> getOutEdges(final Vertex vertex) {
-		return GraphUtil.getEdgesOfVertex(vertex, Direction.BOTH);
+		return Graphs.getEdgesOfVertex(vertex, Direction.BOTH);
 	}
 
 	@Override
 	public Collection<Vertex> getSuccessors(final Vertex vertex) {
-		return GraphUtil.getConnectedVerticesBothDirections(vertex);
+		return Graphs.getConnectedVerticesBothDirections(vertex);
 	}
 }
