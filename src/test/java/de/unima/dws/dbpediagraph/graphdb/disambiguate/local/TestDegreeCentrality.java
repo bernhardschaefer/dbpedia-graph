@@ -8,13 +8,13 @@ import org.junit.Test;
 
 import com.tinkerpop.blueprints.Direction;
 
-import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestDegreeCentrality {
-	private static LocalDisambiguationTestData data;
+	private static LocalDisambiguationTester data;
 	private static SubgraphTester subGraphData;
 
 	@BeforeClass
@@ -22,7 +22,7 @@ public class TestDegreeCentrality {
 		Direction direction = Direction.BOTH;
 
 		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new LocalDisambiguationTestData(new DegreeCentrality(direction), subGraphData);
+		data = new LocalDisambiguationTester(new DegreeCentrality(direction), subGraphData);
 	}
 
 	@AfterClass
@@ -33,12 +33,12 @@ public class TestDegreeCentrality {
 
 	@Test
 	public void testDisambiguateValues() {
-		data.checkDisambiguationResults();
+		data.compareDisambiguationResults();
 	}
 
 	@Test
 	public void testWeightedUrisSize() {
-		assertEquals(data.getWeightedUris().size(), subGraphData.allSenses.size());
+		assertEquals(data.getActualDisambiguationResults().size(), subGraphData.allSenses.size());
 	}
 
 }

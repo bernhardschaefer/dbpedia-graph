@@ -15,31 +15,36 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
-public class GlobalDisambiguationTestData extends AbstractDisambiguationTestData {
-	private static final Logger logger = LoggerFactory.getLogger(GlobalDisambiguationTestData.class);
+public class GlobalDisambiguationTester implements DisambiguationTester {
+	private static final Logger logger = LoggerFactory.getLogger(GlobalDisambiguationTester.class);
 
 	/** Name of the package where the local disambiguator classes reside. */
 	private static final String GLOBAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.graphdb.disambiguate.global";
 
 	private static final String SENSES_DELIMITER = ",";
+	private static final double ALLOWED_SCORE_DEVIATION = 0.005;
 
 	private final GlobalDisambiguator disambiguator;
 
-	private final ExpectedDisambiguationTestData expectedDisambiguationData;
+	private final ExpectedDisambiguationResults expectedDisambiguationData;
 
 	private final SubgraphTester subgraphData;
 
-	public GlobalDisambiguationTestData(GlobalDisambiguator disambiguator, SubgraphTester subgraphData) {
-		expectedDisambiguationData = new ExpectedDisambiguationTestData(TestSet.NavigliTestSet.NL_GLOBAL_RESULTS,
+	public GlobalDisambiguationTester(GlobalDisambiguator disambiguator, SubgraphTester subgraphData) {
+		expectedDisambiguationData = new ExpectedDisambiguationResults(TestSet.NavigliTestSet.NL_GLOBAL_RESULTS,
 				GLOBAL_PACKAGE_NAME);
 		this.disambiguator = disambiguator;
 		this.subgraphData = subgraphData;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData#compareDisambiguationResults()
+	 */
 	@Override
-	public void checkDisambiguationResults() {
-		for (Entry<String, Map<Class<?>, Double>> measureEntry : expectedDisambiguationData.getMeasureResults()
-				.entrySet()) {
+	public void compareDisambiguationResults() {
+		for (Entry<String, Map<Class<?>, Double>> measureEntry : expectedDisambiguationData.getResults().entrySet()) {
 			Collection<String> senseAssignments = Arrays.asList(measureEntry.getKey().split(SENSES_DELIMITER));
 			Collection<Collection<Vertex>> wordsSenses = CollectionUtils.split(GraphUtil.getVerticesByUri(
 					subgraphData.getSubgraph(), senseAssignments));
@@ -52,7 +57,12 @@ public class GlobalDisambiguationTestData extends AbstractDisambiguationTestData
 			double expected = measureEntry.getValue().get(disambiguator.getClass());
 
 			logger.info("senses: {} actual score: {} expected score: {}", senseAssignments, actual, expected);
-			Assert.assertEquals(expected, actual, DELTA);
+			Assert.assertEquals(expected, actual, ALLOWED_SCORE_DEVIATION);
 		}
+	}
+
+	@Override
+	public ExpectedDisambiguationResults getExpectedDisambiguationResults() {
+		return expectedDisambiguationData;
 	}
 }

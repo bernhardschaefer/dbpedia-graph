@@ -15,7 +15,8 @@ import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
 /**
- * Test a {@link SubgraphConstruction} implementation using a {@link TestSet}.
+ * Test a {@link SubgraphConstruction} implementation using a {@link TestSet}. Implementations are to be used in JUnit
+ * tests.
  * 
  * @author Bernhard Schäfer
  * 

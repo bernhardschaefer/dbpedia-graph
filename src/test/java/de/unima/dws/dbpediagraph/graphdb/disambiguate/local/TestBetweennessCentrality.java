@@ -5,17 +5,17 @@ import static org.junit.Assert.assertEquals;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestBetweennessCentrality {
-	private static final LocalDisambiguationTestData data;
+	private static final LocalDisambiguationTester data;
 	private static final SubgraphTester subGraphData;
 	static {
 		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new LocalDisambiguationTestData(new BetweennessCentrality(), subGraphData);
+		data = new LocalDisambiguationTester(new BetweennessCentrality(), subGraphData);
 	}
 
 	@AfterClass
@@ -26,11 +26,11 @@ public class TestBetweennessCentrality {
 
 	@Test
 	public void testDisambiguateValues() {
-		data.checkDisambiguationResults();
+		data.compareDisambiguationResults();
 	}
 
 	@Test
 	public void testWeightedUrisSize() {
-		assertEquals(data.getWeightedUris().size(), subGraphData.allSenses.size());
+		assertEquals(data.getActualDisambiguationResults().size(), subGraphData.allSenses.size());
 	}
 }

@@ -4,19 +4,19 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.unima.dws.dbpediagraph.graphdb.GlobalDisambiguationTestData;
+import de.unima.dws.dbpediagraph.graphdb.GlobalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestEdgeDensity {
-	private static GlobalDisambiguationTestData data;
+	private static GlobalDisambiguationTester data;
 	private static SubgraphTester subGraphData;
 
 	@BeforeClass
 	public static void setUp() {
 		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new GlobalDisambiguationTestData(new EdgeDensity(), subGraphData);
+		data = new GlobalDisambiguationTester(new EdgeDensity(), subGraphData);
 	}
 
 	@AfterClass
@@ -27,6 +27,6 @@ public class TestEdgeDensity {
 
 	@Test
 	public void testDisambiguateValues() {
-		data.checkDisambiguationResults();
+		data.compareDisambiguationResults();
 	}
 }

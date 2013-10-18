@@ -1,6 +1,17 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
+
+/**
+ * Test set consisting of file names that can be parsed to test {@link SubgraphConstruction} and disambiguation using
+ * {@link Disambiguator} in JUnit tests.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class TestSet {
+	// navigli test data
 	public static class NavigliTestSet {
 		/** Test Setup from Navigli&Lapata (2010) */
 		public static final String NL_PKG = "/test-navigli";
@@ -18,21 +29,21 @@ public class TestSet {
 		public static final String NL_LOCAL_RESULTS = NL_PKG + "/nl-local-test.results";
 	}
 
-	private static final String CYCLIC_TEST_PKG = "/test-cyclic";
+	public static final TestSet NAVIGLI_FILE_NAMES = new TestSet(NavigliTestSet.NL_VERTICES, NavigliTestSet.NL_EDGES,
+			NavigliTestSet.NL_SENSES, NavigliTestSet.NL_EXPECTED_VERTICES, NavigliTestSet.NL_EXPECTED_EDGES);
 
+	// constructed data to check if the algorithm is capable of dealing with cycles
+	private static final String CYCLIC_TEST_PKG = "/test-cyclic";
+	public static final TestSet CYCLIC_FILE_NAMES = new TestSet(CYCLIC_TEST_PKG + "/vertices", CYCLIC_TEST_PKG
+			+ "/edges", CYCLIC_TEST_PKG + "/senses", CYCLIC_TEST_PKG + "/subgraph-vertices", CYCLIC_TEST_PKG
+			+ "/subgraph-edges");
+
+	// the required files
 	String verticesFile;
 	String edgesFile;
 	String sensesFile;
 	String expectedVerticesFile;
-
 	String expectedEdgesFile;
-
-	public static final TestSet NAVIGLI_FILE_NAMES = new TestSet(NavigliTestSet.NL_VERTICES, NavigliTestSet.NL_EDGES,
-			NavigliTestSet.NL_SENSES, NavigliTestSet.NL_EXPECTED_VERTICES, NavigliTestSet.NL_EXPECTED_EDGES);
-
-	public static final TestSet CYCLIC_FILE_NAMES = new TestSet(CYCLIC_TEST_PKG + "/vertices", CYCLIC_TEST_PKG
-			+ "/edges", CYCLIC_TEST_PKG + "/senses", CYCLIC_TEST_PKG + "/subgraph-vertices", CYCLIC_TEST_PKG
-			+ "/subgraph-edges");
 
 	public TestSet(String verticesFile, String edgesFile, String sensesFile, String expectedVerticesFile,
 			String expectedEdgesFile) {
