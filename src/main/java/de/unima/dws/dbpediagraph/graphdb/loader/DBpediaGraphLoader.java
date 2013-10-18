@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
+import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.filter.LoadingStatementFilter;
 import de.unima.dws.dbpediagraph.graphdb.filter.LoadingStatementFilterFactory;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
@@ -77,7 +77,7 @@ public class DBpediaGraphLoader {
 		LoadingMetrics globalMetric = new LoadingMetrics("OVERALL");
 		List<LoadingMetrics> metrics = new LinkedList<LoadingMetrics>();
 
-		Graph graph = GraphProvider.getBatchGraph(BUFFER_SIZE);
+		Graph graph = GraphFactory.getBatchGraph(BUFFER_SIZE);
 
 		for (File f : files) {
 			LoadingMetrics metric = new LoadingMetrics(f.getName());

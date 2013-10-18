@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.GraphFactory;
 import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
@@ -13,14 +12,14 @@ import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 /**
- * Noninstantiable graph provider class that provides graph instances.
+ * Noninstantiable graph factory class that provides graph instances.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public final class GraphProvider {
+public final class GraphFactory {
 
-	private static final Logger logger = LoggerFactory.getLogger(GraphProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(GraphFactory.class);
 
 	private static final TransactionalGraph graph = openGraph();
 
@@ -68,7 +67,7 @@ public final class GraphProvider {
 	private static TransactionalGraph openGraph() {
 		long startTime = System.currentTimeMillis();
 
-		Graph graph = GraphFactory.open(GraphConfig.config());
+		Graph graph = com.tinkerpop.blueprints.GraphFactory.open(GraphConfig.config());
 		if (graph instanceof Neo4jGraph) {
 			Neo4jGraph nGraph = (Neo4jGraph) graph;
 			nGraph.createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
@@ -83,7 +82,7 @@ public final class GraphProvider {
 	}
 
 	// Suppress default constructor for noninstantiability
-	private GraphProvider() {
+	private GraphFactory() {
 		throw new AssertionError();
 	}
 }

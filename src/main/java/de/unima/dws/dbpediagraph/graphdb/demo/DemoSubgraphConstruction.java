@@ -19,7 +19,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
+import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.UriShortener;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
@@ -60,7 +60,7 @@ public class DemoSubgraphConstruction {
 	}
 
 	public static void dbpediaDemo() throws IOException, URISyntaxException {
-		Graph graph = GraphProvider.getDBpediaGraph();
+		Graph graph = GraphFactory.getDBpediaGraph();
 
 		Collection<Collection<String>> wordsSensesString = FileUtils.readUrisFromFile(DemoSubgraphConstruction.class,
 				"/napoleon-sentence-test", GraphConfig.DBPEDIA_RESOURCE_PREFIX);

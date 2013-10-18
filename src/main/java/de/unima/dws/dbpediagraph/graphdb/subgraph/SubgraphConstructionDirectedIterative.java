@@ -13,7 +13,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
+import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
@@ -47,7 +47,7 @@ class SubgraphConstructionDirectedIterative implements SubgraphConstruction {
 		Collection<Vertex> allSenses = CollectionUtils.combine(wordsSenses);
 
 		// initialize subgraph with all senses of all words
-		Graph subGraph = GraphProvider.newInMemoryGraph();
+		Graph subGraph = GraphFactory.newInMemoryGraph();
 		Graphs.addVerticesByUrisOfVertices(subGraph, allSenses);
 
 		// perform a DFS for each sense trying to find path to senses of other words
