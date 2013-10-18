@@ -30,6 +30,17 @@ import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 class SubgraphConstructionRec implements SubgraphConstruction {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionDirected.class);
 
+	private static void addPathToSubGraph(Vertex current, List<Edge> path, Graph subGraph) {
+		Vertex start = path.get(0).getVertex(Direction.OUT);
+		logger.debug("Found sense vid: {} uri: {}", current.getId(), current.getProperty(GraphConfig.URI_PROPERTY));
+		logger.debug(GraphPrinter.toStringPath(path, start, current));
+		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, path);
+	}
+
+	private static void addPathToSubGraph(Vertex current, Path<Vertex, Edge> path, Graph subGraph) {
+		addPathToSubGraph(current, path.getEdges(), subGraph);
+	}
+
 	private Graph graph;
 
 	private final SubgraphConstructionSettings settings;
@@ -43,13 +54,6 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 
 	public SubgraphConstructionRec(SubgraphConstructionSettings settings) {
 		this.settings = settings;
-	}
-
-	private void addPathToSubGraph(Vertex current, List<Edge> path, Graph subGraph) {
-		Vertex start = path.get(0).getVertex(Direction.OUT);
-		logger.debug("Found sense vid: {} uri: {}", current.getId(), current.getProperty(GraphConfig.URI_PROPERTY));
-		logger.debug(GraphPrinter.toStringPath(path, start, current));
-		GraphUtil.addNodeAndEdgesIfNonExistent(subGraph, path);
 	}
 
 	@Override
@@ -67,10 +71,10 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 		for (Collection<Vertex> senses : wordsSenses) {
 			Collection<Vertex> otherSenses = CollectionUtils.removeAll(allSenses, senses);
 			for (Vertex start : senses) {
-				logger.debug("");
-				logger.debug("DFS starting point: vid: {} uri: {}", start.getId(),
+				logger.info("Starting DFS with vid: {}, uri: {}", start.getId(),
 						start.getProperty(GraphConfig.URI_PROPERTY));
-				dfs(start, new ArrayList<Edge>(), otherSenses, subGraph);
+				dfs(start, new Path<Vertex, Edge>(), otherSenses, subGraph);
+				// dfs(start, new ArrayList<Edge>(), otherSenses, subGraph);
 			}
 		}
 
@@ -79,7 +83,7 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 		return subGraph;
 	}
 
-	private void dfs(Vertex current, List<Edge> path, Collection<Vertex> targets, Graph subGraph) {
+	protected void dfs(Vertex current, List<Edge> path, Collection<Vertex> targets, Graph subGraph) {
 		traversedNodes++;
 
 		// check limit
@@ -95,9 +99,34 @@ class SubgraphConstructionRec implements SubgraphConstruction {
 		// explore further
 		for (Edge edge : current.getEdges(Direction.OUT)) {
 			Vertex child = edge.getVertex(Direction.IN);
-			if (!GraphUtil.isNodeOnPath(child, path)) {
+			if (!GraphUtil.isNodeOnPath(child, path)) { // this is slow (linear time)
 				List<Edge> newPath = new ArrayList<>(path);
 				newPath.add(edge);
+				dfs(child, newPath, targets, subGraph);
+			}
+		}
+	}
+
+	protected void dfs(Vertex current, Path<Vertex, Edge> path, Collection<Vertex> targets, Graph subGraph) {
+		traversedNodes++;
+
+		// check limit
+		if (path.getEdges().size() > settings.maxDistance) {
+			return;
+		}
+
+		// check if target node
+		if (targets.contains(current)) {
+			addPathToSubGraph(current, path, subGraph);
+		}
+
+		// explore further
+		for (Edge edge : current.getEdges(Direction.OUT)) {
+			Vertex child = edge.getVertex(Direction.IN);
+			if (!path.getVertices().contains(child)) {
+				Path<Vertex, Edge> newPath = new Path<>(path);
+				newPath.getVertices().add(child);
+				newPath.getEdges().add(edge);
 				dfs(child, newPath, targets, subGraph);
 			}
 		}
