@@ -18,9 +18,6 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.subgraph.Path;
-import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
-
 /**
  * Noninstantiable utility class for performing various graph operations. All operations are static.
  * 
@@ -46,17 +43,6 @@ public final class Graphs {
 
 			addEdgeIfNonExistent(graph, edge, outVertex, inVertex);
 		}
-	}
-
-	public static void addPathToSubGraph(Vertex current, List<Edge> path, Graph subGraph) {
-		Vertex start = path.get(0).getVertex(Direction.OUT);
-		logger.debug("Found sense vid: {} uri: {}", current.getId(), current.getProperty(GraphConfig.URI_PROPERTY));
-		logger.debug(GraphPrinter.toStringPath(path, start, current));
-		Graphs.addNodeAndEdgesIfNonExistent(subGraph, path);
-	}
-
-	public static void addPathToSubGraph(Vertex current, Path path, Graph subGraph) {
-		addPathToSubGraph(current, path.getEdges(), subGraph);
 	}
 
 	/**

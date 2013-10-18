@@ -30,8 +30,9 @@ import de.unima.dws.dbpediagraph.graphdb.Graphs;
  * @author Bernhard Schäfer
  * 
  */
-// TODO think about where to put methods such as lineToLabel
 public final class FileUtils {
+
+	public static final String DELIMITER = "\\s+";
 
 	/**
 	 * Extract a collection of all files from a list of arguments. For each argument, it is checked whether the argument
@@ -53,42 +54,6 @@ public final class FileUtils {
 		}
 		return files;
 	}
-
-	/**
-	 * Parse all non-empty and non-comment lines (comment lines start with '#') from a test results file into a map.
-	 * 
-	 * @param clazz
-	 *            the class whose classpath will be used.
-	 */
-	// public static Map<String, Map<ConnectivityMeasure, Double>> parseDisambiguationResultsOld(String fileName,
-	// Class<?> clazz) throws IOException, URISyntaxException {
-	//
-	// Map<String, Map<ConnectivityMeasure, Double>> results = new HashMap<>();
-	//
-	// List<String> lines = FileUtils.readLinesFromFile(clazz, fileName);
-	// if (lines.isEmpty())
-	// throw new RuntimeException(fileName + "file shouldnt be empty.");
-	//
-	// // multiple tabs as delimiters
-	// String delimiterRegex = "\t+";
-	// String[] headers = lines.remove(0).split(delimiterRegex);
-	//
-	// for (String line : lines) {
-	// String[] values = line.split(delimiterRegex);
-	// String uri = values[0];
-	//
-	// Map<ConnectivityMeasure, Double> map = new EnumMap<>(ConnectivityMeasure.class);
-	//
-	// for (int i = 1; i < values.length; i++) {
-	// Double value = Double.parseDouble(values[i]);
-	// ConnectivityMeasure measure = ConnectivityMeasure.valueOf(headers[i]);
-	// map.put(measure, value);
-	// }
-	//
-	// results.put(uri, map);
-	// }
-	// return results;
-	// }
 
 	public static String lineToLabel(String line) {
 		return line.replaceAll(" ", "");
@@ -116,12 +81,10 @@ public final class FileUtils {
 		if (lines.isEmpty())
 			throw new RuntimeException(fileName + "file shouldnt be empty.");
 
-		// multiple tabs as delimiters
-		String delimiterRegex = "\t+";
-		String[] headers = lines.remove(0).split(delimiterRegex);
+		String[] headers = lines.remove(0).split(DELIMITER);
 
 		for (String line : lines) {
-			String[] values = line.split(delimiterRegex);
+			String[] values = line.split(DELIMITER);
 			String uri = values[0];
 
 			Map<Class<?>, Double> map = new HashMap<>();
@@ -154,7 +117,7 @@ public final class FileUtils {
 		}
 
 		for (String line : edges) {
-			String[] srcDest = line.split("\\s+");
+			String[] srcDest = line.split(DELIMITER);
 			Vertex outVertex = graph.getVertex(srcDest[0]);
 			Vertex inVertex = graph.getVertex(srcDest[1]);
 			String label = lineToLabel(line);
@@ -192,7 +155,7 @@ public final class FileUtils {
 		Collection<Collection<String>> wordsSenses = new ArrayList<>();
 		List<String> lines = readRelevantLinesFromFile(clazz, fileName);
 		for (String line : lines) {
-			String[] wordSenses = line.split("\\s+");
+			String[] wordSenses = line.split(DELIMITER);
 			for (int i = 0; i < wordSenses.length; i++) {
 				wordSenses[i] = uriPrefix + wordSenses[i];
 			}

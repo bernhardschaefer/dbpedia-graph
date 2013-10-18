@@ -16,7 +16,6 @@ import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphProvider;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
-import de.unima.dws.dbpediagraph.graphdb.util.GraphPrinter;
 
 /**
  * Construct subgraph based on algorithm described in paper by Navigli and Lapata (2010). NOTE: This implementation only
@@ -42,7 +41,7 @@ class SubgraphConstructionDirectedIterative implements SubgraphConstruction {
 
 	@Override
 	public Graph createSubgraph(Collection<Collection<Vertex>> wordsSenses) {
-		SubgraphConstructionHelper.checkValidWordsSenses(graph, wordsSenses);
+		SubgraphConstructions.checkValidWordsSenses(graph, wordsSenses);
 		long startTime = System.currentTimeMillis();
 
 		Collection<Vertex> allSenses = CollectionUtils.combine(wordsSenses);
@@ -59,7 +58,7 @@ class SubgraphConstructionDirectedIterative implements SubgraphConstruction {
 			}
 		}
 
-		GraphPrinter.logSubgraphConstructionStats(logger, getClass(), subGraph, startTime, traversedNodes,
+		SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, startTime, traversedNodes,
 				settings.maxDistance);
 
 		return subGraph;
@@ -94,7 +93,7 @@ class SubgraphConstructionDirectedIterative implements SubgraphConstruction {
 
 			// check if target node
 			if (targets.contains(current)) {
-				Graphs.addPathToSubGraph(current, path, subGraph);
+				SubgraphConstructions.addPathToSubGraph(current, path, subGraph);
 			}
 
 			// explore further

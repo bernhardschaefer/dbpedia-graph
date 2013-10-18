@@ -16,7 +16,7 @@ import com.tinkerpop.blueprints.Vertex;
  * @author Bernhard Schäfer
  * 
  */
-public class Path {
+class Path {
 	private Set<Vertex> vertices;
 	private List<Edge> edges;
 
