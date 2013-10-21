@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import com.tinkerpop.blueprints.Vertex;
 
@@ -19,8 +20,8 @@ public class CollectionUtils {
 	/**
 	 * Remove all entries from collection a that are in collection b and return a new collection.
 	 */
-	public static <T> Collection<T> removeAll(Collection<T> a, Collection<T> b) {
-		Collection<T> c = new HashSet<T>(a);
+	public static <T> Set<T> removeAll(Collection<T> a, Collection<T> b) {
+		Set<T> c = new HashSet<T>(a);
 		c.removeAll(b);
 		return c;
 	}

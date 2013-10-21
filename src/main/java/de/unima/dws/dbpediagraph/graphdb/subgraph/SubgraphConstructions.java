@@ -78,8 +78,10 @@ class SubgraphConstructions {
 
 	public static void logSubgraphConstructionStats(Logger logger, Class<?> clazz, Graph subgraph, long startTime,
 			long traversedNodes, int maxDistance) {
-		logger.info("{}: time {} sec., traversed nodes: {}, maxDepth: {}", clazz.getSimpleName(),
-				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, maxDistance);
+		// logger.info("{}: time {} sec., traversed nodes: {}, maxDepth: {}", clazz.getSimpleName(),
+		// (System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, maxDistance);
+		logger.info(String.format("%s: time %.2f sec., traversed nodes: %,d, maxDepth: %d", clazz.getSimpleName(),
+				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, maxDistance));
 		if (logger.isDebugEnabled()) {
 			logger.debug("Subgraph vertices:{}, edges:{}", Graphs.getNumberOfVertices(subgraph),
 					Graphs.getNumberOfEdges(subgraph));
