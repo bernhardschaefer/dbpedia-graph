@@ -14,6 +14,9 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class PageRankCentrality implements LocalDisambiguator {
 	private static final int DEFAULT_ITERATIONS = 10;
 
@@ -23,8 +26,7 @@ public class PageRankCentrality implements LocalDisambiguator {
 	private String name;
 
 	public PageRankCentrality(double alpha) {
-		this.alpha = alpha;
-		this.iterations = DEFAULT_ITERATIONS;
+		this(alpha, DEFAULT_ITERATIONS);
 	}
 
 	public PageRankCentrality(double alpha, int iterations) {

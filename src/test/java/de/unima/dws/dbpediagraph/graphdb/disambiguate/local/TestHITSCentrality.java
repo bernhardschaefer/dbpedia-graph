@@ -18,7 +18,7 @@ public class TestHITSCentrality {
 	@BeforeClass
 	public static void setUp() {
 		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new LocalDisambiguationTester(new HITSCentrality(), subGraphData);
+		data = new LocalDisambiguationTester(HITSCentrality.INSTANCE, subGraphData);
 	}
 
 	@AfterClass

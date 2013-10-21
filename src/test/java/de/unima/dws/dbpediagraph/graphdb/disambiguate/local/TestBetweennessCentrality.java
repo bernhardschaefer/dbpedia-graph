@@ -15,7 +15,7 @@ public class TestBetweennessCentrality {
 	private static final SubgraphTester subGraphData;
 	static {
 		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new LocalDisambiguationTester(new BetweennessCentrality(), subGraphData);
+		data = new LocalDisambiguationTester(BetweennessCentrality.INSTANCE, subGraphData);
 	}
 
 	@AfterClass

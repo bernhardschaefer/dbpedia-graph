@@ -6,8 +6,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.tinkerpop.blueprints.Direction;
-
 import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
@@ -19,10 +17,8 @@ public class TestDegreeCentrality {
 
 	@BeforeClass
 	public static void setUp() {
-		Direction direction = Direction.BOTH;
-
 		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new LocalDisambiguationTester(new DegreeCentrality(direction), subGraphData);
+		data = new LocalDisambiguationTester(DegreeCentrality.IN_AND_OUT_DEGREE, subGraphData);
 	}
 
 	@AfterClass

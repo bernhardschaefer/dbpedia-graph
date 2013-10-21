@@ -16,12 +16,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
+import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
 /**
@@ -55,8 +57,8 @@ public final class FileUtils {
 		return files;
 	}
 
-	public static String lineToLabel(String line) {
-		return line.replaceAll(" ", "");
+	public static String lineToLabel(String[] column) {
+		return column.length > 2 ? column[2] : StringUtils.join(column);
 	}
 
 	public static Collection<Collection<Vertex>> parseAllWordsSenses(Graph graph, String fileName, Class<?> clazz,
@@ -106,7 +108,7 @@ public final class FileUtils {
 	 */
 	public static Graph parseGraph(String verticesFileName, String edgesFileName, Class<?> clazz) throws IOException,
 			URISyntaxException {
-		Graph graph = new TinkerGraph();
+		Graph graph = GraphFactory.newInMemoryGraph();
 
 		List<String> vertices = FileUtils.readRelevantLinesFromFile(clazz, verticesFileName);
 		List<String> edges = FileUtils.readRelevantLinesFromFile(clazz, edgesFileName);
@@ -117,10 +119,10 @@ public final class FileUtils {
 		}
 
 		for (String line : edges) {
-			String[] srcDest = line.split(DELIMITER);
-			Vertex outVertex = graph.getVertex(srcDest[0]);
-			Vertex inVertex = graph.getVertex(srcDest[1]);
-			String label = lineToLabel(line);
+			String[] columns = line.split(DELIMITER);
+			Vertex outVertex = graph.getVertex(columns[0]);
+			Vertex inVertex = graph.getVertex(columns[1]);
+			String label = lineToLabel(columns);
 			Edge e = graph.addEdge(label, outVertex, inVertex, label);
 			e.setProperty(GraphConfig.URI_PROPERTY, label);
 		}

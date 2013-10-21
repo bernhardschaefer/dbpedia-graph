@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 
 import org.apache.commons.collections15.Transformer;
 
-import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
@@ -78,8 +77,8 @@ public class DemoSubgraphConstruction {
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE));
 		Graph subGraph = sc.createSubgraph(wordsSenses);
 
-		Disambiguator[] disambiguators = new LocalDisambiguator[] { new BetweennessCentrality(),
-				new DegreeCentrality(Direction.BOTH), new HITSCentrality(), new KPPCentrality(),
+		Disambiguator[] disambiguators = new LocalDisambiguator[] { BetweennessCentrality.INSTANCE,
+				DegreeCentrality.IN_AND_OUT_DEGREE, HITSCentrality.INSTANCE, KPPCentrality.INSTANCE,
 				new PageRankCentrality(0.08) };
 		for (Disambiguator d : disambiguators) {
 			System.out.println(d);

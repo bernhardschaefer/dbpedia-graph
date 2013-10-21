@@ -15,7 +15,6 @@ import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
-//TODO enhance test by including multiple edges between two nodes
 public class TestSubgraphConstructionCyclic {
 	private static final int MAX_DISTANCE = 10;
 
@@ -36,7 +35,7 @@ public class TestSubgraphConstructionCyclic {
 	public void testContainedEdges() {
 		for (String edgeName : subGraphData.expectedSubgraphEdges) {
 			assertNotNull("Edge should be contained in subgraph: " + edgeName,
-					subGraphData.getSubgraph().getEdge(FileUtils.lineToLabel(edgeName)));
+					subGraphData.getSubgraph().getEdge(FileUtils.lineToLabel(edgeName.split(FileUtils.DELIMITER))));
 		}
 	}
 
@@ -55,8 +54,7 @@ public class TestSubgraphConstructionCyclic {
 
 	@Test
 	public void testNumberOfVertices() {
-		assertEquals(subGraphData.expectedSubgraphVertices.size(),
-				Graphs.numberOfVertices(subGraphData.getSubgraph()));
+		assertEquals(subGraphData.expectedSubgraphVertices.size(), Graphs.numberOfVertices(subGraphData.getSubgraph()));
 	}
 
 }

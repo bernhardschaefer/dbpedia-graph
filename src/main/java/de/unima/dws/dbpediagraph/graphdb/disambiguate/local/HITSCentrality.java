@@ -15,7 +15,11 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import edu.uci.ics.jung.algorithms.scoring.HITS;
 import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
 
-public class HITSCentrality implements LocalDisambiguator {
+/**
+ * @author Bernhard Schäfer
+ */
+public enum HITSCentrality implements LocalDisambiguator {
+	INSTANCE;
 
 	@Override
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
