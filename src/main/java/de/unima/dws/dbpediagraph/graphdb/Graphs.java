@@ -63,10 +63,21 @@ public final class Graphs {
 		}
 	}
 
+	public static Iterable<Edge> getConnectedEdges(Vertex current, GraphType graphDirection) {
+		switch (graphDirection) {
+		case DIRECTED_GRAPH:
+			return current.getEdges(Direction.OUT);
+		case UNDIRECTED_GRAPH:
+			return current.getEdges(Direction.BOTH);
+		default:
+			throw new IllegalArgumentException("Suitable graph direction is missing: " + graphDirection);
+		}
+	}
+
 	public static Set<Vertex> getConnectedVerticesBothDirections(Vertex vertex) {
 		final Set<Vertex> vertices = new HashSet<Vertex>();
 		for (final Edge edge : vertex.getEdges(Direction.BOTH)) {
-			Vertex other = Graphs.getOppositeVertex(edge, vertex);
+			Vertex other = Graphs.getOppositeVertexUnsafe(edge, vertex);
 			vertices.add(other);
 		}
 		return vertices;
@@ -109,16 +120,28 @@ public final class Graphs {
 		return getIterItemCount(subgraph.getVertices().iterator());
 	}
 
-	public static Vertex getOppositeVertex(Edge edge, Vertex vertex) {
+	public static Vertex getOppositeVertexSafe(Edge edge, Vertex vertex) {
 		Vertex in = edge.getVertex(Direction.IN);
 		Vertex out = edge.getVertex(Direction.OUT);
-		if (vertex.equals(in)) {
-			return out;
-		} else if (vertex.equals(out)) {
+		if (vertex.equals(out)) {
 			return in;
+		} else if (vertex.equals(in)) {
+			return out;
 		} else {
 			throw new IllegalArgumentException(String.format("Vertex %s is not part of edge %s", vertex.getId(), edge));
 		}
+	}
+
+	/**
+	 * Get the other vertex of the edge. NOTE: To improve performance this method does not check if the provided vertex
+	 * actually belongs to the provided edge.
+	 */
+	public static Vertex getOppositeVertexUnsafe(Edge edge, Vertex vertex) {
+		Vertex in = edge.getVertex(Direction.IN);
+		if (!vertex.equals(in))
+			return in;
+		else
+			return edge.getVertex(Direction.OUT);
 	}
 
 	/**
@@ -157,13 +180,13 @@ public final class Graphs {
 				if (!edges.contains(edge))
 					untraversedOutgoingEdges.add(edge);
 			}
-			
+
 			Collection<Edge> untraversedIngoingEdges = new ArrayList<Edge>();
 			for (Edge edge : current.getEdges(Direction.IN, GraphConfig.EDGE_LABEL)) {
 				if (!edges.contains(edge))
 					untraversedIngoingEdges.add(edge);
 			}
-			
+
 			untraversedIngoingEdges.addAll(untraversedOutgoingEdges);
 			return untraversedIngoingEdges;
 		default:

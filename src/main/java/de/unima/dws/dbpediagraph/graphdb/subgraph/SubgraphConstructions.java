@@ -77,7 +77,7 @@ class SubgraphConstructions {
 	}
 
 	public static void logSubgraphConstructionStats(Logger logger, Class<?> clazz, Graph subgraph, long startTime,
-			int traversedNodes, int maxDistance) {
+			long traversedNodes, int maxDistance) {
 		logger.info("{}: time {} sec., traversed nodes: {}, maxDepth: {}", clazz.getSimpleName(),
 				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, maxDistance);
 		if (logger.isDebugEnabled()) {
@@ -145,7 +145,7 @@ class SubgraphConstructions {
 			for (Edge e : path) {
 				builder.append(from.getProperty(GraphConfig.URI_PROPERTY)).append("--")
 						.append(e.getProperty(GraphConfig.URI_PROPERTY)).append("--");
-				from = Graphs.getOppositeVertex(e, from);
+				from = Graphs.getOppositeVertexUnsafe(e, from);
 			}
 			break;
 		}

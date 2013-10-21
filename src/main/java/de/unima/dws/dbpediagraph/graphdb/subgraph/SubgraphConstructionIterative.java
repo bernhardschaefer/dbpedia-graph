@@ -31,7 +31,7 @@ class SubgraphConstructionIterative implements SubgraphConstruction {
 	private final Graph graph;
 	private final SubgraphConstructionSettings settings;
 
-	private int traversedNodes;
+	private long traversedNodes;
 
 	public SubgraphConstructionIterative(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
@@ -96,8 +96,10 @@ class SubgraphConstructionIterative implements SubgraphConstruction {
 			}
 
 			// explore further
-			for (Edge edge : Graphs.getUntraversedConnectedEdges(current, path.getEdges(), settings.graphType)) {
-				Vertex child = Graphs.getOppositeVertex(edge, current);
+			for (Edge edge : Graphs.getConnectedEdges(current, settings.graphType)) {
+				if (path.getEdges().contains(edge)) // edge has been traversed already on this path
+					continue;
+				Vertex child = Graphs.getOppositeVertexUnsafe(edge, current);
 				if (!path.getVertices().contains(child)) {
 					Path newPath = Path.newHop(path, edge, child);
 					stack.push(newPath);
