@@ -23,7 +23,7 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 	}
 
 	@Override
-	void dfs(Path path, Set<Vertex> targets, Graph subGraph) {
+	protected void dfs(Path path, Set<Vertex> targets, Graph subGraph) {
 		Deque<Path> stack = new ArrayDeque<>();
 		stack.push(path);
 		while (!stack.isEmpty()) {

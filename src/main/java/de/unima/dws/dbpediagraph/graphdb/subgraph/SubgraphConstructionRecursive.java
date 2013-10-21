@@ -20,7 +20,7 @@ class SubgraphConstructionRecursive extends AbstractSubgraphConstruction impleme
 	}
 
 	@Override
-	void dfs(Path path, Set<Vertex> targets, Graph subGraph) {
+	protected void dfs(Path path, Set<Vertex> targets, Graph subGraph) {
 		traversedNodes++;
 
 		Vertex current = path.getLast();

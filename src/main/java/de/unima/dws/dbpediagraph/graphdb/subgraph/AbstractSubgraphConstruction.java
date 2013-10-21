@@ -67,6 +67,6 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 	 * @param subGraph
 	 *            the subgraph where the paths are inserted to
 	 */
-	abstract void dfs(Path path, Set<Vertex> targets, Graph subGraph);
+	protected abstract void dfs(Path path, Set<Vertex> targets, Graph subGraph);
 
 }
