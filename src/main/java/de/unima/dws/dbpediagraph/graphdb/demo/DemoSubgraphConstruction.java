@@ -48,8 +48,8 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
  */
 public class DemoSubgraphConstruction {
 
-	private static final int MAX_DISTANCE = 6;
-	private static final GraphType GRAPH_TYPE = GraphType.UNDIRECTED_GRAPH;
+	private static final int MAX_DISTANCE = 4;
+	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
 
 	private static final Dimension SCREEN_DIMENSION;
 	static {
