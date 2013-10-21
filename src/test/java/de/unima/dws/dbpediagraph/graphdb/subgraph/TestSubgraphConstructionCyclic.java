@@ -15,6 +15,7 @@ import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
+//TODO enhance test by including multiple edges between two nodes
 public class TestSubgraphConstructionCyclic {
 	private static final int MAX_DISTANCE = 10;
 

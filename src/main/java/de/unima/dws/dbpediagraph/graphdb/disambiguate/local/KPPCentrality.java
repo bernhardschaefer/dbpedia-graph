@@ -16,6 +16,7 @@ import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 
+//TODO transform stateless disambiguators to singleton using enum
 public class KPPCentrality implements LocalDisambiguator {
 
 	@Override
