@@ -20,6 +20,7 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.UriShortener;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
@@ -47,7 +48,8 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
  */
 public class DemoSubgraphConstruction {
 
-	private static final int MAX_DISTANCE = 4;
+	private static final int MAX_DISTANCE = 2;
+	private static final GraphType GRAPH_TYPE = GraphType.UNDIRECTED_GRAPH;
 
 	private static final Dimension SCREEN_DIMENSION;
 	static {
@@ -73,7 +75,7 @@ public class DemoSubgraphConstruction {
 		Collection<String> allSensesString = CollectionUtils.combine(wordsSensesString);
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
-				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE));
+				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE));
 		Graph subGraph = sc.createSubgraph(wordsSenses);
 
 		Disambiguator[] disambiguators = new LocalDisambiguator[] { new BetweennessCentrality(),

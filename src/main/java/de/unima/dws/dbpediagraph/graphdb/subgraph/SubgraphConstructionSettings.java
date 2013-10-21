@@ -1,7 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
-import com.tinkerpop.blueprints.Direction;
-
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.filter.DummyEdgeFilter;
 import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 
@@ -9,7 +8,7 @@ public final class SubgraphConstructionSettings {
 
 	// parameters are initialized to default values
 	EdgeFilter edgeFilter = new DummyEdgeFilter();
-	Direction direction = Direction.OUT; // TODO implement using direction in findPath()
+	GraphType graphType = GraphType.DIRECTED_GRAPH;
 	/**
 	 * "the distance between two vertices in a graph is the <i>number of edges</i> in a shortest path connecting them."
 	 * 
@@ -24,8 +23,8 @@ public final class SubgraphConstructionSettings {
 		return DEFAULT;
 	}
 
-	public SubgraphConstructionSettings direction(Direction direction) {
-		this.direction = direction;
+	public SubgraphConstructionSettings graphType(GraphType graphType) {
+		this.graphType = graphType;
 		return this;
 	}
 

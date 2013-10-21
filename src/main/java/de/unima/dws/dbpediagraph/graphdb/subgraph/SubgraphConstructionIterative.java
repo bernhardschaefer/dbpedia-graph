@@ -7,7 +7,6 @@ import java.util.Deque;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
@@ -26,15 +25,15 @@ import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
  * @author Bernhard Schäfer
  * 
  */
-class SubgraphConstructionDirectedIterative implements SubgraphConstruction {
-	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionDirectedIterative.class);
+class SubgraphConstructionIterative implements SubgraphConstruction {
+	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructionIterative.class);
 
 	private final Graph graph;
 	private final SubgraphConstructionSettings settings;
 
 	private int traversedNodes;
 
-	public SubgraphConstructionDirectedIterative(Graph graph, SubgraphConstructionSettings settings) {
+	public SubgraphConstructionIterative(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
 		this.settings = settings;
 	}
@@ -84,7 +83,7 @@ class SubgraphConstructionDirectedIterative implements SubgraphConstruction {
 			traversedNodes++;
 
 			Path path = stack.pop();
-			Vertex current = path.getLastVertex();
+			Vertex current = path.getLast();
 
 			// check limit
 			if (path.getEdges().size() > settings.maxDistance) {
@@ -93,16 +92,14 @@ class SubgraphConstructionDirectedIterative implements SubgraphConstruction {
 
 			// check if target node
 			if (targets.contains(current)) {
-				SubgraphConstructions.addPathToSubGraph(current, path, subGraph);
+				SubgraphConstructions.addPathToSubGraph(current, path, subGraph, settings.graphType);
 			}
 
 			// explore further
-			for (Edge edge : current.getEdges(Direction.OUT)) {
-				Vertex child = edge.getVertex(Direction.IN);
+			for (Edge edge : Graphs.getUntraversedConnectedEdges(current, path.getEdges(), settings.graphType)) {
+				Vertex child = Graphs.getOppositeVertex(edge, current);
 				if (!path.getVertices().contains(child)) {
-					Path newPath = new Path(path);
-					newPath.getVertices().add(child);
-					newPath.getEdges().add(edge);
+					Path newPath = Path.newHop(path, edge, child);
 					stack.push(newPath);
 				}
 			}

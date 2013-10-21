@@ -14,6 +14,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
 /**
@@ -35,15 +36,15 @@ class SubgraphConstructions {
 		}
 	}
 
-	public static void addPathToSubGraph(Vertex current, List<Edge> path, Graph subGraph) {
-		Vertex start = path.get(0).getVertex(Direction.OUT);
-		logger.debug("Found sense vid: {} uri: {}", current.getId(), current.getProperty(GraphConfig.URI_PROPERTY));
-		logger.debug(toStringPath(path, start, current));
-		Graphs.addNodeAndEdgesIfNonExistent(subGraph, path);
+	public static void addPathToSubGraph(Vertex target, Path path, Graph subGraph, GraphType graphType) {
+		addPathToSubGraph(path.getStart(), target, path.getEdges(), subGraph, graphType);
 	}
 
-	public static void addPathToSubGraph(Vertex current, Path path, Graph subGraph) {
-		addPathToSubGraph(current, path.getEdges(), subGraph);
+	public static void addPathToSubGraph(Vertex start, Vertex target, List<Edge> path, Graph subGraph,
+			GraphType graphType) {
+		logger.debug("Found sense vid: {} uri: {}", target.getId(), target.getProperty(GraphConfig.URI_PROPERTY));
+		logger.debug(toStringPath(path, start, target, graphType));
+		Graphs.addNodeAndEdgesIfNonExistent(subGraph, path);
 	}
 
 	public static void checkValidSenses(Graph graph, Collection<Vertex> senses) {
@@ -85,7 +86,8 @@ class SubgraphConstructions {
 		}
 	}
 
-	public static void processFoundPath(Vertex start, Vertex end, Map<Vertex, Edge> previousMap, Graph subGraph) {
+	public static void processFoundPath(Vertex start, Vertex end, Map<Vertex, Edge> previousMap, Graph subGraph,
+			GraphType graphType) {
 		List<Edge> path = Graphs.getPathFromTraversalMap(start, end, previousMap);
 
 		if (path == null || path.size() == 0) {
@@ -103,11 +105,11 @@ class SubgraphConstructions {
 		Graphs.addNodeAndEdgesIfNonExistent(subGraph, path);
 
 		logger.debug("Found sense vid: {} uri: {}", end.getId(), end.getProperty(GraphConfig.URI_PROPERTY));
-		logger.debug(toStringPath(path, start, end));
+		logger.debug(toStringPath(path, start, end, graphType));
 	}
 
 	public static void processFoundPath(Vertex start, Vertex end, Set<Vertex> vertices, Set<Edge> edges,
-			Map<Vertex, Edge> previousMap) {
+			Map<Vertex, Edge> previousMap, GraphType graphType) {
 		// found path v,v1,...,vk,v'
 		List<Edge> path = Graphs.getPathFromTraversalMap(start, end, previousMap);
 
@@ -120,21 +122,36 @@ class SubgraphConstructions {
 		edges.addAll(path);
 
 		logger.debug("Found sense vid: {} uri: {}", end.getId(), end.getProperty(GraphConfig.URI_PROPERTY));
-		logger.debug(toStringPath(path, start, end));
+		logger.debug(toStringPath(path, start, end, graphType));
 
 	}
 
-	public static String toStringPath(List<Edge> path, Vertex start, Vertex end) {
-		if (path.size() == 0) {
+	public static String toStringPath(List<Edge> path, Vertex start, Vertex end, GraphType graphType) {
+		if (graphType == null)
+			throw new NullPointerException("Graph type cannot be null");
+		if (path.size() == 0)
 			return null;
-		}
 
 		StringBuilder builder = new StringBuilder();
-		for (Edge e : path) {
-			builder.append(e.getVertex(Direction.OUT).getProperty(GraphConfig.URI_PROPERTY)).append("--")
-					.append(e.getProperty(GraphConfig.URI_PROPERTY)).append("-->");
+		switch (graphType) {
+		case DIRECTED_GRAPH:
+			for (Edge e : path) {
+				builder.append(e.getVertex(Direction.OUT).getProperty(GraphConfig.URI_PROPERTY)).append("--")
+						.append(e.getProperty(GraphConfig.URI_PROPERTY)).append("-->");
+			}
+			break;
+		case UNDIRECTED_GRAPH:
+			Vertex from = start;
+			for (Edge e : path) {
+				builder.append(from.getProperty(GraphConfig.URI_PROPERTY)).append("--")
+						.append(e.getProperty(GraphConfig.URI_PROPERTY)).append("--");
+				from = Graphs.getOppositeVertex(e, from);
+			}
+			break;
 		}
+
 		builder.append(end.getProperty(GraphConfig.URI_PROPERTY));
+
 		return builder.toString();
 	}
 

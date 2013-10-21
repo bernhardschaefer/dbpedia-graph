@@ -66,7 +66,7 @@ public final class Graphs {
 	public static Set<Vertex> getConnectedVerticesBothDirections(Vertex vertex) {
 		final Set<Vertex> vertices = new HashSet<Vertex>();
 		for (final Edge edge : vertex.getEdges(Direction.BOTH)) {
-			Vertex other = Graphs.getOtherVertex(edge, vertex);
+			Vertex other = Graphs.getOppositeVertex(edge, vertex);
 			vertices.add(other);
 		}
 		return vertices;
@@ -109,7 +109,7 @@ public final class Graphs {
 		return getIterItemCount(subgraph.getVertices().iterator());
 	}
 
-	public static Vertex getOtherVertex(Edge edge, Vertex vertex) {
+	public static Vertex getOppositeVertex(Edge edge, Vertex vertex) {
 		Vertex in = edge.getVertex(Direction.IN);
 		Vertex out = edge.getVertex(Direction.OUT);
 		if (vertex.equals(in)) {
@@ -145,6 +145,30 @@ public final class Graphs {
 		}
 		Collections.reverse(pathFromEndToStart); // path is now in start->end order
 		return pathFromEndToStart;
+	}
+
+	public static Iterable<Edge> getUntraversedConnectedEdges(Vertex current, List<Edge> edges, GraphType graphDirection) {
+		switch (graphDirection) {
+		case DIRECTED_GRAPH:
+			return current.getEdges(Direction.OUT);
+		case UNDIRECTED_GRAPH:
+			Collection<Edge> untraversedOutgoingEdges = new ArrayList<Edge>();
+			for (Edge edge : current.getEdges(Direction.OUT, GraphConfig.EDGE_LABEL)) {
+				if (!edges.contains(edge))
+					untraversedOutgoingEdges.add(edge);
+			}
+			
+			Collection<Edge> untraversedIngoingEdges = new ArrayList<Edge>();
+			for (Edge edge : current.getEdges(Direction.IN, GraphConfig.EDGE_LABEL)) {
+				if (!edges.contains(edge))
+					untraversedIngoingEdges.add(edge);
+			}
+			
+			untraversedIngoingEdges.addAll(untraversedOutgoingEdges);
+			return untraversedIngoingEdges;
+		default:
+			throw new IllegalArgumentException("Suitable graph direction is missing: " + graphDirection);
+		}
 	}
 
 	public static String getUriOfVertex(Vertex v) {

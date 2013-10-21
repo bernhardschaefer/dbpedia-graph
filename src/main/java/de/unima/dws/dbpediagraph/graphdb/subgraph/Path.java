@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
@@ -17,25 +16,50 @@ import com.tinkerpop.blueprints.Vertex;
  * 
  */
 class Path {
-	private Set<Vertex> vertices;
-	private List<Edge> edges;
-
-	public Path() {
-		vertices = new HashSet<>();
-		edges = new ArrayList<>();
+	/**
+	 * Construct a new path object from a given path and a new hop to a adjacent node.
+	 * 
+	 * @param path
+	 *            the given path
+	 * @param edge
+	 *            the edge that has been taken as next hop
+	 * @param child
+	 *            the new node that has been reached using the provided edge
+	 * @return new path object
+	 */
+	public static Path newHop(Path path, Edge edge, Vertex child) {
+		Path newPath = new Path(path);
+		newPath.last = child;
+		newPath.vertices.add(child);
+		newPath.edges.add(edge);
+		return newPath;
 	}
+
+	private final Set<Vertex> vertices;
+	private final List<Edge> edges;
+	private final Vertex start;
+
+	private Vertex last;
 
 	/**
 	 * Copy constructor
 	 */
 	public Path(Path path) {
+		this.start = path.getStart();
+		this.last = path.last;
 		vertices = new HashSet<>(path.vertices);
 		edges = new ArrayList<>(path.edges);
 	}
 
+	/**
+	 * Constructs a new path object using the provided start node.
+	 */
 	public Path(Vertex start) {
-		this();
+		this.start = start;
+		this.last = start;
+		vertices = new HashSet<>();
 		vertices.add(start);
+		edges = new ArrayList<>();
 	}
 
 	/**
@@ -45,13 +69,12 @@ class Path {
 		return edges;
 	}
 
-	public Vertex getLastVertex() {
-		if (edges == null || edges.size() == 0)
-			if (vertices != null && vertices.size() == 1)
-				return vertices.iterator().next();
-			else
-				return null;
-		return edges.get(edges.size() - 1).getVertex(Direction.IN);
+	public Vertex getLast() {
+		return last;
+	}
+
+	public Vertex getStart() {
+		return start;
 	}
 
 	/**
@@ -61,11 +84,8 @@ class Path {
 		return vertices;
 	}
 
-	public void setEdges(List<Edge> edges) {
-		this.edges = edges;
+	public void setLast(Vertex last) {
+		this.last = last;
 	}
 
-	public void setVertices(Set<Vertex> vertices) {
-		this.vertices = vertices;
-	}
 }
