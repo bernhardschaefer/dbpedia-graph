@@ -47,31 +47,24 @@ class SubgraphConstructions {
 	}
 
 	public static void checkValidSenses(Graph graph, Collection<Vertex> senses) {
-		if (senses == null) {
+		if (senses == null)
 			throw new NullPointerException("The senses collection cannot be null.");
-		}
-		if (senses.size() == 0) {
+		if (senses.size() == 0)
 			throw new IllegalArgumentException("The senses collection cannot be empty.");
-		}
-		for (Vertex v : senses) {
-			if (graph.getVertex(v.getId()) == null) {
+		for (Vertex v : senses)
+			if (graph.getVertex(v.getId()) == null)
 				throw new IllegalArgumentException(String.format(
 						"The vertex vid:%s uri:%s does not belong to this graph.", v.getId(),
 						v.getProperty(GraphConfig.URI_PROPERTY)));
-			}
-		}
 	}
 
 	public static void checkValidWordsSenses(Graph graph, Collection<Collection<Vertex>> wordsSenses) {
-		if (wordsSenses == null) {
+		if (wordsSenses == null)
 			throw new NullPointerException("The senses collection cannot be null.");
-		}
-		if (wordsSenses.size() == 0) {
+		if (wordsSenses.size() == 0)
 			throw new IllegalArgumentException("The senses collection cannot be empty.");
-		}
-		for (Collection<Vertex> senses : wordsSenses) {
+		for (Collection<Vertex> senses : wordsSenses)
 			checkValidSenses(graph, senses);
-		}
 
 	}
 
@@ -81,10 +74,9 @@ class SubgraphConstructions {
 		// (System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, maxDistance);
 		logger.info(String.format("%s: time %.2f sec., traversed nodes: %,d, maxDepth: %d", clazz.getSimpleName(),
 				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, maxDistance));
-		if (logger.isDebugEnabled()) {
+		if (logger.isDebugEnabled())
 			logger.debug("Subgraph vertices:{}, edges:{}", Graphs.numberOfVertices(subgraph),
 					Graphs.numberOfEdges(subgraph));
-		}
 	}
 
 	public static String toStringPath(List<Edge> path, Vertex start, Vertex end, GraphType graphType) {
@@ -96,10 +88,9 @@ class SubgraphConstructions {
 		StringBuilder builder = new StringBuilder();
 		switch (graphType) {
 		case DIRECTED_GRAPH:
-			for (Edge e : path) {
+			for (Edge e : path)
 				builder.append(e.getVertex(Direction.OUT).getProperty(GraphConfig.URI_PROPERTY)).append("--")
 						.append(e.getProperty(GraphConfig.URI_PROPERTY)).append("-->");
-			}
 			break;
 		case UNDIRECTED_GRAPH:
 			Vertex from = start;

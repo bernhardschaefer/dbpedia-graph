@@ -23,13 +23,13 @@ public final class SubgraphConstructionSettings {
 		return DEFAULT;
 	}
 
-	public SubgraphConstructionSettings graphType(GraphType graphType) {
-		this.graphType = graphType;
+	public SubgraphConstructionSettings edgeFilter(EdgeFilter edgeFilter) {
+		this.edgeFilter = edgeFilter;
 		return this;
 	}
 
-	public SubgraphConstructionSettings edgeFilter(EdgeFilter edgeFilter) {
-		this.edgeFilter = edgeFilter;
+	public SubgraphConstructionSettings graphType(GraphType graphType) {
+		this.graphType = graphType;
 		return this;
 	}
 

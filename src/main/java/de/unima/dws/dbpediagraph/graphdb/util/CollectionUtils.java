@@ -12,9 +12,8 @@ import com.tinkerpop.blueprints.Vertex;
 public class CollectionUtils {
 	public static <T> Collection<T> combine(Collection<Collection<T>> collections) {
 		Collection<T> combinedCollections = new ArrayList<T>();
-		for (Collection<T> c : collections) {
+		for (Collection<T> c : collections)
 			combinedCollections.addAll(c);
-		}
 		return combinedCollections;
 	}
 
@@ -38,9 +37,8 @@ public class CollectionUtils {
 
 	public static Collection<Collection<Vertex>> split(Collection<Vertex> senses) {
 		Collection<Collection<Vertex>> vertices = new ArrayList<>();
-		for (Vertex v : senses) {
+		for (Vertex v : senses)
 			vertices.add(Arrays.asList(v));
-		}
 		return vertices;
 	}
 }

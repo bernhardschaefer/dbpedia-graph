@@ -20,35 +20,6 @@ public class JGraphTWrapper extends AbstractGraph<Vertex, Edge> implements Direc
 		this.graph = graph;
 	}
 
-	public Graph getRawGraph() {
-		return graph;
-	}
-
-	@Override
-	public Set<Edge> getAllEdges(Vertex sourceVertex, Vertex targetVertex) {
-		Set<Edge> sourceOut = outgoingEdgesOf(sourceVertex);
-
-		Set<Edge> edges = new HashSet<Edge>();
-		for (Edge e : sourceOut) {
-			if (e.getVertex(Direction.IN).equals(targetVertex)) {
-				edges.add(e);
-			}
-		}
-
-		return edges;
-	}
-
-	@Override
-	public Edge getEdge(Vertex sourceVertex, Vertex targetVertex) {
-		Set<Edge> allEdges = getAllEdges(sourceVertex, targetVertex);
-		return allEdges.iterator().hasNext() ? allEdges.iterator().next() : null;
-	}
-
-	@Override
-	public EdgeFactory<Vertex, Edge> getEdgeFactory() {
-		throw new UnsupportedOperationException();
-	}
-
 	@Override
 	public Edge addEdge(Vertex sourceVertex, Vertex targetVertex) {
 		throw new UnsupportedOperationException();
@@ -85,23 +56,34 @@ public class JGraphTWrapper extends AbstractGraph<Vertex, Edge> implements Direc
 	}
 
 	@Override
-	public Edge removeEdge(Vertex sourceVertex, Vertex targetVertex) {
-		throw new UnsupportedOperationException();
+	public Set<Edge> getAllEdges(Vertex sourceVertex, Vertex targetVertex) {
+		Set<Edge> sourceOut = outgoingEdgesOf(sourceVertex);
+
+		Set<Edge> edges = new HashSet<Edge>();
+		for (Edge e : sourceOut)
+			if (e.getVertex(Direction.IN).equals(targetVertex))
+				edges.add(e);
+
+		return edges;
 	}
 
 	@Override
-	public boolean removeEdge(Edge e) {
-		throw new UnsupportedOperationException();
+	public Edge getEdge(Vertex sourceVertex, Vertex targetVertex) {
+		Set<Edge> allEdges = getAllEdges(sourceVertex, targetVertex);
+		return allEdges.iterator().hasNext() ? allEdges.iterator().next() : null;
 	}
 
 	@Override
-	public boolean removeVertex(Vertex v) {
+	public EdgeFactory<Vertex, Edge> getEdgeFactory() {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Set<Vertex> vertexSet() {
-		throw new UnsupportedOperationException();
+	private Set<Edge> getEdgesOfVertex(Vertex vertex, Direction d) {
+		Set<Edge> edges = new HashSet<>();
+		Iterable<Edge> edgeIter = vertex.getEdges(d);
+		for (Edge e : edgeIter)
+			edges.add(e);
+		return edges;
 	}
 
 	@Override
@@ -119,9 +101,8 @@ public class JGraphTWrapper extends AbstractGraph<Vertex, Edge> implements Direc
 		return 1;
 	}
 
-	@Override
-	public int inDegreeOf(Vertex vertex) {
-		return incomingEdgesOf(vertex).size();
+	public Graph getRawGraph() {
+		return graph;
 	}
 
 	@Override
@@ -129,13 +110,9 @@ public class JGraphTWrapper extends AbstractGraph<Vertex, Edge> implements Direc
 		return getEdgesOfVertex(vertex, Direction.IN);
 	}
 
-	private Set<Edge> getEdgesOfVertex(Vertex vertex, Direction d) {
-		Set<Edge> edges = new HashSet<>();
-		Iterable<Edge> edgeIter = vertex.getEdges(d);
-		for (Edge e : edgeIter) {
-			edges.add(e);
-		}
-		return edges;
+	@Override
+	public int inDegreeOf(Vertex vertex) {
+		return incomingEdgesOf(vertex).size();
 	}
 
 	@Override
@@ -146,6 +123,26 @@ public class JGraphTWrapper extends AbstractGraph<Vertex, Edge> implements Direc
 	@Override
 	public Set<Edge> outgoingEdgesOf(Vertex vertex) {
 		return getEdgesOfVertex(vertex, Direction.OUT);
+	}
+
+	@Override
+	public boolean removeEdge(Edge e) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Edge removeEdge(Vertex sourceVertex, Vertex targetVertex) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean removeVertex(Vertex v) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Set<Vertex> vertexSet() {
+		throw new UnsupportedOperationException();
 	}
 
 }

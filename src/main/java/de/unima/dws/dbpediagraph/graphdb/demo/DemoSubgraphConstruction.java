@@ -84,9 +84,8 @@ public class DemoSubgraphConstruction {
 			System.out.println(d);
 			List<WeightedSense> weightedSenses = d.disambiguate(allSensesString, subGraph);
 			Collections.sort(weightedSenses);
-			for (WeightedSense sense : weightedSenses) {
+			for (WeightedSense sense : weightedSenses)
 				System.out.printf("  %s (%.2f)", UriShortener.shorten(sense.getSense()), sense.getWeight());
-			}
 			System.out.println();
 		}
 

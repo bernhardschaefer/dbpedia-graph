@@ -48,11 +48,10 @@ public final class FileUtils {
 		List<File> files = new LinkedList<File>();
 		for (String arg : args) {
 			File f = new File(arg);
-			if (f.isDirectory()) {
+			if (f.isDirectory())
 				files.addAll(Arrays.asList(f.listFiles()));
-			} else {
+			else
 				files.add(f);
-			}
 		}
 		return files;
 	}
@@ -138,9 +137,8 @@ public final class FileUtils {
 	public static List<String> readRelevantLinesFromFile(Class<?> clazz, String fileName) throws IOException,
 			URISyntaxException {
 		URL url = clazz.getResource(fileName);
-		if (url == null) {
+		if (url == null)
 			throw new IllegalArgumentException("File cannot be found: " + fileName);
-		}
 		List<String> lines = Files.readAllLines(Paths.get(url.toURI()), StandardCharsets.UTF_8);
 
 		Iterator<String> iter = lines.iterator();
@@ -158,9 +156,8 @@ public final class FileUtils {
 		List<String> lines = readRelevantLinesFromFile(clazz, fileName);
 		for (String line : lines) {
 			String[] wordSenses = line.split(DELIMITER);
-			for (int i = 0; i < wordSenses.length; i++) {
+			for (int i = 0; i < wordSenses.length; i++)
 				wordSenses[i] = uriPrefix + wordSenses[i];
-			}
 			wordsSenses.add(Arrays.asList(wordSenses));
 		}
 		return wordsSenses;

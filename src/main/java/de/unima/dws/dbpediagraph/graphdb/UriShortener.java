@@ -41,12 +41,10 @@ public class UriShortener {
 	 * Shorten the uri by applying prefixes.
 	 */
 	public static String shorten(String uri) {
-		for (Entry<String, String> e : URI_TO_PREFIX.entrySet()) {
-			if (uri.contains(e.getKey())) {
+		for (Entry<String, String> e : URI_TO_PREFIX.entrySet())
+			if (uri.contains(e.getKey()))
 				// there should be at most one replacement
 				return uri.replace(e.getKey(), e.getValue());
-			}
-		}
 		return uri;
 	}
 
@@ -54,12 +52,10 @@ public class UriShortener {
 	 * Unshorten the uri by replacing prefixes with their full equivalent.
 	 */
 	public static String unshorten(String uri) {
-		for (Entry<String, String> e : URI_TO_PREFIX.entrySet()) {
-			if (uri.contains(e.getValue())) {
+		for (Entry<String, String> e : URI_TO_PREFIX.entrySet())
+			if (uri.contains(e.getValue()))
 				// there should be at most one replacement
 				return uri.replace(e.getValue(), e.getKey());
-			}
-		}
 		return uri;
 	}
 

@@ -74,11 +74,10 @@ public final class GraphFactory {
 		}
 
 		logger.info("Graph loading time {} sec", (System.currentTimeMillis() - startTime) / 1000.0);
-		if (graph instanceof TransactionalGraph) {
+		if (graph instanceof TransactionalGraph)
 			return (TransactionalGraph) graph;
-		} else {
+		else
 			throw new IllegalArgumentException("Graph specified in properties needs to be a transactional graph.");
-		}
 	}
 
 	// Suppress default constructor for noninstantiability

@@ -27,9 +27,8 @@ public final class Graphs {
 	private static final Logger logger = LoggerFactory.getLogger(Graphs.class);
 
 	public static void addEdgeIfNonExistent(Graph graph, Edge edge, Vertex outVertex, Vertex inVertex) {
-		if (graph.getEdge(edge.getId()) == null) {
+		if (graph.getEdge(edge.getId()) == null)
 			graph.addEdge(edge.getId(), outVertex, inVertex, edge.getLabel());
-		}
 	}
 
 	public static void addNodeAndEdgesIfNonExistent(Graph graph, Collection<Edge> edges) {
@@ -95,10 +94,9 @@ public final class Graphs {
 	}
 
 	public static boolean isNodeOnPath(Vertex child, Collection<Edge> path) {
-		for (Edge edge : path) {
+		for (Edge edge : path)
 			if (child.equals(edge.getVertex(Direction.IN)) || child.equals(edge.getVertex(Direction.OUT)))
 				return true;
-		}
 		return false;
 	}
 
@@ -119,13 +117,12 @@ public final class Graphs {
 	public static Vertex oppositeVertexSafe(Edge edge, Vertex vertex) {
 		Vertex in = edge.getVertex(Direction.IN);
 		Vertex out = edge.getVertex(Direction.OUT);
-		if (vertex.equals(out)) {
+		if (vertex.equals(out))
 			return in;
-		} else if (vertex.equals(in)) {
+		else if (vertex.equals(in))
 			return out;
-		} else {
+		else
 			throw new IllegalArgumentException(String.format("Vertex %s is not part of edge %s", vertex.getId(), edge));
-		}
 	}
 
 	/**
@@ -156,9 +153,8 @@ public final class Graphs {
 
 	public static Collection<String> urisOfVertices(Collection<Vertex> vertices) {
 		List<String> uris = new LinkedList<>();
-		for (Vertex v : vertices) {
+		for (Vertex v : vertices)
 			uris.add(uriOfVertex(v));
-		}
 		return uris;
 	}
 
@@ -166,13 +162,11 @@ public final class Graphs {
 		String shortUri = UriShortener.shorten(uri);
 		List<Vertex> vertices = new LinkedList<Vertex>();
 		Iterable<Vertex> verticesIter = graph.getVertices(GraphConfig.URI_PROPERTY, shortUri);
-		for (Vertex v : verticesIter) {
+		for (Vertex v : verticesIter)
 			vertices.add(v);
-		}
 
-		if (vertices.size() == 0) {
+		if (vertices.size() == 0)
 			return null;
-		}
 		if (vertices.size() > 1) {
 			logger.warn("There is more than one vertex with the uri " + uri);
 			for (Vertex v : vertices) {
@@ -192,9 +186,8 @@ public final class Graphs {
 		final Iterable<Edge> itty = vertex.getEdges(direction);
 		if (itty instanceof Collection)
 			degree = ((Collection<Edge>) itty).size();
-		else {
+		else
 			degree = CollectionUtils.getIterItemCount(itty.iterator());
-		}
 		return degree;
 	}
 
@@ -210,9 +203,8 @@ public final class Graphs {
 		List<Vertex> vertices = new LinkedList<Vertex>();
 		for (String uri : uris) {
 			Vertex v = vertexByUri(graph, uri);
-			if (v != null) {
+			if (v != null)
 				vertices.add(v);
-			}
 		}
 		return vertices;
 	}
@@ -229,9 +221,8 @@ public final class Graphs {
 	public static Collection<Collection<Vertex>> wordsVerticesByUri(Graph graph,
 			Collection<Collection<String>> wordsSensesString) {
 		Collection<Collection<Vertex>> wordVertices = new ArrayList<>();
-		for (Collection<String> uris : wordsSensesString) {
+		for (Collection<String> uris : wordsSensesString)
 			wordVertices.add(verticesByUri(graph, uris));
-		}
 		return wordVertices;
 	}
 

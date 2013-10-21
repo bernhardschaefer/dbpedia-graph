@@ -26,14 +26,12 @@ class SubgraphConstructionRecursive extends AbstractSubgraphConstruction impleme
 		Vertex current = path.getLast();
 
 		// check limit
-		if (path.getEdges().size() > settings.maxDistance) {
+		if (path.getEdges().size() > settings.maxDistance)
 			return;
-		}
 
 		// check if target node
-		if (targets.contains(current)) {
+		if (targets.contains(current))
 			SubgraphConstructions.addPathToSubGraph(current, path, subGraph, settings.graphType);
-		}
 
 		// explore further
 		for (Edge edge : Graphs.connectedEdges(current, settings.graphType)) {
