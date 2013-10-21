@@ -48,8 +48,8 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
  */
 public class DemoSubgraphConstruction {
 
-	private static final int MAX_DISTANCE = 4;
-	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
+	private static final int MAX_DISTANCE = 2;
+	private static final GraphType GRAPH_TYPE = GraphType.UNDIRECTED_GRAPH;
 
 	private static final Dimension SCREEN_DIMENSION;
 	static {
@@ -71,7 +71,7 @@ public class DemoSubgraphConstruction {
 	}
 
 	private static void demo(Graph graph, Collection<Collection<String>> wordsSensesString) {
-		Collection<Collection<Vertex>> wordsSenses = Graphs.getWordsVerticesByUri(graph, wordsSensesString);
+		Collection<Collection<Vertex>> wordsSenses = Graphs.wordsVerticesByUri(graph, wordsSensesString);
 		Collection<String> allSensesString = CollectionUtils.combine(wordsSensesString);
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,

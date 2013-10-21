@@ -29,13 +29,13 @@ public class TestSubgraphConstructionNavigli {
 
 	@Test
 	public void testAllEdgesContainedDirected() {
-		assertEquals(subGraphData.expectedSubgraphEdges.size(), Graphs.getNumberOfEdges(subGraphData.getSubgraph()));
+		assertEquals(subGraphData.expectedSubgraphEdges.size(), Graphs.numberOfEdges(subGraphData.getSubgraph()));
 	}
 
 	@Test
 	public void testAllNodesContainedDirected() {
 		assertEquals(subGraphData.expectedSubgraphVertices.size(),
-				Graphs.getNumberOfVertices(subGraphData.getSubgraph()));
+				Graphs.numberOfVertices(subGraphData.getSubgraph()));
 	}
 
 	@Test

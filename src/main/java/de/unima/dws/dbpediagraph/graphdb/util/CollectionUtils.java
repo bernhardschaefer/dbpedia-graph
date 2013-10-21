@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import com.tinkerpop.blueprints.Vertex;
@@ -15,6 +16,15 @@ public class CollectionUtils {
 			combinedCollections.addAll(c);
 		}
 		return combinedCollections;
+	}
+
+	public static int getIterItemCount(Iterator<?> iter) {
+		int counter = 0;
+		while (iter.hasNext()) {
+			iter.next();
+			counter++;
+		}
+		return counter;
 	}
 
 	/**

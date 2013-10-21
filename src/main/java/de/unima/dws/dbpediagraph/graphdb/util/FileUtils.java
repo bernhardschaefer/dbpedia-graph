@@ -62,7 +62,7 @@ public final class FileUtils {
 	public static Collection<Collection<Vertex>> parseAllWordsSenses(Graph graph, String fileName, Class<?> clazz,
 			String uriPrefix) throws IOException, URISyntaxException {
 		Collection<Collection<String>> wordsSensesString = readUrisFromFile(clazz, fileName, uriPrefix);
-		return Graphs.getWordsVerticesByUri(graph, wordsSensesString);
+		return Graphs.wordsVerticesByUri(graph, wordsSensesString);
 	}
 
 	/**

@@ -24,7 +24,7 @@ public class HITSCentrality implements LocalDisambiguator {
 
 		List<WeightedSense> wUris = new ArrayList<>();
 		for (String uri : senses) {
-			Scores scores = hits.getVertexScore(Graphs.getVertexByUri(subgraph, uri));
+			Scores scores = hits.getVertexScore(Graphs.vertexByUri(subgraph, uri));
 			wUris.add(new WeightedSense(uri, scores.authority));
 		}
 		return wUris;

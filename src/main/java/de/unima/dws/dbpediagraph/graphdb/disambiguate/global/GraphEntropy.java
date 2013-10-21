@@ -21,13 +21,13 @@ public class GraphEntropy extends AbstractGlobalDisambiguator implements GlobalD
 	@Override
 	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph) {
 
-		int totalVertices = Graphs.getNumberOfVertices(sensegraph);
-		int totalEdges = Graphs.getNumberOfEdges(sensegraph);
+		int totalVertices = Graphs.numberOfVertices(sensegraph);
+		int totalEdges = Graphs.numberOfEdges(sensegraph);
 
 		double graphEntropy = 0;
 
 		for (Vertex vertex : sensegraph.getVertices()) {
-			double degree = Graphs.getEdgesOfVertex(vertex, Direction.BOTH).size();
+			double degree = Graphs.vertexDegree(vertex, Direction.BOTH);
 			double vertexProbability = degree / (2.0 * totalEdges);
 			graphEntropy += vertexProbability * Math.log(vertexProbability);
 		}

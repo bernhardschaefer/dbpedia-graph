@@ -11,7 +11,7 @@ import com.tinkerpop.blueprints.Graph;
  * 
  */
 public final class SubgraphConstructionFactory {
-	private static final Class<? extends SubgraphConstruction> DEFAULT_SUBGRAPH_CONSTRUCTION = SubgraphConstructionRecursive.class;
+	private static final Class<? extends SubgraphConstruction> DEFAULT_SUBGRAPH_CONSTRUCTION = SubgraphConstructionIterative.class;
 
 	public static Class<? extends SubgraphConstruction> defaultClass() {
 		return DEFAULT_SUBGRAPH_CONSTRUCTION;

@@ -2,7 +2,6 @@ package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -83,49 +82,9 @@ class SubgraphConstructions {
 		logger.info(String.format("%s: time %.2f sec., traversed nodes: %,d, maxDepth: %d", clazz.getSimpleName(),
 				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, maxDistance));
 		if (logger.isDebugEnabled()) {
-			logger.debug("Subgraph vertices:{}, edges:{}", Graphs.getNumberOfVertices(subgraph),
-					Graphs.getNumberOfEdges(subgraph));
+			logger.debug("Subgraph vertices:{}, edges:{}", Graphs.numberOfVertices(subgraph),
+					Graphs.numberOfEdges(subgraph));
 		}
-	}
-
-	public static void processFoundPath(Vertex start, Vertex end, Map<Vertex, Edge> previousMap, Graph subGraph,
-			GraphType graphType) {
-		List<Edge> path = Graphs.getPathFromTraversalMap(start, end, previousMap);
-
-		if (path == null || path.size() == 0) {
-			logger.debug("Empty path");
-			return;
-		}
-
-		Vertex first = path.get(0).getVertex(Direction.OUT);
-		Vertex last = path.get(path.size() - 1).getVertex(Direction.IN);
-		if (!first.equals(start) || !last.equals(end)) {
-			logger.debug("Invalid path.");
-			return;
-		}
-
-		Graphs.addNodeAndEdgesIfNonExistent(subGraph, path);
-
-		logger.debug("Found sense vid: {} uri: {}", end.getId(), end.getProperty(GraphConfig.URI_PROPERTY));
-		logger.debug(toStringPath(path, start, end, graphType));
-	}
-
-	public static void processFoundPath(Vertex start, Vertex end, Set<Vertex> vertices, Set<Edge> edges,
-			Map<Vertex, Edge> previousMap, GraphType graphType) {
-		// found path v,v1,...,vk,v'
-		List<Edge> path = Graphs.getPathFromTraversalMap(start, end, previousMap);
-
-		// add all intermediate nodes and edges on the path
-
-		// V = V.append(v1,...,vk)
-		addIntermediateNodes(path, vertices);
-
-		// E = E.append({{v,v1},...,{vk,v'}})
-		edges.addAll(path);
-
-		logger.debug("Found sense vid: {} uri: {}", end.getId(), end.getProperty(GraphConfig.URI_PROPERTY));
-		logger.debug(toStringPath(path, start, end, graphType));
-
 	}
 
 	public static String toStringPath(List<Edge> path, Vertex start, Vertex end, GraphType graphType) {
@@ -147,7 +106,7 @@ class SubgraphConstructions {
 			for (Edge e : path) {
 				builder.append(from.getProperty(GraphConfig.URI_PROPERTY)).append("--")
 						.append(e.getProperty(GraphConfig.URI_PROPERTY)).append("--");
-				from = Graphs.getOppositeVertexUnsafe(e, from);
+				from = Graphs.oppositeVertexUnsafe(e, from);
 			}
 			break;
 		}

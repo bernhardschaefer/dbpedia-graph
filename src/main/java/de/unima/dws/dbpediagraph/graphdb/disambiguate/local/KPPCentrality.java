@@ -22,11 +22,11 @@ public class KPPCentrality implements LocalDisambiguator {
 	@Override
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
 		Distance<Vertex> distances = new UnweightedShortestPath<>(new GraphJungUndirected(subgraph));
-		int numberOfVertices = Graphs.getNumberOfVertices(subgraph);
+		int numberOfVertices = Graphs.numberOfVertices(subgraph);
 
 		List<WeightedSense> weightedUris = new LinkedList<>();
 		for (String sense : senses) {
-			Vertex v = Graphs.getVertexByUri(subgraph, sense);
+			Vertex v = Graphs.vertexByUri(subgraph, sense);
 			Map<Vertex, Number> distancesFromVertex = distances.getDistanceMap(v);
 			double sumInverseShortestDistances = 0;
 			for (Vertex otherVertex : subgraph.getVertices()) {

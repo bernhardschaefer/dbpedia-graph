@@ -45,7 +45,7 @@ public class PageRankCentrality implements LocalDisambiguator {
 
 		List<WeightedSense> wSenses = new ArrayList<>();
 		for (String sense : senses) {
-			Vertex vertex = Graphs.getVertexByUri(subgraph, sense);
+			Vertex vertex = Graphs.vertexByUri(subgraph, sense);
 			double rank = pageRank.getVertexScore(vertex);
 
 			// double rank = vertexMemory.getProperty(vertex, PageRankProgram.PAGE_RANK);

@@ -32,12 +32,12 @@ public class DegreeCentrality implements LocalDisambiguator {
 
 	@Override
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
-		int numberOfVertices = Graphs.getNumberOfVertices(subgraph);
+		int numberOfVertices = Graphs.numberOfVertices(subgraph);
 
 		List<WeightedSense> weightedSenses = new LinkedList<>();
 		for (String sense : senses) {
-			Vertex v = Graphs.getVertexByUri(subgraph, sense);
-			double inDegree = Graphs.getEdgesOfVertex(v, direction).size();
+			Vertex v = Graphs.vertexByUri(subgraph, sense);
+			double inDegree = Graphs.vertexDegree(v, direction);
 			double centrality = inDegree / (numberOfVertices - 1);
 			weightedSenses.add(new WeightedSense(sense, centrality));
 		}

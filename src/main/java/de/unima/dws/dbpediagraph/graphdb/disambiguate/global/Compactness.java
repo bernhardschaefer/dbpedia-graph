@@ -33,7 +33,7 @@ public class Compactness extends AbstractGlobalDisambiguator implements GlobalDi
 			}
 		}
 
-		int totalVertices = Graphs.getNumberOfVertices(sensegraph);
+		int totalVertices = Graphs.numberOfVertices(sensegraph);
 		int min = totalVertices * (totalVertices - 1);
 		int K = totalVertices; // TODO find out what k actually means
 		int max = K * min;

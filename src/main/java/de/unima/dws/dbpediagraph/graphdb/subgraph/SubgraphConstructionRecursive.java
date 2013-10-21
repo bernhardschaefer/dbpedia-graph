@@ -36,8 +36,8 @@ class SubgraphConstructionRecursive extends AbstractSubgraphConstruction impleme
 		}
 
 		// explore further
-		for (Edge edge : Graphs.getConnectedEdges(current, settings.graphType)) {
-			Vertex child = Graphs.getOppositeVertexUnsafe(edge, current);
+		for (Edge edge : Graphs.connectedEdges(current, settings.graphType)) {
+			Vertex child = Graphs.oppositeVertexUnsafe(edge, current);
 			if (!path.getVertices().contains(child)) {
 				Path newPath = Path.newHop(path, edge, child);
 				dfs(newPath, targets, subGraph);

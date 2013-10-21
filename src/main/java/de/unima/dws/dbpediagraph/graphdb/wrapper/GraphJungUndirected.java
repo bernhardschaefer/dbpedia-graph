@@ -18,16 +18,16 @@ public class GraphJungUndirected extends GraphJung<Graph> {
 
 	@Override
 	public Collection<Edge> getInEdges(final Vertex vertex) {
-		return Graphs.getEdgesOfVertex(vertex, Direction.BOTH);
+		return Graphs.connectedEdges(vertex, Direction.BOTH);
 	}
 
 	@Override
 	public Collection<Edge> getOutEdges(final Vertex vertex) {
-		return Graphs.getEdgesOfVertex(vertex, Direction.BOTH);
+		return Graphs.connectedEdges(vertex, Direction.BOTH);
 	}
 
 	@Override
 	public Collection<Vertex> getSuccessors(final Vertex vertex) {
-		return Graphs.getConnectedVerticesBothDirections(vertex);
+		return Graphs.connectedVerticesBothDirections(vertex);
 	}
 }
