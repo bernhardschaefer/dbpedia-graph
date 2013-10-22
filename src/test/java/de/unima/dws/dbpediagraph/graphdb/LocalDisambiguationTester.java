@@ -13,7 +13,7 @@ public class LocalDisambiguationTester implements DisambiguationTester {
 	private static final Logger logger = LoggerFactory.getLogger(LocalDisambiguationTester.class);
 	/** Name of the package where the local disambiguator classes reside. */
 	private static final String LOCAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.graphdb.disambiguate.local";
-	private static final double ALLOWED_SCORE_DEVIATION = 0.005;
+	private static final double ALLOWED_SCORE_DEVIATION = 0.01;
 
 	private final LocalDisambiguator disambiguator;
 	private final List<WeightedSense> actualDisambiguationResults;

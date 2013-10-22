@@ -75,12 +75,12 @@ public final class Graphs {
 		return edges;
 	}
 
-	public static Iterable<Edge> connectedEdges(Vertex current, GraphType graphDirection) {
+	public static Iterable<Edge> connectedEdges(Vertex v, GraphType graphDirection) {
 		switch (graphDirection) {
 		case DIRECTED_GRAPH:
-			return current.getEdges(Direction.OUT);
+			return v.getEdges(Direction.OUT);
 		case UNDIRECTED_GRAPH:
-			return current.getEdges(Direction.BOTH);
+			return v.getEdges(Direction.BOTH);
 		default:
 			throw new IllegalArgumentException("Suitable graph direction is missing: " + graphDirection);
 		}

@@ -45,6 +45,14 @@ public class PageRankCentrality implements LocalDisambiguator {
 		this.iterations = iterations;
 	}
 
+	private double calculateScoreSum(PageRank<Vertex, Edge> pageRank, Graph subgraph) {
+		double scoreSum = 0;
+		Iterable<Vertex> vertices = subgraph.getVertices();
+		for (Vertex v : vertices)
+			scoreSum += pageRank.getVertexScore(v);
+		return scoreSum;
+	}
+
 	@Override
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
 		GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
@@ -58,9 +66,11 @@ public class PageRankCentrality implements LocalDisambiguator {
 		// VertexMemory vertexMemory = computer.getVertexMemory();
 
 		List<WeightedSense> wSenses = new ArrayList<>();
+
+		double scoreSum = calculateScoreSum(pageRank, subgraph);
 		for (String sense : senses) {
 			Vertex vertex = Graphs.vertexByUri(subgraph, sense);
-			double rank = pageRank.getVertexScore(vertex);
+			double rank = pageRank.getVertexScore(vertex) / scoreSum;
 
 			// double rank = vertexMemory.getProperty(vertex, PageRankProgram.PAGE_RANK);
 			// double edgeCount = vertexMemory.getProperty(vertex, PageRankProgram.EDGE_COUNT);
