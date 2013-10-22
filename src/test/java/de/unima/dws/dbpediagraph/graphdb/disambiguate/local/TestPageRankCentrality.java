@@ -6,36 +6,37 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestPageRankCentrality {
-	private static LocalDisambiguationTester data;
-	private static SubgraphTester subGraphData;
+	private static LocalDisambiguationTester disambiguationTester;
+	private static SubgraphTester navigliSubgraphData;
 
 	@BeforeClass
 	public static void setUp() {
-		double alpha = 0.15;
-		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new LocalDisambiguationTester(new PageRankCentrality(alpha), subGraphData);
+		navigliSubgraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
+		GraphType graphType = GraphType.UNDIRECTED_GRAPH;
+		disambiguationTester = new LocalDisambiguationTester(PageRankCentrality.defaultForGraphType(graphType), navigliSubgraphData);
 	}
 
 	@AfterClass
 	public static void tearDown() {
-		if (subGraphData != null)
-			subGraphData.close();
+		if (navigliSubgraphData != null)
+			navigliSubgraphData.close();
 	}
 
 	@Test
 	public void testDisambiguateValues() {
-		data.compareDisambiguationResults();
+		disambiguationTester.compareDisambiguationResults();
 	}
 
 	@Test
 	public void testWeightedUrisSize() {
-		assertEquals(data.getActualDisambiguationResults().size(), subGraphData.allSenses.size());
+		assertEquals(disambiguationTester.getActualDisambiguationResults().size(), navigliSubgraphData.allSenses.size());
 	}
 
 }

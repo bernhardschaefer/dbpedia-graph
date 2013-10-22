@@ -77,9 +77,9 @@ public class DemoSubgraphConstruction {
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE));
 		Graph subGraph = sc.createSubgraph(wordsSenses);
 
-		Disambiguator[] disambiguators = new LocalDisambiguator[] { BetweennessCentrality.INSTANCE,
-				DegreeCentrality.IN_AND_OUT_DEGREE, HITSCentrality.INSTANCE, KPPCentrality.INSTANCE,
-				new PageRankCentrality(0.08) };
+		Disambiguator[] disambiguators = new LocalDisambiguator[] { BetweennessCentrality.forGraphType(GRAPH_TYPE),
+				DegreeCentrality.IN_AND_OUT_DEGREE, HITSCentrality.defaultForGraphType(GRAPH_TYPE),
+				KPPCentrality.forGraphType(GRAPH_TYPE), PageRankCentrality.defaultForGraphType(GRAPH_TYPE) };
 		for (Disambiguator d : disambiguators) {
 			System.out.println(d);
 			List<WeightedSense> weightedSenses = d.disambiguate(allSensesString, subGraph);

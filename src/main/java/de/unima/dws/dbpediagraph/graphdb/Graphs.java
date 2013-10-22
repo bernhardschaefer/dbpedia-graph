@@ -14,8 +14,10 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
+import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 
 /**
  * Noninstantiable utility class for performing various graph operations. All operations are static.
@@ -104,6 +106,17 @@ public final class Graphs {
 		String uri = Graphs.uriOfVertex(v);
 		Vertex subGraphVertex = vertexByUri(subGraph, uri);
 		return subGraphVertex != null;
+	}
+
+	public static GraphJung<Graph> asGraphJung(GraphType graphType, Graph subgraph) {
+		switch (graphType) {
+		case DIRECTED_GRAPH:
+			return new GraphJung<Graph>(subgraph);
+		case UNDIRECTED_GRAPH:
+			return new GraphJungUndirected(subgraph);
+		default:
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public static int numberOfEdges(Graph subgraph) {

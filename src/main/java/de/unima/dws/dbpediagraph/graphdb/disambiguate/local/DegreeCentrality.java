@@ -9,6 +9,7 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
@@ -22,6 +23,17 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
  */
 public enum DegreeCentrality implements LocalDisambiguator {
 	IN_AND_OUT_DEGREE(Direction.BOTH), IN_DEGREE(Direction.IN), OUT_DEGREE(Direction.OUT);
+
+	public static DegreeCentrality forGraphType(GraphType graphType) {
+		switch (graphType) {
+		case DIRECTED_GRAPH:
+			return IN_DEGREE;
+		case UNDIRECTED_GRAPH:
+			return IN_AND_OUT_DEGREE;
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
 
 	private final Direction direction;
 
@@ -40,8 +52,8 @@ public enum DegreeCentrality implements LocalDisambiguator {
 		List<WeightedSense> weightedSenses = new LinkedList<>();
 		for (String sense : senses) {
 			Vertex v = Graphs.vertexByUri(subgraph, sense);
-			double inDegree = Graphs.vertexDegree(v, direction);
-			double centrality = inDegree / (numberOfVertices - 1);
+			double degree = Graphs.vertexDegree(v, direction);
+			double centrality = degree / (numberOfVertices - 1);
 			weightedSenses.add(new WeightedSense(sense, centrality));
 		}
 

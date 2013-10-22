@@ -8,11 +8,12 @@ import java.util.Map;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
-import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 
@@ -20,11 +21,29 @@ import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
  * @author Bernhard Schäfer
  */
 public enum KPPCentrality implements LocalDisambiguator {
-	INSTANCE;
+	DIRECTED(GraphType.DIRECTED_GRAPH), UNDIRECTED(GraphType.UNDIRECTED_GRAPH);
+
+	public static KPPCentrality forGraphType(GraphType graphType) {
+		switch (graphType) {
+		case DIRECTED_GRAPH:
+			return DIRECTED;
+		case UNDIRECTED_GRAPH:
+			return UNDIRECTED;
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
+
+	private final GraphType graphType;
+
+	private KPPCentrality(GraphType graphType) {
+		this.graphType = graphType;
+	}
 
 	@Override
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
-		Distance<Vertex> distances = new UnweightedShortestPath<>(new GraphJungUndirected(subgraph));
+		GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
+		Distance<Vertex> distances = new UnweightedShortestPath<>(graphJung);
 		int numberOfVertices = Graphs.numberOfVertices(subgraph);
 
 		List<WeightedSense> weightedUris = new LinkedList<>();
@@ -57,7 +76,7 @@ public enum KPPCentrality implements LocalDisambiguator {
 
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName();
+		return this.getClass().getSimpleName() + " (graphType: " + graphType + " )";
 	}
 
 }

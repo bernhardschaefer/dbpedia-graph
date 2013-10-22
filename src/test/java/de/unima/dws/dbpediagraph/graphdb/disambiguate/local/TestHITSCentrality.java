@@ -6,6 +6,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
@@ -18,7 +19,7 @@ public class TestHITSCentrality {
 	@BeforeClass
 	public static void setUp() {
 		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new LocalDisambiguationTester(HITSCentrality.INSTANCE, subGraphData);
+		data = new LocalDisambiguationTester(HITSCentrality.defaultForGraphType(GraphType.UNDIRECTED_GRAPH), subGraphData);
 	}
 
 	@AfterClass

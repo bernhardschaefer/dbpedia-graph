@@ -7,11 +7,12 @@ import java.util.List;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
-import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 
 /**
@@ -19,24 +20,35 @@ import edu.uci.ics.jung.algorithms.scoring.PageRank;
  */
 public class PageRankCentrality implements LocalDisambiguator {
 	private static final int DEFAULT_ITERATIONS = 10;
+	private static final double DEFAULT_ALPHA = 0;
 
-	private final double alpha;
-	private final int iterations;
-
-	private String name;
-
-	public PageRankCentrality(double alpha) {
-		this(alpha, DEFAULT_ITERATIONS);
+	public static PageRankCentrality defaultForGraphType(GraphType graphType) {
+		switch (graphType) {
+		case DIRECTED_GRAPH:
+			return new PageRankCentrality(GraphType.DIRECTED_GRAPH, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
+		case UNDIRECTED_GRAPH:
+			return new PageRankCentrality(GraphType.UNDIRECTED_GRAPH, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
+		default:
+			throw new IllegalArgumentException();
+		}
 	}
 
-	public PageRankCentrality(double alpha, int iterations) {
+	private final GraphType graphType;
+	private final double alpha;
+
+	private final int iterations;
+	private String name;
+
+	public PageRankCentrality(GraphType graphType, double alpha, int iterations) {
+		this.graphType = graphType;
 		this.alpha = alpha;
 		this.iterations = iterations;
 	}
 
 	@Override
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
-		PageRank<Vertex, Edge> pageRank = new PageRank<Vertex, Edge>(new GraphJungUndirected(subgraph), alpha);
+		GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
+		PageRank<Vertex, Edge> pageRank = new PageRank<Vertex, Edge>(graphJung, alpha);
 		pageRank.setMaxIterations(iterations);
 		pageRank.evaluate();
 
@@ -59,10 +71,9 @@ public class PageRankCentrality implements LocalDisambiguator {
 
 	@Override
 	public String toString() {
-		if (name == null) {
+		if (name == null)
 			name = new StringBuilder(this.getClass().getSimpleName()).append(" (alpha: ").append(alpha)
 					.append(", iterations: ").append(iterations).append(")").toString();
-		}
 		return name;
 	}
 
