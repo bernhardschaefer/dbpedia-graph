@@ -107,6 +107,37 @@
 			<artifactId>jgrapht</artifactId>
 			<version>0.8.3</version>
 		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.dbpedia.spotlight</groupId> -->
+<!-- 			<artifactId>spotlight</artifactId> -->
+<!-- 			<version>0.6.5</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>${basedir}/external_libs/dbpedia-spotlight-0.6.5-jar-with-dependencies.jar</systemPath> -->
+
+<!-- 			<exclusions> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>org.slf4j</groupId> -->
+<!-- 					<artifactId>slf4j-log4j12</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>log4j</groupId> -->
+<!-- 					<artifactId>log4j</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>org.slf4j</groupId> -->
+<!-- 					<artifactId>slf4j-api</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>org.slf4j</groupId> -->
+<!-- 					<artifactId>jcl-over-slf4j</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 			</exclusions> -->
+<!-- 		</dependency> -->
+		<dependency>
+			<groupId>org.dbpedia.spotlight</groupId>
+			<artifactId>core</artifactId>
+			<version>0.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
