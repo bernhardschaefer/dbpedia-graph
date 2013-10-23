@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.dbpedia.spotlight.model.DBpediaResource;
+import org.dbpedia.spotlight.model.SurfaceForm;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
@@ -25,6 +27,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenses;
 
 /**
  * Basic File Utilities.
@@ -148,6 +151,25 @@ public final class FileUtils {
 				iter.remove();
 		}
 		return lines;
+	}
+
+	public static Collection<SurfaceFormSenses> surfaceFormsSensesFromFile(Class<?> clazz, String fileName, String uriPrefix)
+			throws IOException, URISyntaxException {
+		Collection<SurfaceFormSenses> wordsSenses = new ArrayList<>();
+		List<String> lines = readRelevantLinesFromFile(clazz, fileName);
+		for (String line : lines)
+			wordsSenses.add(surfaceFormSensesFromLine(line, uriPrefix));
+		return wordsSenses;
+	}
+
+	public static SurfaceFormSenses surfaceFormSensesFromLine(String line, String uriPrefix) {
+		Collection<DBpediaResource> senses = new ArrayList<>();
+		String[] wordSenses = line.split(DELIMITER);
+		for (int i = 0; i < wordSenses.length; i++) {
+			String uri = uriPrefix + wordSenses[i];
+			senses.add(new DBpediaResource(uri));
+		}
+		return new SurfaceFormSenses(new SurfaceForm("unknown"), senses);
 	}
 
 	public static Collection<Collection<String>> readUrisFromFile(Class<?> clazz, String fileName, String uriPrefix)

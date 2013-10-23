@@ -6,8 +6,9 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.DisambiguatorHelper;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenseScore;
 
 public class LocalDisambiguationTester implements DisambiguationTester {
 	private static final Logger logger = LoggerFactory.getLogger(LocalDisambiguationTester.class);
@@ -16,15 +17,15 @@ public class LocalDisambiguationTester implements DisambiguationTester {
 	private static final double ALLOWED_SCORE_DEVIATION = 0.01;
 
 	private final LocalGraphDisambiguator disambiguator;
-	private final List<WeightedSense> actualDisambiguationResults;
+	private final List<SurfaceFormSenseScore> actualDisambiguationResults;
 	private final ExpectedDisambiguationResults expectedDisambiguationResults;
 
 	public LocalDisambiguationTester(LocalGraphDisambiguator disambiguator, SubgraphTester subgraphData) {
 		expectedDisambiguationResults = new ExpectedDisambiguationResults(TestSet.NavigliTestSet.NL_LOCAL_RESULTS,
 				LOCAL_PACKAGE_NAME);
 		this.disambiguator = disambiguator;
-		actualDisambiguationResults = disambiguator.disambiguate(Graphs.urisOfVertices(subgraphData.allSenses),
-				subgraphData.getSubgraph());
+		actualDisambiguationResults = disambiguator.disambiguate(
+				DisambiguatorHelper.transformVertices(subgraphData.allWordsSenses), subgraphData.getSubgraph());
 	}
 
 	/*
@@ -34,15 +35,16 @@ public class LocalDisambiguationTester implements DisambiguationTester {
 	 */
 	@Override
 	public void compareDisambiguationResults() {
-		for (WeightedSense wUri : actualDisambiguationResults) {
-			double expected = getExpectedDisambiguationResults().getResults().get(wUri.getSense())
+		for (SurfaceFormSenseScore surfaceFormSenseScore : actualDisambiguationResults) {
+			double expected = getExpectedDisambiguationResults().getResults().get(surfaceFormSenseScore.uri())
 					.get(disambiguator.getClass());
-			logger.info("uri: {} actual weight: {} expected weight: {}", wUri.getSense(), wUri.getWeight(), expected);
-			Assert.assertEquals(expected, wUri.getWeight(), ALLOWED_SCORE_DEVIATION);
+			logger.info("uri: {} actual weight: {} expected weight: {}", surfaceFormSenseScore.uri(),
+					surfaceFormSenseScore.getScore(), expected);
+			Assert.assertEquals(expected, surfaceFormSenseScore.getScore(), ALLOWED_SCORE_DEVIATION);
 		}
 	}
 
-	public List<WeightedSense> getActualDisambiguationResults() {
+	public List<SurfaceFormSenseScore> getActualDisambiguationResults() {
 		return actualDisambiguationResults;
 	}
 

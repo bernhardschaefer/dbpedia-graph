@@ -62,6 +62,17 @@ public final class Graphs {
 			addVertexByUri(graph, v.getProperty(GraphConfig.URI_PROPERTY).toString());
 	}
 
+	public static GraphJung<Graph> asGraphJung(GraphType graphType, Graph subgraph) {
+		switch (graphType) {
+		case DIRECTED_GRAPH:
+			return new GraphJung<Graph>(subgraph);
+		case UNDIRECTED_GRAPH:
+			return new GraphJungUndirected(subgraph);
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
+
 	public static Collection<Edge> connectedEdges(Vertex vertex, Direction direction, String... labels) {
 		Collection<Edge> edges;
 		final Iterable<Edge> itty = vertex.getEdges(direction);
@@ -106,17 +117,6 @@ public final class Graphs {
 		String uri = Graphs.uriOfVertex(v);
 		Vertex subGraphVertex = vertexByUri(subGraph, uri);
 		return subGraphVertex != null;
-	}
-
-	public static GraphJung<Graph> asGraphJung(GraphType graphType, Graph subgraph) {
-		switch (graphType) {
-		case DIRECTED_GRAPH:
-			return new GraphJung<Graph>(subgraph);
-		case UNDIRECTED_GRAPH:
-			return new GraphJungUndirected(subgraph);
-		default:
-			throw new IllegalArgumentException();
-		}
 	}
 
 	public static int numberOfEdges(Graph subgraph) {

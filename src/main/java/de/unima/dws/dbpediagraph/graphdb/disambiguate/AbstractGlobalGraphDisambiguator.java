@@ -8,11 +8,6 @@ import com.tinkerpop.blueprints.Graph;
 public abstract class AbstractGlobalGraphDisambiguator implements GlobalGraphDisambiguator {
 
 	@Override
-	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
-		throw new UnsupportedOperationException("This operation is not supported for global disambiguators.");
-	}
-
-	@Override
 	public List<WeightedSenseAssignments> disambiguateGlobal(List<List<String>> allWordsSenses, Graph subgraph) {
 		// Example allWordSenses = {{drink1,drink2},{milk1,milk2,milk3}}
 

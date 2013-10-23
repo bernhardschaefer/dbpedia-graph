@@ -20,11 +20,12 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
-import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.UriShortener;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.DisambiguatorHelper;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenseScore;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenses;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.BetweennessCentrality;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.DegreeCentrality;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality;
@@ -33,7 +34,6 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.PageRankCentrality;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
-import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -62,30 +62,30 @@ public class DemoSubgraphConstruction {
 
 	public static void dbpediaDemo() throws IOException, URISyntaxException {
 		Graph graph = GraphFactory.getDBpediaGraph();
-
-		Collection<Collection<String>> wordsSensesString = FileUtils.readUrisFromFile(DemoSubgraphConstruction.class,
-				"/napoleon-sentence-test", GraphConfig.DBPEDIA_RESOURCE_PREFIX);
+		Collection<SurfaceFormSenses> wordsSensesString = FileUtils.surfaceFormsSensesFromFile(
+				DemoSubgraphConstruction.class, "/napoleon-sentence-test", GraphConfig.DBPEDIA_RESOURCE_PREFIX);
 
 		demo(graph, wordsSensesString);
 	}
 
-	private static void demo(Graph graph, Collection<Collection<String>> wordsSensesString) {
-		Collection<Collection<Vertex>> wordsSenses = Graphs.wordsVerticesByUri(graph, wordsSensesString);
-		Collection<String> allSensesString = CollectionUtils.combine(wordsSensesString);
+	private static void demo(Graph graph, Collection<SurfaceFormSenses> surfaceFormsSenses) {
+		Collection<Collection<Vertex>> wordsSenses = DisambiguatorHelper.wordsVerticesFromSenses(graph,
+				surfaceFormsSenses);
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE));
 		Graph subGraph = sc.createSubgraph(wordsSenses);
 
-		GraphDisambiguator[] disambiguators = new LocalGraphDisambiguator[] { BetweennessCentrality.forGraphType(GRAPH_TYPE),
-				DegreeCentrality.IN_AND_OUT_DEGREE, HITSCentrality.defaultForGraphType(GRAPH_TYPE),
-				KPPCentrality.forGraphType(GRAPH_TYPE), PageRankCentrality.defaultForGraphType(GRAPH_TYPE) };
+		GraphDisambiguator[] disambiguators = new LocalGraphDisambiguator[] {
+				BetweennessCentrality.forGraphType(GRAPH_TYPE), DegreeCentrality.IN_AND_OUT_DEGREE,
+				HITSCentrality.defaultForGraphType(GRAPH_TYPE), KPPCentrality.forGraphType(GRAPH_TYPE),
+				PageRankCentrality.defaultForGraphType(GRAPH_TYPE) };
 		for (GraphDisambiguator d : disambiguators) {
 			System.out.println(d);
-			List<WeightedSense> weightedSenses = d.disambiguate(allSensesString, subGraph);
-			Collections.sort(weightedSenses);
-			for (WeightedSense sense : weightedSenses)
-				System.out.printf("  %s (%.2f)", UriShortener.shorten(sense.getSense()), sense.getWeight());
+			List<SurfaceFormSenseScore> senseScores = d.disambiguate(surfaceFormsSenses, subGraph);
+			Collections.sort(senseScores);
+			for (SurfaceFormSenseScore senseScore : senseScores)
+				System.out.printf("  %s (%.2f)", UriShortener.shorten(senseScore.uri()), senseScore.getScore());
 			System.out.println();
 		}
 

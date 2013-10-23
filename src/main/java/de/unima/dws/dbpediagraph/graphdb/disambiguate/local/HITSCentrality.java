@@ -1,9 +1,7 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -15,16 +13,17 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import edu.uci.ics.jung.algorithms.scoring.HITS;
 import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
+import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
  * @author Bernhard Schäfer
  */
-public class HITSCentrality implements LocalGraphDisambiguator {
+public class HITSCentrality extends AbstractLocalGraphDisambiguator implements LocalGraphDisambiguator {
 	/**
 	 * Maintains hub and authority score information for a vertex.
 	 */
@@ -57,12 +56,36 @@ public class HITSCentrality implements LocalGraphDisambiguator {
 		}
 	}
 
+	class HITSVertexScorer implements VertexScorer<Vertex, Double> {
+
+		private final HITS<Vertex, Edge> hits;
+
+		public HITSVertexScorer(Graph subgraph) {
+			GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
+			hits = new HITS<Vertex, Edge>(graphJung, alpha);
+			hits.acceptDisconnectedGraph(true);
+			hits.setMaxIterations(iterations);
+			hits.evaluate();
+		}
+
+		@Override
+		public Double getVertexScore(Vertex v) {
+			Scores scores = hits.getVertexScore(v);
+			// wUris.add(new WeightedSense(v.getProperty(GraphConfig.URI_PROPERTY).toString(),
+			// scores.get(v).authority));
+			double authority = CollectionUtils.iterableItemCount(Graphs.connectedEdges(v, graphType)) != 0 ? scores.authority
+					: 0;
+			return authority;
+		}
+	}
+
 	private static final int DEFAULT_ITERATIONS = 10;
 
 	private static final double DEFAULT_ALPHA = 0;
 
 	private static final double INITIAL_SCORE = 1;
 
+	@Deprecated
 	private static Map<Vertex, HitsScores> createInitialScores(Collection<Vertex> vertices, double initialScore) {
 		Map<Vertex, HitsScores> scores = new HashMap<>();
 		for (Vertex v : vertices)
@@ -95,6 +118,7 @@ public class HITSCentrality implements LocalGraphDisambiguator {
 		this.iterations = iterations;
 	}
 
+	@Deprecated
 	private double authority(Vertex v, Map<Vertex, HitsScores> vScores) {
 		Direction direction = null;
 		switch (graphType) {
@@ -111,6 +135,7 @@ public class HITSCentrality implements LocalGraphDisambiguator {
 	}
 
 	@SuppressWarnings("unused")
+	@Deprecated
 	private Map<Vertex, HitsScores> calculateHitsScores(Graph subgraph) {
 		Collection<Vertex> graphVertices = CollectionUtils.iterableToCollection(subgraph.getVertices());
 
@@ -129,30 +154,11 @@ public class HITSCentrality implements LocalGraphDisambiguator {
 	}
 
 	@Override
-	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
-		GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
-		HITS<Vertex, Edge> hits = new HITS<Vertex, Edge>(graphJung, alpha);
-		hits.acceptDisconnectedGraph(true);
-		hits.setMaxIterations(iterations);
-		hits.evaluate();
-
-		// Map<Vertex, Scores> scores = calculateHitsScores(subgraph);
-
-		// List<Vertex> senseVertices = Graphs.verticesByUri(subgraph, senses);
-		List<WeightedSense> wUris = new ArrayList<>();
-		// for (Vertex v : senseVertices)
-		for (String uri : senses) {
-			Vertex v = Graphs.vertexByUri(subgraph, uri);
-			Scores scores = hits.getVertexScore(v);
-			// wUris.add(new WeightedSense(v.getProperty(GraphConfig.URI_PROPERTY).toString(),
-			// scores.get(v).authority));
-			double authority = CollectionUtils.iteratorItemCount(Graphs.connectedEdges(v, graphType).iterator()) != 0 ? scores.authority
-					: 0;
-			wUris.add(new WeightedSense(uri, authority));
-		}
-		return wUris;
+	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
+		return new HITSVertexScorer(subgraph);
 	}
 
+	@Deprecated
 	private double hub(Vertex v, Map<Vertex, HitsScores> vScores) {
 		Direction direction = null;
 		switch (graphType) {
@@ -168,6 +174,7 @@ public class HITSCentrality implements LocalGraphDisambiguator {
 		return hub;
 	}
 
+	@Deprecated
 	private void normalize(Map<Vertex, HitsScores> scores) {
 		double authSum = 0, hubSum = 0;
 		for (Entry<Vertex, HitsScores> entry : scores.entrySet()) {

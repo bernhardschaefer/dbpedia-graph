@@ -29,6 +29,8 @@ public class SubgraphTester {
 
 	private final Graph graph;
 	public final Collection<Collection<Vertex>> allWordsSenses;
+
+	@Deprecated
 	public final Collection<Vertex> allSenses;
 
 	public final List<String> expectedSubgraphEdges;

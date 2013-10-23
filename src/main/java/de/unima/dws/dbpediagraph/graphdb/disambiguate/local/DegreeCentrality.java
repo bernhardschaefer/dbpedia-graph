@@ -1,19 +1,15 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
+import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
  * Degree Centrality {@link GraphDisambiguator} that only takes into account the degree of edges in the subgraph.
@@ -21,8 +17,26 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
  * @author Bernhard Schäfer
  * 
  */
-public enum DegreeCentrality implements LocalGraphDisambiguator {
-	IN_AND_OUT_DEGREE(Direction.BOTH), IN_DEGREE(Direction.IN), OUT_DEGREE(Direction.OUT);
+public class DegreeCentrality extends AbstractLocalGraphDisambiguator implements LocalGraphDisambiguator {
+	class DegreeVertexScorer implements VertexScorer<Vertex, Double> {
+		private final int verticesCount;
+
+		public DegreeVertexScorer(Graph subgraph) {
+			this.verticesCount = Graphs.numberOfVertices(subgraph);
+		}
+
+		@Override
+		public Double getVertexScore(Vertex v) {
+			double degree = Graphs.vertexDegree(v, direction);
+			double centrality = degree / (verticesCount - 1);
+			return centrality;
+		}
+
+	}
+
+	public static final DegreeCentrality IN_AND_OUT_DEGREE = new DegreeCentrality(Direction.BOTH);
+	public static final DegreeCentrality IN_DEGREE = new DegreeCentrality(Direction.IN);
+	public static final DegreeCentrality OUT_DEGREE = new DegreeCentrality(Direction.OUT);
 
 	public static DegreeCentrality forGraphType(GraphType graphType) {
 		switch (graphType) {
@@ -46,21 +60,8 @@ public enum DegreeCentrality implements LocalGraphDisambiguator {
 	}
 
 	@Override
-	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {
-		int numberOfVertices = Graphs.numberOfVertices(subgraph);
-
-		List<WeightedSense> weightedSenses = new LinkedList<>();
-		for (String sense : senses) {
-			Vertex v = Graphs.vertexByUri(subgraph, sense);
-			double degree = Graphs.vertexDegree(v, direction);
-			double centrality = degree / (numberOfVertices - 1);
-			weightedSenses.add(new WeightedSense(sense, centrality));
-		}
-
-		Collections.sort(weightedSenses);
-		Collections.reverse(weightedSenses);
-
-		return weightedSenses;
+	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
+		return new DegreeVertexScorer(subgraph);
 	}
 
 	@Override
