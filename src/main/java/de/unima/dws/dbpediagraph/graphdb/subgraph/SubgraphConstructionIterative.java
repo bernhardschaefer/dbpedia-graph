@@ -8,6 +8,7 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
 /**
@@ -43,6 +44,9 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 			// explore further
 			for (Edge edge : Graphs.connectedEdges(current, settings.graphType)) {
 				Vertex child = Graphs.oppositeVertexUnsafe(edge, current);
+				if (settings.graphType.equals(GraphType.UNDIRECTED_GRAPH)
+						&& !settings.explorationThreshold.isBelowThreshold(child, edge))
+					continue;
 				if (!path.getVertices().contains(child)) {
 					Path newPath = Path.newHop(path, edge, child);
 					stack.push(newPath);

@@ -120,11 +120,11 @@ public final class Graphs {
 	}
 
 	public static int numberOfEdges(Graph subgraph) {
-		return CollectionUtils.getIterItemCount(subgraph.getEdges().iterator());
+		return CollectionUtils.iteratorItemCount(subgraph.getEdges().iterator());
 	}
 
 	public static int numberOfVertices(Graph subgraph) {
-		return CollectionUtils.getIterItemCount(subgraph.getVertices().iterator());
+		return CollectionUtils.iteratorItemCount(subgraph.getVertices().iterator());
 	}
 
 	public static Vertex oppositeVertexSafe(Edge edge, Vertex vertex) {
@@ -200,7 +200,7 @@ public final class Graphs {
 		if (itty instanceof Collection)
 			degree = ((Collection<Edge>) itty).size();
 		else
-			degree = CollectionUtils.getIterItemCount(itty.iterator());
+			degree = CollectionUtils.iteratorItemCount(itty.iterator());
 		return degree;
 	}
 

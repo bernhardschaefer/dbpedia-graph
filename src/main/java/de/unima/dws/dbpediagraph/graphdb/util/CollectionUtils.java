@@ -30,19 +30,37 @@ public class CollectionUtils {
 		return copy;
 	}
 
-	public static int getIterItemCount(Iterator<?> iter) {
+	public static <T> Collection<T> iterableToCollection(Iterable<T> itty) {
+		if (itty instanceof Collection)
+			return (Collection<T>) itty;
+		return Lists.newArrayList(itty);
+	}
+
+	public static <T> int iterableItemCount(Iterable<T> iterable) {
+		return iterableItemCount(iterable, Integer.MAX_VALUE);
+	}
+
+	public static <T> int iterableItemCount(Iterable<T> iterable, int threshold) {
+		if (iterable instanceof Collection)
+			return ((Collection<T>) iterable).size();
+
+		int counter = 0;
+		Iterator<T> iterator = iterable.iterator();
+		while (iterator.hasNext()) {
+			iterator.next();
+			if (counter++ >= threshold)
+				return counter;
+		}
+		return counter;
+	}
+
+	public static int iteratorItemCount(Iterator<?> iter) {
 		int counter = 0;
 		while (iter.hasNext()) {
 			iter.next();
 			counter++;
 		}
 		return counter;
-	}
-
-	public static <T> Collection<T> iterToCollection(Iterable<T> itty) {
-		if (itty instanceof Collection)
-			return (Collection<T>) itty;
-		return Lists.newArrayList(itty);
 	}
 
 	/**

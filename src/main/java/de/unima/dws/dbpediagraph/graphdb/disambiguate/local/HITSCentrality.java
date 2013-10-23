@@ -112,7 +112,7 @@ public class HITSCentrality implements LocalDisambiguator {
 
 	@SuppressWarnings("unused")
 	private Map<Vertex, HitsScores> calculateHitsScores(Graph subgraph) {
-		Collection<Vertex> graphVertices = CollectionUtils.iterToCollection(subgraph.getVertices());
+		Collection<Vertex> graphVertices = CollectionUtils.iterableToCollection(subgraph.getVertices());
 
 		Map<Vertex, HitsScores> scores = createInitialScores(graphVertices, INITIAL_SCORE);
 
@@ -146,7 +146,7 @@ public class HITSCentrality implements LocalDisambiguator {
 			Scores scores = hits.getVertexScore(v);
 			// wUris.add(new WeightedSense(v.getProperty(GraphConfig.URI_PROPERTY).toString(),
 			// scores.get(v).authority));
-			double authority = CollectionUtils.getIterItemCount(Graphs.connectedEdges(v, graphType).iterator()) != 0 ? scores.authority
+			double authority = CollectionUtils.iteratorItemCount(Graphs.connectedEdges(v, graphType).iterator()) != 0 ? scores.authority
 					: 0;
 			wUris.add(new WeightedSense(uri, authority));
 		}

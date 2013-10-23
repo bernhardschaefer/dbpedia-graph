@@ -7,6 +7,7 @@ import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
 public final class SubgraphConstructionSettings {
 
 	// parameters are initialized to default values
+	ExplorationThreshold explorationThreshold = DegreeThreshold.getDefault();
 	EdgeFilter edgeFilter = new DummyEdgeFilter();
 	GraphType graphType = GraphType.DIRECTED_GRAPH;
 	/**

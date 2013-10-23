@@ -12,7 +12,6 @@ import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.UriShortener;
-import de.unima.dws.dbpediagraph.graphdb.filter.LoadingStatementFilter;
 
 /**
  * Full blueprints compatible batch handler for creating a graph from RDF files. Uses {@link BatchGraph} and the

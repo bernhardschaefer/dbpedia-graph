@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.filter;
+package de.unima.dws.dbpediagraph.graphdb.loader;
 
 import org.apache.commons.configuration.Configuration;
 
