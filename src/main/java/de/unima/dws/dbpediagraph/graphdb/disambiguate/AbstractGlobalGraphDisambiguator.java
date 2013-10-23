@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.tinkerpop.blueprints.Graph;
 
-public abstract class AbstractGlobalDisambiguator implements GlobalDisambiguator {
+public abstract class AbstractGlobalGraphDisambiguator implements GlobalGraphDisambiguator {
 
 	@Override
 	public List<WeightedSense> disambiguate(Collection<String> senses, Graph subgraph) {

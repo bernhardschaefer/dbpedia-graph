@@ -12,7 +12,7 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
@@ -20,7 +20,7 @@ import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 /**
  * @author Bernhard Schäfer
  */
-public enum KPPCentrality implements LocalDisambiguator {
+public enum KPPCentrality implements LocalGraphDisambiguator {
 	DIRECTED(GraphType.DIRECTED_GRAPH), UNDIRECTED(GraphType.UNDIRECTED_GRAPH);
 
 	public static KPPCentrality forGraphType(GraphType graphType) {

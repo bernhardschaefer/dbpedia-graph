@@ -7,8 +7,8 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
@@ -19,7 +19,7 @@ import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
  * @author Bernhard Schäfer
  * 
  */
-public class Compactness extends AbstractGlobalDisambiguator implements GlobalDisambiguator {
+public class Compactness extends AbstractGlobalGraphDisambiguator implements GlobalGraphDisambiguator {
 
 	@Override
 	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph) {

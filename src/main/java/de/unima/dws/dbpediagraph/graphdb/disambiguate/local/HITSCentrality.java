@@ -15,7 +15,7 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import edu.uci.ics.jung.algorithms.scoring.HITS;
@@ -24,7 +24,7 @@ import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
 /**
  * @author Bernhard Schäfer
  */
-public class HITSCentrality implements LocalDisambiguator {
+public class HITSCentrality implements LocalGraphDisambiguator {
 	/**
 	 * Maintains hub and authority score information for a vertex.
 	 */

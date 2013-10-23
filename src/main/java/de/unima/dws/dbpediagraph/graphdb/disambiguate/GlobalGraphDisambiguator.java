@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.tinkerpop.blueprints.Graph;
 
-public interface GlobalDisambiguator extends Disambiguator {
+public interface GlobalGraphDisambiguator extends GraphDisambiguator {
 
 	/**
 	 * Use a global connectivity measure to find the sense assignments with the highest scores.

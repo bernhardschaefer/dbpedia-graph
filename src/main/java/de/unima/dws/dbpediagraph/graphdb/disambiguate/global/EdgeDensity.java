@@ -8,8 +8,8 @@ import java.util.Collection;
 import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalGraphDisambiguator;
 
 /**
  * Edge density global connectivity measure implemented as described in Navigli&Lapata (2010).
@@ -17,7 +17,7 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
  * @author Bernhard Schäfer
  * 
  */
-public class EdgeDensity extends AbstractGlobalDisambiguator implements GlobalDisambiguator {
+public class EdgeDensity extends AbstractGlobalGraphDisambiguator implements GlobalGraphDisambiguator {
 
 	@Override
 	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph) {

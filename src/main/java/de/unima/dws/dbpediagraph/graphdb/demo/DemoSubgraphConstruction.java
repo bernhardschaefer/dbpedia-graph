@@ -22,8 +22,8 @@ import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.UriShortener;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.BetweennessCentrality;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.DegreeCentrality;
@@ -77,10 +77,10 @@ public class DemoSubgraphConstruction {
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE));
 		Graph subGraph = sc.createSubgraph(wordsSenses);
 
-		Disambiguator[] disambiguators = new LocalDisambiguator[] { BetweennessCentrality.forGraphType(GRAPH_TYPE),
+		GraphDisambiguator[] disambiguators = new LocalGraphDisambiguator[] { BetweennessCentrality.forGraphType(GRAPH_TYPE),
 				DegreeCentrality.IN_AND_OUT_DEGREE, HITSCentrality.defaultForGraphType(GRAPH_TYPE),
 				KPPCentrality.forGraphType(GRAPH_TYPE), PageRankCentrality.defaultForGraphType(GRAPH_TYPE) };
-		for (Disambiguator d : disambiguators) {
+		for (GraphDisambiguator d : disambiguators) {
 			System.out.println(d);
 			List<WeightedSense> weightedSenses = d.disambiguate(allSensesString, subGraph);
 			Collections.sort(weightedSenses);

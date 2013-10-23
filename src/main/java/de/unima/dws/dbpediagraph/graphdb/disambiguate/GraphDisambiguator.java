@@ -11,7 +11,7 @@ import com.tinkerpop.blueprints.Graph;
  * @author Bernhard Schäfer
  * 
  */
-public interface Disambiguator {
+public interface GraphDisambiguator {
 	/**
 	 * 
 	 * @param senses

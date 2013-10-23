@@ -1,9 +1,9 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
 
 /**
- * Tests a {@link Disambiguator} class using a {@link SubgraphTester} and a {@link TestSet}. Implementations are to be
+ * Tests a {@link GraphDisambiguator} class using a {@link SubgraphTester} and a {@link TestSet}. Implementations are to be
  * used in JUnit tests.
  * 
  * @author Bernhard Schäfer

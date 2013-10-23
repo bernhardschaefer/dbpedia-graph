@@ -11,14 +11,14 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 
 /**
  * @author Bernhard Schäfer
  */
-public class PageRankCentrality implements LocalDisambiguator {
+public class PageRankCentrality implements LocalGraphDisambiguator {
 	private static final int DEFAULT_ITERATIONS = 10;
 	private static final double DEFAULT_ALPHA = 0;
 

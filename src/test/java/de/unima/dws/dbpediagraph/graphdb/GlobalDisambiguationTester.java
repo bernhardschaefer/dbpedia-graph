@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
 public class GlobalDisambiguationTester implements DisambiguationTester {
@@ -24,13 +24,13 @@ public class GlobalDisambiguationTester implements DisambiguationTester {
 	private static final String SENSES_DELIMITER = ",";
 	private static final double ALLOWED_SCORE_DEVIATION = 0.005;
 
-	private final GlobalDisambiguator disambiguator;
+	private final GlobalGraphDisambiguator disambiguator;
 
 	private final ExpectedDisambiguationResults expectedDisambiguationData;
 
 	private final SubgraphTester subgraphData;
 
-	public GlobalDisambiguationTester(GlobalDisambiguator disambiguator, SubgraphTester subgraphData) {
+	public GlobalDisambiguationTester(GlobalGraphDisambiguator disambiguator, SubgraphTester subgraphData) {
 		expectedDisambiguationData = new ExpectedDisambiguationResults(TestSet.NavigliTestSet.NL_GLOBAL_RESULTS,
 				GLOBAL_PACKAGE_NAME);
 		this.disambiguator = disambiguator;

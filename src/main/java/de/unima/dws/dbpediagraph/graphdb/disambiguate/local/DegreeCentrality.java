@@ -11,17 +11,17 @@ import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 
 /**
- * Degree Centrality {@link Disambiguator} that only takes into account the degree of edges in the subgraph.
+ * Degree Centrality {@link GraphDisambiguator} that only takes into account the degree of edges in the subgraph.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public enum DegreeCentrality implements LocalDisambiguator {
+public enum DegreeCentrality implements LocalGraphDisambiguator {
 	IN_AND_OUT_DEGREE(Direction.BOTH), IN_DEGREE(Direction.IN), OUT_DEGREE(Direction.OUT);
 
 	public static DegreeCentrality forGraphType(GraphType graphType) {

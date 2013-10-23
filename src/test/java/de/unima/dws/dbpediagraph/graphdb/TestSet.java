@@ -1,11 +1,11 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.Disambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 
 /**
  * Test set consisting of file names that can be parsed to test {@link SubgraphConstruction} and disambiguation using
- * {@link Disambiguator} in JUnit tests.
+ * {@link GraphDisambiguator} in JUnit tests.
  * 
  * @author Bernhard Schäfer
  * 

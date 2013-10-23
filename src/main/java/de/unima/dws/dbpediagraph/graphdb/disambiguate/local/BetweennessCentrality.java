@@ -11,7 +11,7 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 
 /**
@@ -20,7 +20,7 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 // TODO evaluate GraphStream
 // https://github.com/graphstream/gs-algo/blob/master/src/org/graphstream/algorithm/BetweennessCentrality.java
 // http://www.javacodegeeks.com/2013/07/mini-search-engine-just-the-basics-using-neo4j-crawler4j-graphstream-and-encog.html
-public enum BetweennessCentrality implements LocalDisambiguator {
+public enum BetweennessCentrality implements LocalGraphDisambiguator {
 	DIRECTED(GraphType.DIRECTED_GRAPH), UNDIRECTED(GraphType.UNDIRECTED_GRAPH);
 
 	public static BetweennessCentrality forGraphType(GraphType graphType) {

@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.WeightedSense;
 
 public class LocalDisambiguationTester implements DisambiguationTester {
@@ -15,11 +15,11 @@ public class LocalDisambiguationTester implements DisambiguationTester {
 	private static final String LOCAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.graphdb.disambiguate.local";
 	private static final double ALLOWED_SCORE_DEVIATION = 0.01;
 
-	private final LocalDisambiguator disambiguator;
+	private final LocalGraphDisambiguator disambiguator;
 	private final List<WeightedSense> actualDisambiguationResults;
 	private final ExpectedDisambiguationResults expectedDisambiguationResults;
 
-	public LocalDisambiguationTester(LocalDisambiguator disambiguator, SubgraphTester subgraphData) {
+	public LocalDisambiguationTester(LocalGraphDisambiguator disambiguator, SubgraphTester subgraphData) {
 		expectedDisambiguationResults = new ExpectedDisambiguationResults(TestSet.NavigliTestSet.NL_LOCAL_RESULTS,
 				LOCAL_PACKAGE_NAME);
 		this.disambiguator = disambiguator;
