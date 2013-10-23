@@ -29,7 +29,7 @@ public class DegreeThreshold implements ExplorationThreshold {
 	private final int maxDegree;
 
 	private final Map<String, Integer> blacklist;
-	private static final int DEFAULT_BLACKLIST_SIZE = 10000;
+	private static final int DEFAULT_BLACKLIST_SIZE = 1000;
 
 	public DegreeThreshold(int maxDegree) {
 		this(maxDegree, new LRUMap<String, Integer>(DEFAULT_BLACKLIST_SIZE));
