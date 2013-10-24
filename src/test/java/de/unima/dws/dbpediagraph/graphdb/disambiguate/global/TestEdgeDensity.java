@@ -10,23 +10,23 @@ import de.unima.dws.dbpediagraph.graphdb.TestSet;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestEdgeDensity {
-	private static GlobalDisambiguationTester data;
-	private static SubgraphTester subGraphData;
+	private static GlobalDisambiguationTester disambiguationNavigli;
+	private static SubgraphTester subgraphNavigli;
 
 	@BeforeClass
 	public static void setUp() {
-		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new GlobalDisambiguationTester(new EdgeDensity(), subGraphData);
+		subgraphNavigli = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
+		disambiguationNavigli = new GlobalDisambiguationTester(new EdgeDensity(), subgraphNavigli);
 	}
 
 	@AfterClass
 	public static void tearDown() {
-		if (subGraphData != null)
-			subGraphData.close();
+		if (subgraphNavigli != null)
+			subgraphNavigli.close();
 	}
 
 	@Test
 	public void testDisambiguateValues() {
-		data.compareDisambiguationResults();
+		disambiguationNavigli.compareDisambiguationResults();
 	}
 }

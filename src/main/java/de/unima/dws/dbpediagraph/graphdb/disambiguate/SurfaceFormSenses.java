@@ -4,13 +4,15 @@ import java.util.Collection;
 
 import org.dbpedia.spotlight.model.DBpediaResource;
 import org.dbpedia.spotlight.model.SurfaceForm;
+import org.dbpedia.spotlight.model.SurfaceFormOccurrence;
 
+//TODO javadoc
 public class SurfaceFormSenses {
-	private final SurfaceForm surfaceForm;
+	private final SurfaceFormOccurrence surfaceFormOccurrence;
 	private final Collection<DBpediaResource> senses;
 
-	public SurfaceFormSenses(SurfaceForm surfaceForm, Collection<DBpediaResource> senses) {
-		this.surfaceForm = surfaceForm;
+	public SurfaceFormSenses(SurfaceFormOccurrence surfaceFormOccurrence, Collection<DBpediaResource> senses) {
+		this.surfaceFormOccurrence = surfaceFormOccurrence;
 		this.senses = senses;
 	}
 
@@ -19,6 +21,10 @@ public class SurfaceFormSenses {
 	}
 
 	public SurfaceForm getSurfaceForm() {
-		return surfaceForm;
+		return surfaceFormOccurrence.surfaceForm();
+	}
+
+	public SurfaceFormOccurrence getSurfaceFormOccurrence() {
+		return surfaceFormOccurrence;
 	}
 }

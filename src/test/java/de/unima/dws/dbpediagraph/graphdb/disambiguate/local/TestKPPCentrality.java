@@ -12,28 +12,28 @@ import de.unima.dws.dbpediagraph.graphdb.TestSet;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestKPPCentrality {
-	private static LocalDisambiguationTester data;
-	private static SubgraphTester subGraphData;
+	private static LocalDisambiguationTester disambiguationNavigli;
+	private static SubgraphTester subgraphNavigli;
 
 	@BeforeClass
 	public static void setUp() {
-		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		data = new LocalDisambiguationTester(KPPCentrality.UNDIRECTED, subGraphData);
+		subgraphNavigli = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
+		disambiguationNavigli = new LocalDisambiguationTester(KPPCentrality.UNDIRECTED, subgraphNavigli);
 	}
 
 	@AfterClass
 	public static void tearDown() {
-		if (subGraphData != null)
-			subGraphData.close();
+		if (subgraphNavigli != null)
+			subgraphNavigli.close();
 	}
 
 	@Test
 	public void testDisambiguateValues() {
-		data.compareDisambiguationResults();
+		disambiguationNavigli.compareDisambiguationResults();
 	}
 
 	@Test
 	public void testWeightedUrisSize() {
-		assertEquals(data.getActualDisambiguationResults().size(), subGraphData.allSenses.size());
+		assertEquals(disambiguationNavigli.getActualDisambiguationResults().size(), subgraphNavigli.allSenses.size());
 	}
 }

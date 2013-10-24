@@ -1,7 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.tinkerpop.blueprints.Graph;
 
@@ -17,7 +16,7 @@ public interface GlobalGraphDisambiguator extends GraphDisambiguator {
 	 *            the subgraph used for disambiguation
 	 * @return
 	 */
-	public List<WeightedSenseAssignments> disambiguateGlobal(List<List<String>> allWordsSenses, Graph subgraph);
+	// public List<WeightedSenseAssignments> disambiguateGlobal(List<List<String>> allWordsSenses, Graph subgraph);
 
 	/**
 	 * Retrieve the global connectivity measure score for a sense assignment

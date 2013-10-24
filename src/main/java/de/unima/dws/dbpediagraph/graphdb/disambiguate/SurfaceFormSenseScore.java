@@ -2,14 +2,16 @@ package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 
 import org.dbpedia.spotlight.model.DBpediaResource;
 import org.dbpedia.spotlight.model.SurfaceForm;
+import org.dbpedia.spotlight.model.SurfaceFormOccurrence;
 
+//TODO javadoc
 public class SurfaceFormSenseScore implements Comparable<SurfaceFormSenseScore> {
-	private final SurfaceForm surfaceForm;
+	private final SurfaceFormOccurrence surfaceFormOccurrence;
 	private final DBpediaResource sense;
 	private double score;
 
-	public SurfaceFormSenseScore(SurfaceForm surfaceForm, DBpediaResource sense, double score) {
-		this.surfaceForm = surfaceForm;
+	public SurfaceFormSenseScore(SurfaceFormOccurrence surfaceForm, DBpediaResource sense, double score) {
+		this.surfaceFormOccurrence = surfaceForm;
 		this.sense = sense;
 		this.score = score;
 	}
@@ -23,8 +25,16 @@ public class SurfaceFormSenseScore implements Comparable<SurfaceFormSenseScore> 
 		return score;
 	}
 
+	public DBpediaResource getSense() {
+		return sense;
+	}
+
 	public SurfaceForm getSurfaceForm() {
-		return surfaceForm;
+		return surfaceFormOccurrence.surfaceForm();
+	}
+
+	public SurfaceFormOccurrence getSurfaceFormOccurrence() {
+		return surfaceFormOccurrence;
 	}
 
 	public void setScore(double score) {
@@ -34,9 +44,5 @@ public class SurfaceFormSenseScore implements Comparable<SurfaceFormSenseScore> 
 
 	public String uri() {
 		return getSense().uri();
-	}
-
-	public DBpediaResource getSense() {
-		return sense;
 	}
 }

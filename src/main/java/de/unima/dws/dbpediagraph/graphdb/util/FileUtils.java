@@ -19,6 +19,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.dbpedia.spotlight.model.DBpediaResource;
 import org.dbpedia.spotlight.model.SurfaceForm;
+import org.dbpedia.spotlight.model.SurfaceFormOccurrence;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
@@ -153,25 +154,6 @@ public final class FileUtils {
 		return lines;
 	}
 
-	public static Collection<SurfaceFormSenses> surfaceFormsSensesFromFile(Class<?> clazz, String fileName, String uriPrefix)
-			throws IOException, URISyntaxException {
-		Collection<SurfaceFormSenses> wordsSenses = new ArrayList<>();
-		List<String> lines = readRelevantLinesFromFile(clazz, fileName);
-		for (String line : lines)
-			wordsSenses.add(surfaceFormSensesFromLine(line, uriPrefix));
-		return wordsSenses;
-	}
-
-	public static SurfaceFormSenses surfaceFormSensesFromLine(String line, String uriPrefix) {
-		Collection<DBpediaResource> senses = new ArrayList<>();
-		String[] wordSenses = line.split(DELIMITER);
-		for (int i = 0; i < wordSenses.length; i++) {
-			String uri = uriPrefix + wordSenses[i];
-			senses.add(new DBpediaResource(uri));
-		}
-		return new SurfaceFormSenses(new SurfaceForm("unknown"), senses);
-	}
-
 	public static Collection<Collection<String>> readUrisFromFile(Class<?> clazz, String fileName, String uriPrefix)
 			throws IOException, URISyntaxException {
 		Collection<Collection<String>> wordsSenses = new ArrayList<>();
@@ -182,6 +164,25 @@ public final class FileUtils {
 				wordSenses[i] = uriPrefix + wordSenses[i];
 			wordsSenses.add(Arrays.asList(wordSenses));
 		}
+		return wordsSenses;
+	}
+
+	public static SurfaceFormSenses surfaceFormSensesFromLine(String line, String uriPrefix) {
+		Collection<DBpediaResource> senses = new ArrayList<>();
+		String[] wordSenses = line.split(DELIMITER);
+		for (int i = 0; i < wordSenses.length; i++) {
+			String uri = uriPrefix + wordSenses[i];
+			senses.add(new DBpediaResource(uri));
+		}
+		return new SurfaceFormSenses(new SurfaceFormOccurrence(new SurfaceForm("unknown"), null, 0), senses);
+	}
+
+	public static Collection<SurfaceFormSenses> surfaceFormsSensesFromFile(Class<?> clazz, String fileName,
+			String uriPrefix) throws IOException, URISyntaxException {
+		Collection<SurfaceFormSenses> wordsSenses = new ArrayList<>();
+		List<String> lines = readRelevantLinesFromFile(clazz, fileName);
+		for (String line : lines)
+			wordsSenses.add(surfaceFormSensesFromLine(line, uriPrefix));
 		return wordsSenses;
 	}
 

@@ -6,19 +6,21 @@ import java.util.List;
 
 import org.dbpedia.spotlight.model.DBpediaResource;
 import org.dbpedia.spotlight.model.SurfaceForm;
+import org.dbpedia.spotlight.model.SurfaceFormOccurrence;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
+//TODO reorganise and javadoc
 public class DisambiguatorHelper {
 
 	public static List<SurfaceFormSenseScore> initializeScores(Collection<SurfaceFormSenses> surfaceFormsSenses) {
 		List<SurfaceFormSenseScore> senseScores = new ArrayList<>();
 		for (SurfaceFormSenses surfaceFormSenses : surfaceFormsSenses)
 			for (DBpediaResource sense : surfaceFormSenses.getSenses())
-				senseScores.add(new SurfaceFormSenseScore(surfaceFormSenses.getSurfaceForm(), sense, 0.0));
+				senseScores.add(new SurfaceFormSenseScore(surfaceFormSenses.getSurfaceFormOccurrence(), sense, 0.0));
 		return senseScores;
 	}
 
@@ -26,7 +28,7 @@ public class DisambiguatorHelper {
 		Collection<DBpediaResource> senses = new ArrayList<>(wordSenses.size());
 		for (Vertex v : wordSenses)
 			senses.add(new DBpediaResource(Graphs.uriOfVertex(v)));
-		return new SurfaceFormSenses(new SurfaceForm("unknown name"), senses);
+		return new SurfaceFormSenses(new SurfaceFormOccurrence(new SurfaceForm("unknown name"), null, 0), senses);
 	}
 
 	public static Collection<SurfaceFormSenses> transformVertices(Collection<Collection<Vertex>> allWordsSenses) {
