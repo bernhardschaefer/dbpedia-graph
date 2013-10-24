@@ -38,8 +38,8 @@ public class SpotlightGraphDisambiguator extends AbstractGraphBasedDisambiguator
 	private static List<DBpediaResourceOccurrence> unwrap(List<SurfaceFormSenseScore> senseScores) {
 		List<DBpediaResourceOccurrence> resources = new ArrayList<>(senseScores.size());
 		for (SurfaceFormSenseScore senseScore : senseScores)
-			resources.add(new DBpediaResourceOccurrence(senseScore.getSense(), senseScore.getSurfaceForm(), senseScore
-					.getSurfaceFormOccurrence().context(), senseScore.getSurfaceFormOccurrence().textOffset()));
+			resources.add(new DBpediaResourceOccurrence(senseScore.sense(), senseScore.surfaceForm(), senseScore
+					.surfaceFormOccurrence().context(), senseScore.surfaceFormOccurrence().textOffset()));
 		return resources;
 	}
 

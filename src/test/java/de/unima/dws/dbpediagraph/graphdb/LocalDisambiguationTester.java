@@ -36,9 +36,9 @@ public class LocalDisambiguationTester implements DisambiguationTester {
 	@Override
 	public void compareDisambiguationResults() {
 		for (SurfaceFormSenseScore surfaceFormSenseScore : actualDisambiguationResults) {
-			double expected = getExpectedDisambiguationResults().getResults().get(surfaceFormSenseScore.uri())
+			double expected = getExpectedDisambiguationResults().getResults().get(surfaceFormSenseScore.fullUri())
 					.get(disambiguator.getClass());
-			logger.info("uri: {} actual weight: {} expected weight: {}", surfaceFormSenseScore.uri(),
+			logger.info("uri: {} actual weight: {} expected weight: {}", surfaceFormSenseScore.fullUri(),
 					surfaceFormSenseScore.getScore(), expected);
 			Assert.assertEquals(expected, surfaceFormSenseScore.getScore(), ALLOWED_SCORE_DEVIATION);
 		}

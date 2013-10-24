@@ -47,8 +47,8 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
  */
 public class DemoSubgraphConstruction {
 
-	private static final int MAX_DISTANCE = 2;
-	private static final GraphType GRAPH_TYPE = GraphType.UNDIRECTED_GRAPH;
+	private static final int MAX_DISTANCE = 4;
+	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
 
 	private static final Dimension SCREEN_DIMENSION;
 	static {
@@ -85,7 +85,7 @@ public class DemoSubgraphConstruction {
 			List<SurfaceFormSenseScore> senseScores = d.disambiguate(surfaceFormsSenses, subGraph);
 			Collections.sort(senseScores);
 			for (SurfaceFormSenseScore senseScore : senseScores)
-				System.out.printf("  %s (%.2f)", UriShortener.shorten(senseScore.uri()), senseScore.getScore());
+				System.out.printf("  %s (%.2f)", UriShortener.shorten(senseScore.fullUri()), senseScore.getScore());
 			System.out.println();
 		}
 

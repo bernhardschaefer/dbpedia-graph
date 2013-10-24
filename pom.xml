@@ -13,8 +13,10 @@
 		<encoding>UTF-8</encoding>
 		<!-- graph db stuff -->
 		<tinkerpop.version>2.4.0</tinkerpop.version>
+		<neo4j.version>1.9.2</neo4j.version>
 		<sesame.version>2.7.5</sesame.version>
 		<slf4j.version>1.7.5</slf4j.version>
+		<logback.version>1.0.13</logback.version>
 	</properties>
 
 	<dependencies>
@@ -64,6 +66,24 @@
 			</exclusions>
 		</dependency>
 
+		<!-- explicitly include neo4j-kernel to exclude logback dependency -->
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-kernel</artifactId>
+			<version>${neo4j.version}</version>
+
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-access</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4jBatch-Implementation -->
 		<dependency>
 			<groupId>com.tinkerpop.blueprints</groupId>
@@ -89,11 +109,16 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>ch.qos.logback</groupId> -->
+<!-- 			<artifactId>logback-core</artifactId> -->
+<!-- 			<version>${logback.version}</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>ch.qos.logback</groupId> -->
+<!-- 			<artifactId>logback-classic</artifactId> -->
+<!-- 			<version>${logback.version}</version> -->
+<!-- 		</dependency> -->
 
 		<!-- testing -->
 		<dependency>
@@ -107,32 +132,32 @@
 			<artifactId>jgrapht</artifactId>
 			<version>0.8.3</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.dbpedia.spotlight</groupId> -->
-<!-- 			<artifactId>spotlight</artifactId> -->
-<!-- 			<version>0.6.5</version> -->
-<!-- 			<scope>system</scope> -->
-<!-- 			<systemPath>${basedir}/external_libs/dbpedia-spotlight-0.6.5-jar-with-dependencies.jar</systemPath> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.dbpedia.spotlight</groupId> -->
+		<!-- <artifactId>spotlight</artifactId> -->
+		<!-- <version>0.6.5</version> -->
+		<!-- <scope>system</scope> -->
+		<!-- <systemPath>${basedir}/external_libs/dbpedia-spotlight-0.6.5-jar-with-dependencies.jar</systemPath> -->
 
-<!-- 			<exclusions> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>org.slf4j</groupId> -->
-<!-- 					<artifactId>slf4j-log4j12</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>log4j</groupId> -->
-<!-- 					<artifactId>log4j</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>org.slf4j</groupId> -->
-<!-- 					<artifactId>slf4j-api</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>org.slf4j</groupId> -->
-<!-- 					<artifactId>jcl-over-slf4j</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 			</exclusions> -->
-<!-- 		</dependency> -->
+		<!-- <exclusions> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>org.slf4j</groupId> -->
+		<!-- <artifactId>slf4j-log4j12</artifactId> -->
+		<!-- </exclusion> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>log4j</groupId> -->
+		<!-- <artifactId>log4j</artifactId> -->
+		<!-- </exclusion> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>org.slf4j</groupId> -->
+		<!-- <artifactId>slf4j-api</artifactId> -->
+		<!-- </exclusion> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>org.slf4j</groupId> -->
+		<!-- <artifactId>jcl-over-slf4j</artifactId> -->
+		<!-- </exclusion> -->
+		<!-- </exclusions> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.dbpedia.spotlight</groupId>
 			<artifactId>core</artifactId>

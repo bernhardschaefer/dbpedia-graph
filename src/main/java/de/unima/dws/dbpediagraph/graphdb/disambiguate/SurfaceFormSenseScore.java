@@ -13,36 +13,35 @@ public class SurfaceFormSenseScore implements Comparable<SurfaceFormSenseScore> 
 	public SurfaceFormSenseScore(SurfaceFormOccurrence surfaceForm, DBpediaResource sense, double score) {
 		this.surfaceFormOccurrence = surfaceForm;
 		this.sense = sense;
-		this.score = score;
+		this.setScore(score);
 	}
 
 	@Override
 	public int compareTo(SurfaceFormSenseScore o) {
-		return Double.compare(o.score, score);
+		return Double.compare(o.getScore(), getScore());
+	}
+
+	public String fullUri() {
+		return sense().getFullUri();
 	}
 
 	public double getScore() {
 		return score;
 	}
 
-	public DBpediaResource getSense() {
+	public DBpediaResource sense() {
 		return sense;
-	}
-
-	public SurfaceForm getSurfaceForm() {
-		return surfaceFormOccurrence.surfaceForm();
-	}
-
-	public SurfaceFormOccurrence getSurfaceFormOccurrence() {
-		return surfaceFormOccurrence;
 	}
 
 	public void setScore(double score) {
 		this.score = score;
-
 	}
 
-	public String uri() {
-		return getSense().uri();
+	public SurfaceForm surfaceForm() {
+		return surfaceFormOccurrence.surfaceForm();
+	}
+
+	public SurfaceFormOccurrence surfaceFormOccurrence() {
+		return surfaceFormOccurrence;
 	}
 }

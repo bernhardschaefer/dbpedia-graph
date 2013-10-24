@@ -17,7 +17,7 @@ public abstract class AbstractLocalGraphDisambiguator implements LocalGraphDisam
 		VertexScorer<Vertex, Double> vertexScorer = getVertexScorer(subgraph);
 		List<SurfaceFormSenseScore> senseScores = DisambiguatorHelper.initializeScores(surfaceFormsSenses);
 		for (SurfaceFormSenseScore senseScore : senseScores) {
-			double score = vertexScorer.getVertexScore(Graphs.vertexByUri(subgraph, senseScore.uri()));
+			double score = vertexScorer.getVertexScore(Graphs.vertexByUri(subgraph, senseScore.fullUri()));
 			senseScore.setScore(score);
 		}
 		Collections.sort(senseScores);

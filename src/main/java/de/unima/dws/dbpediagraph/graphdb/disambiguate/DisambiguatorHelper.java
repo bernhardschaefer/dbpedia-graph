@@ -40,8 +40,8 @@ public class DisambiguatorHelper {
 
 	public static Collection<Vertex> verticesFromSenses(Graph graph, SurfaceFormSenses surfaceFormSenses) {
 		Collection<Vertex> vertices = new ArrayList<>(surfaceFormSenses.getSenses().size());
-		for (DBpediaResource sense : surfaceFormSenses.getSenses())
-			vertices.add(Graphs.vertexByUri(graph, sense.uri()));
+		for (DBpediaResource resource : surfaceFormSenses.getSenses())
+			vertices.add(Graphs.vertexByUri(graph, resource.getFullUri()));
 		return vertices;
 	}
 
