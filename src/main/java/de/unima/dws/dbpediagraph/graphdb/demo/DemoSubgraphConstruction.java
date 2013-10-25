@@ -29,11 +29,11 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.DegreeCentrality;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.KPPCentrality;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.PageRankCentrality;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.spotlight.DBpediaSense;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.spotlight.DBpediaSurfaceForm;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.spotlight.DBpediaModelFactory;
-import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
@@ -54,15 +54,15 @@ public class DemoSubgraphConstruction {
 	private static final int MAX_DISTANCE = 4;
 	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
 
-	private static final ModelFactory<DBpediaSurfaceForm, DBpediaSense> factory = DBpediaModelFactory.INSTANCE;
-	private static final Collection<GraphDisambiguator<DBpediaSurfaceForm, DBpediaSense>> disambiguators;
+	private static final ModelFactory<DefaultSurfaceForm, DefaultSense> factory = DefaultModelFactory.INSTANCE;
+	private static final Collection<GraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators;
 	static {
 		disambiguators = new ArrayList<>();
-		disambiguators.add(new BetweennessCentrality<DBpediaSurfaceForm, DBpediaSense>(GRAPH_TYPE, factory));
-		disambiguators.add(new DegreeCentrality<DBpediaSurfaceForm, DBpediaSense>(Direction.BOTH, factory));
-		disambiguators.add(new HITSCentrality<DBpediaSurfaceForm, DBpediaSense>(GRAPH_TYPE, factory));
-		disambiguators.add(new KPPCentrality<DBpediaSurfaceForm, DBpediaSense>(GRAPH_TYPE, factory));
-		disambiguators.add(new PageRankCentrality<DBpediaSurfaceForm, DBpediaSense>(GRAPH_TYPE, factory));
+		disambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
+		disambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(Direction.BOTH, factory));
+		disambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
+		disambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
+		disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
 	}
 
 	private static final Dimension SCREEN_DIMENSION;
@@ -77,7 +77,7 @@ public class DemoSubgraphConstruction {
 
 	public static void dbpediaDemo() throws IOException, URISyntaxException {
 		Graph graph = GraphFactory.getDBpediaGraph();
-		Collection<SurfaceFormSenses<DBpediaSurfaceForm, DBpediaSense>> wordsSensesString = ModelTransformer
+		Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> wordsSensesString = ModelTransformer
 				.surfaceFormsSensesFromFile(DemoSubgraphConstruction.class, "/napoleon-sentence-test",
 						GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
 
@@ -85,21 +85,21 @@ public class DemoSubgraphConstruction {
 	}
 
 	private static void demo(Graph graph,
-			Collection<SurfaceFormSenses<DBpediaSurfaceForm, DBpediaSense>> surfaceFormsSenses) {
-		Collection<Collection<Vertex>> wordsSenses = ModelTransformer.wordsVerticesFromSenses(graph,
-				surfaceFormsSenses);
+			Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> surfaceFormsSenses) {
+		Collection<Collection<Vertex>> wordsSenses = ModelTransformer
+				.wordsVerticesFromSenses(graph, surfaceFormsSenses);
 
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE));
 		Graph subGraph = sc.createSubgraph(wordsSenses);
 
-		for (GraphDisambiguator<DBpediaSurfaceForm, DBpediaSense> d : disambiguators) {
+		for (GraphDisambiguator<DefaultSurfaceForm, DefaultSense> d : disambiguators) {
 			System.out.println(d);
 
-			List<SurfaceFormSenseScore<DBpediaSurfaceForm, DBpediaSense>> senseScores = d.disambiguate(
+			List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> senseScores = d.disambiguate(
 					surfaceFormsSenses, subGraph);
 			Collections.sort(senseScores);
-			for (SurfaceFormSenseScore<DBpediaSurfaceForm, DBpediaSense> senseScore : senseScores)
+			for (SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> senseScore : senseScores)
 				System.out.printf("  %s (%.2f)", UriShortener.shorten(senseScore.sense().fullUri()),
 						senseScore.getScore());
 			System.out.println();
