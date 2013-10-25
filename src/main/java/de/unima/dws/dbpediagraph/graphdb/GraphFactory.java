@@ -24,8 +24,9 @@ public final class GraphFactory {
 	private static final TransactionalGraph graph = openGraph();
 
 	/**
-	 * Returns the batch graph instance that can be used for bulk inserting nodes and vertices into the dbpedia graph.
-	 * If a persisted dbpedia graph exists already it is returned, otherwise a new graph is created.
+	 * Returns the batch graph instance that can be used for bulk inserting
+	 * nodes and vertices into the dbpedia graph. If a persisted dbpedia graph
+	 * exists already it is returned, otherwise a new graph is created.
 	 * 
 	 * @param bufferSize
 	 *            the buffer size used for the batch inserts.
@@ -51,6 +52,9 @@ public final class GraphFactory {
 	 * @return the dbpedia graph
 	 */
 	public static TransactionalGraph getDBpediaGraph() {
+		if (Graphs.isEmptyGraph(graph))
+			throw new IllegalStateException(
+					"The graph has no vertices. For graph-based disambiguation run the graph loader tool first to create a graph from data dumps.");
 		return graph;
 	}
 
@@ -68,6 +72,11 @@ public final class GraphFactory {
 		long startTime = System.currentTimeMillis();
 
 		Graph graph = com.tinkerpop.blueprints.GraphFactory.open(GraphConfig.config());
+		if (Graphs.isEmptyGraph(graph))
+			logger.warn(String
+					.format("There is no existing graph with vertices in the relative directory %s. For graph-based disambiguation run the graph loader tool first to create a graph from data dumps.",
+							GraphConfig.graphDirectory()));
+
 		if (graph instanceof Neo4jGraph) {
 			Neo4jGraph nGraph = (Neo4jGraph) graph;
 			nGraph.createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);

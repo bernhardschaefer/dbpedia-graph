@@ -4,8 +4,11 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.tinkerpop.blueprints.Graph;
 
+import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
+
 /**
- * Instance-controlled factory class for retrieving a {@link SubgraphConstruction} implementation.
+ * Instance-controlled factory class for retrieving a
+ * {@link SubgraphConstruction} implementation.
  * 
  * @author Bernhard Schäfer
  * 
@@ -37,5 +40,9 @@ public final class SubgraphConstructionFactory {
 	// Suppress default constructor for noninstantiability
 	private SubgraphConstructionFactory() {
 		throw new AssertionError();
+	}
+
+	public static SubgraphConstruction newDefaultImplementation(SubgraphConstructionSettings settings) {
+		return newDefaultImplementation(GraphFactory.getDBpediaGraph(), settings);
 	}
 }

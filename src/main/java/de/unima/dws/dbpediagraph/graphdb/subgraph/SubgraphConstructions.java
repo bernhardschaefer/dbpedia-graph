@@ -17,7 +17,8 @@ import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
 /**
- * Noninstantiable utility class for static methods helping in {@link SubgraphConstruction}.
+ * Noninstantiable utility class for static methods helping in
+ * {@link SubgraphConstruction}.
  * 
  * @author Bernhard Schäfer
  * 
@@ -51,11 +52,15 @@ class SubgraphConstructions {
 			throw new NullPointerException("The senses collection cannot be null.");
 		if (senses.size() == 0)
 			throw new IllegalArgumentException("The senses collection cannot be empty.");
-		for (Vertex v : senses)
+		for (Vertex v : senses) {
+			if (v == null) {
+				throw new IllegalArgumentException("Vertex cannot be null.");
+			}
 			if (graph.getVertex(v.getId()) == null)
 				throw new IllegalArgumentException(String.format(
 						"The vertex vid:%s uri:%s does not belong to this graph.", v.getId(),
 						v.getProperty(GraphConfig.URI_PROPERTY)));
+		}
 	}
 
 	public static void checkValidWordsSenses(Graph graph, Collection<Collection<Vertex>> wordsSenses) {
@@ -70,8 +75,10 @@ class SubgraphConstructions {
 
 	public static void logSubgraphConstructionStats(Logger logger, Class<?> clazz, Graph subgraph, long startTime,
 			long traversedNodes, int maxDistance) {
-		// logger.info("{}: time {} sec., traversed nodes: {}, maxDepth: {}", clazz.getSimpleName(),
-		// (System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, maxDistance);
+		// logger.info("{}: time {} sec., traversed nodes: {}, maxDepth: {}",
+		// clazz.getSimpleName(),
+		// (System.currentTimeMillis() - startTime) / 1000.0, traversedNodes,
+		// maxDistance);
 		logger.info(String.format("%s: time %.2f sec., traversed nodes: %,d, maxDepth: %d", clazz.getSimpleName(),
 				(System.currentTimeMillis() - startTime) / 1000.0, traversedNodes, maxDistance));
 		if (logger.isDebugEnabled())

@@ -178,10 +178,12 @@ public final class Graphs {
 		for (Vertex v : verticesIter)
 			vertices.add(v);
 
-		if (vertices.size() == 0)
+		if (vertices.size() == 0) {
+			logger.warn("No vertex found for uri {}", uri);
 			return null;
+		}
 		if (vertices.size() > 1) {
-			logger.warn("There is more than one vertex with the uri " + uri);
+			logger.warn("There is more than one vertex with the uri {}", uri);
 			for (Vertex v : vertices) {
 				int inDegree = vertexDegree(v, Direction.IN);
 				int outDegree = vertexDegree(v, Direction.OUT);
@@ -242,6 +244,10 @@ public final class Graphs {
 	// Suppress default constructor for noninstantiability
 	private Graphs() {
 		throw new AssertionError();
+	}
+
+	public static boolean isEmptyGraph(Graph graph) {
+		return !graph.getVertices().iterator().hasNext();
 	}
 
 }

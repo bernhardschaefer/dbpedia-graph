@@ -21,6 +21,8 @@ public final class GraphConfig {
 
 	private static final String GRAPH_PROPERTY_FILE = "graph.properties";
 
+	private static final String GRAPH_DIRECTORY_KEY = "graph.directory";
+
 	/**
 	 * The config file that is used for retrieving {@link Graph} implementations.
 	 */
@@ -41,6 +43,10 @@ public final class GraphConfig {
 	// Suppress default constructor for noninstantiability
 	private GraphConfig() {
 		throw new AssertionError();
+	}
+	
+	public static String graphDirectory() {
+		return config.getString(GRAPH_DIRECTORY_KEY);
 	}
 
 }
