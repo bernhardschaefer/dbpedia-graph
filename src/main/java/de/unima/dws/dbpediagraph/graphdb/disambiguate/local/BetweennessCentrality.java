@@ -9,6 +9,9 @@ import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
@@ -17,7 +20,8 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 // TODO evaluate GraphStream
 // https://github.com/graphstream/gs-algo/blob/master/src/org/graphstream/algorithm/BetweennessCentrality.java
 // http://www.javacodegeeks.com/2013/07/mini-search-engine-just-the-basics-using-neo4j-crawler4j-graphstream-and-encog.html
-public class BetweennessCentrality extends AbstractLocalGraphDisambiguator implements LocalGraphDisambiguator {
+public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> extends
+		AbstractLocalGraphDisambiguator<T, U> implements LocalGraphDisambiguator<T, U> {
 
 	class BetweennessVertexScorer implements VertexScorer<Vertex, Double> {
 
@@ -39,23 +43,10 @@ public class BetweennessCentrality extends AbstractLocalGraphDisambiguator imple
 
 	}
 
-	public static final BetweennessCentrality DIRECTED = new BetweennessCentrality(GraphType.DIRECTED_GRAPH);
-	public static final BetweennessCentrality UNDIRECTED = new BetweennessCentrality(GraphType.UNDIRECTED_GRAPH);
-
-	public static BetweennessCentrality forGraphType(GraphType graphType) {
-		switch (graphType) {
-		case DIRECTED_GRAPH:
-			return DIRECTED;
-		case UNDIRECTED_GRAPH:
-			return UNDIRECTED;
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-
 	private final GraphType graphType;
 
-	private BetweennessCentrality(GraphType graphType) {
+	public BetweennessCentrality(GraphType graphType, ModelFactory<T, U> factory) {
+		super(factory);
 		this.graphType = graphType;
 	}
 

@@ -15,6 +15,9 @@ import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import edu.uci.ics.jung.algorithms.scoring.HITS;
 import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
@@ -23,7 +26,8 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 /**
  * @author Bernhard Schäfer
  */
-public class HITSCentrality extends AbstractLocalGraphDisambiguator implements LocalGraphDisambiguator {
+public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
+		implements LocalGraphDisambiguator<T, U> {
 	/**
 	 * Maintains hub and authority score information for a vertex.
 	 */
@@ -93,17 +97,6 @@ public class HITSCentrality extends AbstractLocalGraphDisambiguator implements L
 		return scores;
 	}
 
-	public static HITSCentrality defaultForGraphType(GraphType graphType) {
-		switch (graphType) {
-		case DIRECTED_GRAPH:
-			return new HITSCentrality(GraphType.DIRECTED_GRAPH, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
-		case UNDIRECTED_GRAPH:
-			return new HITSCentrality(GraphType.UNDIRECTED_GRAPH, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-
 	private final GraphType graphType;
 
 	private final double alpha;
@@ -112,7 +105,12 @@ public class HITSCentrality extends AbstractLocalGraphDisambiguator implements L
 
 	private String name;
 
-	public HITSCentrality(GraphType graphType, double alpha, int iterations) {
+	public HITSCentrality(GraphType graphType, ModelFactory<T, U> factory) {
+		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS, factory);
+	}
+
+	public HITSCentrality(GraphType graphType, double alpha, int iterations, ModelFactory<T, U> factory) {
+		super(factory);
 		this.graphType = graphType;
 		this.alpha = alpha;
 		this.iterations = iterations;

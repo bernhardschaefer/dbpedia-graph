@@ -7,6 +7,8 @@ import org.junit.Test;
 import de.unima.dws.dbpediagraph.graphdb.GlobalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestCompactness {
@@ -16,7 +18,8 @@ public class TestCompactness {
 	@BeforeClass
 	public static void setUp() {
 		subgraphNavigli = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		disambiguationNavigli = new GlobalDisambiguationTester(new Compactness(), subgraphNavigli);
+		disambiguationNavigli = new GlobalDisambiguationTester(new Compactness<DefaultSurfaceForm, DefaultSense>(),
+				subgraphNavigli);
 	}
 
 	@AfterClass

@@ -21,10 +21,10 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.DisambiguatorHelper;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenses;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 
 /**
@@ -33,17 +33,21 @@ import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
  * @author Bernhard Schäfer
  * 
  */
-public class SpotlightGraphDisambiguator extends AbstractGraphBasedDisambiguator implements Disambiguator {
+public class SpotlightGraphDisambiguator extends AbstractSpotlightGraphDisambiguator implements Disambiguator {
 
-	private static List<DBpediaResourceOccurrence> unwrap(List<SurfaceFormSenseScore> senseScores) {
-		List<DBpediaResourceOccurrence> resources = new ArrayList<>(senseScores.size());
-		for (SurfaceFormSenseScore senseScore : senseScores)
-			resources.add(new DBpediaResourceOccurrence(senseScore.sense(), senseScore.surfaceForm(), senseScore
-					.surfaceFormOccurrence().context(), senseScore.surfaceFormOccurrence().textOffset()));
+	private static List<DBpediaResourceOccurrence> unwrap(
+			List<SurfaceFormSenseScore<DBpediaSurfaceForm, DBpediaSense>> results) {
+		List<DBpediaResourceOccurrence> resources = new ArrayList<>(results.size());
+		for (SurfaceFormSenseScore<DBpediaSurfaceForm, DBpediaSense> senseScore : results) {
+			DBpediaResource resource = senseScore.sense().getResource();
+			SurfaceFormOccurrence surfaceFormOccurrence = senseScore.surfaceForm().getSurfaceFormOccurrence();
+			resources.add(new DBpediaResourceOccurrence(resource, surfaceFormOccurrence.surfaceForm(),
+					surfaceFormOccurrence.context(), surfaceFormOccurrence.textOffset()));
+		}
 		return resources;
 	}
 
-	private final GraphDisambiguator graphDisambiguator;
+	private final GraphDisambiguator<DBpediaSurfaceForm, DBpediaSense> graphDisambiguator;
 
 	private final SubgraphConstruction subgraphConstruction;
 
@@ -54,8 +58,8 @@ public class SpotlightGraphDisambiguator extends AbstractGraphBasedDisambiguator
 
 	private final Logger logger = LoggerFactory.getLogger(SpotlightGraphDisambiguator.class);
 
-	public SpotlightGraphDisambiguator(GraphDisambiguator graphDisambiguator, SubgraphConstruction subgraphConstruction,
-			CandidateSearcher searcher) {
+	public SpotlightGraphDisambiguator(GraphDisambiguator<DBpediaSurfaceForm, DBpediaSense> graphDisambiguator,
+			SubgraphConstruction subgraphConstruction, CandidateSearcher searcher) {
 		this.searcher = searcher;
 		this.graphDisambiguator = graphDisambiguator;
 		this.subgraphConstruction = subgraphConstruction;
@@ -65,20 +69,21 @@ public class SpotlightGraphDisambiguator extends AbstractGraphBasedDisambiguator
 	public List<DBpediaResourceOccurrence> disambiguate(List<SurfaceFormOccurrence> sfOccurrences)
 			throws SearchException, InputException {
 
-		Collection<SurfaceFormSenses> surfaceFormsSenses = getSFOsCandidates(sfOccurrences);
+		Collection<SurfaceFormSenses<DBpediaSurfaceForm, DBpediaSense>> surfaceFormsSenses = getSFOsCandidates(sfOccurrences);
 
-		Collection<Collection<Vertex>> wordsSenses = DisambiguatorHelper.wordsVerticesFromSenses(
+		Collection<Collection<Vertex>> wordsSenses = ModelTransformer.wordsVerticesFromSenses(
 				GraphFactory.getDBpediaGraph(), surfaceFormsSenses);
 		Graph subgraph = subgraphConstruction.createSubgraph(wordsSenses);
 
-		List<SurfaceFormSenseScore> results = graphDisambiguator.disambiguate(surfaceFormsSenses, subgraph);
-
+		List<SurfaceFormSenseScore<DBpediaSurfaceForm, DBpediaSense>> results = graphDisambiguator.disambiguate(
+				surfaceFormsSenses, subgraph);
 		return unwrap(results);
 	}
 
-	private Collection<SurfaceFormSenses> getSFOsCandidates(List<SurfaceFormOccurrence> sfOccurrences)
-			throws SearchException {
-		Collection<SurfaceFormSenses> surfaceFormsSenses = new ArrayList<>(sfOccurrences.size());
+	private Collection<SurfaceFormSenses<DBpediaSurfaceForm, DBpediaSense>> getSFOsCandidates(
+			List<SurfaceFormOccurrence> sfOccurrences) throws SearchException {
+		Collection<SurfaceFormSenses<DBpediaSurfaceForm, DBpediaSense>> surfaceFormsSenses = new ArrayList<>(
+				sfOccurrences.size());
 		Collection<DBpediaResource> candidates;
 		for (SurfaceFormOccurrence sfOcc : sfOccurrences) {
 			try {
@@ -88,7 +93,7 @@ public class SpotlightGraphDisambiguator extends AbstractGraphBasedDisambiguator
 				logger.warn("Stack trace", e);
 				candidates = Collections.emptyList();
 			}
-			surfaceFormsSenses.add(new SurfaceFormSenses(sfOcc, candidates));
+			surfaceFormsSenses.add(new DBpediaSurfaceFormSenses(sfOcc, candidates));
 		}
 		return surfaceFormsSenses;
 	}

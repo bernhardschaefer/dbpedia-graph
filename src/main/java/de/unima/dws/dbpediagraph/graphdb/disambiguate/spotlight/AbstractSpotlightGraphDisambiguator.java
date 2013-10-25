@@ -21,7 +21,7 @@ import org.dbpedia.spotlight.model.Text;
  * @author Bernhard Schäfer
  * 
  */
-public abstract class AbstractGraphBasedDisambiguator implements Disambiguator {
+public abstract class AbstractSpotlightGraphDisambiguator implements Disambiguator {
 
 	@Override
 	public int ambiguity(SurfaceForm sf) throws SearchException {

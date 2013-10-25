@@ -10,8 +10,10 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenses;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
@@ -22,10 +24,12 @@ import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
  * @author Bernhard Schäfer
  * 
  */
-public class Compactness extends AbstractGlobalGraphDisambiguator implements GlobalGraphDisambiguator {
+public class Compactness<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
+		implements GlobalGraphDisambiguator<T, U> {
 
 	@Override
-	public List<SurfaceFormSenseScore> disambiguate(Collection<SurfaceFormSenses> surfaceFormsSenses, Graph subgraph) {
+	public List<SurfaceFormSenseScore<T, U>> disambiguate(
+			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph) {
 		// TODO Auto-generated method stub
 		return null;
 	}

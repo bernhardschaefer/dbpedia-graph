@@ -5,6 +5,11 @@ import java.util.List;
 
 import com.tinkerpop.blueprints.Graph;
 
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
+
 /**
  * 
  * Disambiguator interface for disambiguation methods.
@@ -12,7 +17,7 @@ import com.tinkerpop.blueprints.Graph;
  * @author Bernhard Schäfer
  * 
  */
-public interface GraphDisambiguator {
+public interface GraphDisambiguator<T extends SurfaceForm, U extends Sense> {
 	/**
 	 * Disambiguate the provided senses of all provided words using a subgraph. Exemplary senses:
 	 * {{drink1,drink2},{milk1,milk2,milk3}}
@@ -22,6 +27,7 @@ public interface GraphDisambiguator {
 	 * @param subgraph
 	 * @return
 	 */
-	public List<SurfaceFormSenseScore> disambiguate(Collection<SurfaceFormSenses> surfaceFormsSenses, Graph subgraph);
+	public List<SurfaceFormSenseScore<T, U>> disambiguate(
+			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph);
 
 }

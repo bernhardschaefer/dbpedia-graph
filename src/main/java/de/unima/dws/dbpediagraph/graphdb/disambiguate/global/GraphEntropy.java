@@ -10,8 +10,10 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenses;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 
 /**
  * Graph Entropy global connectivity measure implemented as described in Navigli&Lapata (2010).
@@ -19,10 +21,12 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.SurfaceFormSenses;
  * @author Bernhard Schäfer
  * 
  */
-public class GraphEntropy extends AbstractGlobalGraphDisambiguator implements GlobalGraphDisambiguator {
+public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
+		implements GlobalGraphDisambiguator<T, U> {
 
 	@Override
-	public List<SurfaceFormSenseScore> disambiguate(Collection<SurfaceFormSenses> surfaceFormsSenses, Graph subgraph) {
+	public List<SurfaceFormSenseScore<T, U>> disambiguate(
+			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph) {
 		// TODO Auto-generated method stub
 		return null;
 	}

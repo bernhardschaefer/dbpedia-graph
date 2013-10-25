@@ -9,13 +9,17 @@ import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
  * @author Bernhard Schäfer
  */
-public class PageRankCentrality extends AbstractLocalGraphDisambiguator implements LocalGraphDisambiguator {
+public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
+		implements LocalGraphDisambiguator<T, U> {
 	class PRVertexScorer implements VertexScorer<Vertex, Double> {
 		private final double scoreSum;
 		private final PageRank<Vertex, Edge> pageRank;
@@ -47,17 +51,6 @@ public class PageRankCentrality extends AbstractLocalGraphDisambiguator implemen
 
 	private static final double DEFAULT_ALPHA = 0;
 
-	public static PageRankCentrality defaultForGraphType(GraphType graphType) {
-		switch (graphType) {
-		case DIRECTED_GRAPH:
-			return new PageRankCentrality(GraphType.DIRECTED_GRAPH, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
-		case UNDIRECTED_GRAPH:
-			return new PageRankCentrality(GraphType.UNDIRECTED_GRAPH, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-
 	private final GraphType graphType;
 
 	private final double alpha;
@@ -65,7 +58,13 @@ public class PageRankCentrality extends AbstractLocalGraphDisambiguator implemen
 
 	private String name;
 
-	public PageRankCentrality(GraphType graphType, double alpha, int iterations) {
+	public PageRankCentrality(GraphType graphType, ModelFactory<T, U> factory) {
+		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS, factory);
+	}
+
+	public PageRankCentrality(GraphType graphType, double alpha, int iterations,
+			ModelFactory<T, U> factory) {
+		super(factory);
 		this.graphType = graphType;
 		this.alpha = alpha;
 		this.iterations = iterations;

@@ -4,11 +4,13 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
@@ -17,7 +19,8 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
  * @author Bernhard Schäfer
  * 
  */
-public class DegreeCentrality extends AbstractLocalGraphDisambiguator implements LocalGraphDisambiguator {
+public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
+		implements LocalGraphDisambiguator<T, U> {
 	class DegreeVertexScorer implements VertexScorer<Vertex, Double> {
 		private final int verticesCount;
 
@@ -34,28 +37,14 @@ public class DegreeCentrality extends AbstractLocalGraphDisambiguator implements
 
 	}
 
-	public static final DegreeCentrality IN_AND_OUT_DEGREE = new DegreeCentrality(Direction.BOTH);
-	public static final DegreeCentrality IN_DEGREE = new DegreeCentrality(Direction.IN);
-	public static final DegreeCentrality OUT_DEGREE = new DegreeCentrality(Direction.OUT);
-
-	public static DegreeCentrality forGraphType(GraphType graphType) {
-		switch (graphType) {
-		case DIRECTED_GRAPH:
-			return IN_DEGREE;
-		case UNDIRECTED_GRAPH:
-			return IN_AND_OUT_DEGREE;
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-
 	private final Direction direction;
 
 	/**
 	 * The direction of edges to be used for degree measurement. E.g. Direction.BOTH means that both in- and out edges
 	 * are considered for the degree calculation, whereas Direction.IN refers to the indegree of an edge.
 	 */
-	private DegreeCentrality(Direction direction) {
+	public DegreeCentrality(Direction direction, ModelFactory<T, U> factory) {
+		super(factory);
 		this.direction = direction;
 	}
 

@@ -4,7 +4,11 @@ import java.util.Collection;
 
 import com.tinkerpop.blueprints.Graph;
 
-public abstract class AbstractGlobalGraphDisambiguator implements GlobalGraphDisambiguator {
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+
+public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense> implements
+		GlobalGraphDisambiguator<T, U> {
 
 	// @Override
 	// public List<WeightedSenseAssignments> disambiguateGlobal(List<List<String>> allWordsSenses, Graph subgraph) {

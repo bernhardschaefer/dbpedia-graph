@@ -10,6 +10,10 @@ import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestHITSCentrality {
@@ -19,7 +23,9 @@ public class TestHITSCentrality {
 	@BeforeClass
 	public static void setUp() {
 		subgraphNavigli = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		disambiguationNavigli = new LocalDisambiguationTester(HITSCentrality.defaultForGraphType(GraphType.UNDIRECTED_GRAPH), subgraphNavigli);
+		LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> localDisambiguator = new HITSCentrality<>(
+				GraphType.UNDIRECTED_GRAPH, DefaultModelFactory.INSTANCE);
+		disambiguationNavigli = new LocalDisambiguationTester(localDisambiguator, subgraphNavigli);
 	}
 
 	@AfterClass

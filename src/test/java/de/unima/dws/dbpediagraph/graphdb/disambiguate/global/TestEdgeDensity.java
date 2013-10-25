@@ -7,6 +7,8 @@ import org.junit.Test;
 import de.unima.dws.dbpediagraph.graphdb.GlobalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 
 public class TestEdgeDensity {
@@ -16,7 +18,8 @@ public class TestEdgeDensity {
 	@BeforeClass
 	public static void setUp() {
 		subgraphNavigli = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		disambiguationNavigli = new GlobalDisambiguationTester(new EdgeDensity(), subgraphNavigli);
+		disambiguationNavigli = new GlobalDisambiguationTester(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(),
+				subgraphNavigli);
 	}
 
 	@AfterClass

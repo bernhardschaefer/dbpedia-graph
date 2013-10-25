@@ -11,13 +11,17 @@ import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 
 /**
  * @author Bernhard Schäfer
  */
-public class KPPCentrality extends AbstractLocalGraphDisambiguator implements LocalGraphDisambiguator {
+public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
+		implements LocalGraphDisambiguator<T, U> {
 
 	class KPPVertexScorer implements VertexScorer<Vertex, Double> {
 		private final UnweightedShortestPath<Vertex, Edge> distances;
@@ -54,23 +58,10 @@ public class KPPCentrality extends AbstractLocalGraphDisambiguator implements Lo
 
 	}
 
-	public static final KPPCentrality DIRECTED = new KPPCentrality(GraphType.DIRECTED_GRAPH);
-	public static final KPPCentrality UNDIRECTED = new KPPCentrality(GraphType.UNDIRECTED_GRAPH);
-
-	public static KPPCentrality forGraphType(GraphType graphType) {
-		switch (graphType) {
-		case DIRECTED_GRAPH:
-			return DIRECTED;
-		case UNDIRECTED_GRAPH:
-			return UNDIRECTED;
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-
 	private final GraphType graphType;
 
-	private KPPCentrality(GraphType graphType) {
+	public KPPCentrality(GraphType graphType, ModelFactory<T, U> factory) {
+		super(factory);
 		this.graphType = graphType;
 	}
 
