@@ -16,7 +16,7 @@ public final class SubgraphConstructionSettings {
 	 * @see <a
 	 *      href="http://en.wikipedia.org/wiki/Distance_(graph_theory)">http://en.wikipedia.org/wiki/Distance_(graph_theory)</a>
 	 */
-	int maxDistance = 5;
+	int maxDistance = 4;
 
 	private static final SubgraphConstructionSettings DEFAULT = new SubgraphConstructionSettings();
 
