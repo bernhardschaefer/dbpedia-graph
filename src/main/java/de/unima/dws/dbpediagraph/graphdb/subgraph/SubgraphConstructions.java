@@ -50,8 +50,6 @@ class SubgraphConstructions {
 	public static void checkValidSenses(Graph graph, Collection<Vertex> senses) {
 		if (senses == null)
 			throw new NullPointerException("The senses collection cannot be null.");
-		if (senses.size() == 0)
-			throw new IllegalArgumentException("The senses collection cannot be empty.");
 		for (Vertex v : senses) {
 			if (v == null) {
 				throw new IllegalArgumentException("Vertex cannot be null.");
@@ -66,8 +64,6 @@ class SubgraphConstructions {
 	public static void checkValidWordsSenses(Graph graph, Collection<Collection<Vertex>> wordsSenses) {
 		if (wordsSenses == null)
 			throw new NullPointerException("The senses collection cannot be null.");
-		if (wordsSenses.size() == 0)
-			throw new IllegalArgumentException("The senses collection cannot be empty.");
 		for (Collection<Vertex> senses : wordsSenses)
 			checkValidSenses(graph, senses);
 

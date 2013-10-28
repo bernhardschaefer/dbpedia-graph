@@ -18,7 +18,7 @@ import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 //TODO reorganise and javadoc
 public class ModelTransformer {
 	private static final Logger logger = LoggerFactory.getLogger(ModelTransformer.class);
-	
+
 	public static <T extends SurfaceForm, U extends Sense> List<SurfaceFormSenseScore<T, U>> initializeScores(
 			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, ModelFactory<T, U> factory) {
 		List<SurfaceFormSenseScore<T, U>> senseScores = new ArrayList<>();
@@ -88,7 +88,8 @@ public class ModelTransformer {
 		Collection<Collection<Vertex>> wordVertices = new ArrayList<>();
 		for (SurfaceFormSenses<T, U> surfaceFormSenses : surfaceFormsSenses) {
 			Collection<Vertex> vertices = verticesFromSenses(graph, surfaceFormSenses);
-			wordVertices.add(vertices);
+			if (!vertices.isEmpty())
+				wordVertices.add(vertices);
 		}
 		return wordVertices;
 	}

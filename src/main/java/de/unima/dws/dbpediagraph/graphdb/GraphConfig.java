@@ -1,14 +1,12 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.*;
 
 import com.tinkerpop.blueprints.Graph;
 
 /**
- * The configuration hub for the DBpedia graph project. The class is noninstantiable and needs to be accessed in a
- * static way.
+ * The configuration hub for the DBpedia graph project. The class is
+ * noninstantiable and needs to be accessed in a static way.
  * 
  * @author Bernhard Schäfer
  * 
@@ -24,7 +22,8 @@ public final class GraphConfig {
 	private static final String GRAPH_DIRECTORY_KEY = "graph.directory";
 
 	/**
-	 * The config file that is used for retrieving {@link Graph} implementations.
+	 * The config file that is used for retrieving {@link Graph}
+	 * implementations.
 	 */
 	private static Configuration config;
 
@@ -40,13 +39,13 @@ public final class GraphConfig {
 		return config;
 	}
 
+	public static String graphDirectory() {
+		return config.getString(GRAPH_DIRECTORY_KEY);
+	}
+
 	// Suppress default constructor for noninstantiability
 	private GraphConfig() {
 		throw new AssertionError();
-	}
-	
-	public static String graphDirectory() {
-		return config.getString(GRAPH_DIRECTORY_KEY);
 	}
 
 }
