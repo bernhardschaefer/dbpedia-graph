@@ -179,7 +179,6 @@ public final class Graphs {
 			vertices.add(v);
 
 		if (vertices.size() == 0) {
-			logger.warn("No vertex found for uri {}", uri);
 			return null;
 		}
 		if (vertices.size() > 1) {
@@ -220,6 +219,8 @@ public final class Graphs {
 			Vertex v = vertexByUri(graph, uri);
 			if (v != null)
 				vertices.add(v);
+			else
+				logger.warn("No vertex found for uri {}", uri);
 		}
 		return vertices;
 	}

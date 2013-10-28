@@ -75,14 +75,6 @@ public class DemoSubgraphConstruction {
 		SCREEN_DIMENSION = new Dimension(width, height);
 	}
 
-	public static void dbpediaDemo() throws IOException, URISyntaxException {
-		Graph graph = GraphFactory.getDBpediaGraph();
-		Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> wordsSensesString = ModelTransformer
-				.surfaceFormsSensesFromFile(DemoSubgraphConstruction.class, "/napoleon-sentence-test",
-						GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
-
-		demo(graph, wordsSensesString);
-	}
 
 	private static void demo(Graph graph,
 			Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> surfaceFormsSenses) {
@@ -112,7 +104,14 @@ public class DemoSubgraphConstruction {
 	}
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		dbpediaDemo();
+		String sensesFileName = "/napoleon-sentence-test";
+//		String sensesFileName = "/dbpedia-default-sentence-test";
+		Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> wordsSensesString = ModelTransformer
+				.surfaceFormsSensesFromFile(DemoSubgraphConstruction.class, sensesFileName,
+						GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
+
+		Graph graph = GraphFactory.getDBpediaGraph();
+		demo(graph, wordsSensesString);
 	}
 
 	private static void visualizeGraph(Graph graph, String frameTitle) {

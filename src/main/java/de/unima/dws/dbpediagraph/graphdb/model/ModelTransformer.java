@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
@@ -14,7 +17,8 @@ import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
 //TODO reorganise and javadoc
 public class ModelTransformer {
-
+	private static final Logger logger = LoggerFactory.getLogger(ModelTransformer.class);
+	
 	public static <T extends SurfaceForm, U extends Sense> List<SurfaceFormSenseScore<T, U>> initializeScores(
 			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, ModelFactory<T, U> factory) {
 		List<SurfaceFormSenseScore<T, U>> senseScores = new ArrayList<>();
@@ -69,8 +73,13 @@ public class ModelTransformer {
 	public static <T extends SurfaceForm, U extends Sense> Collection<Vertex> verticesFromSenses(Graph graph,
 			SurfaceFormSenses<T, U> surfaceFormSenses) {
 		Collection<Vertex> vertices = new ArrayList<>(surfaceFormSenses.getSenses().size());
-		for (Sense sense : surfaceFormSenses.getSenses())
-			vertices.add(Graphs.vertexByUri(graph, sense.fullUri()));
+		for (Sense sense : surfaceFormSenses.getSenses()) {
+			Vertex v = Graphs.vertexByUri(graph, sense.fullUri());
+			if (v != null)
+				vertices.add(v);
+			else
+				logger.warn("No vertex found for uri {}", sense.fullUri());
+		}
 		return vertices;
 	}
 

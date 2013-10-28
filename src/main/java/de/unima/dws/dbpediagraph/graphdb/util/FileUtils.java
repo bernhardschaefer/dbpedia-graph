@@ -144,7 +144,7 @@ public final class FileUtils {
 		Iterator<String> iter = lines.iterator();
 		while (iter.hasNext()) {
 			String line = iter.next();
-			if (line.isEmpty() || line.startsWith("#"))
+			if (line.trim().isEmpty() || line.startsWith("#"))
 				iter.remove();
 		}
 		return lines;
