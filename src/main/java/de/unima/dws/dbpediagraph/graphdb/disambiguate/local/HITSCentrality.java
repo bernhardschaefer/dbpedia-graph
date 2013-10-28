@@ -1,33 +1,25 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
-import com.tinkerpop.blueprints.Direction;
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
-import de.unima.dws.dbpediagraph.graphdb.model.Sense;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.*;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
-import edu.uci.ics.jung.algorithms.scoring.HITS;
+import edu.uci.ics.jung.algorithms.scoring.*;
 import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
-import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
  * @author Bernhard Schäfer
  */
 public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
-		implements LocalGraphDisambiguator<T, U> {
+		implements GraphDisambiguator<T, U> {
 	/**
 	 * Maintains hub and authority score information for a vertex.
 	 */
@@ -75,7 +67,8 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 		@Override
 		public Double getVertexScore(Vertex v) {
 			Scores scores = hits.getVertexScore(v);
-			// wUris.add(new WeightedSense(v.getProperty(GraphConfig.URI_PROPERTY).toString(),
+			// wUris.add(new
+			// WeightedSense(v.getProperty(GraphConfig.URI_PROPERTY).toString(),
 			// scores.get(v).authority));
 			double authority = CollectionUtils.iterableItemCount(Graphs.connectedEdges(v, graphType)) != 0 ? scores.authority
 					: 0;

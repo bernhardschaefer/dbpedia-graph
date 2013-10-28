@@ -2,9 +2,7 @@ package de.unima.dws.dbpediagraph.graphdb.model;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +16,15 @@ import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 //TODO reorganise and javadoc
 public class ModelTransformer {
 	private static final Logger logger = LoggerFactory.getLogger(ModelTransformer.class);
+	private static final double DEFAULT_SCORE = -1.0;
 
 	public static <T extends SurfaceForm, U extends Sense> List<SurfaceFormSenseScore<T, U>> initializeScores(
 			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, ModelFactory<T, U> factory) {
 		List<SurfaceFormSenseScore<T, U>> senseScores = new ArrayList<>();
 		for (SurfaceFormSenses<T, U> surfaceFormSenses : surfaceFormsSenses)
 			for (U sense : surfaceFormSenses.getSenses())
-				senseScores.add(factory.createInitialSurfaceFormSenseScore(surfaceFormSenses.getSurfaceForm(), sense));
+				senseScores.add(factory.newSurfaceFormSenseScore(surfaceFormSenses.getSurfaceForm(), sense,
+						DEFAULT_SCORE));
 		return senseScores;
 	}
 

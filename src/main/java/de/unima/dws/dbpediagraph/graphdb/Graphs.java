@@ -1,26 +1,19 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tinkerpop.blueprints.Direction;
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 
 /**
- * Noninstantiable utility class for performing various graph operations. All operations are static.
+ * Noninstantiable utility class for performing various graph operations. All
+ * operations are static.
  * 
  * @author Bernhard Schäfer
  * 
@@ -46,7 +39,8 @@ public final class Graphs {
 	}
 
 	/**
-	 * Adds a vertex with the uri as property to the graph if it does not exist yet.
+	 * Adds a vertex with the uri as property to the graph if it does not exist
+	 * yet.
 	 */
 	public static Vertex addVertexByUri(Graph graph, String uri) {
 		Vertex v = vertexByUri(graph, uri);
@@ -139,8 +133,9 @@ public final class Graphs {
 	}
 
 	/**
-	 * Get the other vertex of the edge. NOTE: To improve performance this method does not check if the provided vertex
-	 * actually belongs to the provided edge.
+	 * Get the other vertex of the edge. NOTE: To improve performance this
+	 * method does not check if the provided vertex actually belongs to the
+	 * provided edge.
 	 */
 	public static Vertex oppositeVertexUnsafe(Edge edge, Vertex vertex) {
 		Vertex in = edge.getVertex(Direction.IN);
@@ -211,7 +206,8 @@ public final class Graphs {
 	}
 
 	/**
-	 * Converts the uris to vertices. Omits uris that cannot be found in the provided graph.
+	 * Converts the uris to vertices. Omits uris that cannot be found in the
+	 * provided graph.
 	 */
 	public static List<Vertex> verticesByUri(Graph graph, Collection<String> uris) {
 		List<Vertex> vertices = new LinkedList<Vertex>();
@@ -242,13 +238,13 @@ public final class Graphs {
 		return wordVertices;
 	}
 
+	public static boolean isEmptyGraph(Graph graph) {
+		return !graph.getVertices().iterator().hasNext();
+	}
+
 	// Suppress default constructor for noninstantiability
 	private Graphs() {
 		throw new AssertionError();
-	}
-
-	public static boolean isEmptyGraph(Graph graph) {
-		return !graph.getVertices().iterator().hasNext();
 	}
 
 }

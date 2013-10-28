@@ -2,18 +2,14 @@ package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
 import java.util.Map;
 
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
-import de.unima.dws.dbpediagraph.graphdb.model.Sense;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.*;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 
@@ -21,7 +17,7 @@ import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
  * @author Bernhard Schäfer
  */
 public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
-		implements LocalGraphDisambiguator<T, U> {
+		implements GraphDisambiguator<T, U> {
 
 	class KPPVertexScorer implements VertexScorer<Vertex, Double> {
 		private final UnweightedShortestPath<Vertex, Edge> distances;
@@ -45,7 +41,8 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 				Number distance = distancesFromVertex.get(otherVertex);
 				double inverseShortestDistance;
 				if (distance == null || distance.doubleValue() == 0)
-					// if there is no path, the distance is the constant 1/(numberOfVertices-1)
+					// if there is no path, the distance is the constant
+					// 1/(numberOfVertices-1)
 					inverseShortestDistance = 1.0 / (numberOfVertices - 1);
 				else
 					inverseShortestDistance = 1.0 / distance.doubleValue();

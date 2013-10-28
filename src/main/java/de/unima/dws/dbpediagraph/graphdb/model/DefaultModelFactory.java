@@ -9,12 +9,10 @@ import de.unima.dws.dbpediagraph.graphdb.Graphs;
 public enum DefaultModelFactory implements ModelFactory<DefaultSurfaceForm, DefaultSense> {
 	INSTANCE;
 
-	private static final double DEFAULT_SCORE = 0;
-
 	@Override
-	public SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> createInitialSurfaceFormSenseScore(
-			DefaultSurfaceForm surfaceForm, DefaultSense sense) {
-		return new DefaultSurfaceFormSenseScore(surfaceForm, sense, DEFAULT_SCORE);
+	public SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> newSurfaceFormSenseScore(
+			DefaultSurfaceForm surfaceForm, DefaultSense sense, double score) {
+		return new DefaultSurfaceFormSenseScore(surfaceForm, sense, score);
 	}
 
 	@Override

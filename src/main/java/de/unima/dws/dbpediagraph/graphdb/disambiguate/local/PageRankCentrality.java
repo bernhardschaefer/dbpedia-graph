@@ -1,17 +1,13 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
-import de.unima.dws.dbpediagraph.graphdb.model.Sense;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.*;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
@@ -19,7 +15,7 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
  * @author Bernhard Schäfer
  */
 public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
-		implements LocalGraphDisambiguator<T, U> {
+		implements GraphDisambiguator<T, U> {
 	class PRVertexScorer implements VertexScorer<Vertex, Double> {
 		private final double scoreSum;
 		private final PageRank<Vertex, Edge> pageRank;
@@ -32,16 +28,20 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 
 			scoreSum = calculateScoreSum(pageRank, subgraph);
 
-			// VertexProgram pr = PageRankProgram.create().alpha(alpha).iterations(iterations).build();
-			// GraphComputer computer = new SerialGraphComputer(subgraph, pr, Isolation.BSP);
+			// VertexProgram pr =
+			// PageRankProgram.create().alpha(alpha).iterations(iterations).build();
+			// GraphComputer computer = new SerialGraphComputer(subgraph, pr,
+			// Isolation.BSP);
 			// computer.execute();
 			// VertexMemory vertexMemory = computer.getVertexMemory();
 		}
 
 		@Override
 		public Double getVertexScore(Vertex v) {
-			// double rank = vertexMemory.getProperty(vertex, PageRankProgram.PAGE_RANK);
-			// double edgeCount = vertexMemory.getProperty(vertex, PageRankProgram.EDGE_COUNT);
+			// double rank = vertexMemory.getProperty(vertex,
+			// PageRankProgram.PAGE_RANK);
+			// double edgeCount = vertexMemory.getProperty(vertex,
+			// PageRankProgram.EDGE_COUNT);
 			return pageRank.getVertexScore(v) / scoreSum;
 		}
 
@@ -62,8 +62,7 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS, factory);
 	}
 
-	public PageRankCentrality(GraphType graphType, double alpha, int iterations,
-			ModelFactory<T, U> factory) {
+	public PageRankCentrality(GraphType graphType, double alpha, int iterations, ModelFactory<T, U> factory) {
 		super(factory);
 		this.graphType = graphType;
 		this.alpha = alpha;

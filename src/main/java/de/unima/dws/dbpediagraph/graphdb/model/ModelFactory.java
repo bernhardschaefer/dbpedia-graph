@@ -10,7 +10,7 @@ import com.tinkerpop.blueprints.Vertex;
  * @author Bernhard Schäfer
  */
 public interface ModelFactory<T extends SurfaceForm, U extends Sense> {
-	SurfaceFormSenseScore<T, U> createInitialSurfaceFormSenseScore(T surfaceForm, U sense);
+	SurfaceFormSenseScore<T, U> newSurfaceFormSenseScore(T surfaceForm, U sense, double score);
 
 	U newSense(String uri);
 
