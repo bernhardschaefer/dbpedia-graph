@@ -2,14 +2,18 @@ package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import com.tinkerpop.blueprints.Direction;
 
-import de.unima.dws.dbpediagraph.graphdb.*;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.model.*;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
+import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTester;
+import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
 
 public class TestDegreeCentrality {
 	private static LocalDisambiguationTester disambiguationNavigli;
@@ -17,8 +21,8 @@ public class TestDegreeCentrality {
 
 	@BeforeClass
 	public static void setUp() {
-		subgraphNavigli = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		GraphDisambiguator<DefaultSurfaceForm, DefaultSense> localDisambiguator = new DegreeCentrality<>(
+		subgraphNavigli = SubgraphTester.newNavigliTester();
+		LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> localDisambiguator = new DegreeCentrality<>(
 				Direction.BOTH, DefaultModelFactory.INSTANCE);
 		disambiguationNavigli = new LocalDisambiguationTester(localDisambiguator, subgraphNavigli);
 	}
@@ -35,8 +39,8 @@ public class TestDegreeCentrality {
 	}
 
 	@Test
-	public void testWeightedUrisSize() {
-		assertEquals(disambiguationNavigli.getActualDisambiguationResults().size(), subgraphNavigli.allSenses.size());
+	public void testResultingListSize() {
+		assertEquals(subgraphNavigli.allSenses.size(), disambiguationNavigli.getActualAllScoresResults().size());
 	}
 
 }

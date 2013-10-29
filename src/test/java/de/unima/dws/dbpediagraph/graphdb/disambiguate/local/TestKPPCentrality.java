@@ -2,12 +2,17 @@ package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import de.unima.dws.dbpediagraph.graphdb.*;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.model.*;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
+import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTester;
+import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
 
 public class TestKPPCentrality {
 	private static LocalDisambiguationTester disambiguationNavigli;
@@ -15,8 +20,8 @@ public class TestKPPCentrality {
 
 	@BeforeClass
 	public static void setUp() {
-		subgraphNavigli = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		GraphDisambiguator<DefaultSurfaceForm, DefaultSense> localDisambiguator = new KPPCentrality<>(
+		subgraphNavigli = SubgraphTester.newNavigliTester();
+		LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> localDisambiguator = new KPPCentrality<>(
 				GraphType.UNDIRECTED_GRAPH, DefaultModelFactory.INSTANCE);
 		disambiguationNavigli = new LocalDisambiguationTester(localDisambiguator, subgraphNavigli);
 	}
@@ -33,7 +38,7 @@ public class TestKPPCentrality {
 	}
 
 	@Test
-	public void testWeightedUrisSize() {
-		assertEquals(disambiguationNavigli.getActualDisambiguationResults().size(), subgraphNavigli.allSenses.size());
+	public void testResultingListSize() {
+		assertEquals(subgraphNavigli.allSenses.size(), disambiguationNavigli.getActualAllScoresResults().size());
 	}
 }

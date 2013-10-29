@@ -1,11 +1,16 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate.local;
 
-import com.tinkerpop.blueprints.*;
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Graph;
+import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.model.*;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
@@ -16,7 +21,7 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
  * 
  */
 public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
-		implements GraphDisambiguator<T, U> {
+		implements LocalGraphDisambiguator<T, U> {
 	class DegreeVertexScorer implements VertexScorer<Vertex, Double> {
 		private final int verticesCount;
 

@@ -17,10 +17,10 @@ import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 public abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 	protected static final Logger logger = LoggerFactory.getLogger(AbstractSubgraphConstruction.class);
 
-	protected final Graph graph;
 	protected final SubgraphConstructionSettings settings;
-
 	protected long traversedNodes;
+
+	private final Graph graph;
 
 	public AbstractSubgraphConstruction(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
@@ -40,7 +40,8 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 		Graph subGraph = GraphFactory.newInMemoryGraph();
 		Graphs.addVerticesByUrisOfVertices(subGraph, allSenses);
 
-		// perform a DFS for each sense trying to find path to senses of other words
+		// perform a DFS for each sense trying to find path to senses of other
+		// words
 		for (Collection<Vertex> senses : wordsSenses) {
 			Set<Vertex> otherSenses = CollectionUtils.removeAll(allSenses, senses);
 			for (Vertex start : senses) {
@@ -57,8 +58,9 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 	}
 
 	/**
-	 * Performs a DFS starting at the start vertex. The goal is to find all paths within the max distance to the other
-	 * provided senses. Found paths are inserted into the subgraph.
+	 * Performs a DFS starting at the start vertex. The goal is to find all
+	 * paths within the max distance to the other provided senses. Found paths
+	 * are inserted into the subgraph.
 	 * 
 	 * @param start
 	 *            the vertex the DFS starts with

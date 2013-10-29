@@ -22,7 +22,7 @@ public class TestSubgraphConstructionCyclic {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException, URISyntaxException {
-		subGraphData = new SubgraphTester(TestSet.CYCLIC_FILE_NAMES, SubgraphConstructionFactory.defaultClass(),
+		subGraphData = new SubgraphTester(TestSet.CYCLIC_FILE_NAMES,
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE));
 	}
 

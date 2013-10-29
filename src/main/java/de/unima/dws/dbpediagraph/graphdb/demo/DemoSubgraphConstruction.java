@@ -75,7 +75,6 @@ public class DemoSubgraphConstruction {
 		SCREEN_DIMENSION = new Dimension(width, height);
 	}
 
-
 	private static void demo(Graph graph,
 			Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> surfaceFormsSenses) {
 		Collection<Collection<Vertex>> wordsSenses = ModelTransformer
@@ -105,7 +104,7 @@ public class DemoSubgraphConstruction {
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		String sensesFileName = "/napoleon-sentence-test";
-//		String sensesFileName = "/dbpedia-default-sentence-test";
+		// String sensesFileName = "/dbpedia-default-sentence-test";
 		Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> wordsSensesString = ModelTransformer
 				.surfaceFormsSensesFromFile(DemoSubgraphConstruction.class, sensesFileName,
 						GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
@@ -116,7 +115,8 @@ public class DemoSubgraphConstruction {
 
 	private static void visualizeGraph(Graph graph, String frameTitle) {
 		GraphJung<Graph> graphJung = new GraphJung<>(graph);
-		// Layout<Vertex, Edge> layout = new CircleLayout<Vertex, Edge>(graphJung);
+		// Layout<Vertex, Edge> layout = new CircleLayout<Vertex,
+		// Edge>(graphJung);
 		Layout<Vertex, Edge> layout = new ISOMLayout<Vertex, Edge>(graphJung);
 
 		layout.setSize(SCREEN_DIMENSION);

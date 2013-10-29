@@ -19,14 +19,20 @@ import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
  */
 public interface GraphDisambiguator<T extends SurfaceForm, U extends Sense> {
 	/**
-	 * Disambiguate the provided senses of all provided words using a subgraph. Exemplary senses:
-	 * {{drink1,drink2},{milk1,milk2,milk3}}
+	 * Disambiguate the provided senses of all provided words using a subgraph.
+	 * Exemplary senses: {{drink1,drink2},{milk1,milk2,milk3}}
 	 * 
 	 * @param surfaceFormsSenses
-	 *            contains all words to disambiguate and their respective candidate senses
+	 *            the words to disambiguate and their respective candidate
+	 *            senses
 	 * @param subgraph
-	 * @return
+	 *            the subgraph of all paths between all candidate senses of
+	 *            different surface forms
+	 * @return the sense with the highest score for each word
 	 */
+	// TODO the return type does not make sense for global disambiguators;
+	// either change to Map<SurfaceForm,Sense> or check in Spotlight if score
+	// should be supported
 	public List<SurfaceFormSenseScore<T, U>> disambiguate(
 			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph);
 

@@ -13,7 +13,7 @@ public class DefaultSurfaceFormSenseScore implements SurfaceFormSenseScore<Defau
 
 	@Override
 	public int compareTo(SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> o) {
-		return Double.compare(o.getScore(), score);
+		return Double.compare(score, o.getScore());
 	}
 
 	@Override

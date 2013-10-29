@@ -5,17 +5,20 @@ import static org.junit.Assert.assertEquals;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import de.unima.dws.dbpediagraph.graphdb.*;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.model.*;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
+import de.unima.dws.dbpediagraph.graphdb.LocalDisambiguationTester;
+import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
 
 public class TestBetweennessCentrality {
 	private static final LocalDisambiguationTester disambiguationNavigli;
 	private static final SubgraphTester subgraphNavigli;
 	static {
-		subgraphNavigli = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		GraphDisambiguator<DefaultSurfaceForm, DefaultSense> localDisambiguator = new BetweennessCentrality<>(
+		subgraphNavigli = SubgraphTester.newNavigliTester();
+		LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> localDisambiguator = new BetweennessCentrality<>(
 				GraphType.UNDIRECTED_GRAPH, DefaultModelFactory.INSTANCE);
 		disambiguationNavigli = new LocalDisambiguationTester(localDisambiguator, subgraphNavigli);
 
@@ -33,7 +36,7 @@ public class TestBetweennessCentrality {
 	}
 
 	@Test
-	public void testWeightedUrisSize() {
-		assertEquals(disambiguationNavigli.getActualDisambiguationResults().size(), subgraphNavigli.allSenses.size());
+	public void testResultingListSize() {
+		assertEquals(subgraphNavigli.allSenses.size(), disambiguationNavigli.getActualAllScoresResults().size());
 	}
 }

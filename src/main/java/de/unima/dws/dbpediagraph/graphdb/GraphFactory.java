@@ -21,7 +21,15 @@ public final class GraphFactory {
 
 	private static final Logger logger = LoggerFactory.getLogger(GraphFactory.class);
 
-	private static final TransactionalGraph graph = openGraph();
+	/**
+	 * DBpedia Graph Holder is loaded on the first execution of
+	 * {@link GraphFactory#getDBpediaGraph()} or the first access to
+	 * DBpediaGraphHolder.GRAPH, not before. This lazy initialization is
+	 * beneficial in case the graph is not accessed.
+	 */
+	private static class DBpediaGraphHolder {
+		public static final TransactionalGraph GRAPH = openGraph();
+	}
 
 	/**
 	 * Returns the batch graph instance that can be used for bulk inserting
@@ -33,10 +41,10 @@ public final class GraphFactory {
 	 * @return
 	 */
 	public static BatchGraph<? extends TransactionalGraph> getBatchGraph(long bufferSize) {
-		BatchGraph<TransactionalGraph> bgraph = new BatchGraph<>(graph, bufferSize);
+		BatchGraph<TransactionalGraph> bgraph = new BatchGraph<>(getDBpediaGraph(), bufferSize);
 
 		// check if graph exists already
-		long verticesCount = new GremlinPipeline<Object, Object>(graph.getVertices()).count();
+		long verticesCount = new GremlinPipeline<Object, Object>(getDBpediaGraph().getVertices()).count();
 		if (verticesCount != 0) {
 			bgraph.setVertexIdKey(GraphConfig.URI_PROPERTY);
 			bgraph.setLoadingFromScratch(false);
@@ -52,10 +60,10 @@ public final class GraphFactory {
 	 * @return the dbpedia graph
 	 */
 	public static TransactionalGraph getDBpediaGraph() {
-		if (Graphs.isEmptyGraph(graph))
+		if (Graphs.isEmptyGraph(DBpediaGraphHolder.GRAPH))
 			throw new IllegalStateException(
 					"The graph has no vertices. For graph-based disambiguation run the graph loader tool first to create a graph from data dumps.");
-		return graph;
+		return DBpediaGraphHolder.GRAPH;
 	}
 
 	/**

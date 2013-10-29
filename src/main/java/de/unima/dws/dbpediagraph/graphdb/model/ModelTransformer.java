@@ -2,7 +2,11 @@ package de.unima.dws.dbpediagraph.graphdb.model;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +30,19 @@ public class ModelTransformer {
 				senseScores.add(factory.newSurfaceFormSenseScore(surfaceFormSenses.getSurfaceForm(), sense,
 						DEFAULT_SCORE));
 		return senseScores;
+	}
+
+	public static <T extends SurfaceForm, U extends Sense> Map<T, List<SurfaceFormSenseScore<T, U>>> initializeScoresMap(
+			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, ModelFactory<T, U> factory) {
+		Map<T, List<SurfaceFormSenseScore<T, U>>> sFSensesMap = new HashMap<>();
+		for (SurfaceFormSenses<T, U> sFSenses : surfaceFormsSenses) {
+			List<SurfaceFormSenseScore<T, U>> sFSensesList = new ArrayList<SurfaceFormSenseScore<T, U>>();
+			for (U sense : sFSenses.getSenses()) {
+				sFSensesList.add(factory.newSurfaceFormSenseScore(sFSenses.getSurfaceForm(), sense, DEFAULT_SCORE));
+			}
+			sFSensesMap.put(sFSenses.getSurfaceForm(), sFSensesList);
+		}
+		return sFSensesMap;
 	}
 
 	public static <T extends SurfaceForm, U extends Sense> SurfaceFormSenses<T, U> surfaceFormSensesFromLine(
@@ -72,8 +89,12 @@ public class ModelTransformer {
 
 	public static <T extends SurfaceForm, U extends Sense> Collection<Vertex> verticesFromSenses(Graph graph,
 			SurfaceFormSenses<T, U> surfaceFormSenses) {
-		Collection<Vertex> vertices = new ArrayList<>(surfaceFormSenses.getSenses().size());
-		for (Sense sense : surfaceFormSenses.getSenses()) {
+		return verticesFromSenses(graph, surfaceFormSenses.getSenses());
+	}
+
+	public static <U extends Sense> Collection<Vertex> verticesFromSenses(Graph graph, Collection<U> senses) {
+		Collection<Vertex> vertices = new ArrayList<>(senses.size());
+		for (Sense sense : senses) {
 			Vertex v = Graphs.vertexByUri(graph, sense.fullUri());
 			if (v != null)
 				vertices.add(v);

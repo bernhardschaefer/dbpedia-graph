@@ -15,16 +15,24 @@ import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
 /**
- * Test a {@link SubgraphConstruction} implementation using a {@link TestSet}. Implementations are to be used in JUnit
- * tests.
+ * Test a {@link SubgraphConstruction} implementation using a {@link TestSet}.
+ * Implementations are to be used in JUnit tests.
  * 
  * @author Bernhard Schäfer
  * 
  */
 public class SubgraphTester {
 
-	public static final SubgraphTester newNavigliTestData() {
-		return new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
+	public static SubgraphTester newNavigliTester() {
+		return newNavigliTester(getNavigliSettings());
+	}
+
+	public static SubgraphTester newNavigliTester(SubgraphConstructionSettings settings) {
+		return new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, settings);
+	}
+
+	public static SubgraphConstructionSettings getNavigliSettings() {
+		return new SubgraphConstructionSettings().graphType(GraphType.UNDIRECTED_GRAPH).maxDistance(Integer.MAX_VALUE);
 	}
 
 	private final Graph graph;
@@ -36,12 +44,11 @@ public class SubgraphTester {
 	private final Graph subgraph;
 	private final SubgraphConstruction subgraphConstruction;
 
-	public SubgraphTester(TestSet testSet, Class<? extends SubgraphConstruction> subgraphConstructionClass) {
-		this(testSet, subgraphConstructionClass, SubgraphConstructionSettings.getDefault());
+	public SubgraphTester(TestSet testSet) {
+		this(testSet, SubgraphConstructionSettings.getDefault());
 	}
 
-	public SubgraphTester(TestSet testSet, Class<? extends SubgraphConstruction> subgraphConstructionClass,
-			SubgraphConstructionSettings settings) {
+	public SubgraphTester(TestSet testSet, SubgraphConstructionSettings settings) {
 		try {
 			graph = FileUtils.parseGraph(testSet.verticesFile, testSet.edgesFile, getClass());
 			allWordsSenses = FileUtils.parseAllWordsSenses(graph, testSet.sensesFile, getClass(), "");
@@ -53,8 +60,8 @@ public class SubgraphTester {
 			throw new RuntimeException("Error while trying to construct test graph.", e);
 		}
 
-		subgraphConstruction = SubgraphConstructionFactory.newInstance(subgraphConstructionClass, settings, graph);
-		subgraph = getSubgraphConstruction().createSubgraph(allWordsSenses);
+		this.subgraphConstruction = SubgraphConstructionFactory.newDefaultImplementation(graph, settings);
+		subgraph = subgraphConstruction.createSubgraph(allWordsSenses);
 	}
 
 	public void close() {

@@ -11,37 +11,36 @@ import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
-import de.unima.dws.dbpediagraph.graphdb.TestSet;
 
 public class TestSubgraphConstructionNavigli {
-	private SubgraphTester subGraphData;
+	private SubgraphTester subgraphNavigli;
 
 	@Before
 	public void setUp() {
-		subGraphData = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
+		subgraphNavigli = SubgraphTester.newNavigliTester();
 	}
 
 	@After
 	public void tearDown() {
-		if (subGraphData != null)
-			subGraphData.close();
+		if (subgraphNavigli != null)
+			subgraphNavigli.close();
 	}
 
 	@Test
 	public void testAllEdgesContainedDirected() {
-		assertEquals(subGraphData.expectedSubgraphEdges.size(), Graphs.numberOfEdges(subGraphData.getSubgraph()));
+		assertEquals(subgraphNavigli.expectedSubgraphEdges.size(), Graphs.numberOfEdges(subgraphNavigli.getSubgraph()));
 	}
 
 	@Test
 	public void testAllNodesContainedDirected() {
-		assertEquals(subGraphData.expectedSubgraphVertices.size(),
-				Graphs.numberOfVertices(subGraphData.getSubgraph()));
+		assertEquals(subgraphNavigli.expectedSubgraphVertices.size(),
+				Graphs.numberOfVertices(subgraphNavigli.getSubgraph()));
 	}
 
 	@Test
 	public void testSubgraphContainsSensesDirected() {
-		for (Vertex s : subGraphData.allSenses) {
-			assertNotNull("The sense vertex " + s.getId() + " should be contained in the subgraph.", subGraphData
+		for (Vertex s : subgraphNavigli.allSenses) {
+			assertNotNull("The sense vertex " + s.getId() + " should be contained in the subgraph.", subgraphNavigli
 					.getSubgraph().getVertex(s.getId()));
 		}
 	}

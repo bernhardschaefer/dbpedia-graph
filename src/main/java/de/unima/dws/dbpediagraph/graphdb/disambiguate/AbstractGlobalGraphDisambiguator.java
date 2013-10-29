@@ -2,33 +2,56 @@ package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.tinkerpop.blueprints.Graph;
+import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.model.*;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
+import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
 /**
  * Skeleton class which eases the implementation of {@link GraphDisambiguator}.
  * Subclasses only need to implement
- * {@link #globalConnectivityMeasure(Collection, Graph)}.
+ * {@link #globalConnectivityMeasure(Map, Graph)}.
  * 
  * @author Bernhard Schäfer
  * 
  */
 public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense> implements
-		GraphDisambiguator<T, U> {
+		GlobalGraphDisambiguator<T, U> {
+	private final SubgraphConstructionSettings subgraphConstructionSettings;
 
-	/**
-	 * Retrieve the global connectivity measure score for a sense assignment
-	 * 
-	 * @param senseAssignments
-	 *            the sense assignments
-	 * @param sensegraph
-	 *            the sense graph consists of all paths between the sense
-	 *            assignments
-	 * @return the score for the provided assignments
-	 */
-	abstract public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph);
+	public AbstractGlobalGraphDisambiguator(SubgraphConstructionSettings subgraphConstructionSettings) {
+		this.subgraphConstructionSettings = subgraphConstructionSettings;
+	}
+
+	@Override
+	public abstract double globalConnectivityMeasure(Graph sensegraph);
+
+	@Override
+	public double globalConnectivityMeasure(Collection<Vertex> surfaceFormSenseAssigments, Graph subgraph) {
+		SubgraphConstruction sensegraphConstruction = SubgraphConstructionFactory.newDefaultImplementation(subgraph,
+				subgraphConstructionSettings);
+		Graph sensegraph = sensegraphConstruction.createSubgraph(CollectionUtils.split(surfaceFormSenseAssigments));
+		double score = globalConnectivityMeasure(sensegraph);
+		sensegraph.shutdown();
+		return score;
+	}
+
+	@Override
+	public double globalConnectivityMeasure(Map<T, U> surfaceFormSenseAssigments, Graph subgraph) {
+		Collection<Vertex> vertices = ModelTransformer
+				.verticesFromSenses(subgraph, surfaceFormSenseAssigments.values());
+		return globalConnectivityMeasure(vertices, subgraph);
+	}
 
 	@Override
 	public List<SurfaceFormSenseScore<T, U>> disambiguate(
@@ -47,4 +70,5 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 		// // TODO implement genetic and simulated annealing functionality
 		return null;
 	}
+
 }

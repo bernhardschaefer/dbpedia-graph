@@ -1,5 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Assert;
@@ -7,7 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.model.*;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
+import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
+import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
 /**
  * Tests a {@link GraphDisambiguator} class using a {@link SubgraphTester} and a
@@ -22,18 +30,22 @@ public class LocalDisambiguationTester {
 	private static final String LOCAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.graphdb.disambiguate.local";
 	private static final double ALLOWED_SCORE_DEVIATION = 0.01;
 
-	private final GraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator;
-	private final List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> actualDisambiguationResults;
+	private final LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> localDisambiguator;
+	private final List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> actualAllScoresResults;
 	private final ExpectedDisambiguationResults expectedDisambiguationResults;
+	private final List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> actualDisambiguationResults;
 
-	public LocalDisambiguationTester(GraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator,
+	public LocalDisambiguationTester(LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> localDisambiguator,
 			SubgraphTester subgraphData) {
 		expectedDisambiguationResults = new ExpectedDisambiguationResults(TestSet.NavigliTestSet.NL_LOCAL_RESULTS,
 				LOCAL_PACKAGE_NAME);
-		this.disambiguator = disambiguator;
-		actualDisambiguationResults = disambiguator.disambiguate(
-				ModelTransformer.transformVertices(subgraphData.allWordsSenses, DefaultModelFactory.INSTANCE),
-				subgraphData.getSubgraph());
+		this.localDisambiguator = localDisambiguator;
+
+		Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> sFSs = ModelTransformer.transformVertices(
+				subgraphData.allWordsSenses, DefaultModelFactory.INSTANCE);
+		actualDisambiguationResults = localDisambiguator.disambiguate(sFSs, subgraphData.getSubgraph());
+		actualAllScoresResults = CollectionUtils.joinListValues(localDisambiguator.allSurfaceFormSensesScores(sFSs,
+				subgraphData.getSubgraph()));
 	}
 
 	/**
@@ -43,9 +55,9 @@ public class LocalDisambiguationTester {
 	 *             if the expected and actual results differ
 	 */
 	public void compareDisambiguationResults() {
-		for (SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> surfaceFormSenseScore : actualDisambiguationResults) {
+		for (SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> surfaceFormSenseScore : actualAllScoresResults) {
 			double expected = expectedDisambiguationResults.getResults().get(surfaceFormSenseScore.sense().fullUri())
-					.get(disambiguator.getClass());
+					.get(localDisambiguator.getClass());
 			logger.info("uri: {} actual weight: {} expected weight: {}", surfaceFormSenseScore.sense().fullUri(),
 					surfaceFormSenseScore.getScore(), expected);
 			Assert.assertEquals(expected, surfaceFormSenseScore.getScore(), ALLOWED_SCORE_DEVIATION);
@@ -58,6 +70,10 @@ public class LocalDisambiguationTester {
 
 	public ExpectedDisambiguationResults getExpectedDisambiguationResults() {
 		return expectedDisambiguationResults;
+	}
+
+	public List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> getActualAllScoresResults() {
+		return actualAllScoresResults;
 	}
 
 }

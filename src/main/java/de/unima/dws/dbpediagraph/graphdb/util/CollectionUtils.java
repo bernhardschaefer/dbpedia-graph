@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -64,7 +65,8 @@ public class CollectionUtils {
 	}
 
 	/**
-	 * Remove all entries from collection a that are in collection b and return a new collection.
+	 * Remove all entries from collection a that are in collection b and return
+	 * a new collection.
 	 */
 	public static <T> Set<T> removeAll(Collection<T> a, Collection<T> b) {
 		Set<T> c = new HashSet<T>(a);
@@ -77,5 +79,13 @@ public class CollectionUtils {
 		for (Vertex v : senses)
 			vertices.add(Arrays.asList(v));
 		return vertices;
+	}
+
+	public static <T> List<T> joinListValues(Map<?, List<T>> map) {
+		List<T> joinedValues = new ArrayList<>();
+		for (List<T> list : map.values()) {
+			joinedValues.addAll(list);
+		}
+		return joinedValues;
 	}
 }

@@ -3,15 +3,14 @@ package de.unima.dws.dbpediagraph.graphdb.disambiguate.global;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Collection;
-
 import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 
 /**
  * Edge density global connectivity measure implemented as described in
@@ -21,10 +20,14 @@ import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
  * 
  */
 public class EdgeDensity<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
-		implements GraphDisambiguator<T, U> {
+		implements GlobalGraphDisambiguator<T, U> {
+
+	public EdgeDensity(SubgraphConstructionSettings settings) {
+		super(settings);
+	}
 
 	@Override
-	public Double globalConnectivityMeasure(Collection<String> senseAssignments, Graph sensegraph) {
+	public double globalConnectivityMeasure(Graph sensegraph) {
 		int totalEdges = Graphs.numberOfEdges(checkNotNull(sensegraph));
 		checkArgument(totalEdges != 0, " the provided graph cannot contain 0 vertices.");
 		int totalVertices = Graphs.numberOfVertices(sensegraph);

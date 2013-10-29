@@ -1,21 +1,25 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate.global;
 
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import de.unima.dws.dbpediagraph.graphdb.*;
+import de.unima.dws.dbpediagraph.graphdb.GlobalDisambiguationTester;
+import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
 import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 
 public class TestEdgeDensity {
-	private static LocalDisambiguationTester disambiguationNavigli;
+	private static GlobalDisambiguationTester disambiguationNavigli;
 	private static SubgraphTester subgraphNavigli;
 
 	@BeforeClass
 	public static void setUp() {
-		subgraphNavigli = new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, SubgraphConstructionFactory.defaultClass());
-		disambiguationNavigli = new LocalDisambiguationTester(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(),
-				subgraphNavigli);
+		SubgraphConstructionSettings settings = SubgraphTester.getNavigliSettings();
+		subgraphNavigli = SubgraphTester.newNavigliTester(settings);
+		disambiguationNavigli = new GlobalDisambiguationTester(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(
+				settings), subgraphNavigli);
 	}
 
 	@AfterClass
