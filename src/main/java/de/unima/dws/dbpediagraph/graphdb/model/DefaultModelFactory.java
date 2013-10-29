@@ -6,6 +6,13 @@ import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
+/**
+ * Concrete factory as singleton for creating default sense and surface form
+ * instances.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public enum DefaultModelFactory implements ModelFactory<DefaultSurfaceForm, DefaultSense> {
 	INSTANCE;
 

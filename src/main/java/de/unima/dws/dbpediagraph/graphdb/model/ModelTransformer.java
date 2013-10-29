@@ -76,7 +76,7 @@ public class ModelTransformer {
 		Collection<U> senses = new ArrayList<>(wordSenses.size());
 		for (Vertex v : wordSenses)
 			senses.add(factory.newSense(v));
-		return transform(senses, "bla", factory);
+		return transform(senses, "test", factory);
 	}
 
 	public static <T extends SurfaceForm, U extends Sense> Collection<SurfaceFormSenses<T, U>> transformVertices(

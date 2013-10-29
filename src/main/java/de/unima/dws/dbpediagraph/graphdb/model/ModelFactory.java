@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.tinkerpop.blueprints.Vertex;
 
 /**
- * Abstract factory pattern.
+ * Abstract factory for creating sense and surface form related instances.
  * 
  * @author Bernhard Schäfer
  */
