@@ -12,4 +12,9 @@ public class DefaultSense implements Sense {
 		return fullUri;
 	}
 
+	@Override
+	public String toString() {
+		return fullUri();
+	}
+
 }

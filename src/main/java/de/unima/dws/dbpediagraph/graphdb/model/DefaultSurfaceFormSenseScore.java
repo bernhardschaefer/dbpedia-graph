@@ -36,4 +36,10 @@ public class DefaultSurfaceFormSenseScore implements SurfaceFormSenseScore<Defau
 		return surfaceForm;
 	}
 
+	@Override
+	public String toString() {
+		return new StringBuilder().append(surfaceForm.toString()).append(": ").append(sense.toString()).append(" --> ")
+				.append(score).toString();
+	}
+
 }

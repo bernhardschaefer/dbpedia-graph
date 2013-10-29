@@ -21,4 +21,9 @@ public class DefaultSurfaceFormSenses implements SurfaceFormSenses<DefaultSurfac
 		return surfaceForm;
 	}
 
+	@Override
+	public String toString() {
+		return surfaceForm.toString() + ": " + senses.toString();
+	}
+
 }

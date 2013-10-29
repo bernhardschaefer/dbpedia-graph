@@ -12,4 +12,9 @@ public class DefaultSurfaceForm implements SurfaceForm {
 		return name;
 	}
 
+	@Override
+	public String toString() {
+		return name();
+	}
+
 }

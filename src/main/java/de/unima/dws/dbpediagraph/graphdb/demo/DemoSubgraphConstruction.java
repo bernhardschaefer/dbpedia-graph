@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -89,7 +88,6 @@ public class DemoSubgraphConstruction {
 
 			List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> senseScores = d.disambiguate(
 					surfaceFormsSenses, subGraph);
-			Collections.sort(senseScores);
 			for (SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> senseScore : senseScores)
 				System.out.printf("  %s (%.2f)", UriShortener.shorten(senseScore.sense().fullUri()),
 						senseScore.getScore());
