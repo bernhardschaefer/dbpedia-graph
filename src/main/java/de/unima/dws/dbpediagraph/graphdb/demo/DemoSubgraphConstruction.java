@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
@@ -33,8 +34,9 @@ import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
 import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
 import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
@@ -74,21 +76,17 @@ public class DemoSubgraphConstruction {
 		SCREEN_DIMENSION = new Dimension(width, height);
 	}
 
-	private static void demo(Graph graph,
-			Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> surfaceFormsSenses) {
-		Collection<Collection<Vertex>> wordsSenses = ModelTransformer
-				.wordsVerticesFromSenses(graph, surfaceFormsSenses);
-
+	private static <T extends SurfaceForm, U extends Sense> void demo(Graph graph, Map<T, List<U>> surfaceFormsSenses,
+			Collection<GraphDisambiguator<T, U>> disambiguators) {
 		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
 				new SubgraphConstructionSettings().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE));
-		Graph subGraph = sc.createSubgraph(wordsSenses);
+		Graph subGraph = sc.createSubgraph(surfaceFormsSenses);
 
-		for (GraphDisambiguator<DefaultSurfaceForm, DefaultSense> d : disambiguators) {
+		for (GraphDisambiguator<T, U> d : disambiguators) {
 			System.out.println(d);
 
-			List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> senseScores = d.disambiguate(
-					surfaceFormsSenses, subGraph);
-			for (SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> senseScore : senseScores)
+			List<SurfaceFormSenseScore<T, U>> senseScores = d.disambiguate(surfaceFormsSenses, subGraph);
+			for (SurfaceFormSenseScore<T, U> senseScore : senseScores)
 				System.out.printf("  %s (%.2f)", UriShortener.shorten(senseScore.sense().fullUri()),
 						senseScore.getScore());
 			System.out.println();
@@ -103,12 +101,11 @@ public class DemoSubgraphConstruction {
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		String sensesFileName = "/napoleon-sentence-test";
 		// String sensesFileName = "/dbpedia-default-sentence-test";
-		Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> wordsSensesString = ModelTransformer
-				.surfaceFormsSensesFromFile(DemoSubgraphConstruction.class, sensesFileName,
-						GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
+		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = ModelTransformer.surfaceFormsSensesFromFile(
+				DemoSubgraphConstruction.class, sensesFileName, GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
 
 		Graph graph = GraphFactory.getDBpediaGraph();
-		demo(graph, wordsSensesString);
+		demo(graph, wordsSensesString, disambiguators);
 	}
 
 	private static void visualizeGraph(Graph graph, String frameTitle) {

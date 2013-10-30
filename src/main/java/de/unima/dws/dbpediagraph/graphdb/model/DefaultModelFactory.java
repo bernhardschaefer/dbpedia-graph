@@ -1,7 +1,5 @@
 package de.unima.dws.dbpediagraph.graphdb.model;
 
-import java.util.Collection;
-
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
@@ -17,12 +15,6 @@ public enum DefaultModelFactory implements ModelFactory<DefaultSurfaceForm, Defa
 	INSTANCE;
 
 	@Override
-	public SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> newSurfaceFormSenseScore(
-			DefaultSurfaceForm surfaceForm, DefaultSense sense, double score) {
-		return new DefaultSurfaceFormSenseScore(surfaceForm, sense, score);
-	}
-
-	@Override
 	public DefaultSense newSense(String fullUri) {
 		return new DefaultSense(fullUri);
 	}
@@ -33,9 +25,14 @@ public enum DefaultModelFactory implements ModelFactory<DefaultSurfaceForm, Defa
 	}
 
 	@Override
-	public SurfaceFormSenses<DefaultSurfaceForm, DefaultSense> newSurfaceFormSenses(Collection<DefaultSense> senses,
-			String name) {
-		return new DefaultSurfaceFormSenses(new DefaultSurfaceForm(name), senses);
+	public DefaultSurfaceForm newSurfaceForm(String name) {
+		return new DefaultSurfaceForm(name);
+	}
+
+	@Override
+	public SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> newSurfaceFormSenseScore(
+			DefaultSurfaceForm surfaceForm, DefaultSense sense, double score) {
+		return new DefaultSurfaceFormSenseScore(surfaceForm, sense, score);
 	}
 
 }

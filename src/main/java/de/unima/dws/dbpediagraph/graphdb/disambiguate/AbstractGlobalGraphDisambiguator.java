@@ -11,7 +11,6 @@ import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
@@ -34,15 +33,13 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 	}
 
 	@Override
-	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph, int k) {
+	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, int k) {
 		// TODO think about how to simulate this
 		throw new UnsupportedOperationException("bestK not supported for global disambiguators");
 	}
 
 	@Override
-	public List<SurfaceFormSenseScore<T, U>> disambiguate(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph) {
+	public List<SurfaceFormSenseScore<T, U>> disambiguate(Map<T, List<U>> surfaceFormsSenses, Graph subgraph) {
 		// // Example allWordSenses = {{drink1,drink2},{milk1,milk2,milk3}}
 		//
 		// // iteration over all possible sense assignments , e.g.:

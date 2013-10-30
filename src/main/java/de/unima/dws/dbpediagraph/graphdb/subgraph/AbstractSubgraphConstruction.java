@@ -1,6 +1,8 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -12,6 +14,9 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
 public abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
@@ -45,16 +50,25 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 		for (Collection<Vertex> senses : wordsSenses) {
 			Set<Vertex> otherSenses = CollectionUtils.removeAll(allSenses, senses);
 			for (Vertex start : senses) {
-				logger.info("Starting DFS with vid: {}, uri: {}", start.getId(),
-						start.getProperty(GraphConfig.URI_PROPERTY));
+				if (logger.isDebugEnabled())
+					logger.debug("Starting DFS with vid: {}, uri: {}", start.getId(),
+							start.getProperty(GraphConfig.URI_PROPERTY));
 				dfs(new Path(start), otherSenses, subGraph);
 			}
 		}
 
-		SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, startTime, traversedNodes,
-				settings.maxDistance);
+		if (logger.isInfoEnabled())
+			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, startTime, traversedNodes,
+					settings.maxDistance);
 
 		return subGraph;
+	}
+
+	@Override
+	public Graph createSubgraph(Map<? extends SurfaceForm, ? extends List<? extends Sense>> surfaceFormSenses) {
+		Collection<Collection<Vertex>> surfaceFormVertices = ModelTransformer.wordsVerticesFromSenses(graph,
+				surfaceFormSenses);
+		return createSubgraph(surfaceFormVertices);
 	}
 
 	/**

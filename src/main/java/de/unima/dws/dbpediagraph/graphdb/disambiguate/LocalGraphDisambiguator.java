@@ -9,7 +9,6 @@ import com.tinkerpop.blueprints.Graph;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 
 /**
  * {@link GraphDisambiguator} for local graph connectivity measures. Unlike
@@ -36,10 +35,9 @@ public interface LocalGraphDisambiguator<T extends SurfaceForm, U extends Sense>
 	 * @return the map which contains for each surface form (key) a list of
 	 *         candidates sense and their respective score
 	 */
-	public Map<T, List<SurfaceFormSenseScore<T, U>>> allSurfaceFormSensesScores(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph);
+	public Map<T, List<SurfaceFormSenseScore<T, U>>> allSurfaceFormSensesScores(Map<T, List<U>> surfaceFormsSenses,
+			Graph subgraph);
 
 	@Override
-	public List<SurfaceFormSenseScore<T, U>> disambiguate(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph);
+	public List<SurfaceFormSenseScore<T, U>> disambiguate(Map<T, List<U>> surfaceFormsSenses, Graph subgraph);
 }

@@ -18,7 +18,6 @@ import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
@@ -39,19 +38,19 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	}
 
 	@Override
-	public Map<T, List<SurfaceFormSenseScore<T, U>>> allSurfaceFormSensesScores(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph) {
+	public Map<T, List<SurfaceFormSenseScore<T, U>>> allSurfaceFormSensesScores(Map<T, List<U>> surfaceFormsSenses,
+			Graph subgraph) {
 		return bestK(surfaceFormsSenses, subgraph, Integer.MAX_VALUE);
 	}
 
 	@Override
-	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph, int k) {
+	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, int k) {
 		VertexScorer<Vertex, Double> vertexScorer = getVertexScorer(subgraph);
 
-		Map<T, List<SurfaceFormSenseScore<T, U>>> senseScores = ModelTransformer.initializeScoresMap(
+		Map<T, List<SurfaceFormSenseScore<T, U>>> senseScores = ModelTransformer.initializeScoresMapFromMap(
 				surfaceFormsSenses, factory);
 
+		// TODO iterate over surfaceFormsSenses and omit initializer
 		for (T key : senseScores.keySet()) {
 			List<SurfaceFormSenseScore<T, U>> sFSS = senseScores.get(key);
 			for (SurfaceFormSenseScore<T, U> senseScore : sFSS) {
@@ -70,8 +69,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	}
 
 	@Override
-	public List<SurfaceFormSenseScore<T, U>> disambiguate(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph) {
+	public List<SurfaceFormSenseScore<T, U>> disambiguate(Map<T, List<U>> surfaceFormsSenses, Graph subgraph) {
 		Map<T, List<SurfaceFormSenseScore<T, U>>> allScores = allSurfaceFormSensesScores(surfaceFormsSenses, subgraph);
 
 		List<SurfaceFormSenseScore<T, U>> highestScores = new ArrayList<>();

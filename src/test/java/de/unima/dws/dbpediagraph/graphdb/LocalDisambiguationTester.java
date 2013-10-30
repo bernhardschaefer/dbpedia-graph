@@ -1,7 +1,7 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -14,7 +14,6 @@ import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
 import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
 /**
@@ -41,7 +40,7 @@ public class LocalDisambiguationTester {
 				LOCAL_PACKAGE_NAME);
 		this.localDisambiguator = localDisambiguator;
 
-		Collection<SurfaceFormSenses<DefaultSurfaceForm, DefaultSense>> sFSs = ModelTransformer.transformVertices(
+		Map<DefaultSurfaceForm, List<DefaultSense>> sFSs = ModelTransformer.transformVerticesToMap(
 				subgraphData.allWordsSenses, DefaultModelFactory.INSTANCE);
 		actualDisambiguationResults = localDisambiguator.disambiguate(sFSs, subgraphData.getSubgraph());
 		actualAllScoresResults = CollectionUtils.joinListValues(localDisambiguator.allSurfaceFormSensesScores(sFSs,
@@ -64,16 +63,16 @@ public class LocalDisambiguationTester {
 		}
 	}
 
+	public List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> getActualAllScoresResults() {
+		return actualAllScoresResults;
+	}
+
 	public List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> getActualDisambiguationResults() {
 		return actualDisambiguationResults;
 	}
 
 	public ExpectedDisambiguationResults getExpectedDisambiguationResults() {
 		return expectedDisambiguationResults;
-	}
-
-	public List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> getActualAllScoresResults() {
-		return actualAllScoresResults;
 	}
 
 }

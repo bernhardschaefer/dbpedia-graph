@@ -26,32 +26,22 @@
 			<artifactId>blueprints-core</artifactId>
 			<version>${tinkerpop.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.tinkerpop</groupId>
 			<artifactId>pipes</artifactId>
 			<version>${tinkerpop.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.tinkerpop.gremlin</groupId>
 			<artifactId>gremlin-java</artifactId>
 			<version>${tinkerpop.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.tinkerpop.furnace</groupId>
-			<artifactId>furnace</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
-
 		<!-- https://github.com/tinkerpop/blueprints/wiki/Sail-Ouplementation -->
 		<dependency>
 			<groupId>com.tinkerpop.blueprints</groupId>
 			<artifactId>blueprints-graph-sail</artifactId>
 			<version>${tinkerpop.version}</version>
 		</dependency>
-
 		<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4j-Implementation -->
 		<dependency>
 			<groupId>com.tinkerpop.blueprints</groupId>
@@ -65,13 +55,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 		<!-- explicitly include neo4j-kernel to exclude logback dependency -->
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-kernel</artifactId>
 			<version>${neo4j.version}</version>
-
 			<exclusions>
 				<exclusion>
 					<groupId>ch.qos.logback</groupId>
@@ -83,19 +71,29 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 		<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4jBatch-Implementation -->
 		<dependency>
 			<groupId>com.tinkerpop.blueprints</groupId>
 			<artifactId>blueprints-neo4jbatch-graph</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-
 		<!-- https://github.com/tinkerpop/blueprints/wiki/JUNG-Ouplementation -->
 		<dependency>
 			<groupId>com.tinkerpop.blueprints</groupId>
 			<artifactId>blueprints-graph-jung</artifactId>
 			<version>${tinkerpop.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jgrapht</groupId>
+			<artifactId>jgrapht</artifactId>
+			<version>0.8.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>15.0</version>
 		</dependency>
 
 		<!-- logging -->
@@ -109,16 +107,16 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>ch.qos.logback</groupId> -->
-<!-- 			<artifactId>logback-core</artifactId> -->
-<!-- 			<version>${logback.version}</version> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>ch.qos.logback</groupId> -->
-<!-- 			<artifactId>logback-classic</artifactId> -->
-<!-- 			<version>${logback.version}</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>ch.qos.logback</groupId> -->
+		<!-- <artifactId>logback-core</artifactId> -->
+		<!-- <version>${logback.version}</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>ch.qos.logback</groupId> -->
+		<!-- <artifactId>logback-classic</artifactId> -->
+		<!-- <version>${logback.version}</version> -->
+		<!-- </dependency> -->
 
 		<!-- testing -->
 		<dependency>
@@ -127,37 +125,6 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>net.sf.jgrapht</groupId>
-			<artifactId>jgrapht</artifactId>
-			<version>0.8.3</version>
-		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>org.dbpedia.spotlight</groupId> -->
-		<!-- <artifactId>spotlight</artifactId> -->
-		<!-- <version>0.6.5</version> -->
-		<!-- <scope>system</scope> -->
-		<!-- <systemPath>${basedir}/external_libs/dbpedia-spotlight-0.6.5-jar-with-dependencies.jar</systemPath> -->
-
-		<!-- <exclusions> -->
-		<!-- <exclusion> -->
-		<!-- <groupId>org.slf4j</groupId> -->
-		<!-- <artifactId>slf4j-log4j12</artifactId> -->
-		<!-- </exclusion> -->
-		<!-- <exclusion> -->
-		<!-- <groupId>log4j</groupId> -->
-		<!-- <artifactId>log4j</artifactId> -->
-		<!-- </exclusion> -->
-		<!-- <exclusion> -->
-		<!-- <groupId>org.slf4j</groupId> -->
-		<!-- <artifactId>slf4j-api</artifactId> -->
-		<!-- </exclusion> -->
-		<!-- <exclusion> -->
-		<!-- <groupId>org.slf4j</groupId> -->
-		<!-- <artifactId>jcl-over-slf4j</artifactId> -->
-		<!-- </exclusion> -->
-		<!-- </exclusions> -->
-		<!-- </dependency> -->
 	</dependencies>
 
 	<build>
@@ -178,40 +145,18 @@
 						</manifest>
 					</archive>
 				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
+				<!-- for execution during regular package phase -->
+				<!-- <executions> -->
+				<!-- <execution> -->
+				<!-- <id>make-assembly</id> this is used for inheritance merges -->
+				<!-- <phase>package</phase> bind to the packaging phase -->
+				<!-- <goals> -->
+				<!-- <goal>single</goal> -->
+				<!-- </goals> -->
+				<!-- </execution> -->
+				<!-- </executions> -->
 			</plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<!-- furnace exists only as snapshot -->
-		<repository>
-			<id>sonatype-oss-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>central</id>
-			<name>Maven Repository Switchboard</name>
-			<layout>default</layout>
-			<url>http://repo1.maven.org/maven2</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 
 </project>

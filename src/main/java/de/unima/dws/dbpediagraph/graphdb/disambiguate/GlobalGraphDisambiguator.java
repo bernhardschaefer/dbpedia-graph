@@ -10,7 +10,6 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 
 /**
  * {@link GraphDisambiguator} for global graph connectivity measures. Unlike
@@ -22,8 +21,13 @@ import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
  */
 public interface GlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense> extends GraphDisambiguator<T, U> {
 	@Override
-	public List<SurfaceFormSenseScore<T, U>> disambiguate(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph);
+	public List<SurfaceFormSenseScore<T, U>> disambiguate(Map<T, List<U>> surfaceFormsSenses, Graph subgraph);
+
+	// TODO javadoc
+	public double globalConnectivityMeasure(Collection<Vertex> surfaceFormSenseAssigments, Graph subgraph);
+
+	// TODO javadoc
+	public double globalConnectivityMeasure(Graph senseAssignmentsGraph);
 
 	/**
 	 * Retrieve the global connectivity measure score for a sense assignment
@@ -37,10 +41,4 @@ public interface GlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense
 	 * @return the score for the provided assignments
 	 */
 	public double globalConnectivityMeasure(Map<T, U> surfaceFormSenseAssigments, Graph subgraph);
-
-	// TODO javadoc
-	public double globalConnectivityMeasure(Collection<Vertex> surfaceFormSenseAssigments, Graph subgraph);
-
-	// TODO javadoc
-	public double globalConnectivityMeasure(Graph senseAssignmentsGraph);
 }

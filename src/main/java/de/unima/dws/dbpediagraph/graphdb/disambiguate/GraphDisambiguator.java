@@ -9,7 +9,6 @@ import com.tinkerpop.blueprints.Graph;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
 
 /**
  * 
@@ -36,8 +35,7 @@ public interface GraphDisambiguator<T extends SurfaceForm, U extends Sense> {
 	 * @return the map which contains for each surface form (key) a list of
 	 *         candidates sense and their respective score
 	 */
-	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph, int k);
+	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, int k);
 
 	/**
 	 * Disambiguate the provided senses of all provided words using a subgraph.
@@ -56,7 +54,6 @@ public interface GraphDisambiguator<T extends SurfaceForm, U extends Sense> {
 	// should be supported
 	// TODO change Collection<SurfaceFormSenses> to
 	// Map<SurfaceForm,List/Collection<Sense>>
-	public List<SurfaceFormSenseScore<T, U>> disambiguate(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph);
+	public List<SurfaceFormSenseScore<T, U>> disambiguate(Map<T, List<U>> surfaceFormsSenses, Graph subgraph);
 
 }
