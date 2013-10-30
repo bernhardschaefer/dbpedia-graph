@@ -21,10 +21,6 @@ import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenses;
  * 
  */
 public interface LocalGraphDisambiguator<T extends SurfaceForm, U extends Sense> extends GraphDisambiguator<T, U> {
-	@Override
-	public List<SurfaceFormSenseScore<T, U>> disambiguate(
-			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph);
-
 	/**
 	 * Determine the score for each sense candidate of each surface form. The
 	 * {@link GraphDisambiguator#disambiguate(Collection, Graph)} method can
@@ -41,5 +37,9 @@ public interface LocalGraphDisambiguator<T extends SurfaceForm, U extends Sense>
 	 *         candidates sense and their respective score
 	 */
 	public Map<T, List<SurfaceFormSenseScore<T, U>>> allSurfaceFormSensesScores(
+			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph);
+
+	@Override
+	public List<SurfaceFormSenseScore<T, U>> disambiguate(
 			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph);
 }

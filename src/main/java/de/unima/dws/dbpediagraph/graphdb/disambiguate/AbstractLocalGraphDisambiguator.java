@@ -41,12 +41,19 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	@Override
 	public Map<T, List<SurfaceFormSenseScore<T, U>>> allSurfaceFormSensesScores(
 			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph) {
+		return bestK(surfaceFormsSenses, subgraph, Integer.MAX_VALUE);
+	}
+
+	@Override
+	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(
+			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph, int k) {
 		VertexScorer<Vertex, Double> vertexScorer = getVertexScorer(subgraph);
 
 		Map<T, List<SurfaceFormSenseScore<T, U>>> senseScores = ModelTransformer.initializeScoresMap(
 				surfaceFormsSenses, factory);
 
-		for (List<SurfaceFormSenseScore<T, U>> sFSS : senseScores.values()) {
+		for (T key : senseScores.keySet()) {
+			List<SurfaceFormSenseScore<T, U>> sFSS = senseScores.get(key);
 			for (SurfaceFormSenseScore<T, U> senseScore : sFSS) {
 				Vertex v = Graphs.vertexByUri(subgraph, senseScore.sense().fullUri());
 				double score = (v == null) ? -1 : vertexScorer.getVertexScore(v);
@@ -54,6 +61,9 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 			}
 			Collections.sort(sFSS);
 			Collections.reverse(sFSS);
+
+			int toIndex = k > sFSS.size() ? sFSS.size() : k;
+			senseScores.put(key, sFSS.subList(0, toIndex));
 		}
 
 		return senseScores;

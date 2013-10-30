@@ -34,23 +34,10 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 	}
 
 	@Override
-	public abstract double globalConnectivityMeasure(Graph sensegraph);
-
-	@Override
-	public double globalConnectivityMeasure(Collection<Vertex> surfaceFormSenseAssigments, Graph subgraph) {
-		SubgraphConstruction sensegraphConstruction = SubgraphConstructionFactory.newDefaultImplementation(subgraph,
-				subgraphConstructionSettings);
-		Graph sensegraph = sensegraphConstruction.createSubgraph(CollectionUtils.split(surfaceFormSenseAssigments));
-		double score = globalConnectivityMeasure(sensegraph);
-		sensegraph.shutdown();
-		return score;
-	}
-
-	@Override
-	public double globalConnectivityMeasure(Map<T, U> surfaceFormSenseAssigments, Graph subgraph) {
-		Collection<Vertex> vertices = ModelTransformer
-				.verticesFromSenses(subgraph, surfaceFormSenseAssigments.values());
-		return globalConnectivityMeasure(vertices, subgraph);
+	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(
+			Collection<? extends SurfaceFormSenses<T, U>> surfaceFormsSenses, Graph subgraph, int k) {
+		// TODO think about how to simulate this
+		throw new UnsupportedOperationException("bestK not supported for global disambiguators");
 	}
 
 	@Override
@@ -69,6 +56,26 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 		//
 		// // TODO implement genetic and simulated annealing functionality
 		return null;
+	}
+
+	@Override
+	public double globalConnectivityMeasure(Collection<Vertex> surfaceFormSenseAssigments, Graph subgraph) {
+		SubgraphConstruction sensegraphConstruction = SubgraphConstructionFactory.newDefaultImplementation(subgraph,
+				subgraphConstructionSettings);
+		Graph sensegraph = sensegraphConstruction.createSubgraph(CollectionUtils.split(surfaceFormSenseAssigments));
+		double score = globalConnectivityMeasure(sensegraph);
+		sensegraph.shutdown();
+		return score;
+	}
+
+	@Override
+	public abstract double globalConnectivityMeasure(Graph sensegraph);
+
+	@Override
+	public double globalConnectivityMeasure(Map<T, U> surfaceFormSenseAssigments, Graph subgraph) {
+		Collection<Vertex> vertices = ModelTransformer
+				.verticesFromSenses(subgraph, surfaceFormSenseAssigments.values());
+		return globalConnectivityMeasure(vertices, subgraph);
 	}
 
 }
