@@ -74,7 +74,7 @@ class SubgraphConstructions {
 		// tradeoff between better performance of curly brackets notation
 		// vs. more convenient comma-separated traversed nodes
 		logger.info(String
-				.format("%s Stats (time [sec]: %.2f, subgraph vertices: %d, subgraph edges: %d, traversed nodes: %,d, max distance: %d",
+				.format("%s Stats: time [sec]: %.2f, subgraph vertices: %d, subgraph edges: %d, traversed nodes: %,d, max distance: %d",
 						clazz.getSimpleName(), (System.currentTimeMillis() - startTime) / 1000.0,
 						Graphs.numberOfVertices(subgraph), Graphs.numberOfEdges(subgraph), traversedNodes, maxDistance));
 	}
