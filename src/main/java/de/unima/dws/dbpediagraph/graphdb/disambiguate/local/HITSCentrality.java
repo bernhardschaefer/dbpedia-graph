@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
@@ -99,23 +98,6 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 		return scores;
 	}
 
-	private static Direction fromGraphType(GraphType graphType) {
-		Direction direction;
-		switch (graphType) {
-		case DIRECTED_GRAPH:
-			direction = Direction.IN;
-			break;
-		case UNDIRECTED_GRAPH:
-			direction = Direction.BOTH;
-			break;
-		default:
-			throw new IllegalArgumentException("GraphType needs to be either directed or undirected.");
-		}
-		return direction;
-	}
-
-	private final GraphType graphType;
-
 	private final double alpha;
 
 	private final int iterations;
@@ -123,8 +105,7 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 	private String name;
 
 	public HITSCentrality(GraphType graphType, double alpha, int iterations, ModelFactory<T, U> factory) {
-		super(factory);
-		this.graphType = graphType;
+		super(graphType, factory);
 		this.alpha = alpha;
 		this.iterations = iterations;
 	}
@@ -135,10 +116,8 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 
 	@Deprecated
 	private double authority(Vertex v, Map<Vertex, HitsScores> vScores) {
-		Direction direction = fromGraphType(graphType);
-
 		double authority = 0;
-		for (Vertex adjacentVertex : v.getVertices(direction))
+		for (Vertex adjacentVertex : v.getVertices(graphType.getDirection()))
 			authority += vScores.get(adjacentVertex).hub;
 		return authority;
 	}
@@ -169,9 +148,8 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 
 	@Deprecated
 	private double hub(Vertex v, Map<Vertex, HitsScores> vScores) {
-		Direction direction = fromGraphType(graphType);
 		double hub = 0;
-		for (Vertex adjacentVertex : v.getVertices(direction))
+		for (Vertex adjacentVertex : v.getVertices(graphType.getDirection()))
 			hub += vScores.get(adjacentVertex).authority;
 		return hub;
 	}
@@ -192,9 +170,8 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 	@Override
 	public String toString() {
 		if (name == null)
-			name = new StringBuilder(this.getClass().getSimpleName()).append(" (alpha: ").append(alpha)
-					.append(", iterations: ").append(iterations).append(", graphType: ").append(graphType).append(")")
-					.toString();
+			name = new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")
+					.append(iterations).append(")").toString();
 		return name;
 	}
 }

@@ -55,22 +55,19 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 
 	private static final double DEFAULT_ALPHA = 0;
 
-	private final GraphType graphType;
-
 	private final double alpha;
 	private final int iterations;
 
 	private String name;
 
-	public PageRankCentrality(GraphType graphType, ModelFactory<T, U> factory) {
-		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS, factory);
-	}
-
 	public PageRankCentrality(GraphType graphType, double alpha, int iterations, ModelFactory<T, U> factory) {
-		super(factory);
-		this.graphType = graphType;
+		super(graphType, factory);
 		this.alpha = alpha;
 		this.iterations = iterations;
+	}
+
+	public PageRankCentrality(GraphType graphType, ModelFactory<T, U> factory) {
+		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS, factory);
 	}
 
 	private double calculateScoreSum(PageRank<Vertex, Edge> pageRank, Graph subgraph) {
@@ -89,8 +86,8 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 	@Override
 	public String toString() {
 		if (name == null)
-			name = new StringBuilder(this.getClass().getSimpleName()).append(" (alpha: ").append(alpha)
-					.append(", iterations: ").append(iterations).append(")").toString();
+			name = new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")
+					.append(iterations).append(")").toString();
 		return name;
 	}
 

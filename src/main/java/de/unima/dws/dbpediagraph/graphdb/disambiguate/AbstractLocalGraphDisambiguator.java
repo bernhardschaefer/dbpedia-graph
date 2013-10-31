@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
+import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
@@ -21,8 +22,8 @@ import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
- * Skeleton class which eases the implementation of {@link GraphDisambiguator}.
- * Subclasses only need to implement {@link #getVertexScorer(Graph)}.
+ * Skeleton class which eases the implementation of {@link GraphDisambiguator}. Subclasses only need to implement
+ * {@link #getVertexScorer(Graph)}.
  * 
  * @author Bernhard Schäfer
  * 
@@ -31,9 +32,11 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 		LocalGraphDisambiguator<T, U> {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractLocalGraphDisambiguator.class);
 
-	protected ModelFactory<T, U> factory;
+	protected final GraphType graphType;
+	protected final ModelFactory<T, U> factory;
 
-	public AbstractLocalGraphDisambiguator(ModelFactory<T, U> factory) {
+	public AbstractLocalGraphDisambiguator(GraphType graphType, ModelFactory<T, U> factory) {
+		this.graphType = graphType;
 		this.factory = factory;
 	}
 
@@ -88,8 +91,8 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	}
 
 	/**
-	 * This method is called in {@link #disambiguate(Collection, Graph)} to
-	 * retrieve a score for each vertex corresponding to a sense.
+	 * This method is called in {@link #disambiguate(Collection, Graph)} to retrieve a score for each vertex
+	 * corresponding to a sense.
 	 * 
 	 * @param subgraph
 	 *            the subgraph that the vertices are contained in
@@ -97,4 +100,8 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	 */
 	protected abstract VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph);
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "[ graphType: " + graphType.getDirection() + " ]";
+	}
 }

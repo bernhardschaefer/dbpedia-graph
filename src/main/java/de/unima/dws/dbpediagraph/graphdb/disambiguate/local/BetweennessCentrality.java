@@ -43,21 +43,13 @@ public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> exten
 
 	}
 
-	private final GraphType graphType;
-
 	public BetweennessCentrality(GraphType graphType, ModelFactory<T, U> factory) {
-		super(factory);
-		this.graphType = graphType;
+		super(graphType, factory);
 	}
 
 	@Override
 	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
 		return new BetweennessVertexScorer(subgraph);
-	}
-
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + " (graphType: " + graphType + " )";
 	}
 
 }

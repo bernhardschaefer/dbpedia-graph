@@ -12,8 +12,7 @@ import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 
 /**
- * Graph Entropy global connectivity measure implemented as described in
- * Navigli&Lapata (2010).
+ * Graph Entropy global connectivity measure implemented as described in Navigli&Lapata (2010).
  * 
  * @author Bernhard Schäfer
  * 
@@ -27,7 +26,6 @@ public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends Abstra
 
 	@Override
 	public double globalConnectivityMeasure(Graph sensegraph) {
-
 		int totalVertices = Graphs.numberOfVertices(sensegraph);
 		int totalEdges = Graphs.numberOfEdges(sensegraph);
 
@@ -43,11 +41,6 @@ public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends Abstra
 		graphEntropy /= Math.log(totalVertices);
 
 		return graphEntropy;
-	}
-
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
 	}
 
 }

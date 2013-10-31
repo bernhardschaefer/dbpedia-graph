@@ -17,8 +17,7 @@ import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
 /**
- * Skeleton class which eases the implementation of {@link GraphDisambiguator}.
- * Subclasses only need to implement
+ * Skeleton class which eases the implementation of {@link GraphDisambiguator}. Subclasses only need to implement
  * {@link #globalConnectivityMeasure(Map, Graph)}.
  * 
  * @author Bernhard Schäfer
@@ -26,7 +25,7 @@ import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
  */
 public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense> implements
 		GlobalGraphDisambiguator<T, U> {
-	private final SubgraphConstructionSettings subgraphConstructionSettings;
+	protected final SubgraphConstructionSettings subgraphConstructionSettings;
 
 	public AbstractGlobalGraphDisambiguator(SubgraphConstructionSettings subgraphConstructionSettings) {
 		this.subgraphConstructionSettings = subgraphConstructionSettings;
@@ -73,6 +72,11 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 		Collection<Vertex> vertices = ModelTransformer
 				.verticesFromSenses(subgraph, surfaceFormSenseAssigments.values());
 		return globalConnectivityMeasure(vertices, subgraph);
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
 	}
 
 }

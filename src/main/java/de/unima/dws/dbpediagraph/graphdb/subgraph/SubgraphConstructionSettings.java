@@ -48,7 +48,7 @@ public final class SubgraphConstructionSettings {
 
 	final ExplorationThreshold explorationThreshold;
 	final EdgeFilter edgeFilter;
-	final GraphType graphType;
+	public final GraphType graphType;
 	/**
 	 * "the distance between two vertices in a graph is the <i>number of edges</i> in a shortest path connecting them."
 	 * 

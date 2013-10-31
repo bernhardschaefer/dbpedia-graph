@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 
 import org.apache.commons.collections15.Transformer;
 
-import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
@@ -60,7 +59,7 @@ public class DemoSubgraphConstruction {
 	static {
 		disambiguators = new ArrayList<>();
 		disambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
-		disambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(Direction.BOTH, factory));
+		disambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
 		disambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
 		disambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
 		disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));

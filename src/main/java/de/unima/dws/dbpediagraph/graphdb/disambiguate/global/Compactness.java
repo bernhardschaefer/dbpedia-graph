@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.AbstractGlobalGraphDisambiguator;
@@ -11,13 +12,11 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
-import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 
 /**
- * Compactness global connectivity measure implemented as described in
- * Navigli&Lapata (2010).
+ * Compactness global connectivity measure implemented as described in Navigli&Lapata (2010).
  * 
  * @author Bernhard Schäfer
  * 
@@ -25,13 +24,14 @@ import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 public class Compactness<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
 		implements GlobalGraphDisambiguator<T, U> {
 
-	public Compactness(SubgraphConstructionSettings settings) {
-		super(settings);
+	public Compactness(SubgraphConstructionSettings subgraphConstructionSettings) {
+		super(subgraphConstructionSettings);
 	}
 
 	@Override
 	public double globalConnectivityMeasure(Graph sensegraph) {
-		Distance<Vertex> distances = new UnweightedShortestPath<>(new GraphJungUndirected(sensegraph));
+		GraphJung<Graph> graphJung = Graphs.asGraphJung(subgraphConstructionSettings.graphType, sensegraph);
+		Distance<Vertex> distances = new UnweightedShortestPath<>(graphJung);
 		int sumDistances = 0;
 		for (Vertex source : sensegraph.getVertices()) {
 			Map<Vertex, Number> distancesFromSource = distances.getDistanceMap(source);
@@ -48,11 +48,6 @@ public class Compactness<T extends SurfaceForm, U extends Sense> extends Abstrac
 
 		double compactness = ((double) (max - sumDistances)) / (max - min);
 		return compactness;
-	}
-
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
 	}
 
 }

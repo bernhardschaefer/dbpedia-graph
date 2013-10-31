@@ -59,21 +59,13 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 
 	}
 
-	private final GraphType graphType;
-
 	public KPPCentrality(GraphType graphType, ModelFactory<T, U> factory) {
-		super(factory);
-		this.graphType = graphType;
+		super(graphType, factory);
 	}
 
 	@Override
 	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
 		return new KPPVertexScorer(subgraph);
-	}
-
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + " (graphType: " + graphType + " )";
 	}
 
 }

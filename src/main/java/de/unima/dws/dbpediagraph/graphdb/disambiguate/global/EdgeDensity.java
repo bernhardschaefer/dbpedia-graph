@@ -13,8 +13,7 @@ import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 
 /**
- * Edge density global connectivity measure implemented as described in
- * Navigli&Lapata (2010).
+ * Edge density global connectivity measure implemented as described in Navigli&Lapata (2010).
  * 
  * @author Bernhard Schäfer
  * 
@@ -22,8 +21,8 @@ import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 public class EdgeDensity<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
 		implements GlobalGraphDisambiguator<T, U> {
 
-	public EdgeDensity(SubgraphConstructionSettings settings) {
-		super(settings);
+	public EdgeDensity(SubgraphConstructionSettings subgraphConstructionSettings) {
+		super(subgraphConstructionSettings);
 	}
 
 	@Override
@@ -36,8 +35,4 @@ public class EdgeDensity<T extends SurfaceForm, U extends Sense> extends Abstrac
 		return totalEdges / edgesCompleteGraph;
 	}
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
-	}
 }
