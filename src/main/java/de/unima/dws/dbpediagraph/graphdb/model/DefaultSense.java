@@ -1,5 +1,11 @@
 package de.unima.dws.dbpediagraph.graphdb.model;
 
+/**
+ * Immutable default {@link Sense} implementation.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class DefaultSense implements Sense {
 	private final String fullUri;
 

@@ -12,7 +12,7 @@ import com.tinkerpop.blueprints.Graph;
  * @author Bernhard Schäfer
  * 
  */
-public class UriShortener {
+public final class UriShortener {
 	public static final Map<String, String> URI_TO_PREFIX;
 	static {
 		URI_TO_PREFIX = new LinkedHashMap<String, String>();

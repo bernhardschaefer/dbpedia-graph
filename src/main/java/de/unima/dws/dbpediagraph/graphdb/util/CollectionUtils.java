@@ -16,7 +16,13 @@ import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality.HitsScores;
 
-public class CollectionUtils {
+/**
+ * Noninstantiable static collection utility class.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
+public final class CollectionUtils {
 	public static <T> Collection<T> combine(Collection<Collection<T>> collections) {
 		Collection<T> combinedCollections = new ArrayList<T>();
 		for (Collection<T> c : collections)
@@ -31,12 +37,6 @@ public class CollectionUtils {
 		return copy;
 	}
 
-	public static <T> Collection<T> iterableToCollection(Iterable<T> itty) {
-		if (itty instanceof Collection)
-			return (Collection<T>) itty;
-		return Lists.newArrayList(itty);
-	}
-
 	public static <T> int iterableItemCount(Iterable<T> iterable) {
 		return iterableItemCount(iterable, Integer.MAX_VALUE);
 	}
@@ -44,29 +44,35 @@ public class CollectionUtils {
 	public static <T> int iterableItemCount(Iterable<T> iterable, int threshold) {
 		if (iterable instanceof Collection)
 			return ((Collection<T>) iterable).size();
+		return iteratorItemCount(iterable.iterator(), threshold);
+	}
 
+	public static <T> Collection<T> iterableToCollection(Iterable<T> itty) {
+		if (itty instanceof Collection)
+			return (Collection<T>) itty;
+		return Lists.newArrayList(itty);
+	}
+
+	private static int iteratorItemCount(Iterator<?> iter, int threshold) {
 		int counter = 0;
-		Iterator<T> iterator = iterable.iterator();
-		while (iterator.hasNext()) {
-			iterator.next();
+		while (iter.hasNext()) {
+			iter.next();
 			if (counter++ >= threshold)
 				return counter;
 		}
 		return counter;
 	}
 
-	public static int iteratorItemCount(Iterator<?> iter) {
-		int counter = 0;
-		while (iter.hasNext()) {
-			iter.next();
-			counter++;
+	public static <T> List<T> joinListValues(Map<?, List<T>> map) {
+		List<T> joinedValues = new ArrayList<>();
+		for (List<T> list : map.values()) {
+			joinedValues.addAll(list);
 		}
-		return counter;
+		return joinedValues;
 	}
 
 	/**
-	 * Remove all entries from collection a that are in collection b and return
-	 * a new collection.
+	 * Remove all entries from collection a that are in collection b and return a new collection.
 	 */
 	public static <T> Set<T> removeAll(Collection<T> a, Collection<T> b) {
 		Set<T> c = new HashSet<T>(a);
@@ -81,11 +87,8 @@ public class CollectionUtils {
 		return vertices;
 	}
 
-	public static <T> List<T> joinListValues(Map<?, List<T>> map) {
-		List<T> joinedValues = new ArrayList<>();
-		for (List<T> list : map.values()) {
-			joinedValues.addAll(list);
-		}
-		return joinedValues;
+	// prevent default constructor for noninstantiability
+	private CollectionUtils() {
+		throw new AssertionError();
 	}
 }

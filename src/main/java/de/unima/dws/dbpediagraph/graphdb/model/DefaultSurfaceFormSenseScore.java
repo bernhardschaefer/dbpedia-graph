@@ -1,9 +1,15 @@
 package de.unima.dws.dbpediagraph.graphdb.model;
 
+/**
+ * Immutable default {@link SurfaceFormSenseScore} implementation.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class DefaultSurfaceFormSenseScore implements SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> {
 	private final DefaultSurfaceForm surfaceForm;
 	private final DefaultSense sense;
-	private double score;
+	private final double score;
 
 	public DefaultSurfaceFormSenseScore(DefaultSurfaceForm surfaceForm, DefaultSense sense, double score) {
 		this.surfaceForm = surfaceForm;
@@ -13,22 +19,17 @@ public class DefaultSurfaceFormSenseScore implements SurfaceFormSenseScore<Defau
 
 	@Override
 	public int compareTo(SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> o) {
-		return Double.compare(score, o.getScore());
+		return Double.compare(score, o.score());
 	}
 
 	@Override
-	public double getScore() {
+	public double score() {
 		return score;
 	}
 
 	@Override
 	public DefaultSense sense() {
 		return sense;
-	}
-
-	@Override
-	public void setScore(double score) {
-		this.score = score;
 	}
 
 	@Override

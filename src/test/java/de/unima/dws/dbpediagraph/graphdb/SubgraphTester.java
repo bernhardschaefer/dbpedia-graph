@@ -15,13 +15,18 @@ import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
 /**
- * Test a {@link SubgraphConstruction} implementation using a {@link TestSet}.
- * Implementations are to be used in JUnit tests.
+ * Test a {@link SubgraphConstruction} implementation using a {@link TestSet}. Implementations are to be used in JUnit
+ * tests.
  * 
  * @author Bernhard Schäfer
  * 
  */
 public class SubgraphTester {
+
+	public static SubgraphConstructionSettings getNavigliSettings() {
+		return new SubgraphConstructionSettings.Builder().graphType(GraphType.UNDIRECTED_GRAPH)
+				.maxDistance(Integer.MAX_VALUE).build();
+	}
 
 	public static SubgraphTester newNavigliTester() {
 		return newNavigliTester(getNavigliSettings());
@@ -29,10 +34,6 @@ public class SubgraphTester {
 
 	public static SubgraphTester newNavigliTester(SubgraphConstructionSettings settings) {
 		return new SubgraphTester(TestSet.NAVIGLI_FILE_NAMES, settings);
-	}
-
-	public static SubgraphConstructionSettings getNavigliSettings() {
-		return new SubgraphConstructionSettings().graphType(GraphType.UNDIRECTED_GRAPH).maxDistance(Integer.MAX_VALUE);
 	}
 
 	private final Graph graph;

@@ -40,7 +40,7 @@ public class LocalDisambiguationTester {
 				LOCAL_PACKAGE_NAME);
 		this.localDisambiguator = localDisambiguator;
 
-		Map<DefaultSurfaceForm, List<DefaultSense>> sFSs = ModelTransformer.transformVerticesToMap(
+		Map<DefaultSurfaceForm, List<DefaultSense>> sFSs = ModelTransformer.surfaceFormSensesFromVertices(
 				subgraphData.allWordsSenses, DefaultModelFactory.INSTANCE);
 		actualDisambiguationResults = localDisambiguator.disambiguate(sFSs, subgraphData.getSubgraph());
 		actualAllScoresResults = CollectionUtils.joinListValues(localDisambiguator.allSurfaceFormSensesScores(sFSs,
@@ -58,8 +58,8 @@ public class LocalDisambiguationTester {
 			double expected = expectedDisambiguationResults.getResults().get(surfaceFormSenseScore.sense().fullUri())
 					.get(localDisambiguator.getClass());
 			logger.info("uri: {} actual weight: {} expected weight: {}", surfaceFormSenseScore.sense().fullUri(),
-					surfaceFormSenseScore.getScore(), expected);
-			Assert.assertEquals(expected, surfaceFormSenseScore.getScore(), ALLOWED_SCORE_DEVIATION);
+					surfaceFormSenseScore.score(), expected);
+			Assert.assertEquals(expected, surfaceFormSenseScore.score(), ALLOWED_SCORE_DEVIATION);
 		}
 	}
 

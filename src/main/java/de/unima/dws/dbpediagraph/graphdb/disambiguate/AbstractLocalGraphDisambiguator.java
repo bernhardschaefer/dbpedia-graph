@@ -3,6 +3,7 @@ package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,6 @@ import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
-import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
@@ -47,22 +47,23 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, int k) {
 		VertexScorer<Vertex, Double> vertexScorer = getVertexScorer(subgraph);
 
-		Map<T, List<SurfaceFormSenseScore<T, U>>> senseScores = ModelTransformer.initializeScoresMapFromMap(
-				surfaceFormsSenses, factory);
+		Map<T, List<SurfaceFormSenseScore<T, U>>> senseScores = new HashMap<>();
 
-		// TODO iterate over surfaceFormsSenses and omit initializer
-		for (T key : senseScores.keySet()) {
-			List<SurfaceFormSenseScore<T, U>> sFSS = senseScores.get(key);
-			for (SurfaceFormSenseScore<T, U> senseScore : sFSS) {
-				Vertex v = Graphs.vertexByUri(subgraph, senseScore.sense().fullUri());
+		// for each surface form store the k candidate senses with the highest
+		// score
+		for (T surfaceForm : surfaceFormsSenses.keySet()) {
+			List<U> sFSenses = surfaceFormsSenses.get(surfaceForm);
+
+			List<SurfaceFormSenseScore<T, U>> sFSS = new ArrayList<>();
+			for (U sense : sFSenses) { // get the score for each sense
+				Vertex v = Graphs.vertexByUri(subgraph, sense.fullUri());
 				double score = (v == null) ? -1 : vertexScorer.getVertexScore(v);
-				senseScore.setScore(score);
+				sFSS.add(factory.newSurfaceFormSenseScore(surfaceForm, sense, score));
 			}
 			Collections.sort(sFSS);
 			Collections.reverse(sFSS);
-
 			int toIndex = k > sFSS.size() ? sFSS.size() : k;
-			senseScores.put(key, sFSS.subList(0, toIndex));
+			senseScores.put(surfaceForm, sFSS.subList(0, toIndex));
 		}
 
 		return senseScores;

@@ -25,6 +25,9 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
+import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
+import de.unima.dws.dbpediagraph.graphdb.model.Sense;
+import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 
 /**
  * Basic File Utilities.
@@ -160,6 +163,26 @@ public final class FileUtils {
 				wordSenses[i] = uriPrefix + wordSenses[i];
 			wordsSenses.add(Arrays.asList(wordSenses));
 		}
+		return wordsSenses;
+	}
+
+	public static <T extends SurfaceForm, U extends Sense> List<U> sensesFromLine(String line, String uriPrefix,
+			ModelFactory<T, U> factory) {
+		List<U> senses = new ArrayList<>();
+		String[] wordSenses = line.split(FileUtils.DELIMITER);
+		for (int i = 0; i < wordSenses.length; i++) {
+			String uri = uriPrefix + wordSenses[i];
+			senses.add(factory.newSense(uri));
+		}
+		return senses;
+	}
+
+	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> surfaceFormsSensesFromFile(Class<?> clazz,
+			String fileName, String uriPrefix, ModelFactory<T, U> factory) throws IOException, URISyntaxException {
+		Map<T, List<U>> wordsSenses = new HashMap<>();
+		List<String> lines = FileUtils.readRelevantLinesFromFile(clazz, fileName);
+		for (String line : lines)
+			wordsSenses.put(factory.newSurfaceForm("test"), sensesFromLine(line, uriPrefix, factory));
 		return wordsSenses;
 	}
 

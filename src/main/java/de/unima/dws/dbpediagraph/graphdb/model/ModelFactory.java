@@ -3,7 +3,7 @@ package de.unima.dws.dbpediagraph.graphdb.model;
 import com.tinkerpop.blueprints.Vertex;
 
 /**
- * Abstract factory for creating sense and surface form related instances.
+ * Abstract factory for creating {@link Sense} and {@link SurfaceForm} related instances.
  * 
  * @author Bernhard Schäfer
  */

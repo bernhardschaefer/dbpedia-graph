@@ -1,15 +1,16 @@
 package de.unima.dws.dbpediagraph.graphdb.model;
 
-
+/**
+ * Holder of a score for a {@link Sense} that corresponds to a {@link SurfaceForm}.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public interface SurfaceFormSenseScore<T extends SurfaceForm, U extends Sense> extends
 		Comparable<SurfaceFormSenseScore<T, U>> {
-
-	double getScore();
+	double score();
 
 	U sense();
 
-	void setScore(double score);
-
 	T surfaceForm();
-
 }

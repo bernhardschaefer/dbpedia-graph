@@ -1,7 +1,5 @@
 package de.unima.dws.dbpediagraph.graphdb.model;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,48 +13,18 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
-import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
-//TODO reorganise and javadoc
-public class ModelTransformer {
+/**
+ * Noninstantiable Model transformer class that helps to transform between graph-based representations using
+ * {@link Vertex} and model-based representations using {@link Sense} and {@link SurfaceForm}.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
+public final class ModelTransformer {
 	private static final Logger logger = LoggerFactory.getLogger(ModelTransformer.class);
-	private static final double DEFAULT_SCORE = -1.0;
 
-	public static <T extends SurfaceForm, U extends Sense> Map<T, List<SurfaceFormSenseScore<T, U>>> initializeScoresMapFromMap(
-			Map<T, List<U>> surfaceFormsSenses, ModelFactory<T, U> factory) {
-		Map<T, List<SurfaceFormSenseScore<T, U>>> sFSensesMap = new HashMap<>();
-		for (Map.Entry<T, List<U>> sFSenses : surfaceFormsSenses.entrySet()) {
-			List<SurfaceFormSenseScore<T, U>> sFSensesList = new ArrayList<SurfaceFormSenseScore<T, U>>();
-			for (U sense : sFSenses.getValue()) {
-				sFSensesList.add(factory.newSurfaceFormSenseScore(sFSenses.getKey(), sense, DEFAULT_SCORE));
-			}
-			sFSensesMap.put(sFSenses.getKey(), sFSensesList);
-		}
-		return sFSensesMap;
-	}
-
-	public static <T extends SurfaceForm, U extends Sense> List<U> sensesFromLine(String line, String uriPrefix,
-			ModelFactory<T, U> factory) {
-		List<U> senses = new ArrayList<>();
-		String[] wordSenses = line.split(FileUtils.DELIMITER);
-		for (int i = 0; i < wordSenses.length; i++) {
-			String uri = uriPrefix + wordSenses[i];
-			senses.add(factory.newSense(uri));
-		}
-		return senses;
-	}
-
-	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> surfaceFormsSensesFromFile(Class<?> clazz,
-			String fileName, String uriPrefix, ModelFactory<T, U> factory) throws IOException, URISyntaxException {
-		Map<T, List<U>> wordsSenses = new HashMap<>();
-		List<String> lines = FileUtils.readRelevantLinesFromFile(clazz, fileName);
-		for (String line : lines)
-			wordsSenses.put(factory.newSurfaceForm("test"), sensesFromLine(line, uriPrefix, factory));
-		return wordsSenses;
-	}
-
-	public static <U extends Sense> List<U> transformVerticesToList(Collection<Vertex> vertices,
-			ModelFactory<?, U> factory) {
+	public static <U extends Sense> List<U> sensesFromVertices(Collection<Vertex> vertices, ModelFactory<?, U> factory) {
 		List<U> senses = new ArrayList<>();
 		for (Vertex v : vertices) {
 			senses.add(factory.newSense(v));
@@ -64,11 +32,11 @@ public class ModelTransformer {
 		return senses;
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> transformVerticesToMap(
+	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> surfaceFormSensesFromVertices(
 			Collection<Collection<Vertex>> allWordsSenses, ModelFactory<T, U> factory) {
 		Map<T, List<U>> surfaceFormSenses = new HashMap<>();
 		for (Collection<Vertex> wordSenses : allWordsSenses)
-			surfaceFormSenses.put(factory.newSurfaceForm("test"), transformVerticesToList(wordSenses, factory));
+			surfaceFormSenses.put(factory.newSurfaceForm("test"), sensesFromVertices(wordSenses, factory));
 		return surfaceFormSenses;
 	}
 
@@ -95,4 +63,8 @@ public class ModelTransformer {
 		return wordVertices;
 	}
 
+	// suppress default constructor for noninstantiability
+	private ModelTransformer() {
+		throw new AssertionError();
+	}
 }

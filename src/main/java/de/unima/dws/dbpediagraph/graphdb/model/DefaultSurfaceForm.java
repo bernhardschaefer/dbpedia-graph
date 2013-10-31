@@ -1,5 +1,11 @@
 package de.unima.dws.dbpediagraph.graphdb.model;
 
+/**
+ * Immutable default {@link SurfaceForm} implementation.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class DefaultSurfaceForm implements SurfaceForm {
 	private final String name;
 

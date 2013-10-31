@@ -17,13 +17,12 @@ import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
 /**
- * Noninstantiable utility class for static methods helping in
- * {@link SubgraphConstruction}.
+ * Noninstantiable utility class for static methods helping in {@link SubgraphConstruction}.
  * 
  * @author Bernhard Schäfer
  * 
  */
-class SubgraphConstructions {
+final class SubgraphConstructions {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphConstructions.class);
 
 	public static void addIntermediateNodes(List<Edge> path, Set<Vertex> vertices) {

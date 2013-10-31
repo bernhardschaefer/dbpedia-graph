@@ -64,20 +64,21 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 
 		private final HITS<Vertex, Edge> hits;
 
+		// private final Map<Vertex, HitsScores> hitsScores;
+
 		public HITSVertexScorer(Graph subgraph) {
 			GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
 			hits = new HITS<Vertex, Edge>(graphJung, alpha);
 			hits.acceptDisconnectedGraph(true);
 			hits.setMaxIterations(iterations);
 			hits.evaluate();
+			// hitsScores = calculateHitsScores(subgraph);
 		}
 
 		@Override
 		public Double getVertexScore(Vertex v) {
 			Scores scores = hits.getVertexScore(v);
-			// wUris.add(new
-			// WeightedSense(v.getProperty(GraphConfig.URI_PROPERTY).toString(),
-			// scores.get(v).authority));
+			// HitsScores scores = hitsScores.get(v);
 			double authority = CollectionUtils.iterableItemCount(Graphs.connectedEdges(v, graphType)) != 0 ? scores.authority
 					: 0;
 			return authority;
@@ -98,6 +99,21 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 		return scores;
 	}
 
+	private static Direction fromGraphType(GraphType graphType) {
+		Direction direction;
+		switch (graphType) {
+		case DIRECTED_GRAPH:
+			direction = Direction.IN;
+			break;
+		case UNDIRECTED_GRAPH:
+			direction = Direction.BOTH;
+			break;
+		default:
+			throw new IllegalArgumentException("GraphType needs to be either directed or undirected.");
+		}
+		return direction;
+	}
+
 	private final GraphType graphType;
 
 	private final double alpha;
@@ -106,10 +122,6 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 
 	private String name;
 
-	public HITSCentrality(GraphType graphType, ModelFactory<T, U> factory) {
-		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS, factory);
-	}
-
 	public HITSCentrality(GraphType graphType, double alpha, int iterations, ModelFactory<T, U> factory) {
 		super(factory);
 		this.graphType = graphType;
@@ -117,15 +129,13 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 		this.iterations = iterations;
 	}
 
+	public HITSCentrality(GraphType graphType, ModelFactory<T, U> factory) {
+		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS, factory);
+	}
+
 	@Deprecated
 	private double authority(Vertex v, Map<Vertex, HitsScores> vScores) {
-		Direction direction = null;
-		switch (graphType) {
-		case DIRECTED_GRAPH:
-			direction = Direction.IN;
-		case UNDIRECTED_GRAPH:
-			direction = Direction.BOTH;
-		}
+		Direction direction = fromGraphType(graphType);
 
 		double authority = 0;
 		for (Vertex adjacentVertex : v.getVertices(direction))
@@ -159,14 +169,7 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 
 	@Deprecated
 	private double hub(Vertex v, Map<Vertex, HitsScores> vScores) {
-		Direction direction = null;
-		switch (graphType) {
-		case DIRECTED_GRAPH:
-			direction = Direction.OUT;
-		case UNDIRECTED_GRAPH:
-			direction = Direction.BOTH;
-		}
-
+		Direction direction = fromGraphType(graphType);
 		double hub = 0;
 		for (Vertex adjacentVertex : v.getVertices(direction))
 			hub += vScores.get(adjacentVertex).authority;
