@@ -4,11 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.tinkerpop.blueprints.Graph;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
-
 /**
- * Instance-controlled factory class for retrieving a
- * {@link SubgraphConstruction} implementation.
+ * Instance-controlled factory for retrieving a {@link SubgraphConstruction} implementation.
  * 
  * @author Bernhard Schäfer
  * 
@@ -16,23 +13,19 @@ import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 public final class SubgraphConstructionFactory {
 	private static final Class<? extends SubgraphConstruction> DEFAULT_SUBGRAPH_CONSTRUCTION = SubgraphConstructionIterative.class;
 
-	public static Class<? extends SubgraphConstruction> defaultClass() {
-		return DEFAULT_SUBGRAPH_CONSTRUCTION;
+	public static SubgraphConstruction newSubgraphConstruction(Graph graph, SubgraphConstructionSettings settings) {
+		return newSubgraphConstruction(graph, settings, DEFAULT_SUBGRAPH_CONSTRUCTION);
 	}
 
-	public static SubgraphConstruction newDefaultImplementation(Graph graph, SubgraphConstructionSettings settings) {
-		return newInstance(defaultClass(), settings, graph);
-	}
-
-	public static SubgraphConstruction newInstance(Class<? extends SubgraphConstruction> subgraphConstructionClass,
-			SubgraphConstructionSettings settings, Graph graph) {
+	public static SubgraphConstruction newSubgraphConstruction(Graph graph, SubgraphConstructionSettings settings,
+			Class<? extends SubgraphConstruction> subgraphConstructionClass) {
 		SubgraphConstruction subgraphConstruction = null;
 		try {
 			subgraphConstruction = subgraphConstructionClass.getConstructor(Graph.class,
 					SubgraphConstructionSettings.class).newInstance(graph, settings);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
-			throw new RuntimeException("Error while trying to construct test graph.", e);
+			throw new RuntimeException("Error while trying to create instance of subgraph construction.", e);
 		}
 		return subgraphConstruction;
 	}
@@ -40,9 +33,5 @@ public final class SubgraphConstructionFactory {
 	// Suppress default constructor for noninstantiability
 	private SubgraphConstructionFactory() {
 		throw new AssertionError();
-	}
-
-	public static SubgraphConstruction newDefaultImplementation(SubgraphConstructionSettings settings) {
-		return newDefaultImplementation(GraphFactory.getDBpediaGraph(), settings);
 	}
 }

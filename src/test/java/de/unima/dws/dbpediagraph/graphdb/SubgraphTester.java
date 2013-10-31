@@ -61,7 +61,7 @@ public class SubgraphTester {
 			throw new RuntimeException("Error while trying to construct test graph.", e);
 		}
 
-		this.subgraphConstruction = SubgraphConstructionFactory.newDefaultImplementation(graph, settings);
+		this.subgraphConstruction = SubgraphConstructionFactory.newSubgraphConstruction(graph, settings);
 		subgraph = subgraphConstruction.createSubgraph(allWordsSenses);
 	}
 

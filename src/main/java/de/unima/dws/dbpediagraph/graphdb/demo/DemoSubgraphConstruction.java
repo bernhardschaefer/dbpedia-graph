@@ -78,7 +78,7 @@ public class DemoSubgraphConstruction {
 
 	private static <T extends SurfaceForm, U extends Sense> void demo(Graph graph, Map<T, List<U>> surfaceFormsSenses,
 			Collection<GraphDisambiguator<T, U>> disambiguators) {
-		SubgraphConstruction sc = SubgraphConstructionFactory.newDefaultImplementation(graph,
+		SubgraphConstruction sc = SubgraphConstructionFactory.newSubgraphConstruction(graph,
 				new SubgraphConstructionSettings.Builder().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build());
 		Graph subGraph = sc.createSubgraph(surfaceFormsSenses);
 

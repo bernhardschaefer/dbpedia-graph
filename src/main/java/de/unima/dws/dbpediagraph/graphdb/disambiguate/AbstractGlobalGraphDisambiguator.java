@@ -57,7 +57,7 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 
 	@Override
 	public double globalConnectivityMeasure(Collection<Vertex> surfaceFormSenseAssigments, Graph subgraph) {
-		SubgraphConstruction sensegraphConstruction = SubgraphConstructionFactory.newDefaultImplementation(subgraph,
+		SubgraphConstruction sensegraphConstruction = SubgraphConstructionFactory.newSubgraphConstruction(subgraph,
 				subgraphConstructionSettings);
 		Graph sensegraph = sensegraphConstruction.createSubgraph(CollectionUtils.split(surfaceFormSenseAssigments));
 		double score = globalConnectivityMeasure(sensegraph);
