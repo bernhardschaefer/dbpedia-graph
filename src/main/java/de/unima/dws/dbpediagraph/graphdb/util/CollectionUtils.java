@@ -3,6 +3,8 @@ package de.unima.dws.dbpediagraph.graphdb.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,6 +25,16 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality.HitsS
  * 
  */
 public final class CollectionUtils {
+	/**
+	 * Return the best k entries from the collection according to the provided comparator.
+	 */
+	public static <T> List<T> bestK(Collection<T> collection, int k, Comparator<T> comparator) {
+		List<T> sortedResources = new ArrayList<>(collection);
+		Collections.sort(sortedResources, comparator);
+		collection = sortedResources.subList(0, k);
+		return sortedResources;
+	}
+
 	public static <T> Collection<T> combine(Collection<Collection<T>> collections) {
 		Collection<T> combinedCollections = new ArrayList<T>();
 		for (Collection<T> c : collections)
@@ -80,11 +92,11 @@ public final class CollectionUtils {
 		return c;
 	}
 
-	public static Collection<Collection<Vertex>> split(Collection<Vertex> senses) {
-		Collection<Collection<Vertex>> vertices = new ArrayList<>();
-		for (Vertex v : senses)
-			vertices.add(Arrays.asList(v));
-		return vertices;
+	public static <T> Collection<Collection<T>> split(Collection<T> collection) {
+		Collection<Collection<T>> splitted = new ArrayList<>();
+		for (T entry : collection)
+			splitted.add(Arrays.asList(entry));
+		return splitted;
 	}
 
 	// prevent default constructor for noninstantiability

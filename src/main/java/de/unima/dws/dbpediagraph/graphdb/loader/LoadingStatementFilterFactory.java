@@ -13,7 +13,7 @@ public class LoadingStatementFilterFactory {
 	 *            A configuration object where the class is looked up.
 	 * @return A {@link LoadingStatementFilter} instance.
 	 */
-	public static LoadingStatementFilter getImpl(final Configuration configuration) {
+	public static LoadingStatementFilter newLoadingStatementFilter(final Configuration configuration) {
 		final String clazz = configuration.getString(LOADING_STATEMENT_FILTER_KEY, null);
 
 		if (clazz == null) {

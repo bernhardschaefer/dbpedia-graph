@@ -30,7 +30,7 @@ public final class GraphConfig {
 	public static final String DBPEDIA_RESOURCE_PREFIX = "http://dbpedia.org/resource/";
 	public static final String EDGE_LABEL = "pred";
 
-	private static final String GRAPH_PROPERTY_FILE = "graph.properties";
+	private static final String GRAPHDB_PROPERTY_FILE = "graphdb.properties";
 
 	private static final String GRAPH_DIRECTORY_KEY = "graph.directory";
 
@@ -49,9 +49,9 @@ public final class GraphConfig {
 
 	static {
 		try {
-			config = new PropertiesConfiguration(GRAPH_PROPERTY_FILE);
+			config = new PropertiesConfiguration(GRAPHDB_PROPERTY_FILE);
 		} catch (ConfigurationException e) {
-			throw new IllegalArgumentException(GRAPH_PROPERTY_FILE + " could not be loaded.", e);
+			throw new IllegalArgumentException(GRAPHDB_PROPERTY_FILE + " could not be loaded.", e);
 		}
 	}
 
@@ -82,6 +82,7 @@ public final class GraphConfig {
 	@SuppressWarnings("unchecked")
 	public static <T extends SurfaceForm, U extends Sense> LocalGraphDisambiguator<T, U> newLocalDisambiguator(
 			GraphType graphType, ModelFactory<T, U> factory) {
+		// TODO log if no disambiguator in config
 		String disambiguatorClassName = config.getString(LOCAL_DISAMBIGUATOR_KEY, DEFAULT_LOCAL_DISAMBIGUATOR);
 		try {
 			@SuppressWarnings("rawtypes")

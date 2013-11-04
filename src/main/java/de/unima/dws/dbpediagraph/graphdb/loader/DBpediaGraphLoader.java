@@ -31,7 +31,7 @@ import de.unima.dws.dbpediagraph.graphdb.util.LoadingMetrics;
  * @author Bernhard Schäfer
  * 
  */
-public class DBpediaGraphLoader {
+public final class DBpediaGraphLoader {
 
 	/**
 	 * The buffer size for batch importing. Every time the buffer fills up its vertices and edges are persisted to the
@@ -81,7 +81,7 @@ public class DBpediaGraphLoader {
 			LoadingMetrics metric = new LoadingMetrics(f.getName());
 
 			// get appropriate handler
-			LoadingStatementFilter filter = LoadingStatementFilterFactory.getImpl(GraphConfig.config());
+			LoadingStatementFilter filter = LoadingStatementFilterFactory.newLoadingStatementFilter(GraphConfig.config());
 			RDFHandlerVerbose handler = new BatchHandler(graph, filter);
 
 			// get appropriate parser

@@ -52,8 +52,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 
 		Map<T, List<SurfaceFormSenseScore<T, U>>> senseScores = new HashMap<>();
 
-		// for each surface form store the k candidate senses with the highest
-		// score
+		// for each surface form store the k candidate senses with the highest score
 		for (T surfaceForm : surfaceFormsSenses.keySet()) {
 			List<U> sFSenses = surfaceFormsSenses.get(surfaceForm);
 

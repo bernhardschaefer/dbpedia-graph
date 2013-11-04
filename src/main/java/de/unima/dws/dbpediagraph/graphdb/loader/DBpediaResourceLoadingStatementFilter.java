@@ -17,13 +17,11 @@ class DBpediaResourceLoadingStatementFilter implements LoadingStatementFilter {
 	@Override
 	public boolean isValidStatement(Statement st) {
 		// continue if object is literal
-		if (st.getObject() instanceof Literal) {
+		if (st.getObject() instanceof Literal)
 			return false;
-		}
 
-		if (!st.getObject().stringValue().startsWith(GraphConfig.DBPEDIA_RESOURCE_PREFIX)) {
+		if (!st.getObject().stringValue().startsWith(GraphConfig.DBPEDIA_RESOURCE_PREFIX))
 			return false;
-		}
 
 		return true;
 	}
