@@ -1,8 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.junit.Assert;
@@ -24,9 +22,7 @@ public class GlobalDisambiguationTester implements DisambiguationTester {
 	private static final double ALLOWED_SCORE_DEVIATION = 0.01;
 
 	private final GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator;
-
 	private final ExpectedDisambiguationResults expectedDisambiguationData;
-
 	private final SubgraphTester subgraphData;
 
 	public GlobalDisambiguationTester(GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator,
@@ -40,8 +36,7 @@ public class GlobalDisambiguationTester implements DisambiguationTester {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData#
-	 * compareDisambiguationResults()
+	 * @see de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData# compareDisambiguationResults()
 	 */
 	@Override
 	public void compareDisambiguationResults() {

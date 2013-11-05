@@ -2,9 +2,7 @@ package de.unima.dws.dbpediagraph.graphdb;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.*;
 
 import com.tinkerpop.blueprints.Graph;
 
@@ -12,9 +10,7 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.GlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.global.Compactness;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.DegreeCentrality;
-import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
-import de.unima.dws.dbpediagraph.graphdb.model.Sense;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.model.*;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 
 /**
@@ -35,11 +31,9 @@ public final class GraphConfig {
 	private static final String GRAPH_DIRECTORY_KEY = "graph.directory";
 
 	private static final String DEFAULT_LOCAL_DISAMBIGUATOR = DegreeCentrality.class.getName();
-
 	private static final String LOCAL_DISAMBIGUATOR_KEY = "local.graph.disambiguator";
 
 	private static final String DEFAULT_GLOBAL_DISAMBIGUATOR = Compactness.class.getName();
-
 	private static final String GLOBAL_DISAMBIGUATOR_KEY = "global.graph.disambiguator";;
 
 	/**

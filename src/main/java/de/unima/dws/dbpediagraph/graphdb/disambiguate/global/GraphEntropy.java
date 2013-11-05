@@ -26,8 +26,8 @@ public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends Abstra
 
 	@Override
 	public double globalConnectivityMeasure(Graph sensegraph) {
-		int totalVertices = Graphs.numberOfVertices(sensegraph);
-		int totalEdges = Graphs.numberOfEdges(sensegraph);
+		int totalVertices = Graphs.verticesCount(sensegraph);
+		int totalEdges = Graphs.edgesCount(sensegraph);
 
 		double graphEntropy = 0;
 

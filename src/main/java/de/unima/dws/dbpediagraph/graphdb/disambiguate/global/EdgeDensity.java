@@ -27,9 +27,9 @@ public class EdgeDensity<T extends SurfaceForm, U extends Sense> extends Abstrac
 
 	@Override
 	public double globalConnectivityMeasure(Graph sensegraph) {
-		int totalEdges = Graphs.numberOfEdges(checkNotNull(sensegraph));
+		int totalEdges = Graphs.edgesCount(checkNotNull(sensegraph));
 		checkArgument(totalEdges != 0, " the provided graph cannot contain 0 vertices.");
-		int totalVertices = Graphs.numberOfVertices(sensegraph);
+		int totalVertices = Graphs.verticesCount(sensegraph);
 		// binomial (v over 2) === v * (v-1) / 2
 		double edgesCompleteGraph = (totalVertices * (totalVertices - 1)) / 2.0;
 		return totalEdges / edgesCompleteGraph;

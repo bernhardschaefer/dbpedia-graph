@@ -1,17 +1,7 @@
 package de.unima.dws.dbpediagraph.graphdb.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.tinkerpop.blueprints.Vertex;
@@ -25,6 +15,7 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality.HitsS
  * 
  */
 public final class CollectionUtils {
+
 	/**
 	 * Return the best k entries from the collection according to the provided comparator.
 	 */

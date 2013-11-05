@@ -25,7 +25,7 @@ public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends Ab
 		private final int verticesCount;
 
 		public DegreeVertexScorer(Graph subgraph) {
-			this.verticesCount = Graphs.numberOfVertices(subgraph);
+			this.verticesCount = Graphs.verticesCount(subgraph);
 		}
 
 		@Override

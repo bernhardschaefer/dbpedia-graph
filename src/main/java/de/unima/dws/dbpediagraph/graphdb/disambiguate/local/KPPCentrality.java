@@ -32,7 +32,7 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 			this.subgraph = subgraph;
 			GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
 			distances = new UnweightedShortestPath<>(graphJung);
-			numberOfVertices = Graphs.numberOfVertices(subgraph);
+			numberOfVertices = Graphs.verticesCount(subgraph);
 		}
 
 		@Override

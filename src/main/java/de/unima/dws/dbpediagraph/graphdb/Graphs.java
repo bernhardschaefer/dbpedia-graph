@@ -1,19 +1,11 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tinkerpop.blueprints.Direction;
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
@@ -62,12 +54,12 @@ public final class Graphs {
 			addVertexByUri(graph, v.getProperty(GraphConfig.URI_PROPERTY).toString());
 	}
 
-	public static GraphJung<Graph> asGraphJung(GraphType graphType, Graph subgraph) {
+	public static GraphJung<Graph> asGraphJung(GraphType graphType, Graph graph) {
 		switch (graphType) {
 		case DIRECTED_GRAPH:
-			return new GraphJung<Graph>(subgraph);
+			return new GraphJung<Graph>(graph);
 		case UNDIRECTED_GRAPH:
-			return new GraphJungUndirected(subgraph);
+			return new GraphJungUndirected(graph);
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -106,6 +98,10 @@ public final class Graphs {
 		return vertices;
 	}
 
+	public static int edgesCount(Graph graph) {
+		return CollectionUtils.iterableItemCount(graph.getEdges());
+	}
+
 	public static boolean isEmptyGraph(Graph graph) {
 		return !graph.getVertices().iterator().hasNext();
 	}
@@ -117,18 +113,10 @@ public final class Graphs {
 		return false;
 	}
 
-	public static boolean isVertexInGraph(Vertex v, Graph subGraph) {
+	public static boolean isVertexInGraph(Vertex v, Graph graph) {
 		String uri = Graphs.uriOfVertex(v);
-		Vertex subGraphVertex = vertexByUri(subGraph, uri);
-		return subGraphVertex != null;
-	}
-
-	public static int numberOfEdges(Graph subgraph) {
-		return CollectionUtils.iterableItemCount(subgraph.getEdges());
-	}
-
-	public static int numberOfVertices(Graph subgraph) {
-		return CollectionUtils.iterableItemCount(subgraph.getVertices());
+		Vertex graphVertex = vertexByUri(graph, uri);
+		return graphVertex != null;
 	}
 
 	public static Vertex oppositeVertexSafe(Edge edge, Vertex vertex) {
@@ -221,6 +209,11 @@ public final class Graphs {
 				logger.warn("No vertex found for uri {}", uri);
 		}
 		return vertices;
+	}
+
+	public static int verticesCount(Graph graph) {
+		// return new GremlinPipeline<Object, Object>(graph.getVertices()).count();
+		return CollectionUtils.iterableItemCount(graph.getVertices());
 	}
 
 	public static Set<Vertex> verticesOfEdges(Collection<Edge> edges) {

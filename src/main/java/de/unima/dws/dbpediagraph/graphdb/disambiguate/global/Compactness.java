@@ -41,7 +41,7 @@ public class Compactness<T extends SurfaceForm, U extends Sense> extends Abstrac
 			}
 		}
 
-		int totalVertices = Graphs.numberOfVertices(sensegraph);
+		int totalVertices = Graphs.verticesCount(sensegraph);
 		int min = totalVertices * (totalVertices - 1);
 		int K = totalVertices; // TODO find out what k actually means
 		int max = K * min;

@@ -9,16 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.model.DefaultModelFactory;
-import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
-import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
-import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
+import de.unima.dws.dbpediagraph.graphdb.model.*;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
 /**
- * Tests a {@link GraphDisambiguator} class using a {@link SubgraphTester} and a
- * {@link TestSet}. Is used in JUnit tests.
+ * Tests a {@link GraphDisambiguator} class using a {@link SubgraphTester} and a {@link TestSet}. Is used in JUnit
+ * tests.
  * 
  * @author Bernhard Schäfer
  * 

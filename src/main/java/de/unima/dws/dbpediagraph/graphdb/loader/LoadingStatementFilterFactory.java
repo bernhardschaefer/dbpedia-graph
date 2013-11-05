@@ -26,7 +26,7 @@ public class LoadingStatementFilterFactory {
 			filterClass = Class.forName(clazz);
 		} catch (ClassNotFoundException cnfe) {
 			throw new RuntimeException(String.format(
-					"[%s] could not find [%s].  Ensure that the jar is in the classpath.",
+					"[%s] could not find [%s].  Ensure that the configured class name is correct.",
 					LoadingStatementFilterFactory.class.getName(), clazz));
 		}
 

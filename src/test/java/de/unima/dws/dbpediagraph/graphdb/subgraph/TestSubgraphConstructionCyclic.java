@@ -49,12 +49,12 @@ public class TestSubgraphConstructionCyclic {
 
 	@Test
 	public void testNumberOfEdges() {
-		assertEquals(subGraphData.expectedSubgraphEdges.size(), Graphs.numberOfEdges(subGraphData.getSubgraph()));
+		assertEquals(subGraphData.expectedSubgraphEdges.size(), Graphs.edgesCount(subGraphData.getSubgraph()));
 	}
 
 	@Test
 	public void testNumberOfVertices() {
-		assertEquals(subGraphData.expectedSubgraphVertices.size(), Graphs.numberOfVertices(subGraphData.getSubgraph()));
+		assertEquals(subGraphData.expectedSubgraphVertices.size(), Graphs.verticesCount(subGraphData.getSubgraph()));
 	}
 
 }

@@ -31,7 +31,7 @@ public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> exten
 		public BetweennessVertexScorer(Graph subgraph) {
 			GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
 			betweenness = new edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge>(graphJung);
-			verticesCount = Graphs.numberOfVertices(subgraph);
+			verticesCount = Graphs.verticesCount(subgraph);
 		}
 
 		@Override

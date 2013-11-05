@@ -10,7 +10,7 @@ import org.openrdf.model.Statement;
  * @author Bernhard Schäfer
  * 
  */
-public class DBpediaCompleteLoadingStatementFilter implements LoadingStatementFilter {
+class DBpediaCompleteLoadingStatementFilter implements LoadingStatementFilter {
 
 	/**
 	 * valid uri prefixes from http://dbpedia.org/snorql/.

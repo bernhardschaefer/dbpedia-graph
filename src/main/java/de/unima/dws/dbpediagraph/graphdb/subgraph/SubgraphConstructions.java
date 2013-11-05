@@ -1,20 +1,13 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tinkerpop.blueprints.Direction;
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphType;
-import de.unima.dws.dbpediagraph.graphdb.Graphs;
+import de.unima.dws.dbpediagraph.graphdb.*;
 
 /**
  * Noninstantiable utility class for static methods helping in {@link SubgraphConstruction}.
@@ -75,7 +68,7 @@ final class SubgraphConstructions {
 		logger.info(String
 				.format("%s Stats: time [sec]: %.2f, subgraph vertices: %d, subgraph edges: %d, traversed nodes: %,d, max distance: %d",
 						clazz.getSimpleName(), (System.currentTimeMillis() - startTime) / 1000.0,
-						Graphs.numberOfVertices(subgraph), Graphs.numberOfEdges(subgraph), traversedNodes, maxDistance));
+						Graphs.verticesCount(subgraph), Graphs.edgesCount(subgraph), traversedNodes, maxDistance));
 	}
 
 	public static String toStringPath(List<Edge> path, Vertex start, Vertex end, GraphType graphType) {
