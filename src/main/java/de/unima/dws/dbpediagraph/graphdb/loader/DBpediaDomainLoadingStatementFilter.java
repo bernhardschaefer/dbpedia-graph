@@ -4,7 +4,8 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 
 /**
- * Filter that yields all statement with a DBpedia URI as object (http://dbpedia.org/*).
+ * Filter that yields all statement with a DBpedia URI as object (http://dbpedia.org/*). This implementation is somewhat
+ * inconsistent since it partly includes the class hierarchy.
  * 
  * @author Bernhard Schäfer
  * 
