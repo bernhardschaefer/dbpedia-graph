@@ -54,6 +54,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 				double score = (v == null) ? -1 : vertexScorer.getVertexScore(v);
 				sFSS.add(factory.newSurfaceFormSenseScore(surfaceForm, sense, score));
 			}
+			// TODO maybe this should be changed to ascending order
 			Collections.sort(sFSS);
 			Collections.reverse(sFSS);
 			int toIndex = k > sFSS.size() ? sFSS.size() : k;
