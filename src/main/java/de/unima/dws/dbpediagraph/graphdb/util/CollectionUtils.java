@@ -74,6 +74,14 @@ public final class CollectionUtils {
 		return joinedValues;
 	}
 
+	public static <T> Set<T> joinSetValues(Map<?, Set<T>> map) {
+		Set<T> joinedValues = new HashSet<>();
+		for (Set<T> list : map.values()) {
+			joinedValues.addAll(list);
+		}
+		return joinedValues;
+	}
+
 	/**
 	 * Remove all entries from collection a that are in collection b and return a new collection.
 	 */
@@ -93,5 +101,14 @@ public final class CollectionUtils {
 	// prevent default constructor for noninstantiability
 	private CollectionUtils() {
 		throw new AssertionError();
+	}
+
+	public static int countCollectionValues(Map<?, ? extends Collection<?>> map) {
+		int counter = 0;
+		for (Collection<?> c : map.values()) {
+			if (c != null)
+				counter += c.size();
+		}
+		return counter;
 	}
 }
