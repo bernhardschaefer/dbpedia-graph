@@ -4,7 +4,7 @@ import org.apache.commons.configuration.Configuration;
 
 public class LoadingStatementFilterFactory {
 
-	private static final String LOADING_STATEMENT_FILTER_KEY = "loading.filter";
+	private static final String LOADING_STATEMENT_FILTER_KEY = "loading.filter.impl";
 
 	/**
 	 * Get a {@link LoadingStatementFilter} implementation.
