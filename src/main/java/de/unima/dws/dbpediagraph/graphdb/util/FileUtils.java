@@ -4,13 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
+import com.google.common.io.LineProcessor;
+import com.google.common.io.Resources;
 import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.graphdb.*;
@@ -72,9 +73,9 @@ public final class FileUtils {
 		if (lines.isEmpty())
 			throw new RuntimeException(fileName + "file shouldnt be empty.");
 
-		String[] headers = lines.remove(0).split(DELIMITER);
+		String[] headers = lines.get(0).split(DELIMITER);
 
-		for (String line : lines) {
+		for (String line : lines.subList(1, lines.size())) {
 			String[] values = line.split(DELIMITER);
 			String uri = values[0];
 
@@ -118,6 +119,23 @@ public final class FileUtils {
 		return graph;
 	}
 
+	private static class NonEmptyNonCommentLinesCollector implements LineProcessor<List<String>> {
+		final ImmutableList.Builder<String> builder = ImmutableList.builder();
+		private static String PREFIX = "#";
+
+		@Override
+		public boolean processLine(String line) {
+			if (!line.trim().isEmpty() && !line.startsWith(PREFIX))
+				builder.add(line);
+			return true;
+		}
+
+		@Override
+		public ImmutableList<String> getResult() {
+			return builder.build();
+		}
+	};
+
 	/**
 	 * Read all lines from a file and return all non-empty and non-comment lines (comment lines start with '#').
 	 * 
@@ -126,17 +144,10 @@ public final class FileUtils {
 	 */
 	public static List<String> readRelevantLinesFromFile(Class<?> clazz, String fileName) throws IOException,
 			URISyntaxException {
-		URL url = clazz.getResource(fileName);
-		if (url == null)
+		URL resource = clazz.getResource(fileName);
+		if (resource == null)
 			throw new IllegalArgumentException("File cannot be found: " + fileName);
-		List<String> lines = Files.readAllLines(Paths.get(url.toURI()), StandardCharsets.UTF_8);
-
-		Iterator<String> iter = lines.iterator();
-		while (iter.hasNext()) {
-			String line = iter.next();
-			if (line.trim().isEmpty() || line.startsWith("#"))
-				iter.remove();
-		}
+		List<String> lines = Resources.readLines(resource, Charsets.UTF_8, new NonEmptyNonCommentLinesCollector());
 		return lines;
 	}
 
