@@ -5,9 +5,8 @@ import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.google.common.base.Predicate;
+import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
@@ -21,7 +20,7 @@ import de.unima.dws.dbpediagraph.graphdb.UriShortener;
  * @author Bernhard Schäfer
  * 
  */
-public class BatchHandler extends RDFHandlerVerbose {
+public class DBpediaBatchHandler extends RDFHandlerVerbose {
 
 	/** Log measures every TICK_SIZE time */
 	private static final int TICK_SIZE = 1_000_000;
@@ -33,14 +32,14 @@ public class BatchHandler extends RDFHandlerVerbose {
 	private long tick = System.currentTimeMillis();
 
 	/** the statement filter that decides if a statement is valid */
-	private final LoadingStatementFilter statementFilter;
+	private final Predicate<Statement> statementFilter;
 
-	private static final Logger logger = LoggerFactory.getLogger(BatchHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(DBpediaBatchHandler.class);
 
 	/**
 	 * Initialize the handler with a graph object the statements should be added to.
 	 */
-	public BatchHandler(Graph graph, LoadingStatementFilter statementFilter) {
+	public DBpediaBatchHandler(Graph graph, Predicate<Statement> statementFilter) {
 		this.bgraph = graph;
 		this.statementFilter = statementFilter;
 	}
@@ -76,7 +75,7 @@ public class BatchHandler extends RDFHandlerVerbose {
 
 	@Override
 	public void handleStatement(Statement st) {
-		if (!statementFilter.isValidStatement(st)) {
+		if (!statementFilter.apply(st)) {
 			invalidTriples++;
 		} else {
 			validTriples++;

@@ -1,23 +1,15 @@
 package de.unima.dws.dbpediagraph.graphdb.loader;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.openrdf.rio.ParseErrorListener;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.Rio;
+import org.openrdf.model.Statement;
+import org.openrdf.rio.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Predicate;
 import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
@@ -81,8 +73,8 @@ public final class DBpediaGraphLoader {
 			LoadingMetrics metric = new LoadingMetrics(f.getName());
 
 			// get appropriate handler
-			LoadingStatementFilter filter = LoadingStatementFilterFactory.newLoadingStatementFilter(GraphConfig.config());
-			RDFHandlerVerbose handler = new BatchHandler(graph, filter);
+			Predicate<Statement> filter = StatementPredicateFactory.fromConfig(GraphConfig.config());
+			RDFHandlerVerbose handler = new DBpediaBatchHandler(graph, filter);
 
 			// get appropriate parser
 			RDFFormat rdfFormat = RDFFormat.forFileName(f.getName());
@@ -103,7 +95,7 @@ public final class DBpediaGraphLoader {
 			}
 
 			// log metrics
-			metric.finish(handler);
+			metric.finish(handler.getValidTriples(), handler.getInvalidTriples());
 			metrics.add(metric);
 		}
 

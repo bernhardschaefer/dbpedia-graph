@@ -3,6 +3,8 @@ package de.unima.dws.dbpediagraph.graphdb.loader;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 
+import com.google.common.base.Predicate;
+
 /**
  * Filter that yields all statement with DBpedia resources, ontologies, or yago classes as object. This includes the
  * entire class hierarchy and classes such as foaf:Person.
@@ -10,7 +12,7 @@ import org.openrdf.model.Statement;
  * @author Bernhard Schäfer
  * 
  */
-class DBpediaCompleteLoadingStatementFilter implements LoadingStatementFilter {
+class CompleteStatementPredicate implements Predicate<Statement> {
 
 	/**
 	 * valid uri prefixes from http://dbpedia.org/snorql/.
@@ -23,7 +25,7 @@ class DBpediaCompleteLoadingStatementFilter implements LoadingStatementFilter {
 	};
 
 	@Override
-	public boolean isValidStatement(Statement st) {
+	public boolean apply(Statement st) {
 		// continue if object is literal
 		if (st.getObject() instanceof Literal)
 			return false;

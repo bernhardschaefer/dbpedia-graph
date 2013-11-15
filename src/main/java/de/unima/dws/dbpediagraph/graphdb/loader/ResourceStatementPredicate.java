@@ -3,6 +3,8 @@ package de.unima.dws.dbpediagraph.graphdb.loader;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 
+import com.google.common.base.Predicate;
+
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 
 /**
@@ -12,10 +14,10 @@ import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
  * @author Bernhard Schäfer
  * 
  */
-class DBpediaResourceLoadingStatementFilter implements LoadingStatementFilter {
+class ResourceStatementPredicate implements Predicate<Statement> {
 
 	@Override
-	public boolean isValidStatement(Statement st) {
+	public boolean apply(Statement st) {
 		// continue if object is literal
 		if (st.getObject() instanceof Literal)
 			return false;

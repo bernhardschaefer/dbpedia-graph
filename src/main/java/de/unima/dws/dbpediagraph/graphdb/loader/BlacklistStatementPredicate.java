@@ -10,6 +10,8 @@ import org.openrdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Predicate;
+
 import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
@@ -18,8 +20,8 @@ import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
  * 
  * @author Bernhard Schäfer
  */
-public class DBpediaBlacklistLoadingStatementFilter implements LoadingStatementFilter {
-	private static final Logger logger = LoggerFactory.getLogger(DBpediaBlacklistLoadingStatementFilter.class);
+public class BlacklistStatementPredicate implements Predicate<Statement> {
+	private static final Logger logger = LoggerFactory.getLogger(BlacklistStatementPredicate.class);
 
 	// Blacklists from "Exploiting Linked Data for Semantic Document Modelling"
 	private static final String KEY_CATEGORIES_FILE = "loading.filter.categories.file";
@@ -28,7 +30,7 @@ public class DBpediaBlacklistLoadingStatementFilter implements LoadingStatementF
 	private final HashSet<String> categories;
 	private final HashSet<String> predicates;
 
-	public DBpediaBlacklistLoadingStatementFilter() {
+	public BlacklistStatementPredicate() {
 		Configuration conf = GraphConfig.config();
 
 		categories = new HashSet<String>();
@@ -55,7 +57,7 @@ public class DBpediaBlacklistLoadingStatementFilter implements LoadingStatementF
 	}
 
 	@Override
-	public boolean isValidStatement(Statement st) {
+	public boolean apply(Statement st) {
 		// TODO check if enough to look at statement subject and object
 		boolean validCategory = !(isStatementUriInBlacklist(st, categories));
 		// TODO check if enough to look at statement predicate

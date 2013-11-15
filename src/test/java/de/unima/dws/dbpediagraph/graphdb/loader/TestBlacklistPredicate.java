@@ -9,8 +9,10 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
 
-public class TestBlacklistFilter {
-	private static LoadingStatementFilter filter;
+import com.google.common.base.Predicate;
+
+public class TestBlacklistPredicate {
+	private static Predicate<Statement> predicate;
 
 	private static Statement invalidSubject;
 	private static Statement invalidObject;
@@ -18,7 +20,7 @@ public class TestBlacklistFilter {
 
 	@BeforeClass
 	public static void beforeClass() {
-		filter = new DBpediaBlacklistLoadingStatementFilter();
+		predicate = new BlacklistStatementPredicate();
 
 		invalidSubject = fromStringUris("http://dbpedia.org/resource/Category:Topic",
 				"http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://test.org/3");
@@ -34,9 +36,9 @@ public class TestBlacklistFilter {
 
 	@Test
 	public void testFilter() {
-		assertFalse(filter.isValidStatement(invalidSubject));
-		assertFalse(filter.isValidStatement(invalidObject));
+		assertFalse(predicate.apply(invalidSubject));
+		assertFalse(predicate.apply(invalidObject));
 
-		assertTrue(filter.isValidStatement(validStatement));
+		assertTrue(predicate.apply(validStatement));
 	}
 }

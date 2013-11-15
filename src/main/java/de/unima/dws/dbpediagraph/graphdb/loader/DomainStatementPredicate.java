@@ -3,6 +3,8 @@ package de.unima.dws.dbpediagraph.graphdb.loader;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 
+import com.google.common.base.Predicate;
+
 /**
  * Filter that yields all statement with a DBpedia URI as object (http://dbpedia.org/*). This implementation is somewhat
  * inconsistent since it partly includes the class hierarchy.
@@ -10,10 +12,10 @@ import org.openrdf.model.Statement;
  * @author Bernhard Schäfer
  * 
  */
-class DBpediaDomainLoadingStatementFilter implements LoadingStatementFilter {
+class DomainStatementPredicate implements Predicate<Statement> {
 
 	@Override
-	public boolean isValidStatement(Statement st) {
+	public boolean apply(Statement st) {
 		// continue if object is literal
 		if (st.getObject() instanceof Literal)
 			return false;

@@ -5,8 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.unima.dws.dbpediagraph.graphdb.loader.RDFHandlerVerbose;
-
 /**
  * Helper class to record graph loading metrics.
  * 
@@ -86,13 +84,6 @@ public class LoadingMetrics {
 			sumInvalidTriples += m.invalidTriples;
 		}
 		finish(sumValidTriples, sumInvalidTriples);
-	}
-
-	/**
-	 * Convenience method for {@link #finish(int, int, int)} that extracts the metrics from the handler object.
-	 */
-	public void finish(RDFHandlerVerbose handler) {
-		finish(handler.getValidTriples(), handler.getInvalidTriples());
 	}
 
 	/**
