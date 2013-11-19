@@ -212,6 +212,7 @@ public final class Graphs {
 	}
 
 	public static int verticesCount(Graph graph) {
+		//TODO(if needed): check if gremlin has better performance 
 		// return new GremlinPipeline<Object, Object>(graph.getVertices()).count();
 		return CollectionUtils.iterableItemCount(graph.getVertices());
 	}
