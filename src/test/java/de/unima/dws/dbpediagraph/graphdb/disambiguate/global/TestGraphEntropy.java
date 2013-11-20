@@ -1,13 +1,10 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate.global;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import de.unima.dws.dbpediagraph.graphdb.GlobalDisambiguationTester;
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
-import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
-import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.model.*;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 
 public class TestGraphEntropy {
@@ -19,7 +16,7 @@ public class TestGraphEntropy {
 		SubgraphConstructionSettings settings = SubgraphTester.getNavigliSettings();
 		subgraphNavigli = SubgraphTester.newNavigliTester(settings);
 		disambiguationNavigli = new GlobalDisambiguationTester(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(
-				settings), subgraphNavigli);
+				settings, DefaultModelFactory.INSTANCE), subgraphNavigli);
 	}
 
 	@AfterClass

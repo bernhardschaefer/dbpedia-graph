@@ -96,6 +96,12 @@
 			<version>15.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.googlecode.aima-java</groupId>
+			<artifactId>aima-core</artifactId>
+			<version>0.10.5</version>
+		</dependency>
+
 		<!-- logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

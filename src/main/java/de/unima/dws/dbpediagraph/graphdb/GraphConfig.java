@@ -59,14 +59,15 @@ public final class GraphConfig {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends SurfaceForm, U extends Sense> GlobalGraphDisambiguator<T, U> newGlobalDisambiguator(
-			Configuration configuration, SubgraphConstructionSettings subgraphConstructionSettings) {
+			Configuration configuration, SubgraphConstructionSettings subgraphConstructionSettings,
+			ModelFactory<T, U> factory) {
 		String disambiguatorClassName = config.getString(GLOBAL_DISAMBIGUATOR_KEY, DEFAULT_GLOBAL_DISAMBIGUATOR);
 		try {
 			@SuppressWarnings("rawtypes")
 			Class<? extends GlobalGraphDisambiguator> globalDisambiguatorClass = Class.forName(disambiguatorClassName)
 					.asSubclass(GlobalGraphDisambiguator.class);
-			return globalDisambiguatorClass.getConstructor(SubgraphConstructionSettings.class).newInstance(
-					subgraphConstructionSettings);
+			return globalDisambiguatorClass.getConstructor(SubgraphConstructionSettings.class, ModelFactory.class)
+					.newInstance(subgraphConstructionSettings, factory);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException("Error while trying to create disambiguator instance.", e);
