@@ -17,7 +17,7 @@ class CompleteStatementPredicate implements Predicate<Statement> {
 	/**
 	 * valid uri prefixes from http://dbpedia.org/snorql/.
 	 */
-	// TODO check if compiled pattern with all prefixes has better performance
+	// TODO(if needed) check if compiled pattern with all prefixes has better performance
 	private static final String[] uriPrefixes = new String[] { "http://dbpedia.org/", // dbpedia resource, property
 			"http://www.w3.org/", // owl,xsd,rdfs,rdf,skos
 			"http://xmlns.com/foaf", // foaf

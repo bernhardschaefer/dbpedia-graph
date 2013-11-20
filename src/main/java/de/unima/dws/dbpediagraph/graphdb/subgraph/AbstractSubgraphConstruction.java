@@ -1,9 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,14 +8,17 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
-import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
-import de.unima.dws.dbpediagraph.graphdb.Graphs;
-import de.unima.dws.dbpediagraph.graphdb.model.ModelTransformer;
-import de.unima.dws.dbpediagraph.graphdb.model.Sense;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.graphdb.*;
+import de.unima.dws.dbpediagraph.graphdb.model.*;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
+/**
+ * {@link SubgraphConstruction} skeleton implementation. Subclasses only need to implement
+ * {@link #dfs(Path, Set, Graph)}.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 	protected static final Logger logger = LoggerFactory.getLogger(AbstractSubgraphConstruction.class);
 
@@ -72,9 +72,8 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 	}
 
 	/**
-	 * Performs a DFS starting at the start vertex. The goal is to find all
-	 * paths within the max distance to the other provided senses. Found paths
-	 * are inserted into the subgraph.
+	 * Performs a DFS starting at the start vertex. The goal is to find all paths within the max distance to the other
+	 * provided senses. Found paths are inserted into the subgraph.
 	 * 
 	 * @param start
 	 *            the vertex the DFS starts with

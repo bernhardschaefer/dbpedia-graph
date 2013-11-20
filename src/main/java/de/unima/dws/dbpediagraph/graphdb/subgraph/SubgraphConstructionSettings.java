@@ -15,10 +15,10 @@ import de.unima.dws.dbpediagraph.graphdb.filter.EdgeFilter;
  */
 public final class SubgraphConstructionSettings {
 	// keys in configuration file
-	private static final String MAX_DISTANCE_KEY = "de.unima.dws.dbpediagraph.graphdb.subgraph.maxDistance";
-	private static final String GRAPH_TYPE_KEY = "de.unima.dws.dbpediagraph.graphdb.subgraph.graphType";
-	private static final String EXPLORATION_THRESHOLD_KEY = "de.unima.dws.dbpediagraph.graphdb.subgraph.explorationThreshold";
-	private static final String EDGE_FILTER_KEY = "de.unima.dws.dbpediagraph.graphdb.subgraph.edgeFilter";
+	private static final String CONFIG_MAX_DISTANCE = "de.unima.dws.dbpediagraph.graphdb.subgraph.maxDistance";
+	private static final String CONFIG_GRAPH_TYPE = "de.unima.dws.dbpediagraph.graphdb.subgraph.graphType";
+	private static final String CONFIG_EXPLORATION_THRESHOLD = "de.unima.dws.dbpediagraph.graphdb.subgraph.explorationThreshold";
+	private static final String CONFIG_EDGE_FILTER = "de.unima.dws.dbpediagraph.graphdb.subgraph.edgeFilter";
 
 	/**
 	 * Instance with default settings
@@ -53,22 +53,22 @@ public final class SubgraphConstructionSettings {
 	public static SubgraphConstructionSettings fromConfig(Configuration config) {
 		SubgraphConstructionSettings.Builder builder = new SubgraphConstructionSettings.Builder();
 
-		Integer maxDistance = config.getInt(MAX_DISTANCE_KEY);
+		Integer maxDistance = config.getInt(CONFIG_MAX_DISTANCE);
 		if (maxDistance != null)
 			builder.maxDistance(maxDistance);
 
-		String graphTypeString = config.getString(GRAPH_TYPE_KEY);
+		String graphTypeString = config.getString(CONFIG_GRAPH_TYPE);
 		if (graphTypeString != null) {
 			GraphType graphType = GraphType.valueOf(graphTypeString);
 			builder.graphType(graphType);
 		}
 
-		String explorationThresholdClassName = config.getString(EXPLORATION_THRESHOLD_KEY);
+		String explorationThresholdClassName = config.getString(CONFIG_EXPLORATION_THRESHOLD);
 		if (explorationThresholdClassName != null) {
 			// TODO implement
 		}
 
-		String edgeFilterClassName = config.getString(EDGE_FILTER_KEY);
+		String edgeFilterClassName = config.getString(CONFIG_EDGE_FILTER);
 		if (edgeFilterClassName != null) {
 			// TODO implement
 		}

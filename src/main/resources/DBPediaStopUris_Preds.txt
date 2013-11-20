@@ -3,7 +3,8 @@ http://purl.org/dc/elements/1.1/rights
 http://purl.org/dc/elements/1.1/description
 http://dbpedia.org/ontology/wikiPageExternalLink
 http://dbpedia.org/ontology/wikiPageWikiLink
-http://dbpedia.org/ontology/wikiPageRedirects
+# Redirects are needed since Spotlight uses them for spotting 
+# http://dbpedia.org/ontology/wikiPageRedirects
 http://dbpedia.org/ontology/wikiPageInterLanguageLink
 http://dbpedia.org/ontology/thumbnail
 http://dbpedia.org/ontology/wikiPageDisambiguates
