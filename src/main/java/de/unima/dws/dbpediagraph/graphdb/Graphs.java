@@ -33,6 +33,7 @@ public final class Graphs {
 		}
 	}
 
+	@Deprecated
 	public static void addNodeAndEdgesByUriIfNonExistent(Graph graph, Collection<Edge> edges) {
 		for (Edge edge : edges) {
 			String outVertexUri = edge.getVertex(Direction.OUT).getProperty(GraphConfig.URI_PROPERTY).toString();
@@ -48,6 +49,7 @@ public final class Graphs {
 	/**
 	 * Adds a vertex with the uri as property to the graph if it does not exist yet.
 	 */
+	@Deprecated
 	public static Vertex addVertexByUri(Graph graph, String fullUri) {
 		Vertex v = vertexByUri(graph, fullUri);
 		if (v == null) {
@@ -73,6 +75,7 @@ public final class Graphs {
 		return toReturn;
 	}
 
+	@Deprecated
 	public static void addVerticesByUrisOfVertices(Graph graph, Iterable<Vertex> vertices) {
 		for (Vertex v : vertices)
 			addVertexByUri(graph, v.getProperty(GraphConfig.URI_PROPERTY).toString());
@@ -256,7 +259,7 @@ public final class Graphs {
 	}
 
 	public static Collection<Set<Vertex>> wordsVerticesByUri(Graph graph,
-			Collection<Collection<String>> wordsSensesString) {
+			Collection<? extends Collection<String>> wordsSensesString) {
 		Collection<Set<Vertex>> wordVertices = new ArrayList<>();
 		for (Collection<String> uris : wordsSensesString)
 			wordVertices.add(verticesByUri(graph, uris));
