@@ -1,10 +1,6 @@
 package de.unima.dws.dbpediagraph.graphdb.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +20,7 @@ import de.unima.dws.dbpediagraph.graphdb.Graphs;
 public final class ModelTransformer {
 	private static final Logger logger = LoggerFactory.getLogger(ModelTransformer.class);
 
-	public static <U extends Sense> List<U> sensesFromVertices(Collection<Vertex> vertices, ModelFactory<?, U> factory) {
+	public static <U extends Sense> List<U> sensesFromVertices(Iterable<Vertex> vertices, ModelFactory<?, U> factory) {
 		List<U> senses = new ArrayList<>();
 		for (Vertex v : vertices) {
 			senses.add(factory.newSense(v));
@@ -33,15 +29,15 @@ public final class ModelTransformer {
 	}
 
 	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> surfaceFormSensesFromVertices(
-			Collection<Collection<Vertex>> allWordsSenses, ModelFactory<T, U> factory) {
+			Iterable<? extends Iterable<Vertex>> allWordsSenses, ModelFactory<T, U> factory) {
 		Map<T, List<U>> surfaceFormSenses = new HashMap<>();
-		for (Collection<Vertex> wordSenses : allWordsSenses)
+		for (Iterable<Vertex> wordSenses : allWordsSenses)
 			surfaceFormSenses.put(factory.newSurfaceForm("test"), sensesFromVertices(wordSenses, factory));
 		return surfaceFormSenses;
 	}
 
-	public static Collection<Vertex> verticesFromSenses(Graph graph, Collection<? extends Sense> senses) {
-		Collection<Vertex> vertices = new ArrayList<>(senses.size());
+	public static Set<Vertex> verticesFromSenses(Graph graph, Collection<? extends Sense> senses) {
+		Set<Vertex> vertices = new HashSet<>(senses.size());
 		for (Sense sense : senses) {
 			Vertex v = Graphs.vertexByUri(graph, sense.fullUri());
 			if (v != null)
@@ -52,11 +48,11 @@ public final class ModelTransformer {
 		return vertices;
 	}
 
-	public static Collection<Collection<Vertex>> wordsVerticesFromSenses(Graph graph,
+	public static Collection<Set<Vertex>> wordsVerticesFromSenses(Graph graph,
 			Map<? extends SurfaceForm, ? extends List<? extends Sense>> sFSenses) {
-		Collection<Collection<Vertex>> wordVertices = new ArrayList<>();
+		Collection<Set<Vertex>> wordVertices = new ArrayList<>();
 		for (List<? extends Sense> senses : sFSenses.values()) {
-			Collection<Vertex> vertices = verticesFromSenses(graph, senses);
+			Set<Vertex> vertices = verticesFromSenses(graph, senses);
 			if (!vertices.isEmpty())
 				wordVertices.add(vertices);
 		}

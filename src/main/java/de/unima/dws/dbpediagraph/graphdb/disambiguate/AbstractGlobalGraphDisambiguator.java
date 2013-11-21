@@ -108,7 +108,7 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 
 	@Override
 	public double globalConnectivityMeasure(Collection<Vertex> assigments, Graph subgraph,
-			Collection<Collection<Vertex>> surfaceFormsVertices) {
+			Collection<Set<Vertex>> surfaceFormsVertices) {
 		SubgraphConstruction sensegraphConstruction = SubgraphConstructionFactory.newSubgraphConstruction(subgraph,
 				subgraphConstructionSettings);
 		Set<Vertex> allSensesVertices = Sets.newHashSet(Iterables.concat(surfaceFormsVertices));
@@ -127,7 +127,7 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 			Map<T, List<U>> surfaceFormsSenses) {
 		Collection<Vertex> assignments = ModelTransformer.verticesFromSenses(subgraph,
 				surfaceFormSenseAssigments.values());
-		Collection<Collection<Vertex>> surfaceFormsVertices = ModelTransformer.wordsVerticesFromSenses(subgraph,
+		Collection<Set<Vertex>> surfaceFormsVertices = ModelTransformer.wordsVerticesFromSenses(subgraph,
 				surfaceFormsSenses);
 		return globalConnectivityMeasure(assignments, subgraph, surfaceFormsVertices);
 	}

@@ -228,8 +228,8 @@ public final class Graphs {
 	/**
 	 * Converts the uris to vertices. Omits uris that cannot be found in the provided graph.
 	 */
-	public static List<Vertex> verticesByUri(Graph graph, Collection<String> uris) {
-		List<Vertex> vertices = new LinkedList<Vertex>();
+	public static Set<Vertex> verticesByUri(Graph graph, Collection<String> uris) {
+		Set<Vertex> vertices = new HashSet<Vertex>();
 		for (String uri : uris) {
 			Vertex v = vertexByUri(graph, uri);
 			if (v != null)
@@ -255,9 +255,9 @@ public final class Graphs {
 		return vertices;
 	}
 
-	public static Collection<Collection<Vertex>> wordsVerticesByUri(Graph graph,
+	public static Collection<Set<Vertex>> wordsVerticesByUri(Graph graph,
 			Collection<Collection<String>> wordsSensesString) {
-		Collection<Collection<Vertex>> wordVertices = new ArrayList<>();
+		Collection<Set<Vertex>> wordVertices = new ArrayList<>();
 		for (Collection<String> uris : wordsSensesString)
 			wordVertices.add(verticesByUri(graph, uris));
 		return wordVertices;

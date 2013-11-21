@@ -51,7 +51,7 @@ public final class FileUtils {
 		return column.length > 2 ? column[2] : StringUtils.join(column);
 	}
 
-	public static Collection<Collection<Vertex>> parseAllWordsSenses(Graph graph, String fileName, Class<?> clazz,
+	public static Collection<Set<Vertex>> parseAllWordsSenses(Graph graph, String fileName, Class<?> clazz,
 			String uriPrefix) throws IOException, URISyntaxException {
 		Collection<Collection<String>> wordsSensesString = readUrisFromFile(clazz, fileName, uriPrefix);
 		return Graphs.wordsVerticesByUri(graph, wordsSensesString);

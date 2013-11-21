@@ -29,7 +29,7 @@ public interface GlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense
 	 * @param surfaceFormsVertices TODO javadoc
 	 * @return the score for the provided assignments
 	 */
-	public double globalConnectivityMeasure(Collection<Vertex> assigments, Graph subgraph, Collection<Collection<Vertex>> surfaceFormsVertices);
+	public double globalConnectivityMeasure(Collection<Vertex> assigments, Graph subgraph, Collection<Set<Vertex>> surfaceFormsVertices);
 
 	/**
 	 * Determine the global connectivity score for a fixed set of candidate sense assignments provided as a graph.

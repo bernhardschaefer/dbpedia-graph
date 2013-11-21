@@ -20,11 +20,10 @@ public interface SubgraphConstruction {
 	 * Create a subgraph based on the provided vertices.
 	 * 
 	 * @param surfaceFormVertices
-	 *            a collection that contains for each surfaceForm a collection of vertex candidates (e.g. {drink1, ... ,
+	 *            a collection that contains for each surfaceForm a set of vertex candidates (e.g. {drink1, ... ,
 	 *            drink5}, {milk1, ..., milk4} for the surface forms (drink, milk)).
 	 */
-	// TODO think about changing (at least inner) collections to Sets
-	public Graph createSubgraph(Collection<Collection<Vertex>> surfaceFormVertices);
+	public Graph createSubgraph(Collection<Set<Vertex>> surfaceFormVertices);
 
 //	/**
 //	 * Create a subgraph based on the provided senses.

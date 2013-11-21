@@ -53,7 +53,7 @@ final class SubgraphConstructions {
 		}
 	}
 
-	public static void checkValidWordsSenses(Graph graph, Collection<Collection<Vertex>> wordsSenses) {
+	public static void checkValidWordsSenses(Graph graph, Collection<? extends Collection<Vertex>> wordsSenses) {
 		if (wordsSenses == null)
 			throw new NullPointerException("The senses collection cannot be null.");
 		for (Collection<Vertex> senses : wordsSenses)

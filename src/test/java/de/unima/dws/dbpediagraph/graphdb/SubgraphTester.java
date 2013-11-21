@@ -2,8 +2,7 @@ package de.unima.dws.dbpediagraph.graphdb;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -36,7 +35,7 @@ public class SubgraphTester {
 	}
 
 	private final Graph graph;
-	public final Collection<Collection<Vertex>> allWordsSenses;
+	public final Collection<Set<Vertex>> allWordsSenses;
 	public final Collection<Vertex> allSenses;
 
 	public final List<String> expectedSubgraphEdges;

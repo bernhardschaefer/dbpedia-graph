@@ -51,7 +51,7 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 				logger.debug("Starting DFS with vid: {}, uri: {}", start.getId(),
 						start.getProperty(GraphConfig.URI_PROPERTY));
 			Set<Vertex> stopVertices = Sets.difference(allSensesVertices, targetSenses);
-			dfs(new Path(start), targetSenses, subsubgraph, stopVertices );
+			dfs(new Path(start), targetSenses, subsubgraph, stopVertices);
 		}
 
 		if (logger.isInfoEnabled())
@@ -62,7 +62,7 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 	}
 
 	@Override
-	public Graph createSubgraph(Collection<Collection<Vertex>> surfaceFormVertices) {
+	public Graph createSubgraph(Collection<Set<Vertex>> surfaceFormVertices) {
 		long startTime = System.currentTimeMillis();
 
 		SubgraphConstructions.checkValidWordsSenses(graph, surfaceFormVertices);
@@ -72,19 +72,18 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 
 		// initialize subgraph with all senses of all words
 		Graph subGraph = GraphFactory.newInMemoryGraph();
-//		Graphs.addVerticesByUrisOfVertices(subGraph, allSenses);
+		// Graphs.addVerticesByUrisOfVertices(subGraph, allSenses);
 		Graphs.addVerticesByIdIfNonExistent(subGraph, allSenses);
 
 		// perform a DFS for each sense trying to find path to senses of other
 		// words
-		for (Collection<Vertex> senses : surfaceFormVertices) {
-			Set<Vertex> surfaceFormSenses = Sets.newHashSet(senses);
-			Set<Vertex> targetSenses = Sets.difference(allSenses, surfaceFormSenses); 
+		for (Set<Vertex> senses : surfaceFormVertices) {
+			Set<Vertex> targetSenses = Sets.difference(allSenses, senses);
 			for (Vertex start : senses) {
 				if (logger.isDebugEnabled())
 					logger.debug("Starting DFS with vid: {}, uri: {}", start.getId(),
 							start.getProperty(GraphConfig.URI_PROPERTY));
-				Set<Vertex> stopVertices = Sets.difference(surfaceFormSenses, Sets.newHashSet(start));
+				Set<Vertex> stopVertices = Sets.difference(senses, Sets.newHashSet(start));
 				dfs(new Path(start), targetSenses, subGraph, stopVertices);
 			}
 		}
@@ -95,7 +94,6 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 
 		return subGraph;
 	}
-
 
 	/**
 	 * Performs a DFS starting at the start vertex. The goal is to find all paths within the max distance to the other

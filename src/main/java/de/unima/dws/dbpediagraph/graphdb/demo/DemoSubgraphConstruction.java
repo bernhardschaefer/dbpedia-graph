@@ -61,7 +61,7 @@ public class DemoSubgraphConstruction {
 		SubgraphConstruction sc = SubgraphConstructionFactory.newSubgraphConstruction(graph,
 				new SubgraphConstructionSettings.Builder().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build());
 		
-		Collection<Collection<Vertex>> surfaceFormVertices = ModelTransformer.wordsVerticesFromSenses(graph,
+		Collection<Set<Vertex>> surfaceFormVertices = ModelTransformer.wordsVerticesFromSenses(graph,
 				surfaceFormsSenses);
 		Graph subGraph = sc.createSubgraph(surfaceFormVertices);
 
