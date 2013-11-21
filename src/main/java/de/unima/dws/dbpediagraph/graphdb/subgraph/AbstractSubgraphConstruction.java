@@ -1,15 +1,17 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.*;
-import de.unima.dws.dbpediagraph.graphdb.model.*;
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 
 /**
@@ -33,27 +35,57 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 	}
 
 	@Override
-	public Graph createSubgraph(Collection<Collection<Vertex>> wordsSenses) {
+	public Graph createSubSubgraph(Collection<Vertex> assignments, Set<Vertex> allSensesVertices) {
 		long startTime = System.currentTimeMillis();
 
-		SubgraphConstructions.checkValidWordsSenses(graph, wordsSenses);
+		// SubgraphConstructions.checkValidWordsSenses(graph, assignments);
 		traversedNodes = 0;
 
-		Collection<Vertex> allSenses = CollectionUtils.combine(wordsSenses);
+		// initialize subgraph with all assignments
+		Graph subsubgraph = GraphFactory.newInMemoryGraph();
+		Graphs.addVerticesByIdIfNonExistent(subsubgraph, assignments);
+
+		for (Vertex start : assignments) {
+			Set<Vertex> targetSenses = CollectionUtils.remove(assignments, start);
+			if (logger.isDebugEnabled())
+				logger.debug("Starting DFS with vid: {}, uri: {}", start.getId(),
+						start.getProperty(GraphConfig.URI_PROPERTY));
+			Set<Vertex> stopVertices = Sets.difference(allSensesVertices, targetSenses);
+			dfs(new Path(start), targetSenses, subsubgraph, stopVertices );
+		}
+
+		if (logger.isInfoEnabled())
+			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, startTime,
+					traversedNodes, settings.maxDistance);
+
+		return subsubgraph;
+	}
+
+	@Override
+	public Graph createSubgraph(Collection<Collection<Vertex>> surfaceFormVertices) {
+		long startTime = System.currentTimeMillis();
+
+		SubgraphConstructions.checkValidWordsSenses(graph, surfaceFormVertices);
+		traversedNodes = 0;
+
+		Set<Vertex> allSenses = Sets.newHashSet(Iterables.concat(surfaceFormVertices));
 
 		// initialize subgraph with all senses of all words
 		Graph subGraph = GraphFactory.newInMemoryGraph();
-		Graphs.addVerticesByUrisOfVertices(subGraph, allSenses);
+//		Graphs.addVerticesByUrisOfVertices(subGraph, allSenses);
+		Graphs.addVerticesByIdIfNonExistent(subGraph, allSenses);
 
 		// perform a DFS for each sense trying to find path to senses of other
 		// words
-		for (Collection<Vertex> senses : wordsSenses) {
-			Set<Vertex> otherSenses = CollectionUtils.removeAll(allSenses, senses);
+		for (Collection<Vertex> senses : surfaceFormVertices) {
+			Set<Vertex> surfaceFormSenses = Sets.newHashSet(senses);
+			Set<Vertex> targetSenses = Sets.difference(allSenses, surfaceFormSenses); 
 			for (Vertex start : senses) {
 				if (logger.isDebugEnabled())
 					logger.debug("Starting DFS with vid: {}, uri: {}", start.getId(),
 							start.getProperty(GraphConfig.URI_PROPERTY));
-				dfs(new Path(start), otherSenses, subGraph);
+				Set<Vertex> stopVertices = Sets.difference(surfaceFormSenses, Sets.newHashSet(start));
+				dfs(new Path(start), targetSenses, subGraph, stopVertices);
 			}
 		}
 
@@ -64,12 +96,6 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 		return subGraph;
 	}
 
-	@Override
-	public Graph createSubgraph(Map<? extends SurfaceForm, ? extends List<? extends Sense>> surfaceFormSenses) {
-		Collection<Collection<Vertex>> surfaceFormVertices = ModelTransformer.wordsVerticesFromSenses(graph,
-				surfaceFormSenses);
-		return createSubgraph(surfaceFormVertices);
-	}
 
 	/**
 	 * Performs a DFS starting at the start vertex. The goal is to find all paths within the max distance to the other
@@ -77,11 +103,13 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 	 * 
 	 * @param start
 	 *            the vertex the DFS starts with
-	 * @param otherSenses
+	 * @param targets
 	 *            the target senses
-	 * @param subGraph
+	 * @param subgraph
 	 *            the subgraph where the paths are inserted to
+	 * @param stopVertices
+	 *            the senses vertices of the source surface form
 	 */
-	protected abstract void dfs(Path path, Set<Vertex> targets, Graph subGraph);
+	protected abstract void dfs(Path path, Set<Vertex> targets, Graph subgraph, Set<Vertex> stopVertices);
 
 }

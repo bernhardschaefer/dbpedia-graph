@@ -1,12 +1,8 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Set;
+import java.util.*;
 
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.graphdb.GraphType;
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
@@ -24,7 +20,7 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 	}
 
 	@Override
-	protected void dfs(Path path, Set<Vertex> targets, Graph subGraph) {
+	protected void dfs(Path path, Set<Vertex> targets, Graph subgraph, Set<Vertex> stopVertices) {
 		Deque<Path> stack = new ArrayDeque<>();
 		stack.push(path);
 		while (!stack.isEmpty()) {
@@ -39,17 +35,23 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 
 			// check if target node
 			if (targets.contains(current))
-				SubgraphConstructions.addPathToSubGraph(current, path, subGraph, settings.graphType);
+				SubgraphConstructions.addPathToSubGraph(current, path, subgraph, settings.graphType);
 
 			// explore further
 			for (Edge edge : Graphs.connectedEdges(current, settings.graphType)) {
 				Vertex child = Graphs.oppositeVertexUnsafe(edge, current);
+
+				// for undirected graph check if vertex/edge combination is worth exploring
 				if (settings.graphType.equals(GraphType.UNDIRECTED_GRAPH)
 						&& !settings.explorationThreshold.isBelowThreshold(child, edge))
 					continue;
-				if (!path.getVertices().contains(child)) {
+
+				// According to Navigli&Lapata algorithm, do not accept paths crossing vertices of the source
+				// surface form.
+				if (!path.getVertices().contains(child) && !stopVertices.contains(child)) {
 					Path newPath = Path.newHop(path, edge, child);
 					stack.push(newPath);
+					// recursive: dfs(newPath, targets, subGraph, stopSenses);
 				}
 			}
 		}

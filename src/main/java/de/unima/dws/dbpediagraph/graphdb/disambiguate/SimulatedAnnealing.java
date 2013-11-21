@@ -3,52 +3,70 @@ package de.unima.dws.dbpediagraph.graphdb.disambiguate;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 
-public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> {
+/**
+ * @author Bernhard Schäfer
+ */
+public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implements Searcher<T, U> {
+	private static final Logger logger = LoggerFactory.getLogger(SimulatedAnnealing.class);
 
 	private static final double MIN_IMPROVEMENT = 0.01;
 	private static final double MIN_TEMPERATURE = 0.1;
-	private final Map<T, List<U>> surfaceFormsSenses;
-	private final Graph subgraph;
-	private final ScoreFunction<T, U> scoreFunction;
+	private Map<T, List<U>> surfaceFormsSenses;
+	private Graph subgraph;
+	private ScoreFunction<T, U> scoreFunction;
 	private final int maxU;
 	private final double initialTemperature;
 	private final Random random;
+
+	private double currentScore;
 
 	public static interface ScoreFunction<T extends SurfaceForm, U extends Sense> {
 		double getScore(Map<T, U> assignments, Graph subgraph);
 	}
 
-	public SimulatedAnnealing(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, ScoreFunction<T, U> scoreFunction,
-			int maxU, double initialTemperature, Random random) {
-		this.surfaceFormsSenses = surfaceFormsSenses;
-		this.subgraph = subgraph;
-		this.scoreFunction = scoreFunction;
+	public SimulatedAnnealing(int maxU, double initialTemperature, Random random) {
 		this.maxU = maxU;
 		this.initialTemperature = initialTemperature;
 		this.random = random;
 	}
 
-	public SimulatedAnnealing(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, ScoreFunction<T, U> scoreFunction,
-			int maxU, double initialTemperature) {
-		this(surfaceFormsSenses, subgraph, scoreFunction, maxU, initialTemperature, new Random());
-	}
+	@Override
+	public Map<T, U> search(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, ScoreFunction<T, U> scoreFunction) {
+		this.surfaceFormsSenses = surfaceFormsSenses;
+		this.subgraph = subgraph;
+		this.scoreFunction = scoreFunction;
 
-	public Map<T, U> search() {
+		logger.info("Starting " + toString());
 		// Initially, we randomly select an interpretation I for sentence s.
 		Map<T, U> assignments = randomSelect(surfaceFormsSenses);
 		// get fitness
 		double score = scoreFunction.getScore(assignments, subgraph);
+		currentScore = score;
 		int u = 0;
-		return doStep(assignments, score, u, initialTemperature);
+
+		Map<T, U> bestAssignment = doStep(assignments, score, u, initialTemperature);
+		logger.info("Finished " + getClass().getSimpleName() + ". Best assignment: " + bestAssignment);
+		return bestAssignment;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " maxU:" + maxU + " initialTemeperature: " + initialTemperature + " sFS: "
+				+ surfaceFormsSenses;
 	}
 
 	// given: assignments, score(assignments), u, surfaceFormSenses
 	private Map<T, U> doStep(Map<T, U> assignments, double score, int u, double temperature) {
+		currentScore = score;
+
 		if (temperature < MIN_TEMPERATURE)
 			return assignments;
 
@@ -114,4 +132,11 @@ public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> {
 		}
 		return randomSelection;
 	}
+
+	// TODO fix ugly hack and think about datastructure that contains assignments and score
+	@Override
+	public double getScore() {
+		return currentScore;
+	}
+
 }

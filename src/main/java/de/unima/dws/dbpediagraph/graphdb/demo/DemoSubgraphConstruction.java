@@ -4,40 +4,21 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.JFrame;
 
 import org.apache.commons.collections15.Transformer;
 
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
-import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
+import de.unima.dws.dbpediagraph.graphdb.*;
 import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
-import de.unima.dws.dbpediagraph.graphdb.GraphType;
-import de.unima.dws.dbpediagraph.graphdb.UriShortener;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.GraphDisambiguator;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.BetweennessCentrality;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.DegreeCentrality;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.KPPCentrality;
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.PageRankCentrality;
-import de.unima.dws.dbpediagraph.graphdb.model.DefaultModelFactory;
-import de.unima.dws.dbpediagraph.graphdb.model.DefaultSense;
-import de.unima.dws.dbpediagraph.graphdb.model.DefaultSurfaceForm;
-import de.unima.dws.dbpediagraph.graphdb.model.ModelFactory;
-import de.unima.dws.dbpediagraph.graphdb.model.Sense;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
-import de.unima.dws.dbpediagraph.graphdb.model.SurfaceFormSenseScore;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstruction;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionFactory;
-import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
+import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.*;
+import de.unima.dws.dbpediagraph.graphdb.model.*;
+import de.unima.dws.dbpediagraph.graphdb.subgraph.*;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -79,7 +60,10 @@ public class DemoSubgraphConstruction {
 			Collection<GraphDisambiguator<T, U>> disambiguators) {
 		SubgraphConstruction sc = SubgraphConstructionFactory.newSubgraphConstruction(graph,
 				new SubgraphConstructionSettings.Builder().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build());
-		Graph subGraph = sc.createSubgraph(surfaceFormsSenses);
+		
+		Collection<Collection<Vertex>> surfaceFormVertices = ModelTransformer.wordsVerticesFromSenses(graph,
+				surfaceFormsSenses);
+		Graph subGraph = sc.createSubgraph(surfaceFormVertices);
 
 		for (GraphDisambiguator<T, U> d : disambiguators) {
 			System.out.println(d);

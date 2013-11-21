@@ -36,7 +36,7 @@ final class SubgraphConstructions {
 			GraphType graphType) {
 		logger.debug("Found sense vid: {} uri: {}", target.getId(), target.getProperty(GraphConfig.URI_PROPERTY));
 		logger.debug(toStringPath(path, start, target, graphType));
-		Graphs.addNodeAndEdgesIfNonExistent(subGraph, path);
+		Graphs.addNodeAndEdgesByIdIfNonExistent(subGraph, path);
 	}
 
 	public static void checkValidSenses(Graph graph, Collection<Vertex> senses) {

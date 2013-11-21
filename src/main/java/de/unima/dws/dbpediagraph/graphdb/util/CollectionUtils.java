@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.Lists;
 import com.tinkerpop.blueprints.Vertex;
 
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality.HitsScores;
 
 /**
@@ -26,12 +27,13 @@ public final class CollectionUtils {
 		return sortedResources;
 	}
 
-	public static <T> Collection<T> combine(Collection<Collection<T>> collections) {
-		Collection<T> combinedCollections = new ArrayList<T>();
-		for (Collection<T> c : collections)
-			combinedCollections.addAll(c);
-		return combinedCollections;
-	}
+	// guava Iterables.combine() is similar
+//	public static <T> Collection<T> combine(Collection<Collection<T>> collections) {
+//		Collection<T> combinedCollections = new ArrayList<T>();
+//		for (Collection<T> c : collections)
+//			combinedCollections.addAll(c);
+//		return combinedCollections;
+//	}
 
 	public static Map<Vertex, HitsScores> deepCopy(Map<Vertex, HitsScores> scores) {
 		Map<Vertex, HitsScores> copy = new HashMap<>(scores.size());
@@ -83,7 +85,16 @@ public final class CollectionUtils {
 	}
 
 	/**
-	 * Remove all entries from collection a that are in collection b and return a new collection.
+	 * Remove the value from collection coll and return a new collection.
+	 */
+	public static <T> Set<T> remove(Collection<T> coll, T value) {
+		Set<T> copy = new HashSet<T>(coll);
+		copy.remove(value);
+		return copy;
+	}
+
+	/**
+	 * Remove all entries from collection a that are in collection b and returns a new collection.
 	 */
 	public static <T> Set<T> removeAll(Collection<T> a, Collection<T> b) {
 		Set<T> c = new HashSet<T>(a);
@@ -110,5 +121,16 @@ public final class CollectionUtils {
 				counter += c.size();
 		}
 		return counter;
+	}
+
+	public static Set<Vertex> findContainingCollection(Collection<Collection<Vertex>> surfaceFormVertices,
+			Vertex searchVertex) {
+		for (Collection<Vertex> vertices : surfaceFormVertices)
+			for (Vertex v : vertices)
+				// simple contains won't work since vertices can be from different graphs with different id
+				// representations
+				if (Graphs.uriOfVertex(v).equals(Graphs.uriOfVertex(searchVertex)))
+					return new HashSet<>(vertices);
+		throw new IllegalArgumentException("Vertex is not in one of the provided collections.");
 	}
 }

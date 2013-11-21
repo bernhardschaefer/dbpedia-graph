@@ -1,9 +1,10 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +20,7 @@ public class GlobalDisambiguationTester implements DisambiguationTester {
 	/** Name of the package where the local disambiguator classes reside. */
 	private static final String GLOBAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.graphdb.disambiguate.global";
 	private static final String SENSES_DELIMITER = ",";
-	// private static final double ALLOWED_SCORE_DEVIATION = 0.01;
-	// TODO set to previous value when global algorithms are working
-	private static final double ALLOWED_SCORE_DEVIATION = 1.0;
+	private static final double ALLOWED_SCORE_DEVIATION = 0.01;
 
 	private final GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator;
 	private final ExpectedDisambiguationResults expectedDisambiguationData;
@@ -47,12 +46,13 @@ public class GlobalDisambiguationTester implements DisambiguationTester {
 			Collection<Vertex> senses = Graphs.verticesByUri(subgraphData.getSubgraph(), senseAssignments);
 
 			// create sense graph based on the sense assignments
-			double actual = disambiguator.globalConnectivityMeasure(senses, subgraphData.getSubgraph());
+			double actual = disambiguator.globalConnectivityMeasure(senses, subgraphData.getSubgraph(),
+					subgraphData.allWordsSenses);
 
 			double expected = measureEntry.getValue().get(disambiguator.getClass());
 
 			logger.info("senses: {} actual score: {} expected score: {}", senseAssignments, actual, expected);
-			Assert.assertEquals(expected, actual, ALLOWED_SCORE_DEVIATION);
+			assertEquals(expected, actual, ALLOWED_SCORE_DEVIATION);
 		}
 	}
 

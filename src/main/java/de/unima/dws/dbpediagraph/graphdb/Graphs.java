@@ -25,7 +25,15 @@ public final class Graphs {
 			graph.addEdge(edge.getId(), outVertex, inVertex, edge.getLabel());
 	}
 
-	public static void addNodeAndEdgesIfNonExistent(Graph graph, Collection<Edge> edges) {
+	public static void addNodeAndEdgesByIdIfNonExistent(Graph graph, Collection<Edge> edges) {
+		for (Edge edge : edges) {
+			Vertex outVertex = addVertexByIdIfNonExistent(graph, edge.getVertex(Direction.OUT));
+			Vertex inVertex = addVertexByIdIfNonExistent(graph, edge.getVertex(Direction.IN));
+			addEdgeIfNonExistent(graph, edge, outVertex, inVertex);
+		}
+	}
+
+	public static void addNodeAndEdgesByUriIfNonExistent(Graph graph, Collection<Edge> edges) {
 		for (Edge edge : edges) {
 			String outVertexUri = edge.getVertex(Direction.OUT).getProperty(GraphConfig.URI_PROPERTY).toString();
 			Vertex outVertex = addVertexByUri(graph, outVertexUri);
@@ -40,16 +48,32 @@ public final class Graphs {
 	/**
 	 * Adds a vertex with the uri as property to the graph if it does not exist yet.
 	 */
-	public static Vertex addVertexByUri(Graph graph, String uri) {
-		Vertex v = vertexByUri(graph, uri);
+	public static Vertex addVertexByUri(Graph graph, String fullUri) {
+		Vertex v = vertexByUri(graph, fullUri);
 		if (v == null) {
-			v = graph.addVertex(uri);
-			v.setProperty(GraphConfig.URI_PROPERTY, uri);
+			v = graph.addVertex(fullUri);
+			v.setProperty(GraphConfig.URI_PROPERTY, fullUri);
 		}
 		return v;
 	}
 
-	public static void addVerticesByUrisOfVertices(Graph graph, Collection<Vertex> vertices) {
+	public static void addVerticesByIdIfNonExistent(Graph graph, Iterable<Vertex> vertices) {
+		for (Vertex v : vertices)
+			addVertexByIdIfNonExistent(graph, v);
+	}
+
+	public static Vertex addVertexByIdIfNonExistent(Graph graph, Vertex v) {
+		// IMPORTANT: Vertex v can be from another graph, and thus is is important not to return v but instead the
+		// retrieved vertex from the provided graph.
+		Vertex toReturn = graph.getVertex(v.getId());
+		if (toReturn == null) {
+			toReturn = graph.addVertex(v.getId());
+			toReturn.setProperty(GraphConfig.URI_PROPERTY, v.getProperty(GraphConfig.URI_PROPERTY));
+		}
+		return toReturn;
+	}
+
+	public static void addVerticesByUrisOfVertices(Graph graph, Iterable<Vertex> vertices) {
 		for (Vertex v : vertices)
 			addVertexByUri(graph, v.getProperty(GraphConfig.URI_PROPERTY).toString());
 	}
@@ -156,8 +180,8 @@ public final class Graphs {
 		return v.getProperty(GraphConfig.URI_PROPERTY).toString();
 	}
 
-	public static Collection<String> urisOfVertices(Collection<Vertex> vertices) {
-		List<String> uris = new LinkedList<>();
+	public static Set<String> urisOfVertices(Iterable<Vertex> vertices) {
+		Set<String> uris = new HashSet<>();
 		for (Vertex v : vertices)
 			uris.add(uriOfVertex(v));
 		return uris;
@@ -188,6 +212,11 @@ public final class Graphs {
 	}
 
 	public static int vertexDegree(Vertex vertex, Direction direction) {
+		// if (direction == Direction.BOTH) {
+		// int inDegree = CollectionUtils.iterableItemCount(vertex.getEdges(Direction.IN));
+		// int outDegree = CollectionUtils.iterableItemCount(vertex.getEdges(Direction.OUT));
+		// return inDegree + outDegree;
+		// }
 		return CollectionUtils.iterableItemCount(vertex.getEdges(direction));
 	}
 
@@ -212,7 +241,7 @@ public final class Graphs {
 	}
 
 	public static int verticesCount(Graph graph) {
-		//TODO(if needed): check if gremlin has better performance 
+		// TODO(if needed): check if gremlin has better performance
 		// return new GremlinPipeline<Object, Object>(graph.getVertices()).count();
 		return CollectionUtils.iterableItemCount(graph.getVertices());
 	}
@@ -237,6 +266,17 @@ public final class Graphs {
 	// Suppress default constructor for noninstantiability
 	private Graphs() {
 		throw new AssertionError();
+	}
+
+	public static boolean containsVertexByUri(Collection<Vertex> vertices, Vertex searchVertex) {
+		for (Vertex v : vertices)
+			if (Graphs.equalByUri(searchVertex, v))
+				return true;
+		return false;
+	}
+
+	public static boolean equalByUri(Vertex v1, Vertex v2) {
+		return uriOfVertex(v1).equals(uriOfVertex(v2));
 	}
 
 }

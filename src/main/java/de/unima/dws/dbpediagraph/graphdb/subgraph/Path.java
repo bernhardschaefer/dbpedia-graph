@@ -1,12 +1,11 @@
 package de.unima.dws.dbpediagraph.graphdb.subgraph;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
+
+import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
 /**
  * Represents a path on a graph. The vertices on the path can be explicitly queried to allow lookup in constant time
@@ -86,6 +85,15 @@ class Path {
 
 	public void setLast(Vertex last) {
 		this.last = last;
+	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder()
+				.append("Start: ").append(Graphs.uriOfVertex(start))
+				.append(" End: ").append(Graphs.uriOfVertex(last))
+				.append(" Edges: ").append(edges)
+				.toString();
 	}
 
 }

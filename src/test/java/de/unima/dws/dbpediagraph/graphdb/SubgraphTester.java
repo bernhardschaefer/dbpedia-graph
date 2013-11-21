@@ -5,11 +5,12 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.subgraph.*;
-import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
 /**
@@ -51,7 +52,7 @@ public class SubgraphTester {
 		try {
 			graph = FileUtils.parseGraph(testSet.verticesFile, testSet.edgesFile, getClass());
 			allWordsSenses = FileUtils.parseAllWordsSenses(graph, testSet.sensesFile, getClass(), "");
-			allSenses = CollectionUtils.combine(allWordsSenses);
+			allSenses = Lists.newArrayList(Iterables.concat(allWordsSenses));
 
 			expectedSubgraphVertices = FileUtils.readRelevantLinesFromFile(getClass(), testSet.expectedVerticesFile);
 			expectedSubgraphEdges = FileUtils.readRelevantLinesFromFile(getClass(), testSet.expectedEdgesFile);
