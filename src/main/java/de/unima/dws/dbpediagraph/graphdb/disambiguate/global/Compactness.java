@@ -29,6 +29,11 @@ public class Compactness<T extends SurfaceForm, U extends Sense> extends Abstrac
 
 	@Override
 	public double globalConnectivityMeasure(Graph sensegraph) {
+		Graphs.checkHasVertices(sensegraph);
+
+		if (Graphs.edgesCount(sensegraph) == 0)
+			return 0; // if there are paths between sense vertices in the graph, there is no compactness
+
 		GraphJung<Graph> graphJung = Graphs.asGraphJung(subgraphConstructionSettings.graphType, sensegraph);
 		Distance<Vertex> distances = new UnweightedShortestPath<>(graphJung);
 		int sumDistances = 0;

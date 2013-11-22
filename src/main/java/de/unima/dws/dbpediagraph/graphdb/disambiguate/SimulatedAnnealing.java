@@ -12,103 +12,78 @@ import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 
 /**
+ * Simulated Annealing search. Code adapted from Artificial Intelligence: A Modern Approach
+ * 
  * @author Bernhard Schäfer
  */
 public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implements Searcher<T, U> {
 	private static final Logger logger = LoggerFactory.getLogger(SimulatedAnnealing.class);
 
-	private static final double MIN_IMPROVEMENT = 0.01;
-	private static final double MIN_TEMPERATURE = 0.1;
-	private Map<T, List<U>> surfaceFormsSenses;
-	private Graph subgraph;
-	private ScoreFunction<T, U> scoreFunction;
-	private final int maxU;
-	private final double initialTemperature;
+	private final Scheduler scheduler;
+	private ConnectivityMeasureFunction<T, U> measureFunction;
 	private final Random random;
 
-	private double currentScore;
-
-	public static interface ScoreFunction<T extends SurfaceForm, U extends Sense> {
-		double getScore(Map<T, U> assignments, Graph subgraph);
-	}
-
-	public SimulatedAnnealing(int maxU, double initialTemperature, Random random) {
-		this.maxU = maxU;
-		this.initialTemperature = initialTemperature;
+	public SimulatedAnnealing(Scheduler scheduler, ConnectivityMeasureFunction<T, U> measureFunction, Random random) {
+		this.scheduler = scheduler;
+		this.measureFunction = measureFunction;
 		this.random = random;
 	}
 
+	private static final Random DEFAULT_RANDOM = new Random();
+
+	public SimulatedAnnealing(Scheduler scheduler, ConnectivityMeasureFunction<T, U> measureFunction) {
+		this(scheduler, measureFunction, DEFAULT_RANDOM);
+	}
+
 	@Override
-	public Map<T, U> search(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, ScoreFunction<T, U> scoreFunction) {
-		this.surfaceFormsSenses = surfaceFormsSenses;
-		this.subgraph = subgraph;
-		this.scoreFunction = scoreFunction;
-
+	public Map<T, U> search(Map<T, List<U>> surfaceFormsSenses, Graph subgraph) {
 		logger.info("Starting " + toString());
-		// Initially, we randomly select an interpretation I for sentence s.
-		Map<T, U> assignments = randomSelect(surfaceFormsSenses);
-		// get fitness
-		double score = scoreFunction.getScore(assignments, subgraph);
-		currentScore = score;
 
-		int u = 0;
-		int totalSteps = 0;
+		Map<T, U> bestAssignment = searchIterative(surfaceFormsSenses, subgraph);
 
-		Map<T, U> bestAssignment = doStep(assignments, score, u, initialTemperature, totalSteps);
 		logger.info("Finished " + getClass().getSimpleName() + ". Best assignment: " + bestAssignment);
 		return bestAssignment;
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " maxU:" + maxU + " initialTemeperature: " + initialTemperature + " sFS: "
-				+ surfaceFormsSenses;
+		return getClass().getSimpleName() + " scheduler: " + scheduler.toString();
 	}
 
-	// given: assignments, score(assignments), u, surfaceFormSenses
-	private Map<T, U> doStep(Map<T, U> assignments, double score, int u, double temperature, int totalSteps) {
-		currentScore = score;
+	private Map<T, U> searchIterative(Map<T, List<U>> surfaceFormsSenses, Graph subgraph) {
+		Map<T, U> assignments = randomSelect(surfaceFormsSenses);
+		double score = measureFunction.getMeasure(assignments, subgraph);
 
-		if (temperature < MIN_TEMPERATURE) {
-			logger.info("{} total steps in simulated annealing", totalSteps);
-			return assignments;
+		for (int i = 0;; i++) {
+			double temperature = scheduler.getTemperature(i);
+			if (temperature <= 0) {
+				// we're done
+				logger.info("{} total iterations in simulated annealing", i);
+				return assignments;
+			}
+
+			// swap one random sense of a random surface form
+			Map<T, U> newAssignments = newSwapRandomSense(assignments, surfaceFormsSenses);
+			double newScore = measureFunction.getMeasure(newAssignments, subgraph);
+
+			double delta = (newScore - score);
+			if (delta > 0) {
+				// If new assignment has higher score, we adopt it
+				assignments = newAssignments;
+				score = newScore;
+			} else {
+				// Otherwise, we only switch to new assignment with probability e^(delta/T),
+				double probability = Math.pow(Math.E, (delta / temperature));
+				if (random.nextDouble() < probability) {
+					assignments = newAssignments;
+					score = newScore;
+				}
+			}
 		}
+	}
 
-		// The procedure is repeated u times. The algorithm terminates when we observe no changes in I after u steps.
-		// Otherwise, the entire procedure is repeated starting from the most recent interpretation.
-		if (u >= maxU) {
-			// the constant T, initially set to 1.0, was reset to T := 0.9 * T after the u iterations.
-			u = 0;
-			temperature *= 0.9;
-		}
-
-		// At each step, we (randomly) select a word from s and assign it a new sense also chosen at random.
-		// As a result, a new interpretation I' is produced.
-		Map<T, U> newAssignments = swapRandomSense(assignments, surfaceFormsSenses);
-
-		// Next, we apply our global measure to the graph induced by I'
-		double newScore = scoreFunction.getScore(assignments, subgraph);
-
-		// and calculate the difference delta between its value and that of the graph obtained from the old
-		// interpretation I.
-		double delta = (newScore - score);
-
-		if (delta > MIN_IMPROVEMENT)
-			// If the new interpretation has a higher score, we adopt it (i.e., we set I :=I').
-			// assignments = newAssignments;
-			doStep(newAssignments, newScore, 0, temperature, totalSteps++);
-		else {
-			u++;
-			// Otherwise, we either switch to the new interpretation with probability e^(delta/T),
-			// or nonetheless retain the old interpretation with probability 1-e^(delta/T)
-			double probability = Math.pow(Math.E, (delta / temperature));
-			if (random.nextDouble() < probability)
-				doStep(newAssignments, newScore, u, temperature, totalSteps++);
-			else
-				doStep(assignments, score, u, temperature, totalSteps++);
-		}
-
-		throw new IllegalStateException("this shouldnt happen");
+	private Map<T, U> newSwapRandomSense(Map<T, U> assignments, Map<T, List<U>> surfaceFormsSenses) {
+		return swapRandomSense(new HashMap<>(assignments), surfaceFormsSenses);
 	}
 
 	private Map<T, U> swapRandomSense(Map<T, U> assignments, Map<T, List<U>> surfaceFormsSenses) {
@@ -135,12 +110,6 @@ public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implemen
 			randomSelection.put(entry.getKey(), element);
 		}
 		return randomSelection;
-	}
-
-	// TODO fix ugly hack and think about datastructure that contains assignments and score
-	@Override
-	public double getScore() {
-		return currentScore;
 	}
 
 }

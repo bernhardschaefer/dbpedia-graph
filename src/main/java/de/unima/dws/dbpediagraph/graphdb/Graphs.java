@@ -1,5 +1,7 @@
 package de.unima.dws.dbpediagraph.graphdb;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -33,32 +35,6 @@ public final class Graphs {
 		}
 	}
 
-	@Deprecated
-	public static void addNodeAndEdgesByUriIfNonExistent(Graph graph, Collection<Edge> edges) {
-		for (Edge edge : edges) {
-			String outVertexUri = edge.getVertex(Direction.OUT).getProperty(GraphConfig.URI_PROPERTY).toString();
-			Vertex outVertex = addVertexByUri(graph, outVertexUri);
-
-			String inVertexUri = edge.getVertex(Direction.IN).getProperty(GraphConfig.URI_PROPERTY).toString();
-			Vertex inVertex = addVertexByUri(graph, inVertexUri);
-
-			addEdgeIfNonExistent(graph, edge, outVertex, inVertex);
-		}
-	}
-
-	/**
-	 * Adds a vertex with the uri as property to the graph if it does not exist yet.
-	 */
-	@Deprecated
-	public static Vertex addVertexByUri(Graph graph, String fullUri) {
-		Vertex v = vertexByUri(graph, fullUri);
-		if (v == null) {
-			v = graph.addVertex(fullUri);
-			v.setProperty(GraphConfig.URI_PROPERTY, fullUri);
-		}
-		return v;
-	}
-
 	public static void addVerticesByIdIfNonExistent(Graph graph, Iterable<Vertex> vertices) {
 		for (Vertex v : vertices)
 			addVertexByIdIfNonExistent(graph, v);
@@ -75,12 +51,6 @@ public final class Graphs {
 		return toReturn;
 	}
 
-	@Deprecated
-	public static void addVerticesByUrisOfVertices(Graph graph, Iterable<Vertex> vertices) {
-		for (Vertex v : vertices)
-			addVertexByUri(graph, v.getProperty(GraphConfig.URI_PROPERTY).toString());
-	}
-
 	public static GraphJung<Graph> asGraphJung(GraphType graphType, Graph graph) {
 		switch (graphType) {
 		case DIRECTED_GRAPH:
@@ -90,6 +60,16 @@ public final class Graphs {
 		default:
 			throw new IllegalArgumentException();
 		}
+	}
+
+	/**
+	 * Throws {@link IllegalArgumentException} if the graph is null or does not have vertices.
+	 * @return the provided graph.
+	 */
+	public static Graph checkHasVertices(Graph graph) {
+		if(isEmptyGraph(checkNotNull(graph)))
+			throw new IllegalArgumentException("Graph needs to have at least one vertex.");
+		return graph;
 	}
 
 	public static Collection<Edge> connectedEdges(Vertex vertex, Direction direction, String... labels) {
@@ -258,6 +238,7 @@ public final class Graphs {
 		return vertices;
 	}
 
+	@Deprecated
 	public static Collection<Set<Vertex>> wordsVerticesByUri(Graph graph,
 			Collection<? extends Collection<String>> wordsSensesString) {
 		Collection<Set<Vertex>> wordVertices = new ArrayList<>();
@@ -266,11 +247,39 @@ public final class Graphs {
 		return wordVertices;
 	}
 
-	// Suppress default constructor for noninstantiability
-	private Graphs() {
-		throw new AssertionError();
+	@Deprecated
+	public static void addNodeAndEdgesByUriIfNonExistent(Graph graph, Collection<Edge> edges) {
+		for (Edge edge : edges) {
+			String outVertexUri = edge.getVertex(Direction.OUT).getProperty(GraphConfig.URI_PROPERTY).toString();
+			Vertex outVertex = addVertexByUri(graph, outVertexUri);
+
+			String inVertexUri = edge.getVertex(Direction.IN).getProperty(GraphConfig.URI_PROPERTY).toString();
+			Vertex inVertex = addVertexByUri(graph, inVertexUri);
+
+			addEdgeIfNonExistent(graph, edge, outVertex, inVertex);
+		}
 	}
 
+	/**
+	 * Adds a vertex with the uri as property to the graph if it does not exist yet.
+	 */
+	@Deprecated
+	public static Vertex addVertexByUri(Graph graph, String fullUri) {
+		Vertex v = vertexByUri(graph, fullUri);
+		if (v == null) {
+			v = graph.addVertex(fullUri);
+			v.setProperty(GraphConfig.URI_PROPERTY, fullUri);
+		}
+		return v;
+	}
+
+	@Deprecated
+	public static void addVerticesByUrisOfVertices(Graph graph, Iterable<Vertex> vertices) {
+		for (Vertex v : vertices)
+			addVertexByUri(graph, v.getProperty(GraphConfig.URI_PROPERTY).toString());
+	}
+
+	@Deprecated
 	public static boolean containsVertexByUri(Collection<Vertex> vertices, Vertex searchVertex) {
 		for (Vertex v : vertices)
 			if (Graphs.equalByUri(searchVertex, v))
@@ -278,8 +287,13 @@ public final class Graphs {
 		return false;
 	}
 
+	@Deprecated
 	public static boolean equalByUri(Vertex v1, Vertex v2) {
 		return uriOfVertex(v1).equals(uriOfVertex(v2));
 	}
 
+	// Suppress default constructor for noninstantiability
+	private Graphs() {
+		throw new AssertionError();
+	}
 }

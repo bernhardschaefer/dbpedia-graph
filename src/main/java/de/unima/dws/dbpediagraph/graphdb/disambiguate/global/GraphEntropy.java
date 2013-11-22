@@ -23,15 +23,22 @@ public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends Abstra
 
 	@Override
 	public double globalConnectivityMeasure(Graph sensegraph) {
+		Graphs.checkHasVertices(sensegraph);
+
 		int totalVertices = Graphs.verticesCount(sensegraph);
 		int totalEdges = Graphs.edgesCount(sensegraph);
+
+		if (totalEdges == 0)
+			return 0; // shortcut
 
 		double graphEntropy = 0;
 
 		for (Vertex vertex : sensegraph.getVertices()) {
 			double degree = Graphs.vertexDegree(vertex, Direction.BOTH);
-			double vertexProbability = degree / (2.0 * totalEdges);
-			graphEntropy += vertexProbability * Math.log(vertexProbability);
+			if (degree != 0) {
+				double vertexProbability = degree / (2.0 * totalEdges);
+				graphEntropy += vertexProbability * Math.log(vertexProbability);
+			}
 		}
 		graphEntropy *= -1;
 

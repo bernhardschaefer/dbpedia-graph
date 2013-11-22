@@ -17,23 +17,12 @@ import de.unima.dws.dbpediagraph.graphdb.disambiguate.local.HITSCentrality.HitsS
  */
 public final class CollectionUtils {
 
-	/**
-	 * Return the best k entries from the collection according to the provided comparator.
-	 */
-	public static <T> List<T> bestK(Collection<T> collection, int k, Comparator<T> comparator) {
-		List<T> sortedResources = new ArrayList<>(collection);
-		Collections.sort(sortedResources, comparator);
-		collection = sortedResources.subList(0, k);
-		return sortedResources;
+	public static <T> Set<T> combine(Collection<Set<T>> collections) {
+		Set<T> combinedCollections = new HashSet<T>();
+		for (Collection<T> c : collections)
+			combinedCollections.addAll(c);
+		return combinedCollections;
 	}
-
-	// guava Iterables.combine() is similar
-//	public static <T> Collection<T> combine(Collection<Collection<T>> collections) {
-//		Collection<T> combinedCollections = new ArrayList<T>();
-//		for (Collection<T> c : collections)
-//			combinedCollections.addAll(c);
-//		return combinedCollections;
-//	}
 
 	public static Map<Vertex, HitsScores> deepCopy(Map<Vertex, HitsScores> scores) {
 		Map<Vertex, HitsScores> copy = new HashMap<>(scores.size());

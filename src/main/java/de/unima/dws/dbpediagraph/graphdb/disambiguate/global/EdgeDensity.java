@@ -1,8 +1,5 @@
 package de.unima.dws.dbpediagraph.graphdb.disambiguate.global;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
@@ -26,9 +23,11 @@ public class EdgeDensity<T extends SurfaceForm, U extends Sense> extends Abstrac
 
 	@Override
 	public double globalConnectivityMeasure(Graph sensegraph) {
-		int totalEdges = Graphs.edgesCount(checkNotNull(sensegraph));
-		checkArgument(totalEdges != 0, " the provided graph cannot contain 0 vertices.");
+		Graphs.checkHasVertices(sensegraph);
+		
 		int totalVertices = Graphs.verticesCount(sensegraph);
+		int totalEdges = Graphs.edgesCount(sensegraph);
+		
 		// binomial (v over 2) === v * (v-1) / 2
 		double edgesCompleteGraph = (totalVertices * (totalVertices - 1)) / 2.0;
 		return totalEdges / edgesCompleteGraph;

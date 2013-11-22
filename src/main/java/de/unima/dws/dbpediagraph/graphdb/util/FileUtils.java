@@ -65,7 +65,7 @@ public final class FileUtils {
 
 		List<String> lines = FileUtils.readNonEmptyNonCommentLinesFromFile(clazz, fileName);
 		if (lines.isEmpty())
-			throw new RuntimeException(fileName + "file shouldnt be empty.");
+			throw new IllegalStateException(fileName + "file shouldnt be empty.");
 
 		String[] headers = lines.get(0).split(DELIMITER);
 

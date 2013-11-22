@@ -8,7 +8,6 @@ import com.google.common.collect.Sets;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graphdb.disambiguate.SimulatedAnnealing.ScoreFunction;
 import de.unima.dws.dbpediagraph.graphdb.model.*;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.*;
 
@@ -40,62 +39,22 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 	public List<SurfaceFormSenseScore<T, U>> disambiguate(final Map<T, List<U>> surfaceFormsSenses, Graph subgraph) {
 		// TODO check optaplanner:
 		// http://docs.jboss.org/drools/release/latest/optaplanner-docs/html_single/index.html#optimizationAlgorithms
-		// TODO check ai book code: https://code.google.com/p/aima-java/
 
-		ScoreFunction<T, U> scoreFunction = new ScoreFunction<T, U>() {
+		final Set<Vertex> allSensesVertices = Sets.newHashSet(Iterables.concat(ModelTransformer
+				.wordsVerticesFromSenses(subgraph, surfaceFormsSenses)));
+		ConnectivityMeasureFunction<T, U> scoreFunction = new ConnectivityMeasureFunction<T, U>() {
 			@Override
-			public double getScore(Map<T, U> assignments, Graph subgraph) {
-				return globalConnectivityMeasure(assignments, subgraph, surfaceFormsSenses);
+			public double getMeasure(Map<T, U> assignments, Graph subgraph) {
+				return globalConnectivityMeasure(assignments, subgraph, allSensesVertices);
 			}
 		};
+		Searcher<T, U> searcher = new SimulatedAnnealing<T, U>(new AimaScheduler(1000), scoreFunction);
 
-		// The number of iterations u for SA was set to 5,000
-		int maxU = 5000;
+		Map<T, U> finalAssignment = searcher.search(surfaceFormsSenses, subgraph);
 
-		// and, following [56], the constant T, initially set to 1.0, was reset to T := 0.9 * T after the u iterations.
-		double initialTemperature = 1.0;
-		Searcher<T, U> searcher = new SimulatedAnnealing<T, U>(maxU, initialTemperature, new Random());
-		Map<T, U> result = searcher.search(surfaceFormsSenses, subgraph, scoreFunction);
-		double score = searcher.getScore();
+		double finalScore = scoreFunction.getMeasure(finalAssignment, subgraph);
 
-		return wrap(result, score);
-
-		// private static class ConnectivityHeuristicFunction implements HeuristicFunction {
-		// @Override
-		// public double h(Object state) {
-		// return 0;
-		// }
-		// };
-		//
-		// Object initialState = null;
-		//
-		// ActionsFunction actionsFunction = new ActionsFunction() {
-		// @Override
-		// public Set<Action> actions(Object s) {
-		// return null;
-		// }
-		// };
-		// ResultFunction resultFunction = new ResultFunction() {
-		// @Override
-		// public Object result(Object s, Action a) {
-		// return null;
-		// }
-		// };
-		// GoalTest goalTest = new GoalTest() {
-		// @Override
-		// public boolean isGoalState(Object state) {
-		// return false;
-		// }
-		// };
-		// Problem p = new Problem(initialState, actionsFunction, resultFunction, goalTest);
-		// HeuristicFunction hf = new ConnectivityHeuristicFunction();
-		// SimulatedAnnealingSearch sas = new SimulatedAnnealingSearch(hf);
-		// try {
-		// sas.search(p);
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-
+		return wrap(finalAssignment, finalScore);
 	}
 
 	private List<SurfaceFormSenseScore<T, U>> wrap(Map<T, U> result, double score) {
@@ -107,29 +66,23 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 	}
 
 	@Override
-	public double globalConnectivityMeasure(Collection<Vertex> assigments, Graph subgraph,
-			Collection<Set<Vertex>> surfaceFormsVertices) {
+	public double globalConnectivityMeasure(Collection<Vertex> assigments, Graph subgraph, Set<Vertex> sensesVertices) {
 		SubgraphConstruction sensegraphConstruction = SubgraphConstructionFactory.newSubgraphConstruction(subgraph,
 				subgraphConstructionSettings);
-		Set<Vertex> allSensesVertices = Sets.newHashSet(Iterables.concat(surfaceFormsVertices));
-		// CollectionUtils.combine(surfaceFormsVertices)
-		Graph sensegraph = sensegraphConstruction.createSubSubgraph(assigments, allSensesVertices);
+		Graph sensegraph = sensegraphConstruction.createSubSubgraph(assigments, sensesVertices);
 		double score = globalConnectivityMeasure(sensegraph);
 		sensegraph.shutdown();
 		return score;
 	}
 
-	@Override
 	public abstract double globalConnectivityMeasure(Graph sensegraph);
 
 	@Override
 	public double globalConnectivityMeasure(Map<T, U> surfaceFormSenseAssigments, Graph subgraph,
-			Map<T, List<U>> surfaceFormsSenses) {
+			Set<Vertex> sensesVertices) {
 		Collection<Vertex> assignments = ModelTransformer.verticesFromSenses(subgraph,
 				surfaceFormSenseAssigments.values());
-		Collection<Set<Vertex>> surfaceFormsVertices = ModelTransformer.wordsVerticesFromSenses(subgraph,
-				surfaceFormsSenses);
-		return globalConnectivityMeasure(assignments, subgraph, surfaceFormsVertices);
+		return globalConnectivityMeasure(assignments, subgraph, sensesVertices);
 	}
 
 	@Override

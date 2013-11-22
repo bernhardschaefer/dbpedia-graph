@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
@@ -37,7 +37,7 @@ public class SubgraphTester {
 
 	private final Graph graph;
 	public final Collection<Set<Vertex>> surfaceFormSenseVertices;
-	public final Collection<Vertex> senseVertices;
+	public final Set<Vertex> senseVertices;
 
 	public final Map<DefaultSurfaceForm, List<DefaultSense>> surfaceFormSenses;
 
@@ -58,7 +58,7 @@ public class SubgraphTester {
 					DefaultModelFactory.INSTANCE);
 
 			surfaceFormSenseVertices = ModelTransformer.wordsVerticesFromSenses(graph, surfaceFormSenses);
-			senseVertices = Lists.newArrayList(Iterables.concat(surfaceFormSenseVertices));
+			senseVertices = Sets.newHashSet(Iterables.concat(surfaceFormSenseVertices));
 
 			expectedSubgraphVertices = FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), testSet.expectedVerticesFile);
 			expectedSubgraphEdges = FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), testSet.expectedEdgesFile);

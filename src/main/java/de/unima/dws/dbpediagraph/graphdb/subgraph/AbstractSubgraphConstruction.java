@@ -21,7 +21,7 @@ import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
  * @author Bernhard Schäfer
  * 
  */
-public abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
+abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 	protected static final Logger logger = LoggerFactory.getLogger(AbstractSubgraphConstruction.class);
 
 	protected final SubgraphConstructionSettings settings;
@@ -29,7 +29,7 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 
 	private final Graph graph;
 
-	public AbstractSubgraphConstruction(Graph graph, SubgraphConstructionSettings settings) {
+	AbstractSubgraphConstruction(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
 		this.settings = settings;
 	}

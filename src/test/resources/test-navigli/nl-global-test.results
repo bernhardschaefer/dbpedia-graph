@@ -6,3 +6,7 @@ drink5v,milk1n		0.85		0.97			0.50
 drink1v,milk2n		0.82		0.96			0.38
 drink2v,milk2n		0.79		0.98			0.33
 drink5v,milk2n		0.79		0.98			0.33
+
+# not mentioned in paper
+drink3v,milk1n		0.00		0.00			0.00
+drink3v,milk3n		0.00		0.00			0.00
