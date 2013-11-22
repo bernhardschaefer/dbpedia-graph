@@ -27,7 +27,7 @@ public class TestCompactness {
 
 	@Test
 	public void testDisambiguateValues() {
-		disambiguationNavigli.compareDisambiguationResults();
+		disambiguationNavigli.compareAllDisambiguationResults();
 	}
-
+	
 }

@@ -38,14 +38,14 @@ public class BlacklistStatementPredicate implements Predicate<Statement> {
 
 		String categoriesFileName = conf.getString(KEY_CATEGORIES_FILE);
 		try {
-			categories.addAll(FileUtils.readRelevantLinesFromFile(getClass(), categoriesFileName));
+			categories.addAll(FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), categoriesFileName));
 		} catch (URISyntaxException | IOException e) {
 			logger.warn("Category filter could not be loaded.", e);
 		}
 
 		String predicatesFileName = conf.getString(KEY_PREDICATES_FILE);
 		try {
-			predicates.addAll(FileUtils.readRelevantLinesFromFile(getClass(), predicatesFileName));
+			predicates.addAll(FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), predicatesFileName));
 		} catch (URISyntaxException | IOException e) {
 			logger.warn("Predicate filter could not be loaded.", e);
 		}

@@ -34,7 +34,7 @@ public class TestPageRankCentrality {
 
 	@Test
 	public void testResultingListSize() {
-		assertEquals(subgraphNavigli.allSenses.size(), disambiguationNavigli.getActualAllScoresResults().size());
+		assertEquals(subgraphNavigli.senseVertices.size(), disambiguationNavigli.getActualAllScoresResults().size());
 	}
 
 }

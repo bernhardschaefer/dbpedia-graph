@@ -27,7 +27,7 @@ public class TestGraphEntropy {
 
 	@Test
 	public void testDisambiguateValues() {
-		disambiguationNavigli.compareDisambiguationResults();
+		disambiguationNavigli.compareAllDisambiguationResults();
 	}
 
 }

@@ -28,12 +28,12 @@ public class TestDegreeCentrality {
 
 	@Test
 	public void testDisambiguateValues() {
-		disambiguationNavigli.compareDisambiguationResults();
+		disambiguationNavigli.compareAllDisambiguationResults();
 	}
 
 	@Test
 	public void testResultingListSize() {
-		assertEquals(subgraphNavigli.allSenses.size(), disambiguationNavigli.getActualAllScoresResults().size());
+		assertEquals(subgraphNavigli.senseVertices.size(), disambiguationNavigli.getActualAllScoresResults().size());
 	}
 
 }

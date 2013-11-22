@@ -14,7 +14,7 @@ import com.google.common.io.LineProcessor;
 import com.google.common.io.Resources;
 import com.tinkerpop.blueprints.*;
 
-import de.unima.dws.dbpediagraph.graphdb.*;
+import de.unima.dws.dbpediagraph.graphdb.GraphConfig;
 import de.unima.dws.dbpediagraph.graphdb.GraphFactory;
 import de.unima.dws.dbpediagraph.graphdb.model.*;
 
@@ -51,12 +51,6 @@ public final class FileUtils {
 		return column.length > 2 ? column[2] : StringUtils.join(column);
 	}
 
-	public static Collection<Set<Vertex>> parseAllWordsSenses(Graph graph, String fileName, Class<?> clazz,
-			String uriPrefix) throws IOException, URISyntaxException {
-		Collection<Collection<String>> wordsSensesString = readUrisFromFile(clazz, fileName, uriPrefix);
-		return Graphs.wordsVerticesByUri(graph, wordsSensesString);
-	}
-
 	/**
 	 * Parse all non-empty and non-comment lines (comment lines start with '#') from a test results file into a map.
 	 * 
@@ -69,7 +63,7 @@ public final class FileUtils {
 
 		Map<String, Map<Class<?>, Double>> results = new HashMap<>();
 
-		List<String> lines = FileUtils.readRelevantLinesFromFile(clazz, fileName);
+		List<String> lines = FileUtils.readNonEmptyNonCommentLinesFromFile(clazz, fileName);
 		if (lines.isEmpty())
 			throw new RuntimeException(fileName + "file shouldnt be empty.");
 
@@ -100,8 +94,8 @@ public final class FileUtils {
 			URISyntaxException {
 		Graph graph = GraphFactory.newInMemoryGraph();
 
-		List<String> vertices = FileUtils.readRelevantLinesFromFile(clazz, verticesFileName);
-		List<String> edges = FileUtils.readRelevantLinesFromFile(clazz, edgesFileName);
+		List<String> vertices = FileUtils.readNonEmptyNonCommentLinesFromFile(clazz, verticesFileName);
+		List<String> edges = FileUtils.readNonEmptyNonCommentLinesFromFile(clazz, edgesFileName);
 
 		for (String v : vertices) {
 			Vertex vertex = graph.addVertex(v);
@@ -142,7 +136,7 @@ public final class FileUtils {
 	 * @param clazz
 	 *            the class whose classpath will be used.
 	 */
-	public static List<String> readRelevantLinesFromFile(Class<?> clazz, String fileName) throws IOException,
+	public static List<String> readNonEmptyNonCommentLinesFromFile(Class<?> clazz, String fileName) throws IOException,
 			URISyntaxException {
 		URL resource = clazz.getResource(fileName);
 		if (resource == null)
@@ -151,38 +145,28 @@ public final class FileUtils {
 		return lines;
 	}
 
-	public static Collection<Collection<String>> readUrisFromFile(Class<?> clazz, String fileName, String uriPrefix)
+	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> parseSurfaceFormSensesFromFile(String fileName, Class<?> clazz, String uriPrefix, ModelFactory<T, U> factory)
 			throws IOException, URISyntaxException {
-		Collection<Collection<String>> wordsSenses = new ArrayList<>();
-		List<String> lines = readRelevantLinesFromFile(clazz, fileName);
+		Map<T, List<U>> wordsSenses = new HashMap<>();
+		List<String> lines = readNonEmptyNonCommentLinesFromFile(clazz, fileName);
 		for (String line : lines) {
-			String[] wordSenses = line.split(DELIMITER);
-			for (int i = 0; i < wordSenses.length; i++)
-				wordSenses[i] = uriPrefix + wordSenses[i];
-			wordsSenses.add(Arrays.asList(wordSenses));
+			List<String> wordSenses = Arrays.asList(line.split(DELIMITER));
+			// the first entry is the surface form name, the rest are the senses
+			T sf = factory.newSurfaceForm(wordSenses.get(0));
+			List<U> senses = sensesFromNotPrefixedUris(wordSenses.subList(1, wordSenses.size()),uriPrefix, factory);
+			wordsSenses.put(sf, senses);
 		}
 		return wordsSenses;
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> List<U> sensesFromLine(String line, String uriPrefix,
+	private static <T extends SurfaceForm, U extends Sense> List<U> sensesFromNotPrefixedUris(List<String> notPrefixedUris, String uriPrefix,
 			ModelFactory<T, U> factory) {
 		List<U> senses = new ArrayList<>();
-		String[] wordSenses = line.split(FileUtils.DELIMITER);
-		for (int i = 0; i < wordSenses.length; i++) {
-			String uri = uriPrefix + wordSenses[i];
-			senses.add(factory.newSense(uri));
-		}
+		for (String notPrefixedUri: notPrefixedUris)
+			senses.add(factory.newSense(uriPrefix + notPrefixedUri));
 		return senses;
 	}
-
-	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> surfaceFormsSensesFromFile(Class<?> clazz,
-			String fileName, String uriPrefix, ModelFactory<T, U> factory) throws IOException, URISyntaxException {
-		Map<T, List<U>> wordsSenses = new HashMap<>();
-		List<String> lines = FileUtils.readRelevantLinesFromFile(clazz, fileName);
-		for (String line : lines)
-			wordsSenses.put(factory.newSurfaceForm("test"), sensesFromLine(line, uriPrefix, factory));
-		return wordsSenses;
-	}
+	
 
 	// Suppress default constructor for noninstantiability
 	private FileUtils() {

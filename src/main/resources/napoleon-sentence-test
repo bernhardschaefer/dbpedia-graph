@@ -1,20 +1,13 @@
 # Napoleon was the emperor of the First French Empire. He was defeated at Waterloo by Wellington and [[Blücher]]. He was banned to Saint Helena, died of stomach cancer, and was buried at Invalides.
 
+NAPOLEON	Napoleon	Napoleon_II		Napoleon_III	Napoleon_Louis_Bonaparte
 
-# Napoleon
-Napoleon	Napoleon_II		Napoleon_III	Napoleon_Louis_Bonaparte
+WATERLOO	Battle_of_Waterloo		Waterloo,_Belgium 		Waterloo,_Ontario
 
-# Waterloo
-Battle_of_Waterloo		Waterloo,_Belgium 		Waterloo,_Ontario
+WELLINGTON	Arthur_Wellesley,_1st_Duke_of_Wellington		Wellington		 Beef_Wellington
 
-# Wellington
-Arthur_Wellesley,_1st_Duke_of_Wellington		Wellington		 Beef_Wellington
+BLUECHER	Gebhard_Leberecht_von_Bl%C3%BCcher
 
-# Blücher
-Gebhard_Leberecht_von_Bl%C3%BCcher
+SAINTHELENA	Saint_Helena
 
-# Saint Helena
-Saint_Helena
-
-# Invalides
-Les_Invalides
+INVALIDES	Les_Invalides

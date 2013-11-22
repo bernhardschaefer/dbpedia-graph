@@ -19,12 +19,12 @@ public class GlobalDisambiguationTester implements DisambiguationTester {
 
 	/** Name of the package where the local disambiguator classes reside. */
 	private static final String GLOBAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.graphdb.disambiguate.global";
-	private static final String SENSES_DELIMITER = ",";
 	private static final double ALLOWED_SCORE_DEVIATION = 0.01;
 
 	private final GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator;
 	private final ExpectedDisambiguationResults expectedDisambiguationData;
 	private final SubgraphTester subgraphData;
+
 
 	public GlobalDisambiguationTester(GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator,
 			SubgraphTester subgraphData) {
@@ -40,14 +40,14 @@ public class GlobalDisambiguationTester implements DisambiguationTester {
 	 * @see de.unima.dws.dbpediagraph.graphdb.DisambiguationTestData# compareDisambiguationResults()
 	 */
 	@Override
-	public void compareDisambiguationResults() {
+	public void compareAllDisambiguationResults() {
 		for (Entry<String, Map<Class<?>, Double>> measureEntry : expectedDisambiguationData.getResults().entrySet()) {
-			Collection<String> senseAssignments = Arrays.asList(measureEntry.getKey().split(SENSES_DELIMITER));
+			Collection<String> senseAssignments = TestDisambiguationHelper.split(measureEntry.getKey());
 			Collection<Vertex> senses = Graphs.verticesByUri(subgraphData.getSubgraph(), senseAssignments);
 
 			// create sense graph based on the sense assignments
 			double actual = disambiguator.globalConnectivityMeasure(senses, subgraphData.getSubgraph(),
-					subgraphData.allWordsSenses);
+					subgraphData.surfaceFormSenseVertices);
 
 			double expected = measureEntry.getValue().get(disambiguator.getClass());
 
@@ -60,4 +60,9 @@ public class GlobalDisambiguationTester implements DisambiguationTester {
 	public ExpectedDisambiguationResults getExpectedDisambiguationResults() {
 		return expectedDisambiguationData;
 	}
+
+//	@Override
+//	public List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> getActualDisambiguationResults() {
+//		return actualDisambiguationResults;
+//	}
 }

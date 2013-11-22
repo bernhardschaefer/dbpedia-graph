@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
+import de.unima.dws.dbpediagraph.graphdb.model.*;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.*;
 import de.unima.dws.dbpediagraph.graphdb.util.FileUtils;
 
@@ -35,8 +36,10 @@ public class SubgraphTester {
 	}
 
 	private final Graph graph;
-	public final Collection<Set<Vertex>> allWordsSenses;
-	public final Collection<Vertex> allSenses;
+	public final Collection<Set<Vertex>> surfaceFormSenseVertices;
+	public final Collection<Vertex> senseVertices;
+
+	public final Map<DefaultSurfaceForm, List<DefaultSense>> surfaceFormSenses;
 
 	public final List<String> expectedSubgraphEdges;
 	public final List<String> expectedSubgraphVertices;
@@ -50,17 +53,21 @@ public class SubgraphTester {
 	public SubgraphTester(TestSet testSet, SubgraphConstructionSettings settings) {
 		try {
 			graph = FileUtils.parseGraph(testSet.verticesFile, testSet.edgesFile, getClass());
-			allWordsSenses = FileUtils.parseAllWordsSenses(graph, testSet.sensesFile, getClass(), "");
-			allSenses = Lists.newArrayList(Iterables.concat(allWordsSenses));
 
-			expectedSubgraphVertices = FileUtils.readRelevantLinesFromFile(getClass(), testSet.expectedVerticesFile);
-			expectedSubgraphEdges = FileUtils.readRelevantLinesFromFile(getClass(), testSet.expectedEdgesFile);
+			surfaceFormSenses = FileUtils.parseSurfaceFormSensesFromFile(testSet.sensesFile, getClass(), "",
+					DefaultModelFactory.INSTANCE);
+
+			surfaceFormSenseVertices = ModelTransformer.wordsVerticesFromSenses(graph, surfaceFormSenses);
+			senseVertices = Lists.newArrayList(Iterables.concat(surfaceFormSenseVertices));
+
+			expectedSubgraphVertices = FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), testSet.expectedVerticesFile);
+			expectedSubgraphEdges = FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), testSet.expectedEdgesFile);
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException("Error while trying to construct test graph.", e);
 		}
 
 		this.subgraphConstruction = SubgraphConstructionFactory.newSubgraphConstruction(graph, settings);
-		subgraph = subgraphConstruction.createSubgraph(allWordsSenses);
+		subgraph = subgraphConstruction.createSubgraph(surfaceFormSenseVertices);
 	}
 
 	public void close() {

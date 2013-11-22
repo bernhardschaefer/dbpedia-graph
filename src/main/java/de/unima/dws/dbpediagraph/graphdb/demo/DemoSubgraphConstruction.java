@@ -60,7 +60,7 @@ public class DemoSubgraphConstruction {
 			Collection<GraphDisambiguator<T, U>> disambiguators) {
 		SubgraphConstruction sc = SubgraphConstructionFactory.newSubgraphConstruction(graph,
 				new SubgraphConstructionSettings.Builder().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build());
-		
+
 		Collection<Set<Vertex>> surfaceFormVertices = ModelTransformer.wordsVerticesFromSenses(graph,
 				surfaceFormsSenses);
 		Graph subGraph = sc.createSubgraph(surfaceFormVertices);
@@ -84,8 +84,8 @@ public class DemoSubgraphConstruction {
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		String sensesFileName = "/napoleon-sentence-test";
 		// String sensesFileName = "/dbpedia-default-sentence-test";
-		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.surfaceFormsSensesFromFile(
-				DemoSubgraphConstruction.class, sensesFileName, GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
+		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
+				sensesFileName, DemoSubgraphConstruction.class, GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
 
 		Graph graph = GraphFactory.getDBpediaGraph();
 		demo(graph, wordsSensesString, disambiguators);

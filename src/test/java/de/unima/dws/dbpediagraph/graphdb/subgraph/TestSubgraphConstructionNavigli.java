@@ -39,7 +39,7 @@ public class TestSubgraphConstructionNavigli {
 
 	@Test
 	public void testSubgraphContainsSensesDirected() {
-		for (Vertex s : subgraphNavigli.allSenses) {
+		for (Vertex s : subgraphNavigli.senseVertices) {
 			assertNotNull("The sense vertex " + s.getId() + " should be contained in the subgraph.", subgraphNavigli
 					.getSubgraph().getVertex(s.getId()));
 		}

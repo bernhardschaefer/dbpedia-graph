@@ -1,5 +1,7 @@
 package de.unima.dws.dbpediagraph.graphdb.model;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Immutable default {@link SurfaceFormSenseScore} implementation.
  * 
@@ -12,9 +14,9 @@ public class DefaultSurfaceFormSenseScore implements SurfaceFormSenseScore<Defau
 	private final double score;
 
 	public DefaultSurfaceFormSenseScore(DefaultSurfaceForm surfaceForm, DefaultSense sense, double score) {
-		this.surfaceForm = surfaceForm;
-		this.sense = sense;
-		this.score = score;
+		this.surfaceForm = checkNotNull(surfaceForm, "Surface form cannot be null");
+		this.sense = checkNotNull(sense, "Sense cannot be null");
+		this.score = checkNotNull(score, "Score cannot be null");
 	}
 
 	@Override
@@ -35,6 +37,27 @@ public class DefaultSurfaceFormSenseScore implements SurfaceFormSenseScore<Defau
 	@Override
 	public DefaultSurfaceForm surfaceForm() {
 		return surfaceForm;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 31 * result + surfaceForm.hashCode();
+		result = 31 * result + sense.hashCode();
+		long f = Double.doubleToLongBits(score);
+		result = 31 * result + (int) (f ^ (f >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof DefaultSurfaceFormSenseScore))
+			return false;
+		DefaultSurfaceFormSenseScore senseScore = (DefaultSurfaceFormSenseScore) o;
+		return score == senseScore.score && sense.equals(senseScore.sense)
+				&& surfaceForm.equals(senseScore.surfaceForm);
 	}
 
 	@Override

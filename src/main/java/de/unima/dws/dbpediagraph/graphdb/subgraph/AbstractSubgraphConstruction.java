@@ -54,7 +54,7 @@ public abstract class AbstractSubgraphConstruction implements SubgraphConstructi
 			dfs(new Path(start), targetSenses, subsubgraph, stopVertices);
 		}
 
-		if (logger.isInfoEnabled())
+		if (logger.isDebugEnabled())
 			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, startTime,
 					traversedNodes, settings.maxDistance);
 

@@ -50,9 +50,11 @@ public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implemen
 		// get fitness
 		double score = scoreFunction.getScore(assignments, subgraph);
 		currentScore = score;
-		int u = 0;
 
-		Map<T, U> bestAssignment = doStep(assignments, score, u, initialTemperature);
+		int u = 0;
+		int totalSteps = 0;
+
+		Map<T, U> bestAssignment = doStep(assignments, score, u, initialTemperature, totalSteps);
 		logger.info("Finished " + getClass().getSimpleName() + ". Best assignment: " + bestAssignment);
 		return bestAssignment;
 	}
@@ -64,11 +66,13 @@ public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implemen
 	}
 
 	// given: assignments, score(assignments), u, surfaceFormSenses
-	private Map<T, U> doStep(Map<T, U> assignments, double score, int u, double temperature) {
+	private Map<T, U> doStep(Map<T, U> assignments, double score, int u, double temperature, int totalSteps) {
 		currentScore = score;
 
-		if (temperature < MIN_TEMPERATURE)
+		if (temperature < MIN_TEMPERATURE) {
+			logger.info("{} total steps in simulated annealing", totalSteps);
 			return assignments;
+		}
 
 		// The procedure is repeated u times. The algorithm terminates when we observe no changes in I after u steps.
 		// Otherwise, the entire procedure is repeated starting from the most recent interpretation.
@@ -92,16 +96,16 @@ public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implemen
 		if (delta > MIN_IMPROVEMENT)
 			// If the new interpretation has a higher score, we adopt it (i.e., we set I :=I').
 			// assignments = newAssignments;
-			doStep(newAssignments, newScore, 0, temperature);
+			doStep(newAssignments, newScore, 0, temperature, totalSteps++);
 		else {
 			u++;
 			// Otherwise, we either switch to the new interpretation with probability e^(delta/T),
 			// or nonetheless retain the old interpretation with probability 1-e^(delta/T)
 			double probability = Math.pow(Math.E, (delta / temperature));
 			if (random.nextDouble() < probability)
-				doStep(newAssignments, newScore, u, temperature);
+				doStep(newAssignments, newScore, u, temperature, totalSteps++);
 			else
-				doStep(assignments, score, u, temperature);
+				doStep(assignments, score, u, temperature, totalSteps++);
 		}
 
 		throw new IllegalStateException("this shouldnt happen");

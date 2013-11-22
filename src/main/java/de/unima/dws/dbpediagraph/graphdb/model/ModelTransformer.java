@@ -28,14 +28,6 @@ public final class ModelTransformer {
 		return senses;
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> surfaceFormSensesFromVertices(
-			Iterable<? extends Iterable<Vertex>> allWordsSenses, ModelFactory<T, U> factory) {
-		Map<T, List<U>> surfaceFormSenses = new HashMap<>();
-		for (Iterable<Vertex> wordSenses : allWordsSenses)
-			surfaceFormSenses.put(factory.newSurfaceForm("test"), sensesFromVertices(wordSenses, factory));
-		return surfaceFormSenses;
-	}
-
 	public static Set<Vertex> verticesFromSenses(Graph graph, Collection<? extends Sense> senses) {
 		Set<Vertex> vertices = new HashSet<>(senses.size());
 		for (Sense sense : senses) {

@@ -1,2 +1,3 @@
-drink1v	drink2v	drink3v	drink4v	drink5v
-milk1n	milk2n	milk3n	milk4n
+# in each row, the first entry is the surface form name, the rest are the senses
+DRINK	drink1v	drink2v	drink3v	drink4v	drink5v
+MILK	milk1n	milk2n	milk3n	milk4n
