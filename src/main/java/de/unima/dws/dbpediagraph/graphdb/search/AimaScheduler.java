@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.disambiguate;
+package de.unima.dws.dbpediagraph.graphdb.search;
 
 /**
  * Wraps the default {@link aima.core.search.local.Scheduler}.

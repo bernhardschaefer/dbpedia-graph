@@ -9,6 +9,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graphdb.model.*;
+import de.unima.dws.dbpediagraph.graphdb.search.*;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.*;
 
 /**
@@ -48,9 +49,10 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 				return globalConnectivityMeasure(assignments, subgraph, allSensesVertices);
 			}
 		};
-		Searcher<T, U> searcher = new SimulatedAnnealing<T, U>(new AimaScheduler(1000), scoreFunction);
+		int maxIterations = 1000;
+		Searcher searcher = SearcherFactory.newSearcher(maxIterations);
 
-		Map<T, U> finalAssignment = searcher.search(surfaceFormsSenses, subgraph);
+		Map<T, U> finalAssignment = searcher.search(surfaceFormsSenses, subgraph, scoreFunction);
 
 		double finalScore = scoreFunction.getMeasure(finalAssignment, subgraph);
 

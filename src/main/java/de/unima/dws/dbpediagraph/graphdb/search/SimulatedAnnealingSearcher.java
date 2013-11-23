@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.disambiguate;
+package de.unima.dws.dbpediagraph.graphdb.search;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -16,30 +16,22 @@ import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
  * 
  * @author Bernhard Schäfer
  */
-public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implements Searcher<T, U> {
-	private static final Logger logger = LoggerFactory.getLogger(SimulatedAnnealing.class);
+class SimulatedAnnealingSearcher implements Searcher {
+	private static final Logger logger = LoggerFactory.getLogger(SimulatedAnnealingSearcher.class);
 
 	private final Scheduler scheduler;
-	private ConnectivityMeasureFunction<T, U> measureFunction;
-	private final Random random;
+	private static final Random RANDOM = new Random();
 
-	public SimulatedAnnealing(Scheduler scheduler, ConnectivityMeasureFunction<T, U> measureFunction, Random random) {
+	SimulatedAnnealingSearcher(Scheduler scheduler) {
 		this.scheduler = scheduler;
-		this.measureFunction = measureFunction;
-		this.random = random;
-	}
-
-	private static final Random DEFAULT_RANDOM = new Random();
-
-	public SimulatedAnnealing(Scheduler scheduler, ConnectivityMeasureFunction<T, U> measureFunction) {
-		this(scheduler, measureFunction, DEFAULT_RANDOM);
 	}
 
 	@Override
-	public Map<T, U> search(Map<T, List<U>> surfaceFormsSenses, Graph subgraph) {
+	public <T extends SurfaceForm, U extends Sense> Map<T, U> search(Map<T, List<U>> surfaceFormsSenses,
+			Graph subgraph, ConnectivityMeasureFunction<T, U> measureFunction) {
 		logger.info("Starting " + toString());
 
-		Map<T, U> bestAssignment = searchIterative(surfaceFormsSenses, subgraph);
+		Map<T, U> bestAssignment = searchIterative(surfaceFormsSenses, subgraph, measureFunction);
 
 		logger.info("Finished " + getClass().getSimpleName() + ". Best assignment: " + bestAssignment);
 		return bestAssignment;
@@ -50,7 +42,8 @@ public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implemen
 		return getClass().getSimpleName() + " scheduler: " + scheduler.toString();
 	}
 
-	private Map<T, U> searchIterative(Map<T, List<U>> surfaceFormsSenses, Graph subgraph) {
+	private <T extends SurfaceForm, U extends Sense> Map<T, U> searchIterative(Map<T, List<U>> surfaceFormsSenses,
+			Graph subgraph, ConnectivityMeasureFunction<T, U> measureFunction) {
 		Map<T, U> assignments = randomSelect(surfaceFormsSenses);
 		double score = measureFunction.getMeasure(assignments, subgraph);
 
@@ -74,7 +67,7 @@ public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implemen
 			} else {
 				// Otherwise, we only switch to new assignment with probability e^(delta/T),
 				double probability = Math.pow(Math.E, (delta / temperature));
-				if (random.nextDouble() < probability) {
+				if (RANDOM.nextDouble() < probability) {
 					assignments = newAssignments;
 					score = newScore;
 				}
@@ -82,19 +75,21 @@ public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implemen
 		}
 	}
 
-	private Map<T, U> newSwapRandomSense(Map<T, U> assignments, Map<T, List<U>> surfaceFormsSenses) {
+	private static <T extends SurfaceForm, U extends Sense> Map<T, U> newSwapRandomSense(Map<T, U> assignments,
+			Map<T, List<U>> surfaceFormsSenses) {
 		return swapRandomSense(new HashMap<>(assignments), surfaceFormsSenses);
 	}
 
-	private Map<T, U> swapRandomSense(Map<T, U> assignments, Map<T, List<U>> surfaceFormsSenses) {
+	private static <T extends SurfaceForm, U extends Sense> Map<T, U> swapRandomSense(Map<T, U> assignments,
+			Map<T, List<U>> surfaceFormsSenses) {
 		// get random surface form
 		ArrayList<T> sfs = new ArrayList<>(assignments.keySet());
-		T randomSurfaceForm = sfs.get(random.nextInt(sfs.size()));
+		T randomSurfaceForm = sfs.get(RANDOM.nextInt(sfs.size()));
 
 		// get random sense
 		List<U> otherSenses = new ArrayList<>(surfaceFormsSenses.get(randomSurfaceForm));
 		otherSenses.remove(randomSurfaceForm);
-		U newSense = otherSenses.get(random.nextInt(otherSenses.size()));
+		U newSense = otherSenses.get(RANDOM.nextInt(otherSenses.size()));
 
 		// override old sense of surface form with new sense
 		assignments.put(randomSurfaceForm, newSense);
@@ -102,11 +97,11 @@ public class SimulatedAnnealing<T extends SurfaceForm, U extends Sense> implemen
 		return assignments;
 	}
 
-	private Map<T, U> randomSelect(Map<T, List<U>> surfaceFormsSenses) {
+	private static <T extends SurfaceForm, U extends Sense> Map<T, U> randomSelect(Map<T, List<U>> surfaceFormsSenses) {
 		Map<T, U> randomSelection = new HashMap<>();
 		for (Entry<T, List<U>> entry : surfaceFormsSenses.entrySet()) {
 			List<U> list = entry.getValue();
-			U element = list.get(random.nextInt(list.size()));
+			U element = list.get(RANDOM.nextInt(list.size()));
 			randomSelection.put(entry.getKey(), element);
 		}
 		return randomSelection;
