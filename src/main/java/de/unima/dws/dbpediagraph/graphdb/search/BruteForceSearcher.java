@@ -47,6 +47,7 @@ class BruteForceSearcher implements Searcher {
 		return surfaceFormMappings;
 	}
 
+	//FIXME wrongly implemented
 	public static <T extends SurfaceForm, U extends Sense> Map<T, U> getNextAssignment(Map<T, U> currentAssignment,
 			Map<T, List<U>> surfaceFormsSenses, MutableInt listPointer, Map<Integer, T> surfaceFormMappings) {
 		Map<T, U> nextAssignment = new HashMap<>(currentAssignment);
