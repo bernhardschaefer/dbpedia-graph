@@ -1,0 +1,18 @@
+package de.unima.dws.dbpediagraph.model;
+
+import com.tinkerpop.blueprints.Vertex;
+
+/**
+ * Abstract factory for creating {@link Sense} and {@link SurfaceForm} related instances.
+ * 
+ * @author Bernhard Schäfer
+ */
+public interface ModelFactory<T extends SurfaceForm, U extends Sense> {
+	U newSense(String uri);
+
+	U newSense(Vertex v);
+
+	T newSurfaceForm(String name);
+
+	SurfaceFormSenseScore<T, U> newSurfaceFormSenseScore(T surfaceForm, U sense, double score);
+}
