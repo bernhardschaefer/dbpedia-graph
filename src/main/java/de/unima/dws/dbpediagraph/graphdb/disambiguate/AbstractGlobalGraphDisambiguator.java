@@ -50,7 +50,7 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 			}
 		};
 		int maxIterations = 1000;
-		Searcher searcher = SearcherFactory.newSearcher(maxIterations);
+		Searcher searcher = SearcherFactory.newDefaultSearcher(maxIterations);
 
 		Map<T, U> finalAssignment = searcher.search(surfaceFormsSenses, subgraph, scoreFunction);
 

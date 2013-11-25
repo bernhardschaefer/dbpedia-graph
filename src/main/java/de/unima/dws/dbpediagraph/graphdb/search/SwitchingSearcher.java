@@ -7,12 +7,17 @@ import com.tinkerpop.blueprints.Graph;
 import de.unima.dws.dbpediagraph.graphdb.model.Sense;
 import de.unima.dws.dbpediagraph.graphdb.model.SurfaceForm;
 
-class StrategySearcher implements Searcher {
+/**
+ * Switching {@link Searcher} implementation that switches between implementations depending on the request. 
+ * @author Bernhard Schäfer
+ *
+ */
+class SwitchingSearcher implements Searcher {
 	private final Searcher bruteForce;
 	private final Searcher simmulatedAnnealing;
 	private final int maxIterations;
 
-	StrategySearcher(int maxIterations) {
+	SwitchingSearcher(int maxIterations) {
 		this.maxIterations = maxIterations;
 		bruteForce = new BruteForceSearcher();
 		simmulatedAnnealing = new SimulatedAnnealingSearcher(new AimaScheduler(maxIterations));
