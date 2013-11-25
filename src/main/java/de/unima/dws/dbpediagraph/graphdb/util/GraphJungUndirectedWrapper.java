@@ -1,4 +1,4 @@
-package de.unima.dws.dbpediagraph.graphdb.wrapper;
+package de.unima.dws.dbpediagraph.graphdb.util;
 
 import java.util.Collection;
 
@@ -10,9 +10,9 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.Graphs;
 
-public class GraphJungUndirected extends GraphJung<Graph> {
+public class GraphJungUndirectedWrapper extends GraphJung<Graph> {
 
-	public GraphJungUndirected(Graph graph) {
+	public GraphJungUndirectedWrapper(Graph graph) {
 		super(graph);
 	}
 

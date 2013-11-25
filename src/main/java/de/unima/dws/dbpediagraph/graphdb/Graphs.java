@@ -11,7 +11,7 @@ import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graphdb.util.CollectionUtils;
-import de.unima.dws.dbpediagraph.graphdb.wrapper.GraphJungUndirected;
+import de.unima.dws.dbpediagraph.graphdb.util.GraphJungUndirectedWrapper;
 
 /**
  * Noninstantiable utility class for performing various graph operations. All operations are static.
@@ -56,7 +56,7 @@ public final class Graphs {
 		case DIRECTED_GRAPH:
 			return new GraphJung<Graph>(graph);
 		case UNDIRECTED_GRAPH:
-			return new GraphJungUndirected(graph);
+			return new GraphJungUndirectedWrapper(graph);
 		default:
 			throw new IllegalArgumentException();
 		}
