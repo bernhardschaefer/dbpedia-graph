@@ -14,6 +14,7 @@ import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.disambiguate.GraphDisambiguator;
+import de.unima.dws.dbpediagraph.disambiguate.global.*;
 import de.unima.dws.dbpediagraph.disambiguate.local.*;
 import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
@@ -35,15 +36,25 @@ public class DemoSubgraphConstruction {
 	private static final int MAX_DISTANCE = 4;
 	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
 
+	private static final SubgraphConstructionSettings settings = new SubgraphConstructionSettings.Builder()
+			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build();
 	private static final ModelFactory<DefaultSurfaceForm, DefaultSense> factory = DefaultModelFactory.INSTANCE;
+
 	private static final Collection<GraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators;
 	static {
 		disambiguators = new ArrayList<>();
-		disambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
-		disambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
-		disambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
-		disambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
-		disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, factory));
+
+		// local
+		disambiguators.add(new BetweennessCentrality<>(GRAPH_TYPE, factory));
+		disambiguators.add(new DegreeCentrality<>(GRAPH_TYPE, factory));
+		disambiguators.add(new HITSCentrality<>(GRAPH_TYPE, factory));
+		disambiguators.add(new KPPCentrality<>(GRAPH_TYPE, factory));
+		disambiguators.add(new PageRankCentrality<>(GRAPH_TYPE, factory));
+
+		// global
+		disambiguators.add(new Compactness<>(settings, factory));
+		disambiguators.add(new EdgeDensity<>(settings, factory));
+		disambiguators.add(new GraphEntropy<>(settings, factory));
 	}
 
 	private static final Dimension SCREEN_DIMENSION;
@@ -58,8 +69,7 @@ public class DemoSubgraphConstruction {
 
 	private static <T extends SurfaceForm, U extends Sense> void demo(Graph graph, Map<T, List<U>> surfaceFormsSenses,
 			Collection<GraphDisambiguator<T, U>> disambiguators) {
-		SubgraphConstruction sc = SubgraphConstructionFactory.newSubgraphConstruction(graph,
-				new SubgraphConstructionSettings.Builder().maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build());
+		SubgraphConstruction sc = SubgraphConstructionFactory.newSubgraphConstruction(graph, settings);
 
 		Collection<Set<Vertex>> surfaceFormVertices = ModelTransformer.wordsVerticesFromSenses(graph,
 				surfaceFormsSenses);
@@ -70,8 +80,8 @@ public class DemoSubgraphConstruction {
 
 			List<SurfaceFormSenseScore<T, U>> senseScores = d.disambiguate(surfaceFormsSenses, subGraph);
 			for (SurfaceFormSenseScore<T, U> senseScore : senseScores)
-				System.out
-						.printf("  %s (%.2f)", GraphUriShortener.shorten(senseScore.sense().fullUri()), senseScore.score());
+				System.out.printf("  %s (%.2f)", GraphUriShortener.shorten(senseScore.sense().fullUri()),
+						senseScore.score());
 			System.out.println();
 		}
 

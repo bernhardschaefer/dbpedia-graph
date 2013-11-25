@@ -1,7 +1,6 @@
 package de.unima.dws.dbpediagraph.graph;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import com.tinkerpop.blueprints.Graph;
@@ -13,7 +12,7 @@ import com.tinkerpop.blueprints.Graph;
  * 
  */
 public final class GraphUriShortener {
-	public static final Map<String, String> URI_TO_PREFIX;
+	private static final Map<String, String> URI_TO_PREFIX;
 	static {
 		URI_TO_PREFIX = new LinkedHashMap<String, String>();
 

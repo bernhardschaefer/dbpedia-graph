@@ -20,7 +20,7 @@ import de.unima.dws.dbpediagraph.util.FileUtils;
  * 
  * @author Bernhard Schäfer
  */
-public class BlacklistStatementPredicate implements Predicate<Statement> {
+class BlacklistStatementPredicate implements Predicate<Statement> {
 	private static final Logger logger = LoggerFactory.getLogger(BlacklistStatementPredicate.class);
 
 	// Blacklists from "Exploiting Linked Data for Semantic Document Modelling"
@@ -30,7 +30,7 @@ public class BlacklistStatementPredicate implements Predicate<Statement> {
 	private final HashSet<String> categories;
 	private final HashSet<String> predicates;
 
-	public BlacklistStatementPredicate() {
+	BlacklistStatementPredicate() {
 		Configuration conf = GraphConfig.config();
 
 		categories = new HashSet<String>();

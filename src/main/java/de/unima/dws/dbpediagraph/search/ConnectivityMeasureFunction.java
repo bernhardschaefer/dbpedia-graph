@@ -8,5 +8,5 @@ import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 
 public interface ConnectivityMeasureFunction<T extends SurfaceForm, U extends Sense> {
-	double getMeasure(Map<T, U> assignments, Graph subgraph);
+	public double getMeasure(Map<T, U> assignments, Graph subgraph);
 }

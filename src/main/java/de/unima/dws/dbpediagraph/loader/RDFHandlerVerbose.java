@@ -10,7 +10,7 @@ import de.unima.dws.dbpediagraph.util.LoadingMetrics;
  * @author Bernhard Schäfer
  * 
  */
-public abstract class RDFHandlerVerbose implements RDFHandler {
+abstract class RDFHandlerVerbose implements RDFHandler {
 	protected int validTriples = 0;
 	protected int invalidTriples = 0;
 

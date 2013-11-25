@@ -15,7 +15,7 @@ class AimaScheduler implements Scheduler {
 		scheduler = new aima.core.search.local.Scheduler(k, lam, limit);
 	}
 
-	public AimaScheduler() {
+	AimaScheduler() {
 		scheduler = new aima.core.search.local.Scheduler();
 	}
 

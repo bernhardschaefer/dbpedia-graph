@@ -9,7 +9,13 @@ import org.openrdf.model.Statement;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-public class StatementPredicateFactory {
+/**
+ * Factory for retrieving {@link Predicate}s for {@link Statement}s.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
+class StatementPredicateFactory {
 
 	private static final String CONFIG_STATEMENT_PREDICATE = "loading.filter.impl";
 	private static final Predicate<Statement> DUMMY_PREDICATE = new Predicate<Statement>() {
@@ -19,18 +25,18 @@ public class StatementPredicateFactory {
 		}
 	};
 
-	public enum LoadingType {
+	enum LoadingType {
 		BLACKLIST, COMPLETE, DOMAIN, RESOURCE;
 	}
 
-	public static Predicate<Statement> fromLoadingTypes(List<LoadingType> types) {
+	static Predicate<Statement> fromLoadingTypes(List<LoadingType> types) {
 		List<Predicate<Statement>> predicates = new ArrayList<>();
 		for (LoadingType type : types)
 			predicates.add(fromLoadingType(type));
 		return Predicates.and(predicates);
 	}
 
-	public static Predicate<Statement> fromLoadingType(LoadingType type) {
+	private static Predicate<Statement> fromLoadingType(LoadingType type) {
 		switch (type) {
 		case BLACKLIST:
 			return new BlacklistStatementPredicate();
@@ -52,7 +58,7 @@ public class StatementPredicateFactory {
 	 *            A configuration object where the {@link LoadingType} is looked up.
 	 * @return A {@link Predicate} instance.
 	 */
-	public static Predicate<Statement> fromConfig(final Configuration config) {
+	static Predicate<Statement> fromConfig(final Configuration config) {
 		List<LoadingType> loadingTypes = loadingTypesFromConfig(config);
 
 		if (loadingTypes == null || loadingTypes.isEmpty()) // no loading filter requested
@@ -61,7 +67,7 @@ public class StatementPredicateFactory {
 		return fromLoadingTypes(loadingTypes);
 	}
 
-	public static List<LoadingType> loadingTypesFromConfig(Configuration config) {
+	static List<LoadingType> loadingTypesFromConfig(Configuration config) {
 		List<LoadingType> loadingTypes = new ArrayList<>();
 		@SuppressWarnings("unchecked")
 		// apache commons config does not support generics
@@ -73,7 +79,8 @@ public class StatementPredicateFactory {
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException(String.format(
 						"Unknown loading filter type '%s' specified in '%s'. Only the following are allowed: %s",
-						loadingTypeName, CONFIG_STATEMENT_PREDICATE, LoadingType.values()), e);
+						loadingTypeName, CONFIG_STATEMENT_PREDICATE, java.util.Arrays.toString(LoadingType.values())),
+						e);
 			}
 		}
 		return loadingTypes;

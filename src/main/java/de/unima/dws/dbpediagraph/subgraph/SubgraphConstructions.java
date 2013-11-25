@@ -71,7 +71,7 @@ final class SubgraphConstructions {
 						Graphs.verticesCount(subgraph), Graphs.edgesCount(subgraph), traversedNodes, maxDistance));
 	}
 
-	public static String toStringPath(List<Edge> path, Vertex start, Vertex end, GraphType graphType) {
+	private static String toStringPath(List<Edge> path, Vertex start, Vertex end, GraphType graphType) {
 		if (graphType == null)
 			throw new NullPointerException("Graph type cannot be null");
 		if (path.size() == 0)

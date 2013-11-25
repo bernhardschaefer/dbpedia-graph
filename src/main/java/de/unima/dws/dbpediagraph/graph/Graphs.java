@@ -22,7 +22,16 @@ import de.unima.dws.dbpediagraph.util.GraphJungUndirectedWrapper;
 public final class Graphs {
 	private static final Logger logger = LoggerFactory.getLogger(Graphs.class);
 
+	/**
+	 * The provided vertices need to be part of the provided graph.
+	 */
 	public static void addEdgeIfNonExistent(Graph graph, Edge edge, Vertex outVertex, Vertex inVertex) {
+		if (graph.getVertex(outVertex.getId()) == null || graph.getVertex(inVertex.getId()) == null)
+			throw new IllegalArgumentException("Both provided vertices need to be part of the provided graph.");
+		addEdgeIfNonExistentUnsafe(graph, edge, outVertex, inVertex);
+	}
+
+	private static void addEdgeIfNonExistentUnsafe(Graph graph, Edge edge, Vertex outVertex, Vertex inVertex) {
 		if (graph.getEdge(edge.getId()) == null)
 			graph.addEdge(edge.getId(), outVertex, inVertex, edge.getLabel());
 	}
@@ -31,7 +40,7 @@ public final class Graphs {
 		for (Edge edge : edges) {
 			Vertex outVertex = addVertexByIdIfNonExistent(graph, edge.getVertex(Direction.OUT));
 			Vertex inVertex = addVertexByIdIfNonExistent(graph, edge.getVertex(Direction.IN));
-			addEdgeIfNonExistent(graph, edge, outVertex, inVertex);
+			addEdgeIfNonExistentUnsafe(graph, edge, outVertex, inVertex);
 		}
 	}
 
@@ -64,10 +73,11 @@ public final class Graphs {
 
 	/**
 	 * Throws {@link IllegalArgumentException} if the graph is null or does not have vertices.
+	 * 
 	 * @return the provided graph.
 	 */
 	public static Graph checkHasVertices(Graph graph) {
-		if(isEmptyGraph(checkNotNull(graph)))
+		if (isEmptyGraph(checkNotNull(graph)))
 			throw new IllegalArgumentException("Graph needs to have at least one vertex.");
 		return graph;
 	}
@@ -149,16 +159,6 @@ public final class Graphs {
 			return edge.getVertex(Direction.OUT);
 	}
 
-	public static void removeVerticesWithoutUri(Graph graph) {
-		for (Vertex v : graph.getVertices()) {
-			String uriProperty = v.getProperty(GraphConfig.URI_PROPERTY);
-			if (uriProperty == null || uriProperty.toString().isEmpty()) {
-				graph.removeVertex(v);
-				logger.info("vertex vid: {} has been deleted", v.getId());
-			}
-		}
-	}
-
 	public static String uriOfVertex(Vertex v) {
 		return v.getProperty(GraphConfig.URI_PROPERTY).toString();
 	}
@@ -195,11 +195,6 @@ public final class Graphs {
 	}
 
 	public static int vertexDegree(Vertex vertex, Direction direction) {
-		// if (direction == Direction.BOTH) {
-		// int inDegree = CollectionUtils.iterableItemCount(vertex.getEdges(Direction.IN));
-		// int outDegree = CollectionUtils.iterableItemCount(vertex.getEdges(Direction.OUT));
-		// return inDegree + outDegree;
-		// }
 		return CollectionUtils.iterableItemCount(vertex.getEdges(direction));
 	}
 
@@ -227,15 +222,6 @@ public final class Graphs {
 		return CollectionUtils.iterableItemCount(graph.getVertices());
 	}
 
-	public static Set<Vertex> verticesOfEdges(Collection<Edge> edges) {
-		Set<Vertex> vertices = new HashSet<Vertex>();
-		for (Edge e : edges) {
-			vertices.add(e.getVertex(Direction.IN));
-			vertices.add(e.getVertex(Direction.OUT));
-		}
-		return vertices;
-	}
-
 	@Deprecated
 	public static Collection<Set<Vertex>> wordsVerticesByUri(Graph graph,
 			Collection<? extends Collection<String>> wordsSensesString) {
@@ -254,7 +240,7 @@ public final class Graphs {
 			String inVertexUri = edge.getVertex(Direction.IN).getProperty(GraphConfig.URI_PROPERTY).toString();
 			Vertex inVertex = addVertexByUri(graph, inVertexUri);
 
-			addEdgeIfNonExistent(graph, edge, outVertex, inVertex);
+			addEdgeIfNonExistentUnsafe(graph, edge, outVertex, inVertex);
 		}
 	}
 

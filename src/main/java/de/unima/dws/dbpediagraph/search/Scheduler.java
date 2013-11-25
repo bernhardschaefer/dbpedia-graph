@@ -11,5 +11,5 @@ interface Scheduler {
 	 *            the time that the searcher is running already; can be represented by iteration count.
 	 * @return the temperature
 	 */
-	public double getTemperature(int time);
+	double getTemperature(int time);
 }
