@@ -13,6 +13,4 @@ public interface ModelFactory<T extends SurfaceForm, U extends Sense> {
 	U newSense(Vertex v);
 
 	T newSurfaceForm(String name);
-
-	SurfaceFormSenseScore<T, U> newSurfaceFormSenseScore(T surfaceForm, U sense, double score);
 }

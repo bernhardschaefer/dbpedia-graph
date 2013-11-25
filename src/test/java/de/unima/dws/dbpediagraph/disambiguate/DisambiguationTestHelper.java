@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.disambiguate.GlobalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.graph.SubgraphTester;
 import de.unima.dws.dbpediagraph.model.*;
@@ -81,14 +79,14 @@ public class DisambiguationTestHelper {
 	public static <T extends SurfaceForm, U extends Sense> void compareDisambiguatedAssignment(
 			ExpectedDisambiguationResults<T, U> allExpected, List<SurfaceFormSenseScore<T, U>> actualAssignment,
 			Class<?> disambiguatorClass, ModelFactory<T, U> factory) {
-		List<SurfaceFormSenseScore<T, U>> expectedAssignment = getHighestGlobalScoreResult(allExpected, disambiguatorClass,
-				factory);
+		List<SurfaceFormSenseScore<T, U>> expectedAssignment = getHighestGlobalScoreResult(allExpected,
+				disambiguatorClass, factory);
 		assertEquals(expectedAssignment.size(), actualAssignment.size());
 		for (int i = 0; i < expectedAssignment.size(); i++)
 			// equals surface form sense score is not applicable since there can be multiple assignments with max score
 			assertEquals(String.format("Disambiguator: %s, Expected Assignment: %s, Actual Assignment: %s",
-					disambiguatorClass.getSimpleName(), expectedAssignment, actualAssignment), expectedAssignment.get(i).score(), actualAssignment.get(i)
-					.score(), 0.01);
+					disambiguatorClass.getSimpleName(), expectedAssignment, actualAssignment), expectedAssignment
+					.get(i).score(), actualAssignment.get(i).score(), 0.01);
 	}
 
 	public static <T extends SurfaceForm, U extends Sense> List<SurfaceFormSenseScore<T, U>> getHighestGlobalScoreResult(
@@ -108,7 +106,7 @@ public class DisambiguationTestHelper {
 		List<SurfaceFormSenseScore<T, U>> res = new ArrayList<>();
 		Collection<String> senseAssignments = split(senses);
 		for (String sense : senseAssignments) {
-			SurfaceFormSenseScore<T, U> sfss = factory.newSurfaceFormSenseScore(
+			SurfaceFormSenseScore<T, U> sfss = new SurfaceFormSenseScore<T, U>(
 					factory.newSurfaceForm(senseNameToSurfaceFormName(sense)), factory.newSense(sense), score);
 			res.add(sfss);
 		}

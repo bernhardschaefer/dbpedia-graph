@@ -29,10 +29,4 @@ public enum DefaultModelFactory implements ModelFactory<DefaultSurfaceForm, Defa
 		return new DefaultSurfaceForm(name);
 	}
 
-	@Override
-	public SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> newSurfaceFormSenseScore(
-			DefaultSurfaceForm surfaceForm, DefaultSense sense, double score) {
-		return new DefaultSurfaceFormSenseScore(surfaceForm, sense, score);
-	}
-
 }

@@ -45,16 +45,16 @@ public class DemoSubgraphConstruction {
 		disambiguators = new ArrayList<>();
 
 		// local
-		disambiguators.add(new BetweennessCentrality<>(GRAPH_TYPE, factory));
-		disambiguators.add(new DegreeCentrality<>(GRAPH_TYPE, factory));
-		disambiguators.add(new HITSCentrality<>(GRAPH_TYPE, factory));
-		disambiguators.add(new KPPCentrality<>(GRAPH_TYPE, factory));
-		disambiguators.add(new PageRankCentrality<>(GRAPH_TYPE, factory));
+		disambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE));
+		disambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE));
+		disambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE));
+		disambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE));
+		disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE));
 
 		// global
-		disambiguators.add(new Compactness<>(settings, factory));
-		disambiguators.add(new EdgeDensity<>(settings, factory));
-		disambiguators.add(new GraphEntropy<>(settings, factory));
+		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(settings));
+		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(settings));
+		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(settings));
 	}
 
 	private static final Dimension SCREEN_DIMENSION;

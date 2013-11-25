@@ -22,12 +22,9 @@ import de.unima.dws.dbpediagraph.subgraph.*;
 public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense> implements
 		GlobalGraphDisambiguator<T, U> {
 	protected final SubgraphConstructionSettings subgraphConstructionSettings;
-	private final ModelFactory<T, U> factory;
 
-	public AbstractGlobalGraphDisambiguator(SubgraphConstructionSettings subgraphConstructionSettings,
-			ModelFactory<T, U> factory) {
+	public AbstractGlobalGraphDisambiguator(SubgraphConstructionSettings subgraphConstructionSettings) {
 		this.subgraphConstructionSettings = subgraphConstructionSettings;
-		this.factory = factory;
 	}
 
 	@Override
@@ -62,7 +59,7 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 	private List<SurfaceFormSenseScore<T, U>> wrap(Map<T, U> result, double score) {
 		List<SurfaceFormSenseScore<T, U>> scoresResults = new ArrayList<>();
 		for (Entry<T, U> entry : result.entrySet()) {
-			scoresResults.add(factory.newSurfaceFormSenseScore(entry.getKey(), entry.getValue(), score));
+			scoresResults.add(new SurfaceFormSenseScore<T, U>(entry.getKey(), entry.getValue(), score));
 		}
 		return scoresResults;
 	}

@@ -9,7 +9,8 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 import de.unima.dws.dbpediagraph.disambiguate.AbstractGlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.GlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graph.Graphs;
-import de.unima.dws.dbpediagraph.model.*;
+import de.unima.dws.dbpediagraph.model.Sense;
+import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
@@ -23,8 +24,8 @@ import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 public class Compactness<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
 		implements GlobalGraphDisambiguator<T, U> {
 
-	public Compactness(SubgraphConstructionSettings subgraphConstructionSettings, ModelFactory<T, U> factory) {
-		super(subgraphConstructionSettings, factory);
+	public Compactness(SubgraphConstructionSettings subgraphConstructionSettings) {
+		super(subgraphConstructionSettings);
 	}
 
 	@Override

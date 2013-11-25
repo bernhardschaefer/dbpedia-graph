@@ -25,11 +25,16 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	private static final Logger logger = LoggerFactory.getLogger(AbstractLocalGraphDisambiguator.class);
 
 	protected final GraphType graphType;
-	protected final ModelFactory<T, U> factory;
 
-	public AbstractLocalGraphDisambiguator(GraphType graphType, ModelFactory<T, U> factory) {
+	private final Comparator<? super SurfaceFormSenseScore<T, U>> descendingScoreComparator = new Comparator<SurfaceFormSenseScore<T, U>>() {
+		@Override
+		public int compare(SurfaceFormSenseScore<T, U> left, SurfaceFormSenseScore<T, U> right) {
+			return Double.compare(right.score(), left.score());
+		}
+	};
+
+	public AbstractLocalGraphDisambiguator(GraphType graphType) {
 		this.graphType = graphType;
-		this.factory = factory;
 	}
 
 	@Override
@@ -52,11 +57,11 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 			for (U sense : sFSenses) { // get the score for each sense
 				Vertex v = Graphs.vertexByUri(subgraph, sense.fullUri());
 				double score = (v == null) ? -1 : vertexScorer.getVertexScore(v);
-				sFSS.add(factory.newSurfaceFormSenseScore(surfaceForm, sense, score));
+				sFSS.add(new SurfaceFormSenseScore<T, U>(surfaceForm, sense, score));
 			}
 			// TODO maybe this should be changed to ascending order
-			Collections.sort(sFSS);
-			Collections.reverse(sFSS);
+
+			Collections.sort(sFSS, descendingScoreComparator);
 			int toIndex = k > sFSS.size() ? sFSS.size() : k;
 			senseScores.put(surfaceForm, sFSS.subList(0, toIndex));
 		}
@@ -75,7 +80,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 				logger.warn("Surface form {} has no sense candidates.", surfaceForm);
 				continue;
 			}
-			SurfaceFormSenseScore<T, U> highestScoreSense = Collections.max(sFSScores);
+			SurfaceFormSenseScore<T, U> highestScoreSense = Collections.max(sFSScores, descendingScoreComparator);
 			highestScores.add(highestScoreSense);
 		}
 

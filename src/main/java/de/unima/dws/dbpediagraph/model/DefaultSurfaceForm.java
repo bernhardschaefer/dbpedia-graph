@@ -3,7 +3,8 @@ package de.unima.dws.dbpediagraph.model;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Immutable default {@link SurfaceForm} implementation.
+ * Immutable default {@link SurfaceForm} implementation. Can serve as a skeleton implementation of {@link SurfaceForm}
+ * so that subclasses only need to additionally needed behavior.
  * 
  * @author Bernhard Schäfer
  * 

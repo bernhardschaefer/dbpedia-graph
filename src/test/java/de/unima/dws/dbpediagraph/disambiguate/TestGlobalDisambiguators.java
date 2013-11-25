@@ -31,9 +31,9 @@ public class TestGlobalDisambiguators {
 		subgraphTesterNavigli = SubgraphTester.newNavigliTester(settings);
 
 		List<GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators = new ArrayList<>();
-		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(settings, factory));
-		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(settings, factory));
-		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(settings, factory));
+		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(settings));
+		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(settings));
+		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(settings));
 
 		disambiguatorResults = new HashMap<>();
 		for (GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator : disambiguators) {

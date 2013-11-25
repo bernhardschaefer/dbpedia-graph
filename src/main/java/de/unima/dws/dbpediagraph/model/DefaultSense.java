@@ -1,8 +1,10 @@
 package de.unima.dws.dbpediagraph.model;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Immutable default {@link Sense} implementation.
+ * Immutable default {@link Sense} implementation. Can serve as a skeleton implementation of {@link Sense} so that
+ * subclasses only need to additionally needed behavior.
  * 
  * @author Bernhard Schäfer
  * 
@@ -30,12 +32,12 @@ public class DefaultSense implements Sense {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof DefaultSense))
+		if (!(o instanceof Sense))
 			return false;
-		DefaultSense sense = (DefaultSense) o;
-		return fullUri.equals(sense.fullUri);
+		Sense sense = (Sense) o;
+		return fullUri.equals(sense.fullUri());
 	}
-	
+
 	@Override
 	public String toString() {
 		return fullUri();

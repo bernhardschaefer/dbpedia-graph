@@ -15,7 +15,6 @@ public class TestLocalDisambiguators {
 	private static final String LOCAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.disambiguate.local";
 
 	private static final SubgraphTester subgraphNavigli = SubgraphTester.newNavigliTester();;
-	private static final DefaultModelFactory factory = DefaultModelFactory.INSTANCE;
 	private static final ExpectedDisambiguationResults<DefaultSurfaceForm, DefaultSense> expectedResults = new ExpectedDisambiguationResults<>(
 			TestSet.NavigliTestSet.NL_LOCAL_RESULTS, LOCAL_PACKAGE_NAME);
 
@@ -26,11 +25,11 @@ public class TestLocalDisambiguators {
 		GraphType graphType = GraphType.UNDIRECTED_GRAPH;
 
 		List<LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> localDisambiguators = new ArrayList<>();
-		localDisambiguators.add(new BetweennessCentrality<>(graphType, factory));
-		localDisambiguators.add(new DegreeCentrality<>(graphType, factory));
-		// localDisambiguators.add(new HITSCentrality<>(graphType, factory));
-		localDisambiguators.add(new KPPCentrality<>(graphType, factory));
-		// localDisambiguators.add(new PageRankCentrality<>(graphType, factory));
+		localDisambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(graphType));
+		localDisambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(graphType));
+		// localDisambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(graphType));
+		localDisambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(graphType));
+		// localDisambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(graphType));
 
 		disambiguatorResults = new HashMap<>();
 		for (LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator : localDisambiguators) {

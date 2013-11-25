@@ -25,11 +25,14 @@ public class TestDefaultModel {
 	private static double score1_2 = 0.5;
 	private static double score2 = 0.0;
 
-	private static DefaultSurfaceFormSenseScore sfs1 = new DefaultSurfaceFormSenseScore(surfaceForm1, sense1, score1);
-	private static DefaultSurfaceFormSenseScore sfs1_2 = new DefaultSurfaceFormSenseScore(surfaceForm1_2, sense1_2,
-			score1_2);
-	private static DefaultSurfaceFormSenseScore sfs2 = new DefaultSurfaceFormSenseScore(surfaceForm2, sense2, score2);
-	private static DefaultSurfaceFormSenseScore sfs121 = new DefaultSurfaceFormSenseScore(surfaceForm1, sense2, score1);
+	private static SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> sfs1 = new SurfaceFormSenseScore<>(
+			surfaceForm1, sense1, score1);
+	private static SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> sfs1_2 = new SurfaceFormSenseScore<>(
+			surfaceForm1_2, sense1_2, score1_2);
+	private static SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> sfs2 = new SurfaceFormSenseScore<>(
+			surfaceForm2, sense2, score2);
+	private static SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> sfs121 = new SurfaceFormSenseScore<>(
+			surfaceForm1, sense2, score1);
 
 	@Test
 	public void testHashCodes() {

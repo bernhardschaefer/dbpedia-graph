@@ -5,7 +5,8 @@ import com.tinkerpop.blueprints.*;
 import de.unima.dws.dbpediagraph.disambiguate.AbstractGlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.GlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graph.Graphs;
-import de.unima.dws.dbpediagraph.model.*;
+import de.unima.dws.dbpediagraph.model.Sense;
+import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 
 /**
@@ -17,8 +18,8 @@ import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
 		implements GlobalGraphDisambiguator<T, U> {
 
-	public GraphEntropy(SubgraphConstructionSettings settings, ModelFactory<T, U> factory) {
-		super(settings, factory);
+	public GraphEntropy(SubgraphConstructionSettings settings) {
+		super(settings);
 	}
 
 	@Override

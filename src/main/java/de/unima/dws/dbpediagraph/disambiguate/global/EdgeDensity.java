@@ -5,7 +5,8 @@ import com.tinkerpop.blueprints.Graph;
 import de.unima.dws.dbpediagraph.disambiguate.AbstractGlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.GlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graph.Graphs;
-import de.unima.dws.dbpediagraph.model.*;
+import de.unima.dws.dbpediagraph.model.Sense;
+import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 
 /**
@@ -17,8 +18,8 @@ import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 public class EdgeDensity<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
 		implements GlobalGraphDisambiguator<T, U> {
 
-	public EdgeDensity(SubgraphConstructionSettings subgraphConstructionSettings, ModelFactory<T, U> factory) {
-		super(subgraphConstructionSettings, factory);
+	public EdgeDensity(SubgraphConstructionSettings subgraphConstructionSettings) {
+		super(subgraphConstructionSettings);
 	}
 
 	@Override

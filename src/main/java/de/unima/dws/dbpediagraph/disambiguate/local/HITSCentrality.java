@@ -1,24 +1,20 @@
 package de.unima.dws.dbpediagraph.disambiguate.local;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
-import de.unima.dws.dbpediagraph.model.*;
+import de.unima.dws.dbpediagraph.model.Sense;
+import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.util.CollectionUtils;
-import edu.uci.ics.jung.algorithms.scoring.HITS;
+import edu.uci.ics.jung.algorithms.scoring.*;
 import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
-import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
  * @author Bernhard Schäfer
@@ -102,14 +98,14 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 
 	private String name;
 
-	public HITSCentrality(GraphType graphType, double alpha, int iterations, ModelFactory<T, U> factory) {
-		super(graphType, factory);
+	public HITSCentrality(GraphType graphType, double alpha, int iterations) {
+		super(graphType);
 		this.alpha = alpha;
 		this.iterations = iterations;
 	}
 
-	public HITSCentrality(GraphType graphType, ModelFactory<T, U> factory) {
-		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS, factory);
+	public HITSCentrality(GraphType graphType) {
+		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
 	}
 
 	@Deprecated

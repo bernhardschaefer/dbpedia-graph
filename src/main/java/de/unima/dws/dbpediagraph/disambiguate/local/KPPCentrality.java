@@ -2,16 +2,15 @@ package de.unima.dws.dbpediagraph.disambiguate.local;
 
 import java.util.Map;
 
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
-import de.unima.dws.dbpediagraph.model.*;
+import de.unima.dws.dbpediagraph.model.Sense;
+import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 
@@ -57,8 +56,8 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 
 	}
 
-	public KPPCentrality(GraphType graphType, ModelFactory<T, U> factory) {
-		super(graphType, factory);
+	public KPPCentrality(GraphType graphType) {
+		super(graphType);
 	}
 
 	@Override

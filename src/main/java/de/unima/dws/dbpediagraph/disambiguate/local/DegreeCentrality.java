@@ -6,7 +6,8 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.disambiguate.*;
 import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
-import de.unima.dws.dbpediagraph.model.*;
+import de.unima.dws.dbpediagraph.model.Sense;
+import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
@@ -33,8 +34,8 @@ public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends Ab
 
 	}
 
-	public DegreeCentrality(GraphType graphType, ModelFactory<T, U> factory) {
-		super(graphType, factory);
+	public DegreeCentrality(GraphType graphType) {
+		super(graphType);
 	}
 
 	@Override
