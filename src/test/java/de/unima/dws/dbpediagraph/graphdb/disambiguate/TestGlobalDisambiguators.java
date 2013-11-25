@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.junit.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.unima.dws.dbpediagraph.graphdb.SubgraphTester;
 import de.unima.dws.dbpediagraph.graphdb.TestSet;
@@ -12,15 +14,14 @@ import de.unima.dws.dbpediagraph.graphdb.model.*;
 import de.unima.dws.dbpediagraph.graphdb.subgraph.SubgraphConstructionSettings;
 
 public class TestGlobalDisambiguators {
+	private static final Logger logger = LoggerFactory.getLogger(TestGlobalDisambiguators.class);
+
 	/** Name of the package where the local disambiguator classes reside. */
 	private static final String GLOBAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.graphdb.disambiguate.global";
 
 	private static SubgraphTester subgraphTesterNavigli;
-
 	private static ExpectedDisambiguationResults<DefaultSurfaceForm, DefaultSense> expectedResults;
-
 	private static ModelFactory<DefaultSurfaceForm, DefaultSense> factory = DefaultModelFactory.INSTANCE;
-
 	private static Map<GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>, List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>>> disambiguatorResults;
 
 	@BeforeClass
@@ -54,17 +55,22 @@ public class TestGlobalDisambiguators {
 
 	@Test
 	public void testCalculatedConnectivityMeasures() {
-		for (GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator : disambiguatorResults.keySet())
+		for (GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator : disambiguatorResults.keySet()) {
+			logger.info("Testing connectivity measure scores with {}", disambiguator);
 			DisambiguationTestHelper.compareAllGlobalDisambiguationResults(disambiguator, expectedResults,
 					subgraphTesterNavigli);
+		}
 	}
 
 	@Test
 	public void testDisambiguation() {
 		for (Entry<GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>, List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>>> entry : disambiguatorResults
-				.entrySet())
-			DisambiguationTestHelper.compareDisambiguatedAssignment(expectedResults, entry.getValue(), entry.getKey()
-					.getClass(), factory);
+				.entrySet()) {
+			GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator = entry.getKey();
+			logger.info("Testing disambiguation with {}", disambiguator);
+			DisambiguationTestHelper.compareDisambiguatedAssignment(expectedResults, entry.getValue(),
+					disambiguator.getClass(), factory);
+		}
 	}
 
 }

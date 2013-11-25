@@ -45,8 +45,7 @@ public class DisambiguationTestHelper {
 
 	public static <T extends SurfaceForm, U extends Sense> void compareAllGlobalDisambiguationResults(
 			GlobalGraphDisambiguator<T, U> disambiguator,
-			ExpectedDisambiguationResults<T, U> expectedDisambiguationData,
-			SubgraphTester subgraphData) {
+			ExpectedDisambiguationResults<T, U> expectedDisambiguationData, SubgraphTester subgraphData) {
 
 		for (Entry<String, Map<Class<?>, Double>> measureEntry : expectedDisambiguationData.getRawResults().entrySet()) {
 			Collection<String> senseAssignments = DisambiguationTestHelper.split(measureEntry.getKey());
@@ -78,14 +77,16 @@ public class DisambiguationTestHelper {
 	}
 
 	public static <T extends SurfaceForm, U extends Sense> void compareDisambiguatedAssignment(
-			ExpectedDisambiguationResults<T, U> allExpected, List<SurfaceFormSenseScore<T, U>> actual,
+			ExpectedDisambiguationResults<T, U> allExpected, List<SurfaceFormSenseScore<T, U>> actualAssignment,
 			Class<?> disambiguatorClass, ModelFactory<T, U> factory) {
-		List<SurfaceFormSenseScore<T, U>> expected = getHighestGlobalScoreResult(allExpected, disambiguatorClass,
+		List<SurfaceFormSenseScore<T, U>> expectedAssignment = getHighestGlobalScoreResult(allExpected, disambiguatorClass,
 				factory);
-		assertEquals(expected.size(), actual.size());
-		for (int i = 0; i < expected.size(); i++)
+		assertEquals(expectedAssignment.size(), actualAssignment.size());
+		for (int i = 0; i < expectedAssignment.size(); i++)
 			// equals surface form sense score is not applicable since there can be multiple assignments with max score
-			assertEquals(expected.get(i).score(), actual.get(i).score(), 0.01);
+			assertEquals(String.format("Disambiguator: %s, Expected Assignment: %s, Actual Assignment: %s",
+					disambiguatorClass.getSimpleName(), expectedAssignment, actualAssignment), expectedAssignment.get(i).score(), actualAssignment.get(i)
+					.score(), 0.01);
 	}
 
 	public static <T extends SurfaceForm, U extends Sense> List<SurfaceFormSenseScore<T, U>> getHighestGlobalScoreResult(
