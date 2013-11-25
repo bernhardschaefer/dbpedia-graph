@@ -38,7 +38,6 @@ public class DemoSubgraphConstruction {
 
 	private static final SubgraphConstructionSettings settings = new SubgraphConstructionSettings.Builder()
 			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build();
-	private static final ModelFactory<DefaultSurfaceForm, DefaultSense> factory = DefaultModelFactory.INSTANCE;
 
 	private static final Collection<GraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators;
 	static {
@@ -95,7 +94,7 @@ public class DemoSubgraphConstruction {
 		String sensesFileName = "/demo/napoleon-sentence-test";
 		// String sensesFileName = "/dbpedia-default-sentence-test";
 		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
-				sensesFileName, DemoSubgraphConstruction.class, GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
+				sensesFileName, DemoSubgraphConstruction.class, GraphConfig.DBPEDIA_RESOURCE_PREFIX);
 
 		Graph graph = GraphFactory.getDBpediaGraph();
 		demo(graph, wordsSensesString, disambiguators);

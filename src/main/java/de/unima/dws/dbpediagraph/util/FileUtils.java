@@ -16,7 +16,8 @@ import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
-import de.unima.dws.dbpediagraph.model.*;
+import de.unima.dws.dbpediagraph.model.DefaultSense;
+import de.unima.dws.dbpediagraph.model.DefaultSurfaceForm;
 
 /**
  * Basic File Utilities.
@@ -145,28 +146,26 @@ public final class FileUtils {
 		return lines;
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> parseSurfaceFormSensesFromFile(String fileName, Class<?> clazz, String uriPrefix, ModelFactory<T, U> factory)
-			throws IOException, URISyntaxException {
-		Map<T, List<U>> wordsSenses = new HashMap<>();
+	public static Map<DefaultSurfaceForm, List<DefaultSense>> parseSurfaceFormSensesFromFile(String fileName,
+			Class<?> clazz, String uriPrefix) throws IOException, URISyntaxException {
+		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSenses = new HashMap<>();
 		List<String> lines = readNonEmptyNonCommentLinesFromFile(clazz, fileName);
 		for (String line : lines) {
 			List<String> wordSenses = Arrays.asList(line.split(DELIMITER));
 			// the first entry is the surface form name, the rest are the senses
-			T sf = factory.newSurfaceForm(wordSenses.get(0));
-			List<U> senses = sensesFromNotPrefixedUris(wordSenses.subList(1, wordSenses.size()),uriPrefix, factory);
+			DefaultSurfaceForm sf = new DefaultSurfaceForm(wordSenses.get(0));
+			List<DefaultSense> senses = sensesFromNotPrefixedUris(wordSenses.subList(1, wordSenses.size()), uriPrefix);
 			wordsSenses.put(sf, senses);
 		}
 		return wordsSenses;
 	}
 
-	private static <T extends SurfaceForm, U extends Sense> List<U> sensesFromNotPrefixedUris(List<String> notPrefixedUris, String uriPrefix,
-			ModelFactory<T, U> factory) {
-		List<U> senses = new ArrayList<>();
-		for (String notPrefixedUri: notPrefixedUris)
-			senses.add(factory.newSense(uriPrefix + notPrefixedUri));
+	private static List<DefaultSense> sensesFromNotPrefixedUris(List<String> notPrefixedUris, String uriPrefix) {
+		List<DefaultSense> senses = new ArrayList<>();
+		for (String notPrefixedUri : notPrefixedUris)
+			senses.add(new DefaultSense(uriPrefix + notPrefixedUri));
 		return senses;
 	}
-	
 
 	// Suppress default constructor for noninstantiability
 	private FileUtils() {

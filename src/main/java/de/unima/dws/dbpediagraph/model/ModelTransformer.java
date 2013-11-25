@@ -20,14 +20,6 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
 public final class ModelTransformer {
 	private static final Logger logger = LoggerFactory.getLogger(ModelTransformer.class);
 
-	public static <U extends Sense> List<U> sensesFromVertices(Iterable<Vertex> vertices, ModelFactory<?, U> factory) {
-		List<U> senses = new ArrayList<>();
-		for (Vertex v : vertices) {
-			senses.add(factory.newSense(v));
-		}
-		return senses;
-	}
-
 	public static Set<Vertex> verticesFromSenses(Graph graph, Collection<? extends Sense> senses) {
 		Set<Vertex> vertices = new HashSet<>(senses.size());
 		for (Sense sense : senses) {

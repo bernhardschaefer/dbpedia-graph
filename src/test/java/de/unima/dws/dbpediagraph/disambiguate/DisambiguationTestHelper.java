@@ -76,11 +76,11 @@ public class DisambiguationTestHelper {
 		}
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> void compareDisambiguatedAssignment(
-			ExpectedDisambiguationResults<T, U> allExpected, List<SurfaceFormSenseScore<T, U>> actualAssignment,
-			Class<?> disambiguatorClass, ModelFactory<T, U> factory) {
-		List<SurfaceFormSenseScore<T, U>> expectedAssignment = getHighestGlobalScoreResult(allExpected,
-				disambiguatorClass, factory);
+	public static void compareDisambiguatedAssignment(
+			ExpectedDisambiguationResults<DefaultSurfaceForm, DefaultSense> allExpected,
+			List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> actualAssignment, Class<?> disambiguatorClass) {
+		List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> expectedAssignment = getHighestGlobalScoreResult(
+				allExpected, disambiguatorClass);
 		assertEquals(expectedAssignment.size(), actualAssignment.size());
 		for (int i = 0; i < expectedAssignment.size(); i++)
 			// equals surface form sense score is not applicable since there can be multiple assignments with max score
@@ -89,25 +89,24 @@ public class DisambiguationTestHelper {
 					.get(i).score(), actualAssignment.get(i).score(), 0.01);
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> List<SurfaceFormSenseScore<T, U>> getHighestGlobalScoreResult(
-			ExpectedDisambiguationResults<T, U> allExpected, Class<?> disambiguatorClass, ModelFactory<T, U> factory) {
-		List<SurfaceFormSenseScore<T, U>> highest = null;
+	public static List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> getHighestGlobalScoreResult(
+			ExpectedDisambiguationResults<DefaultSurfaceForm, DefaultSense> allExpected, Class<?> disambiguatorClass) {
+		List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> highest = null;
 		for (Entry<String, Map<Class<?>, Double>> entry : allExpected.getRawResults().entrySet()) {
 			double expected = entry.getValue().get(disambiguatorClass);
 			if (highest == null || expected >= highest.get(0).score()) {
-				highest = transform(entry.getKey(), expected, factory);
+				highest = transform(entry.getKey(), expected);
 			}
 		}
 		return highest;
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> List<SurfaceFormSenseScore<T, U>> transform(String senses,
-			double score, ModelFactory<T, U> factory) {
-		List<SurfaceFormSenseScore<T, U>> res = new ArrayList<>();
+	public static List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> transform(String senses, double score) {
+		List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> res = new ArrayList<>();
 		Collection<String> senseAssignments = split(senses);
 		for (String sense : senseAssignments) {
-			SurfaceFormSenseScore<T, U> sfss = new SurfaceFormSenseScore<T, U>(
-					factory.newSurfaceForm(senseNameToSurfaceFormName(sense)), factory.newSense(sense), score);
+			SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense> sfss = new SurfaceFormSenseScore<>(
+					new DefaultSurfaceForm(senseNameToSurfaceFormName(sense)), new DefaultSense(sense), score);
 			res.add(sfss);
 		}
 		return res;
@@ -118,15 +117,14 @@ public class DisambiguationTestHelper {
 		return sense.substring(0, sense.length() - 2).toUpperCase();
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> Map<T, List<U>> transform(String surfaceFormName,
-			String senseNames, ModelFactory<T, U> factory) {
-		Map<T, List<U>> res = new HashMap<>();
+	public static Map<DefaultSurfaceForm, List<DefaultSense>> transform(String surfaceFormName, String senseNames) {
+		Map<DefaultSurfaceForm, List<DefaultSense>> res = new HashMap<>();
 
 		Collection<String> senseAssignments = split(senseNames);
-		List<U> senses = new ArrayList<>(senseAssignments.size());
+		List<DefaultSense> senses = new ArrayList<>(senseAssignments.size());
 		for (String senseName : senseAssignments)
-			senses.add(factory.newSense(senseName));
-		res.put(factory.newSurfaceForm(surfaceFormName), senses);
+			senses.add(new DefaultSense(senseName));
+		res.put(new DefaultSurfaceForm(surfaceFormName), senses);
 
 		return res;
 	}

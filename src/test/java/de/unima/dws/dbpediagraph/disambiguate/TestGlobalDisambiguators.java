@@ -21,7 +21,6 @@ public class TestGlobalDisambiguators {
 
 	private static SubgraphTester subgraphTesterNavigli;
 	private static ExpectedDisambiguationResults<DefaultSurfaceForm, DefaultSense> expectedResults;
-	private static ModelFactory<DefaultSurfaceForm, DefaultSense> factory = DefaultModelFactory.INSTANCE;
 	private static Map<GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>, List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>>> disambiguatorResults;
 
 	@BeforeClass
@@ -69,7 +68,7 @@ public class TestGlobalDisambiguators {
 			GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator = entry.getKey();
 			logger.info("Testing disambiguation with {}", disambiguator);
 			DisambiguationTestHelper.compareDisambiguatedAssignment(expectedResults, entry.getValue(),
-					disambiguator.getClass(), factory);
+					disambiguator.getClass());
 		}
 	}
 

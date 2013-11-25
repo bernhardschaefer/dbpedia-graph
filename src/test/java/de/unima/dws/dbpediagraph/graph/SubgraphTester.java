@@ -9,7 +9,6 @@ import com.google.common.collect.Sets;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.subgraph.*;
 import de.unima.dws.dbpediagraph.util.FileUtils;
@@ -55,8 +54,7 @@ public class SubgraphTester {
 		try {
 			graph = FileUtils.parseGraph(testSet.verticesFile, testSet.edgesFile, getClass());
 
-			surfaceFormSenses = FileUtils.parseSurfaceFormSensesFromFile(testSet.sensesFile, getClass(), "",
-					DefaultModelFactory.INSTANCE);
+			surfaceFormSenses = FileUtils.parseSurfaceFormSensesFromFile(testSet.sensesFile, getClass(), "");
 
 			surfaceFormSenseVertices = ModelTransformer.verticesFromSurfaceFormSenses(graph, surfaceFormSenses);
 			senseVertices = Sets.newHashSet(Iterables.concat(surfaceFormSenseVertices));
