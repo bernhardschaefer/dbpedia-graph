@@ -82,7 +82,7 @@ public class DemoSubgraphConstruction {
 	}
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		String sensesFileName = "/napoleon-sentence-test";
+		String sensesFileName = "/demo/napoleon-sentence-test";
 		// String sensesFileName = "/dbpedia-default-sentence-test";
 		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
 				sensesFileName, DemoSubgraphConstruction.class, GraphConfig.DBPEDIA_RESOURCE_PREFIX, factory);
