@@ -40,15 +40,35 @@ public final class ModelTransformer {
 		return vertices;
 	}
 
-	public static Collection<Set<Vertex>> wordsVerticesFromSenses(Graph graph,
+	/**
+	 * Transform a model-based representation of surface forms and their sense candidates into a nested collection of
+	 * vertices, where each inner collection represents the sense candidates of a surface form. Note that during
+	 * transformation information about surface form names is getting lost.
+	 * 
+	 * @param graph
+	 *            the graph used for retrieving the vertices
+	 */
+	public static Collection<Set<Vertex>> verticesFromSurfaceFormSenses(Graph graph,
 			Map<? extends SurfaceForm, ? extends List<? extends Sense>> sFSenses) {
-		Collection<Set<Vertex>> wordVertices = new ArrayList<>();
-		for (List<? extends Sense> senses : sFSenses.values()) {
-			Set<Vertex> vertices = verticesFromSenses(graph, senses);
+		return verticesFromNestedSenses(graph,sFSenses.values());
+	}
+	
+	/**
+	 * Transform a model-based representation of sense candidates into a nested collection of
+	 * vertices, where each inner collection represents the sense candidates of a surface form. 
+	 * 
+	 * @param graph
+	 *            the graph used for retrieving the vertices
+	 */
+	public static Collection<Set<Vertex>> verticesFromNestedSenses(Graph graph,
+			Collection<? extends List<? extends Sense>> senses) {
+		Collection<Set<Vertex>> senseVertices = new ArrayList<>();
+		for (List<? extends Sense> sFSenses : senses) {
+			Set<Vertex> vertices = verticesFromSenses(graph, sFSenses);
 			if (!vertices.isEmpty())
-				wordVertices.add(vertices);
+				senseVertices.add(vertices);
 		}
-		return wordVertices;
+		return senseVertices;
 	}
 
 	// suppress default constructor for noninstantiability

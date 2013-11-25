@@ -42,7 +42,7 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 		// http://docs.jboss.org/drools/release/latest/optaplanner-docs/html_single/index.html#optimizationAlgorithms
 
 		final Set<Vertex> allSensesVertices = Sets.newHashSet(Iterables.concat(ModelTransformer
-				.wordsVerticesFromSenses(subgraph, surfaceFormsSenses)));
+				.verticesFromSurfaceFormSenses(subgraph, surfaceFormsSenses)));
 		ConnectivityMeasureFunction<T, U> scoreFunction = new ConnectivityMeasureFunction<T, U>() {
 			@Override
 			public double getMeasure(Map<T, U> assignments, Graph subgraph) {
