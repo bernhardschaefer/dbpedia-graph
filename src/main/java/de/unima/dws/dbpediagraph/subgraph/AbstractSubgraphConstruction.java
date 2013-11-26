@@ -1,7 +1,6 @@
 package de.unima.dws.dbpediagraph.subgraph;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graph.*;
+import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.util.CollectionUtils;
 
 /**
@@ -32,33 +32,6 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 	AbstractSubgraphConstruction(Graph graph, SubgraphConstructionSettings settings) {
 		this.graph = graph;
 		this.settings = settings;
-	}
-
-	@Override
-	public Graph createSubSubgraph(Collection<Vertex> assignments, Set<Vertex> allSensesVertices) {
-		long startTime = System.currentTimeMillis();
-
-		// SubgraphConstructions.checkValidWordsSenses(graph, assignments);
-		traversedNodes = 0;
-
-		// initialize subgraph with all assignments
-		Graph subsubgraph = GraphFactory.newInMemoryGraph();
-		Graphs.addVerticesByIdIfNonExistent(subsubgraph, assignments);
-
-		for (Vertex start : assignments) {
-			Set<Vertex> targetSenses = CollectionUtils.remove(assignments, start);
-			if (logger.isDebugEnabled())
-				logger.debug("Starting DFS with vid: {}, uri: {}", start.getId(),
-						start.getProperty(GraphConfig.URI_PROPERTY));
-			Set<Vertex> stopVertices = Sets.difference(allSensesVertices, targetSenses);
-			dfs(new Path(start), targetSenses, subsubgraph, stopVertices);
-		}
-
-		if (logger.isDebugEnabled())
-			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, startTime,
-					traversedNodes, settings.maxDistance);
-
-		return subsubgraph;
 	}
 
 	@Override
@@ -93,6 +66,38 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 					settings.maxDistance);
 
 		return subGraph;
+	}
+	
+	@Override
+	public Graph createSubgraph(Map<? extends SurfaceForm, ? extends List<? extends Sense>> surfaceFormSenses) {
+		Collection<Set<Vertex>> surfaceFormVertices = ModelToVertex.verticesFromSurfaceFormSenses(graph, surfaceFormSenses);
+		return createSubgraph(surfaceFormVertices);
+	}
+
+	@Override
+	public Graph createSubSubgraph(Collection<Vertex> assignments, Set<Vertex> allSensesVertices) {
+		long startTime = System.currentTimeMillis();
+	
+		traversedNodes = 0;
+	
+		// initialize subgraph with all assignments
+		Graph subsubgraph = GraphFactory.newInMemoryGraph();
+		Graphs.addVerticesByIdIfNonExistent(subsubgraph, assignments);
+	
+		for (Vertex start : assignments) {
+			Set<Vertex> targetSenses = CollectionUtils.remove(assignments, start);
+			if (logger.isDebugEnabled())
+				logger.debug("Starting DFS with vid: {}, uri: {}", start.getId(),
+						start.getProperty(GraphConfig.URI_PROPERTY));
+			Set<Vertex> stopVertices = Sets.difference(allSensesVertices, targetSenses);
+			dfs(new Path(start), targetSenses, subsubgraph, stopVertices);
+		}
+	
+		if (logger.isDebugEnabled())
+			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, startTime,
+					traversedNodes, settings.maxDistance);
+	
+		return subsubgraph;
 	}
 
 	/**

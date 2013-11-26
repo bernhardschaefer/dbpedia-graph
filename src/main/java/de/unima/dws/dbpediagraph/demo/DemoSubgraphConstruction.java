@@ -69,10 +69,7 @@ public class DemoSubgraphConstruction {
 	private static <T extends SurfaceForm, U extends Sense> void demo(Graph graph, Map<T, List<U>> surfaceFormsSenses,
 			Collection<GraphDisambiguator<T, U>> disambiguators) {
 		SubgraphConstruction sc = SubgraphConstructionFactory.newSubgraphConstruction(graph, settings);
-
-		Collection<Set<Vertex>> surfaceFormVertices = ModelToVertex.verticesFromSurfaceFormSenses(graph,
-				surfaceFormsSenses);
-		Graph subGraph = sc.createSubgraph(surfaceFormVertices);
+		Graph subGraph = sc.createSubgraph(surfaceFormsSenses);
 
 		for (GraphDisambiguator<T, U> d : disambiguators) {
 			System.out.println(d);

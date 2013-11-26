@@ -1,15 +1,16 @@
 package de.unima.dws.dbpediagraph.subgraph;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
+import de.unima.dws.dbpediagraph.model.Sense;
+import de.unima.dws.dbpediagraph.model.SurfaceForm;
+
 /**
- * Subgraph Construction interface which defines the essential methods. This means that based on a subset of vertices of
- * a Graph G, a subgraph is supposed to contain the subset vertices, and all edges and vertices on all paths between any
- * two vertices of the subset.
+ * Subgraph Construction interface. Based on a subset of vertices of a Graph G, a subgraph is supposed to contain the
+ * subset vertices, and all edges and vertices on all paths between any two vertices of the subset.
  * 
  * @author Bernhard Schäfer
  * 
@@ -25,14 +26,11 @@ public interface SubgraphConstruction {
 	 */
 	public Graph createSubgraph(Collection<Set<Vertex>> surfaceFormVertices);
 
-//	/**
-//	 * Create a subgraph based on the provided senses.
-//	 * 
-//	 * @param surfaceFormSenses
-//	 *            a collection that contains for each surfaceForm a collection of sense candidates (e.g. {drink1, ... ,
-//	 *            drink5}, {milk1, ..., milk4} for the surface forms (drink, milk)).
-//	 */
-//	public Graph createSubgraph(Map<? extends SurfaceForm, ? extends List<? extends Sense>> surfaceFormSenses);
+	/**
+	 * Convenience method which transforms the model-based representation to a vertex-centric representation and then
+	 * delegates to {@link #createSubgraph(Collection)}.
+	 */
+	public Graph createSubgraph(Map<? extends SurfaceForm, ? extends List<? extends Sense>> surfaceFormSenses);
 
 	public Graph createSubSubgraph(Collection<Vertex> assignments, Set<Vertex> allSensesVertices);
 
