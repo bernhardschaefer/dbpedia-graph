@@ -56,7 +56,7 @@ public class SubgraphTester {
 
 			surfaceFormSenses = FileUtils.parseSurfaceFormSensesFromFile(testSet.sensesFile, getClass(), "");
 
-			surfaceFormSenseVertices = ModelTransformer.verticesFromSurfaceFormSenses(graph, surfaceFormSenses);
+			surfaceFormSenseVertices = ModelToVertex.verticesFromSurfaceFormSenses(graph, surfaceFormSenses);
 			senseVertices = Sets.newHashSet(Iterables.concat(surfaceFormSenseVertices));
 
 			expectedSubgraphVertices = FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), testSet.expectedVerticesFile);

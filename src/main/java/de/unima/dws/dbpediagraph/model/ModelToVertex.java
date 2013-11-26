@@ -11,14 +11,14 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 
 /**
- * Noninstantiable Model transformer class that helps to transform between graph-based representations using
- * {@link Vertex} and model-based representations using {@link Sense} and {@link SurfaceForm}.
+ * Noninstantiable Model transformer class that helps to transform between model-based representations using
+ * {@link Sense} and {@link SurfaceForm} and graph-based representations using {@link Vertex}.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public final class ModelTransformer {
-	private static final Logger logger = LoggerFactory.getLogger(ModelTransformer.class);
+public final class ModelToVertex {
+	private static final Logger logger = LoggerFactory.getLogger(ModelToVertex.class);
 
 	public static Set<Vertex> verticesFromSenses(Graph graph, Collection<? extends Sense> senses) {
 		Set<Vertex> vertices = new HashSet<>(senses.size());
@@ -42,12 +42,12 @@ public final class ModelTransformer {
 	 */
 	public static Collection<Set<Vertex>> verticesFromSurfaceFormSenses(Graph graph,
 			Map<? extends SurfaceForm, ? extends List<? extends Sense>> sFSenses) {
-		return verticesFromNestedSenses(graph,sFSenses.values());
+		return verticesFromNestedSenses(graph, sFSenses.values());
 	}
-	
+
 	/**
-	 * Transform a model-based representation of sense candidates into a nested collection of
-	 * vertices, where each inner collection represents the sense candidates of a surface form. 
+	 * Transform a model-based representation of sense candidates into a nested collection of vertices, where each inner
+	 * collection represents the sense candidates of a surface form.
 	 * 
 	 * @param graph
 	 *            the graph used for retrieving the vertices
@@ -64,7 +64,7 @@ public final class ModelTransformer {
 	}
 
 	// suppress default constructor for noninstantiability
-	private ModelTransformer() {
+	private ModelToVertex() {
 		throw new AssertionError();
 	}
 }

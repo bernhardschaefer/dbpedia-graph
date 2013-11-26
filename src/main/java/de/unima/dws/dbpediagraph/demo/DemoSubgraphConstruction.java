@@ -70,7 +70,7 @@ public class DemoSubgraphConstruction {
 			Collection<GraphDisambiguator<T, U>> disambiguators) {
 		SubgraphConstruction sc = SubgraphConstructionFactory.newSubgraphConstruction(graph, settings);
 
-		Collection<Set<Vertex>> surfaceFormVertices = ModelTransformer.verticesFromSurfaceFormSenses(graph,
+		Collection<Set<Vertex>> surfaceFormVertices = ModelToVertex.verticesFromSurfaceFormSenses(graph,
 				surfaceFormsSenses);
 		Graph subGraph = sc.createSubgraph(surfaceFormVertices);
 
