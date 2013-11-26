@@ -20,8 +20,9 @@
 	</properties>
 
 	<dependencies>
-		<!-- for batch etc. https://github.com/tinkerpop/blueprints/wiki/Batch-Implementation -->
+		<!-- graph related dependencies -->
 		<dependency>
+			<!-- for batch etc. https://github.com/tinkerpop/blueprints/wiki/Batch-Implementation -->
 			<groupId>com.tinkerpop.blueprints</groupId>
 			<artifactId>blueprints-core</artifactId>
 			<version>${tinkerpop.version}</version>
@@ -36,18 +37,17 @@
 			<artifactId>gremlin-java</artifactId>
 			<version>${tinkerpop.version}</version>
 		</dependency>
-		<!-- https://github.com/tinkerpop/blueprints/wiki/Sail-Ouplementation -->
 		<dependency>
+			<!-- https://github.com/tinkerpop/blueprints/wiki/Sail-Ouplementation -->
 			<groupId>com.tinkerpop.blueprints</groupId>
 			<artifactId>blueprints-graph-sail</artifactId>
 			<version>${tinkerpop.version}</version>
 		</dependency>
-		<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4j-Implementation -->
 		<dependency>
+			<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4j-Implementation -->
 			<groupId>com.tinkerpop.blueprints</groupId>
 			<artifactId>blueprints-neo4j-graph</artifactId>
 			<version>${tinkerpop.version}</version>
-
 			<exclusions>
 				<exclusion>
 					<groupId>ch.qos.logback</groupId>
@@ -55,8 +55,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- explicitly include neo4j-kernel to exclude logback dependency -->
 		<dependency>
+			<!-- explicitly include neo4j-kernel to exclude logback dependency -->
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-kernel</artifactId>
 			<version>${neo4j.version}</version>
@@ -71,35 +71,30 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4jBatch-Implementation -->
 		<dependency>
+			<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4jBatch-Implementation -->
 			<groupId>com.tinkerpop.blueprints</groupId>
 			<artifactId>blueprints-neo4jbatch-graph</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-		<!-- https://github.com/tinkerpop/blueprints/wiki/JUNG-Ouplementation -->
 		<dependency>
+			<!-- https://github.com/tinkerpop/blueprints/wiki/JUNG-Ouplementation -->
 			<groupId>com.tinkerpop.blueprints</groupId>
 			<artifactId>blueprints-graph-jung</artifactId>
 			<version>${tinkerpop.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>net.sf.jgrapht</groupId>
 			<artifactId>jgrapht</artifactId>
 			<version>0.8.3</version>
 		</dependency>
 
+		<!-- testing -->
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>15.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.googlecode.aima-java</groupId>
-			<artifactId>aima-core</artifactId>
-			<version>0.10.5</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- logging -->
@@ -124,12 +119,25 @@
 		<!-- <version>${logback.version}</version> -->
 		<!-- </dependency> -->
 
-		<!-- testing -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>15.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.aima-java</groupId>
+			<artifactId>aima-core</artifactId>
+			<version>0.10.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sleepycat</groupId>
+			<artifactId>je</artifactId>
+			<version>5.0.73</version>
+		</dependency>
+		<dependency>
+			<groupId>it.unimi.dsi</groupId>
+			<artifactId>fastutil</artifactId>
+			<version>6.5.11</version>
 		</dependency>
 	</dependencies>
 

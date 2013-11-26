@@ -159,6 +159,7 @@ public final class Graphs {
 			return edge.getVertex(Direction.OUT);
 	}
 
+	//TODO rename shortUriOfVertex(Vertex v)
 	public static String uriOfVertex(Vertex v) {
 		return v.getProperty(GraphConfig.URI_PROPERTY).toString();
 	}
