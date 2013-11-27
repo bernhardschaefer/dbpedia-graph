@@ -8,12 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.unima.dws.dbpediagraph.disambiguate.global.*;
-import de.unima.dws.dbpediagraph.graph.SubgraphTester;
-import de.unima.dws.dbpediagraph.graph.TestSet;
+import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
-import de.unima.dws.dbpediagraph.weights.GraphWeights;
-import de.unima.dws.dbpediagraph.weights.GraphWeightsFactory;
+import de.unima.dws.dbpediagraph.weights.EdgeWeight;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightFactory;
 
 public class TestGlobalDisambiguators {
 	private static final Logger logger = LoggerFactory.getLogger(TestGlobalDisambiguators.class);
@@ -29,7 +28,7 @@ public class TestGlobalDisambiguators {
 	public static void setUp() {
 
 		SubgraphConstructionSettings settings = SubgraphTester.getNavigliSettings();
-		GraphWeights graphWeights = GraphWeightsFactory.getDBpediaGraphWeights();
+		EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImpl(GraphConfig.config());
 		subgraphTesterNavigli = SubgraphTester.newNavigliTester(settings);
 
 		List<GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators = new ArrayList<>();

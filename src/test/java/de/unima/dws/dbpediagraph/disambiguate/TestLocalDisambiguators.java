@@ -9,8 +9,8 @@ import de.unima.dws.dbpediagraph.disambiguate.local.*;
 import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.util.CollectionUtils;
-import de.unima.dws.dbpediagraph.weights.GraphWeights;
-import de.unima.dws.dbpediagraph.weights.GraphWeightsFactory;
+import de.unima.dws.dbpediagraph.weights.EdgeWeight;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightFactory;
 
 public class TestLocalDisambiguators {
 	/** Name of the package where the local disambiguator classes reside. */
@@ -25,7 +25,7 @@ public class TestLocalDisambiguators {
 	@BeforeClass
 	public static void beforeClass() {
 		GraphType graphType = GraphType.UNDIRECTED_GRAPH;
-		GraphWeights graphWeights = GraphWeightsFactory.getDBpediaGraphWeights();
+		EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImpl(GraphConfig.config());
 
 		List<LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> localDisambiguators = new ArrayList<>();
 		localDisambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));

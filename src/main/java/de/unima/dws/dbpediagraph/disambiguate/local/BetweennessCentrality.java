@@ -9,7 +9,7 @@ import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
-import de.unima.dws.dbpediagraph.weights.GraphWeights;
+import de.unima.dws.dbpediagraph.weights.EdgeWeight;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
@@ -41,7 +41,7 @@ public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> exten
 
 	}
 
-	public BetweennessCentrality(GraphType graphType, GraphWeights graphWeights) {
+	public BetweennessCentrality(GraphType graphType, EdgeWeight graphWeights) {
 		super(graphType, graphWeights);
 	}
 

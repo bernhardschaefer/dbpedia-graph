@@ -118,7 +118,7 @@ public final class CollectionUtils {
 			for (Vertex v : vertices)
 				// simple contains won't work since vertices can be from different graphs with different id
 				// representations
-				if (Graphs.uriOfVertex(v).equals(Graphs.uriOfVertex(searchVertex)))
+				if (Graphs.shortUriOfVertex(v).equals(Graphs.shortUriOfVertex(searchVertex)))
 					return new HashSet<>(vertices);
 		throw new IllegalArgumentException("Vertex is not in one of the provided collections.");
 	}

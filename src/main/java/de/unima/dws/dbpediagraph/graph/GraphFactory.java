@@ -23,7 +23,21 @@ public final class GraphFactory {
 	 * accessed.
 	 */
 	private static class DBpediaGraphHolder {
-		public static final TransactionalGraph GRAPH = openGraph(true);
+		public static final TransactionalGraph GRAPH;
+
+		static {
+			GRAPH = openGraph(true);
+
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					if (GRAPH != null) {
+						logger.info("Shutting down graph.");
+						GRAPH.shutdown();
+					}
+				}
+			});
+		}
 	}
 
 	/**

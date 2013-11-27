@@ -113,6 +113,6 @@ public final class DBpediaGraphLoader {
 	 */
 	public static void main(String[] args) throws ConfigurationException {
 		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args));
-		PredObjOccsCounter.countDBpediaGraphOccsIntoDB();
+		PredObjOccsCounter.countAndPersistDBpediaGraphOccs();
 	}
 }

@@ -11,7 +11,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.*;
-import de.unima.dws.dbpediagraph.weights.GraphWeights;
+import de.unima.dws.dbpediagraph.weights.EdgeWeight;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
@@ -26,9 +26,9 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	private static final Logger logger = LoggerFactory.getLogger(AbstractLocalGraphDisambiguator.class);
 
 	protected final GraphType graphType;
-	protected final GraphWeights graphWeights;
+	protected final EdgeWeight graphWeights;
 
-	public AbstractLocalGraphDisambiguator(GraphType graphType, GraphWeights graphWeights) {
+	public AbstractLocalGraphDisambiguator(GraphType graphType, EdgeWeight graphWeights) {
 		this.graphType = graphType;
 		this.graphWeights = graphWeights;
 	}

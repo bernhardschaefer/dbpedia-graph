@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.*;
 
-import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
+import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.util.Counter;
 import de.unima.dws.dbpediagraph.util.PersistentMap;
 
@@ -22,34 +22,31 @@ public class PredObjOccsCounter {
 	public static final String KEY_EDGE_COUNT = "EDGE_COUNT";
 
 	public static void main(String[] args) {
+		countAndPersistDBpediaGraphOccs();
+	}
+	
+	public static void countAndPersistDBpediaGraphOccs() {
+		Graph graph = GraphFactory.getDBpediaGraph();
+		PersistentMap<String, Integer> db = EdgeWeightFactory.newPersistentWeightsMap();
+		
+		double minGb = 2;
+		if(runtimeHasEnoughMemory(minGb)) {
+			logger.info("Using fast counter since more than {} GB Ram available.", minGb);
+			Map<String, Integer> map = EdgeWeightFactory.newTransientMap();
+			countGraphOccsIntoMap(graph, map);
+			dumpMapToPersistentMap(map, db);
+		} else {
+			logger.info("Using slow counter since less than {} GB Ram available.", minGb);
+			countGraphOccsIntoMap(graph, db);
+		}
+		
+		db.close();
+		graph.shutdown();
+	}
+
+	private static boolean runtimeHasEnoughMemory(double minGb) {
 		double totalMemoryGb = Runtime.getRuntime().maxMemory() / (1024.0 * 1024.0 * 1024.0);
-		if (totalMemoryGb > 2)
-			countDBpediaGraphOccsIntoDB();
-		else
-			countDBpediaGraphOccsIntoDBSlow();
-	}
-
-	public static void countDBpediaGraphOccsIntoDB() {
-		Graph graph = GraphFactory.getDBpediaGraph();
-
-		Map<String, Integer> map = GraphWeightsFactory.newTransientMap();
-		countGraphOccsIntoMap(graph, map);
-
-		PersistentMap<String, Integer> db = GraphWeightsFactory.newPersistentWeightsMap();
-		dumpMapToPersistentMap(map, db);
-		db.close();
-
-		graph.shutdown();
-	}
-
-	public static void countDBpediaGraphOccsIntoDBSlow() {
-		Graph graph = GraphFactory.getDBpediaGraph();
-
-		PersistentMap<String, Integer> db = GraphWeightsFactory.newPersistentWeightsMap();
-		countGraphOccsIntoMap(graph, db);
-		db.close();
-
-		graph.shutdown();
+		return totalMemoryGb >= minGb;
 	}
 
 	private static void dumpMapToPersistentMap(Map<String, Integer> map, PersistentMap<String, Integer> db) {
@@ -65,14 +62,8 @@ public class PredObjOccsCounter {
 		Counter c = new Counter("process edges", 1_000_000);
 
 		for (Edge edge : graph.getEdges()) {
-			String shortPredUri = edge.getLabel();
-
-			Vertex in = edge.getVertex(Direction.IN);
-			if (in == null) {
-				logger.warn("edge with label {} has no in vertex.", shortPredUri);
-				continue;
-			}
-			String shortObjUri = Graphs.uriOfVertex(in);
+			String shortPredUri = Graphs.shortUriOfEdge(edge);
+			String shortObjUri = Graphs.shortUriOfVertex(edge.getVertex(Direction.IN));
 
 			incValueOfKey(counts, shortPredUri);
 			incValueOfKey(counts, shortObjUri);

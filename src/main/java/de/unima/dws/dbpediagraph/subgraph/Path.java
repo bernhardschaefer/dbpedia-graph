@@ -90,8 +90,8 @@ class Path {
 	@Override
 	public String toString() {
 		return new StringBuilder()
-				.append("Start: ").append(Graphs.uriOfVertex(start))
-				.append(" End: ").append(Graphs.uriOfVertex(last))
+				.append("Start: ").append(Graphs.shortUriOfVertex(start))
+				.append(" End: ").append(Graphs.shortUriOfVertex(last))
 				.append(" Edges: ").append(edges)
 				.toString();
 	}

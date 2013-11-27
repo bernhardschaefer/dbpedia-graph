@@ -12,6 +12,7 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.util.GraphJungUndirectedWrapper;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightFactory;
 
 /**
  * Noninstantiable utility class for performing various graph operations. All operations are static.
@@ -32,8 +33,10 @@ public final class Graphs {
 	}
 
 	private static void addEdgeIfNonExistentUnsafe(Graph graph, Edge edge, Vertex outVertex, Vertex inVertex) {
-		if (graph.getEdge(edge.getId()) == null)
-			graph.addEdge(edge.getId(), outVertex, inVertex, edge.getLabel());
+		if (graph.getEdge(edge.getId()) == null) {
+			Edge newEdge = graph.addEdge(edge.getId(), outVertex, inVertex, edge.getLabel());
+			newEdge.setProperty(GraphConfig.URI_PROPERTY, edge.getProperty(GraphConfig.URI_PROPERTY));
+		}
 	}
 
 	public static void addNodeAndEdgesByIdIfNonExistent(Graph graph, Collection<Edge> edges) {
@@ -119,6 +122,18 @@ public final class Graphs {
 		return CollectionUtils.iterableItemCount(graph.getEdges());
 	}
 
+	public static String edgeToString(Edge edge) {
+		String shortUri = checkNotNull(edge).getProperty(GraphConfig.URI_PROPERTY);
+		return shortUri != null ? String.format("%s (%.3f)", shortUri,
+				EdgeWeightFactory.getDBpediaImpl(GraphConfig.config()).weight(edge)) : "";
+	}
+
+	public static String shortUriOfEdge(Edge edge) {
+		String shortUri = edge.getProperty(GraphConfig.URI_PROPERTY);
+		checkNotNull(shortUri, "Graph is corrupted. The edge %s has no uri property.", edge.getId().toString());
+		return shortUri;
+	}
+
 	public static boolean isEmptyGraph(Graph graph) {
 		return !graph.getVertices().iterator().hasNext();
 	}
@@ -131,7 +146,7 @@ public final class Graphs {
 	}
 
 	public static boolean isVertexInGraph(Vertex v, Graph graph) {
-		String uri = Graphs.uriOfVertex(v);
+		String uri = Graphs.shortUriOfVertex(v);
 		Vertex graphVertex = vertexByUri(graph, uri);
 		return graphVertex != null;
 	}
@@ -159,15 +174,16 @@ public final class Graphs {
 			return edge.getVertex(Direction.OUT);
 	}
 
-	//TODO rename shortUriOfVertex(Vertex v)
-	public static String uriOfVertex(Vertex v) {
-		return v.getProperty(GraphConfig.URI_PROPERTY).toString();
+	public static String shortUriOfVertex(Vertex v) {
+		String shortUri = v.getProperty(GraphConfig.URI_PROPERTY);
+		checkNotNull(shortUri, "Graph is corrupted. The vertex %s has no uri property.", v.getId().toString());
+		return shortUri;
 	}
 
 	public static Set<String> urisOfVertices(Iterable<Vertex> vertices) {
 		Set<String> uris = new HashSet<>();
 		for (Vertex v : vertices)
-			uris.add(uriOfVertex(v));
+			uris.add(shortUriOfVertex(v));
 		return uris;
 	}
 
@@ -274,7 +290,7 @@ public final class Graphs {
 
 	@Deprecated
 	public static boolean equalByUri(Vertex v1, Vertex v2) {
-		return uriOfVertex(v1).equals(uriOfVertex(v2));
+		return shortUriOfVertex(v1).equals(shortUriOfVertex(v2));
 	}
 
 	// Suppress default constructor for noninstantiability

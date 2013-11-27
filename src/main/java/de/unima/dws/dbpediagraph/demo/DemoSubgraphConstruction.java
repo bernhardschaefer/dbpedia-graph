@@ -21,8 +21,8 @@ import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.subgraph.*;
 import de.unima.dws.dbpediagraph.util.FileUtils;
-import de.unima.dws.dbpediagraph.weights.GraphWeights;
-import de.unima.dws.dbpediagraph.weights.GraphWeightsFactory;
+import de.unima.dws.dbpediagraph.weights.EdgeWeight;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightFactory;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
@@ -37,7 +37,7 @@ public class DemoSubgraphConstruction {
 
 	private static final int MAX_DISTANCE = 4;
 	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
-	private static final GraphWeights GRAPH_WEIGHTS = GraphWeightsFactory.getDBpediaGraphWeights();
+	private static final EdgeWeight GRAPH_WEIGHTS = EdgeWeightFactory.getDBpediaImpl(GraphConfig.config());
 	private static final SubgraphConstructionSettings SETTINGS = new SubgraphConstructionSettings.Builder()
 			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build();
 
@@ -119,8 +119,7 @@ public class DemoSubgraphConstruction {
 		Transformer<Edge, String> edgeLabelTransformer = new Transformer<Edge, String>() {
 			@Override
 			public String transform(Edge edge) {
-				String uriProp = edge.getProperty(GraphConfig.URI_PROPERTY);
-				return uriProp != null ? uriProp : "";
+				return Graphs.edgeToString(edge);
 			}
 		};
 

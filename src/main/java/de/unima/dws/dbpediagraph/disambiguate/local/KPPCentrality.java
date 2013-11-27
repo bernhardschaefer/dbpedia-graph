@@ -11,7 +11,7 @@ import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
-import de.unima.dws.dbpediagraph.weights.GraphWeights;
+import de.unima.dws.dbpediagraph.weights.EdgeWeight;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 
@@ -21,7 +21,7 @@ import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
 		implements LocalGraphDisambiguator<T, U> {
 
-	public KPPCentrality(GraphType graphType, GraphWeights graphWeights) {
+	public KPPCentrality(GraphType graphType, EdgeWeight graphWeights) {
 		super(graphType, graphWeights);
 	}
 
