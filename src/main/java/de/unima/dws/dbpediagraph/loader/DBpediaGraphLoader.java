@@ -16,6 +16,7 @@ import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.util.FileUtils;
 import de.unima.dws.dbpediagraph.util.LoadingMetrics;
+import de.unima.dws.dbpediagraph.weights.PredObjOccsCounter;
 
 /**
  * Main class for importing DBpedia files into a {@link Graph}.
@@ -112,5 +113,6 @@ public final class DBpediaGraphLoader {
 	 */
 	public static void main(String[] args) throws ConfigurationException {
 		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args));
+		PredObjOccsCounter.countDBpediaGraphOccsIntoDB();
 	}
 }

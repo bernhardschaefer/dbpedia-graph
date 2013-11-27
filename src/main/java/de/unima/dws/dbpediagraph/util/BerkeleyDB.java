@@ -13,6 +13,9 @@ import com.sleepycat.collections.StoredMap;
 import com.sleepycat.je.*;
 import com.sleepycat.util.RuntimeExceptionWrapper;
 
+import de.unima.dws.dbpediagraph.graph.GraphConfig;
+import de.unima.dws.dbpediagraph.graph.GraphWeightsFactory;
+
 /**
  * A class to wrap a Berkeley DB as a Map
  * 
@@ -23,7 +26,7 @@ import com.sleepycat.util.RuntimeExceptionWrapper;
  * @param <V>
  *            class of the values
  */
-public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistedMap<K, V> {
+public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentMap<K, V> {
 	private transient Environment dbEnv;
 	private transient Database db;
 	private transient Database classCatalogDb;
@@ -37,6 +40,11 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistedMa
 			boolean allowSortedDuplicates, boolean readOnly) {
 		createDBEnvironment(location);
 		initDB(dbName, keyClass, valueClass, allowSortedDuplicates, readOnly);
+	}
+
+	@Override
+	protected Map<K, V> delegate() {
+		return mapView;
 	}
 
 	private void createDBEnvironment(final File location) {
@@ -114,27 +122,6 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistedMa
 		return mapView;
 	}
 
-	public static <V> void queryContent(BerkeleyDB<String, V> db) {
-		String user = "";
-
-		while (true) {
-			System.out.println("Please enter a key, then press <return> (type \"exit\" to quit)");
-			BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-
-			try {
-				user = input.readLine();
-				if (user.startsWith("exit")) {
-					System.out.println("QUITTING, thank you ... ");
-					break;
-				}
-				System.out.println("SHOWING DB RECORD: " + user + " => " + db.getAll(user));
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	public Environment getDBEnvironment() {
 		return dbEnv;
 	}
@@ -172,9 +159,36 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistedMa
 		}
 	}
 
-	@Override
-	protected Map<K, V> delegate() {
-		return mapView;
+	public static <V> void queryContent(BerkeleyDB<String, V> db) {
+		String line = "";
+
+		while (true) {
+			System.out.println("Please enter a key, then press <return> (type \"exit\" to quit)");
+			BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+			try {
+				line = input.readLine();
+				if (line.startsWith("exit")) {
+					System.out.println("QUITTING, thank you ... ");
+					break;
+				}
+				System.out.println("SHOWING DB RECORD: " + line + " => " + db.getAll(line));
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void main(String[] args) {
+		boolean clear = false;
+		boolean readOnly = true;
+		PersistentMap<String, Integer> persistentMap = GraphWeightsFactory.loadPersistentWeightsMap(
+				GraphConfig.config(), clear, readOnly);
+		if (persistentMap instanceof BerkeleyDB) {
+			BerkeleyDB<String, Integer> db = (BerkeleyDB<String, Integer>) persistentMap;
+			queryContent(db);
+		}
 	}
 
 }
