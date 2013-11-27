@@ -13,6 +13,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.util.CollectionUtils;
+import de.unima.dws.dbpediagraph.weights.GraphWeights;
 import edu.uci.ics.jung.algorithms.scoring.*;
 import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
 
@@ -21,6 +22,24 @@ import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
  */
 public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
 		implements LocalGraphDisambiguator<T, U> {
+
+	private static final int DEFAULT_ITERATIONS = 10;
+	private static final double DEFAULT_ALPHA = 0;
+	private static final double INITIAL_SCORE = 1;
+
+	private final double alpha;
+	private final int iterations;
+
+	public HITSCentrality(GraphType graphType, GraphWeights graphWeights, double alpha, int iterations) {
+		super(graphType, graphWeights);
+		this.alpha = alpha;
+		this.iterations = iterations;
+	}
+
+	public HITSCentrality(GraphType graphType, GraphWeights graphWeights) {
+		this(graphType, graphWeights, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
+	}
+
 	/**
 	 * Maintains hub and authority score information for a vertex.
 	 */
@@ -78,34 +97,12 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 		}
 	}
 
-	private static final int DEFAULT_ITERATIONS = 10;
-
-	private static final double DEFAULT_ALPHA = 0;
-
-	private static final double INITIAL_SCORE = 1;
-
 	@Deprecated
 	private static Map<Vertex, HitsScores> createInitialScores(Collection<Vertex> vertices, double initialScore) {
 		Map<Vertex, HitsScores> scores = new HashMap<>();
 		for (Vertex v : vertices)
 			scores.put(v, new HitsScores(initialScore, initialScore));
 		return scores;
-	}
-
-	private final double alpha;
-
-	private final int iterations;
-
-	private String name;
-
-	public HITSCentrality(GraphType graphType, double alpha, int iterations) {
-		super(graphType);
-		this.alpha = alpha;
-		this.iterations = iterations;
-	}
-
-	public HITSCentrality(GraphType graphType) {
-		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
 	}
 
 	@Deprecated
@@ -163,9 +160,7 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 
 	@Override
 	public String toString() {
-		if (name == null)
-			name = new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")
-					.append(iterations).append(")").toString();
-		return name;
+		return new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")
+				.append(iterations).append(")").toString();
 	}
 }

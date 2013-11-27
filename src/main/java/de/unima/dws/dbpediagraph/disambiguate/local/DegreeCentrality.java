@@ -8,6 +8,7 @@ import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.weights.GraphWeights;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
@@ -18,6 +19,11 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
  */
 public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
 		implements LocalGraphDisambiguator<T, U> {
+
+	public DegreeCentrality(GraphType graphType, GraphWeights graphWeights) {
+		super(graphType, graphWeights);
+	}
+
 	class DegreeVertexScorer implements VertexScorer<Vertex, Double> {
 		private final int verticesCount;
 
@@ -32,10 +38,6 @@ public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends Ab
 			return centrality;
 		}
 
-	}
-
-	public DegreeCentrality(GraphType graphType) {
-		super(graphType);
 	}
 
 	@Override

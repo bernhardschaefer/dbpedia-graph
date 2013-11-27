@@ -9,6 +9,7 @@ import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
+import de.unima.dws.dbpediagraph.weights.GraphWeights;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
@@ -17,6 +18,31 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
  */
 public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
 		implements LocalGraphDisambiguator<T, U> {
+
+	private static final int DEFAULT_ITERATIONS = 10;
+	private static final double DEFAULT_ALPHA = 0;
+
+	private final double alpha;
+	private final int iterations;
+
+	public PageRankCentrality(GraphType graphType, GraphWeights graphWeights, double alpha, int iterations) {
+		super(graphType, graphWeights);
+		this.alpha = alpha;
+		this.iterations = iterations;
+	}
+
+	public PageRankCentrality(GraphType graphType, GraphWeights graphWeights) {
+		this(graphType, graphWeights, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
+	}
+
+	private double calculateScoreSum(PageRank<Vertex, Edge> pageRank, Graph subgraph) {
+		double scoreSum = 0;
+		Iterable<Vertex> vertices = subgraph.getVertices();
+		for (Vertex v : vertices)
+			scoreSum += pageRank.getVertexScore(v);
+		return scoreSum;
+	}
+
 	class PRVertexScorer implements VertexScorer<Vertex, Double> {
 		private final double scoreSum;
 		private final PageRank<Vertex, Edge> pageRank;
@@ -48,33 +74,6 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 
 	}
 
-	private static final int DEFAULT_ITERATIONS = 10;
-
-	private static final double DEFAULT_ALPHA = 0;
-
-	private final double alpha;
-	private final int iterations;
-
-	private String name;
-
-	public PageRankCentrality(GraphType graphType, double alpha, int iterations) {
-		super(graphType);
-		this.alpha = alpha;
-		this.iterations = iterations;
-	}
-
-	public PageRankCentrality(GraphType graphType) {
-		this(graphType, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
-	}
-
-	private double calculateScoreSum(PageRank<Vertex, Edge> pageRank, Graph subgraph) {
-		double scoreSum = 0;
-		Iterable<Vertex> vertices = subgraph.getVertices();
-		for (Vertex v : vertices)
-			scoreSum += pageRank.getVertexScore(v);
-		return scoreSum;
-	}
-
 	@Override
 	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
 		return new PRVertexScorer(subgraph);
@@ -82,10 +81,8 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 
 	@Override
 	public String toString() {
-		if (name == null)
-			name = new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")
-					.append(iterations).append(")").toString();
-		return name;
+		return new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")
+				.append(iterations).append(")").toString();
 	}
 
 }

@@ -11,6 +11,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.*;
+import de.unima.dws.dbpediagraph.weights.GraphWeights;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
@@ -25,16 +26,11 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	private static final Logger logger = LoggerFactory.getLogger(AbstractLocalGraphDisambiguator.class);
 
 	protected final GraphType graphType;
+	protected final GraphWeights graphWeights;
 
-	private final Comparator<? super SurfaceFormSenseScore<T, U>> descendingScoreComparator = new Comparator<SurfaceFormSenseScore<T, U>>() {
-		@Override
-		public int compare(SurfaceFormSenseScore<T, U> left, SurfaceFormSenseScore<T, U> right) {
-			return Double.compare(right.score(), left.score());
-		}
-	};
-
-	public AbstractLocalGraphDisambiguator(GraphType graphType) {
+	public AbstractLocalGraphDisambiguator(GraphType graphType, GraphWeights graphWeights) {
 		this.graphType = graphType;
+		this.graphWeights = graphWeights;
 	}
 
 	@Override
@@ -42,6 +38,13 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 			Graph subgraph) {
 		return bestK(surfaceFormsSenses, subgraph, Integer.MAX_VALUE);
 	}
+
+	private final Comparator<? super SurfaceFormSenseScore<T, U>> descendingScoreComparator = new Comparator<SurfaceFormSenseScore<T, U>>() {
+		@Override
+		public int compare(SurfaceFormSenseScore<T, U> left, SurfaceFormSenseScore<T, U> right) {
+			return Double.compare(right.score(), left.score());
+		}
+	};
 
 	@Override
 	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, int k) {

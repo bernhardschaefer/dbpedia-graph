@@ -13,6 +13,7 @@ import de.unima.dws.dbpediagraph.disambiguate.local.DegreeCentrality;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
+import de.unima.dws.dbpediagraph.weights.GraphWeights;
 
 /**
  * The configuration hub for the DBpedia graph project. The class is noninstantiable and needs to be accessed in a
@@ -60,14 +61,15 @@ public final class GraphConfig {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends SurfaceForm, U extends Sense> GlobalGraphDisambiguator<T, U> newGlobalDisambiguator(
-			Configuration configuration, SubgraphConstructionSettings subgraphConstructionSettings) {
+			Configuration configuration, SubgraphConstructionSettings subgraphConstructionSettings,
+			GraphWeights graphWeights) {
 		String disambiguatorClassName = config.getString(GLOBAL_DISAMBIGUATOR_KEY, DEFAULT_GLOBAL_DISAMBIGUATOR);
 		try {
 			@SuppressWarnings("rawtypes")
 			Class<? extends GlobalGraphDisambiguator> globalDisambiguatorClass = Class.forName(disambiguatorClassName)
 					.asSubclass(GlobalGraphDisambiguator.class);
-			return globalDisambiguatorClass.getConstructor(SubgraphConstructionSettings.class).newInstance(
-					subgraphConstructionSettings);
+			return globalDisambiguatorClass.getConstructor(SubgraphConstructionSettings.class, GraphWeights.class)
+					.newInstance(subgraphConstructionSettings, graphWeights);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException("Error while trying to create disambiguator instance.", e);
@@ -76,14 +78,15 @@ public final class GraphConfig {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends SurfaceForm, U extends Sense> LocalGraphDisambiguator<T, U> newLocalDisambiguator(
-			GraphType graphType) {
+			GraphType graphType, GraphWeights graphWeights) {
 		// TODO log if no disambiguator in config
 		String disambiguatorClassName = config.getString(LOCAL_DISAMBIGUATOR_KEY, DEFAULT_LOCAL_DISAMBIGUATOR);
 		try {
 			@SuppressWarnings("rawtypes")
 			Class<? extends LocalGraphDisambiguator> localDisambiguatorClass = Class.forName(disambiguatorClassName)
 					.asSubclass(LocalGraphDisambiguator.class);
-			return localDisambiguatorClass.getConstructor(GraphType.class).newInstance(graphType);
+			return localDisambiguatorClass.getConstructor(GraphType.class, GraphWeights.class).newInstance(graphType,
+					graphWeights);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException("Error while trying to create disambiguator instance.", e);
