@@ -35,22 +35,17 @@ public class PredObjOccsCounter {
 		Map<String, Integer> map = GraphWeightsFactory.newTransientMap();
 		countGraphOccsIntoMap(graph, map);
 
-		PersistentMap<String, Integer> db = newPersistenWeightsMap();
+		PersistentMap<String, Integer> db = GraphWeightsFactory.newPersistentWeightsMap();
 		dumpMapToPersistentMap(map, db);
 		db.close();
 
 		graph.shutdown();
 	}
 
-	private static PersistentMap<String, Integer> newPersistenWeightsMap() {
-		boolean readOnly = false, clear = true;
-		return GraphWeightsFactory.loadPersistentWeightsMap(GraphConfig.config(), clear, readOnly);
-	}
-
 	public static void countDBpediaGraphOccsIntoDBSlow() {
 		Graph graph = GraphFactory.getDBpediaGraph();
 
-		PersistentMap<String, Integer> db = newPersistenWeightsMap();
+		PersistentMap<String, Integer> db = GraphWeightsFactory.newPersistentWeightsMap();
 		countGraphOccsIntoMap(graph, db);
 		db.close();
 

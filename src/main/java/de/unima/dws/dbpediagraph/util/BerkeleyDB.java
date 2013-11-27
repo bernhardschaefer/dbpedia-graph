@@ -13,9 +13,6 @@ import com.sleepycat.collections.StoredMap;
 import com.sleepycat.je.*;
 import com.sleepycat.util.RuntimeExceptionWrapper;
 
-import de.unima.dws.dbpediagraph.graph.GraphConfig;
-import de.unima.dws.dbpediagraph.graph.GraphWeightsFactory;
-
 /**
  * A class to wrap a Berkeley DB as a Map
  * 
@@ -177,17 +174,6 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentM
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-	}
-
-	public static void main(String[] args) {
-		boolean clear = false;
-		boolean readOnly = true;
-		PersistentMap<String, Integer> persistentMap = GraphWeightsFactory.loadPersistentWeightsMap(
-				GraphConfig.config(), clear, readOnly);
-		if (persistentMap instanceof BerkeleyDB) {
-			BerkeleyDB<String, Integer> db = (BerkeleyDB<String, Integer>) persistentMap;
-			queryContent(db);
 		}
 	}
 

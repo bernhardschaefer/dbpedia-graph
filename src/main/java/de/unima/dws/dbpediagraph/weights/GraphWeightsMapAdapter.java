@@ -7,11 +7,11 @@ import java.util.Map;
  * @author Bernhard Schäfer
  *
  */
-public class MapGraphWeights implements GraphWeights {
+public class GraphWeightsMapAdapter implements GraphWeights {
 	private final Map<String, Integer> map;
 	private final int edgeCount;
 	
-	public MapGraphWeights(Map<String, Integer> map) { 
+	public GraphWeightsMapAdapter(Map<String, Integer> map) { 
 		this.map = map;
 		edgeCount = map.get(PredObjOccsCounter.KEY_EDGE_COUNT);
 	}
