@@ -27,6 +27,25 @@ class StatementPredicateFactory {
 
 	enum LoadingType {
 		BLACKLIST, COMPLETE, DOMAIN, RESOURCE;
+		
+		static List<LoadingType> fromConfig(Configuration config) {
+			List<LoadingType> loadingTypes = new ArrayList<>();
+			@SuppressWarnings("unchecked")
+			// apache commons config does not support generics
+			List<String> loadingTypeNames = config.getList(CONFIG_STATEMENT_PREDICATE);
+
+			for (String loadingTypeName : loadingTypeNames) {
+				try {
+					loadingTypes.add(LoadingType.valueOf(loadingTypeName.trim()));
+				} catch (IllegalArgumentException e) {
+					throw new IllegalArgumentException(String.format(
+							"Unknown loading filter type '%s' specified in '%s'. Only the following are allowed: %s",
+							loadingTypeName, CONFIG_STATEMENT_PREDICATE, java.util.Arrays.toString(LoadingType.values())),
+							e);
+				}
+			}
+			return loadingTypes;
+		}
 	}
 
 	static Predicate<Statement> fromLoadingTypes(List<LoadingType> types) {
@@ -59,31 +78,12 @@ class StatementPredicateFactory {
 	 * @return A {@link Predicate} instance.
 	 */
 	static Predicate<Statement> fromConfig(final Configuration config) {
-		List<LoadingType> loadingTypes = loadingTypesFromConfig(config);
+		List<LoadingType> loadingTypes = LoadingType.fromConfig(config);
 
 		if (loadingTypes == null || loadingTypes.isEmpty()) // no loading filter requested
 			return DUMMY_PREDICATE; // return dummy filter to use all triples
 
 		return fromLoadingTypes(loadingTypes);
-	}
-
-	static List<LoadingType> loadingTypesFromConfig(Configuration config) {
-		List<LoadingType> loadingTypes = new ArrayList<>();
-		@SuppressWarnings("unchecked")
-		// apache commons config does not support generics
-		List<String> loadingTypeNames = config.getList(CONFIG_STATEMENT_PREDICATE);
-
-		for (String loadingTypeName : loadingTypeNames) {
-			try {
-				loadingTypes.add(LoadingType.valueOf(loadingTypeName.trim()));
-			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException(String.format(
-						"Unknown loading filter type '%s' specified in '%s'. Only the following are allowed: %s",
-						loadingTypeName, CONFIG_STATEMENT_PREDICATE, java.util.Arrays.toString(LoadingType.values())),
-						e);
-			}
-		}
-		return loadingTypes;
 	}
 
 }

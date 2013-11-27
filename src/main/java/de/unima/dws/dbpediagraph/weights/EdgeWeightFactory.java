@@ -27,13 +27,13 @@ public final class EdgeWeightFactory {
 	static {
 		boolean readOnly = true, clear = false;
 		occCounts = loadPersistentOccCountsMap(GraphConfig.config(), clear, readOnly);
-		
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				if(occCounts instanceof PersistentMap) {
+				if (occCounts instanceof PersistentMap) {
 					logger.info("Shutting down occurrence counts");
-					((PersistentMap<String,Integer>)occCounts).close();
+					((PersistentMap<String, Integer>) occCounts).close();
 				}
 			}
 		});
@@ -48,11 +48,11 @@ public final class EdgeWeightFactory {
 			return new InfContentAndPointwiseMutuaInf(occCounts);
 		case JOINT_IC:
 			return new JointInformationContent(occCounts);
-		default:
-			throw new IllegalArgumentException("Illegal edgeWeightType: " + edgeWeightType);
 		}
+		throw new IllegalArgumentException("The " + EdgeWeightType.class.getSimpleName()
+				+ " specified in config is not valid: " + edgeWeightType);
 	}
-	
+
 	static Map<String, Integer> newTransientMap() {
 		return new Object2IntOpenHashMap<String>();
 	}
