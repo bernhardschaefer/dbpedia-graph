@@ -4,15 +4,14 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.*;
 
 import de.unima.dws.dbpediagraph.disambiguate.local.*;
 import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.util.CollectionUtils;
+import de.unima.dws.dbpediagraph.weights.DummyEdgeWeights;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
-import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory;
 
 public class TestLocalDisambiguators {
 	/** Name of the package where the local disambiguator classes reside. */
@@ -27,8 +26,7 @@ public class TestLocalDisambiguators {
 	@BeforeClass
 	public static void beforeClass() throws ConfigurationException {
 		GraphType graphType = GraphType.UNDIRECTED_GRAPH;
-		EdgeWeights graphWeights = EdgeWeightsFactory.dbpediaImplFromConfig(new PropertiesConfiguration(
-				TestSet.NavigliTestSet.NL_TEST_PROPERTIES));
+		EdgeWeights graphWeights = DummyEdgeWeights.INSTANCE;
 
 		List<LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> localDisambiguators = new ArrayList<>();
 		localDisambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));

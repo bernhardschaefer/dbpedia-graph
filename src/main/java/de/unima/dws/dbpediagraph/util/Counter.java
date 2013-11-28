@@ -15,8 +15,7 @@ public class Counter {
 	private final long tickRate;
 	private final String name;
 
-	// TODO change to nanoTime
-	private final long startTime = System.currentTimeMillis();
+	private final long startTime = System.nanoTime();
 	private long lastTickTime = startTime;
 	private int count = 0;
 
@@ -33,10 +32,11 @@ public class Counter {
 
 	public void inc() {
 		if ((++count % tickRate) == 0) {
-			long now = System.currentTimeMillis();
+			long now = System.nanoTime();
 			long tickTimeDelta = now - lastTickTime;
 			lastTickTime = now;
-			logger.info(String.format("%s: %,d @ ~%.2f sec/%,d items.", name, count, tickTimeDelta / 1000.0, tickRate));
+			logger.info(String
+					.format("%s: %,d @ ~%.2f sec/%,d items.", name, count, nanoToSec(tickTimeDelta), tickRate));
 		}
 	}
 
@@ -45,8 +45,17 @@ public class Counter {
 	}
 
 	public void finish() {
-		long totalTime = System.currentTimeMillis() - startTime;
-		logger.info(String.format("DONE with %s (%,d items @ ~%.2f sec.) %n", name, count, totalTime / 1000.0));
+		logger.info(String.format("DONE with %s (%,d items @ ~%.2f sec.) %n", name, count, elapsedSecs(startTime)));
+	}
+
+	public static double elapsedSecs(long nanoStartTime) {
+		long now = System.nanoTime();
+		long timeDelta = now - nanoStartTime;
+		return nanoToSec(timeDelta);
+	}
+
+	public static double nanoToSec(long nanos) {
+		return nanos / 1_000_000_000.0;
 	}
 
 }

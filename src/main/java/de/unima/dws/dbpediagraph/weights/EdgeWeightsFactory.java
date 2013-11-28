@@ -4,8 +4,6 @@ import java.util.*;
 
 import org.apache.commons.configuration.Configuration;
 
-import de.unima.dws.dbpediagraph.graph.GraphConfig;
-
 /**
  * Noninstantiable graph weights factory class that provides the graph weights needed for disambiguation.
  * 
@@ -14,26 +12,47 @@ import de.unima.dws.dbpediagraph.graph.GraphConfig;
  */
 public final class EdgeWeightsFactory {
 
-	private static final Map<EdgeWeightsType, EdgeWeights> edgeWeightsImpls;
-	static {
-		boolean readOnly = true, clear = false;
-		Map<String, Integer> occCounts = OccurrenceCounts.loadPersistentOccCountsMap(GraphConfig.config(), clear,
-				readOnly);
-
-		edgeWeightsImpls = new EnumMap<>(EdgeWeightsType.class);
-		edgeWeightsImpls.put(EdgeWeightsType.DUMMY, DummyEdgeWeights.INSTANCE);
-		edgeWeightsImpls.put(EdgeWeightsType.COMB_IC, new CombinedInformationContent(occCounts));
-		edgeWeightsImpls.put(EdgeWeightsType.JOINT_IC, new JointInformationContent(occCounts));
-		edgeWeightsImpls.put(EdgeWeightsType.IC_PMI, new InfContentAndPointwiseMutuaInf(occCounts));
+	/**
+	 * Inner class for lazy-loading DBpedia edge weights so that other edge weights could be used in future.
+	 */
+	private static class DBpediaEdgeWeights {
+		private static final Map<EdgeWeightsType, EdgeWeights> DBPEDIA_EDGE_WEIGHTS;
+		static {
+			Map<String, Integer> occCounts = OccurrenceCounts.getDBpediaOccCounts();
+			DBPEDIA_EDGE_WEIGHTS = new EnumMap<>(EdgeWeightsType.class);
+			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.DUMMY, DummyEdgeWeights.INSTANCE);
+			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.COMB_IC, new CombinedInformationContent(occCounts));
+			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.JOINT_IC, new JointInformationContent(occCounts));
+			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.IC_PMI, new InfContentAndPointwiseMutuaInf(occCounts));
+		}
 	}
 
-	public static EdgeWeights dbpediaImplFromConfig(Configuration config) {
+	public static EdgeWeights fromConfig(Configuration config, Map<String, Integer> occCounts) {
 		EdgeWeightsType edgeWeightsType = EdgeWeightsType.fromConfig(config);
-		return dbpediaWeightsfromEdgeWeightsType(edgeWeightsType);
+		return fromEdgeWeightsType(edgeWeightsType, occCounts);
 	}
 
-	public static EdgeWeights dbpediaWeightsfromEdgeWeightsType(EdgeWeightsType edgeWeightsType) {
-		return edgeWeightsImpls.get(edgeWeightsType);
+	public static EdgeWeights fromEdgeWeightsType(EdgeWeightsType edgeWeightsType, Map<String, Integer> occCounts) {
+		switch (edgeWeightsType) {
+		case COMB_IC:
+			return new CombinedInformationContent(occCounts);
+		case IC_PMI:
+			return new InfContentAndPointwiseMutuaInf(occCounts);
+		case JOINT_IC:
+			return new JointInformationContent(occCounts);
+		case DUMMY:
+			return DummyEdgeWeights.INSTANCE;
+		}
+		throw new IllegalArgumentException("The specified edge weights type is not valid: " + edgeWeightsType);
+	}
+
+	public static EdgeWeights dbpediaFromConfig(Configuration config) {
+		EdgeWeightsType edgeWeightsType = EdgeWeightsType.fromConfig(config);
+		return dbpediaFromEdgeWeightsType(edgeWeightsType);
+	}
+
+	public static EdgeWeights dbpediaFromEdgeWeightsType(EdgeWeightsType edgeWeightsType) {
+		return DBpediaEdgeWeights.DBPEDIA_EDGE_WEIGHTS.get(edgeWeightsType);
 	}
 
 	/**

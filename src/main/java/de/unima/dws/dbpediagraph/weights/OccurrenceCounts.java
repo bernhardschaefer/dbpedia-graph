@@ -15,7 +15,22 @@ import de.unima.dws.dbpediagraph.util.PersistentMap;
 
 public class OccurrenceCounts {
 	private static final Logger logger = LoggerFactory.getLogger(OccurrenceCounts.class);
-	
+
+	/**
+	 * Inner class for lazy-loading DBpedia occurrence counts so that other counts can be used for testing etc.
+	 */
+	private static class DBpediaOccCountsHolder {
+		private static final Map<String, Integer> OCC_COUNTS;
+		static {
+			boolean readOnly = true, clear = false;
+			OCC_COUNTS = OccurrenceCounts.loadPersistentOccCountsMap(GraphConfig.config(), clear, readOnly);
+		}
+	}
+
+	public static Map<String, Integer> getDBpediaOccCounts() {
+		return DBpediaOccCountsHolder.OCC_COUNTS;
+	}
+
 	static Map<String, Integer> newTransientMap() {
 		return new Object2IntOpenHashMap<String>();
 	}
@@ -49,7 +64,7 @@ public class OccurrenceCounts {
 		logger.info("Graph weights loading time {} sec", (System.currentTimeMillis() - startTime) / 1000.0);
 		return db;
 	}
-	
+
 	public static void main(String[] args) {
 		boolean clear = false, readOnly = true;
 		PersistentMap<String, Integer> persistentMap = loadPersistentOccCountsMap(GraphConfig.config(), clear, readOnly);

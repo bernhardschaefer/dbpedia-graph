@@ -8,8 +8,6 @@ import com.tinkerpop.blueprints.Graph;
 
 import de.unima.dws.dbpediagraph.disambiguate.GlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.disambiguate.global.Compactness;
-import de.unima.dws.dbpediagraph.disambiguate.local.DegreeCentrality;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
@@ -32,10 +30,7 @@ public final class GraphConfig {
 
 	private static final String GRAPH_DIRECTORY_KEY = "graph.directory";
 
-	private static final String DEFAULT_LOCAL_DISAMBIGUATOR = DegreeCentrality.class.getName();
 	private static final String LOCAL_DISAMBIGUATOR_KEY = "local.graph.disambiguator";
-
-	private static final String DEFAULT_GLOBAL_DISAMBIGUATOR = Compactness.class.getName();
 	private static final String GLOBAL_DISAMBIGUATOR_KEY = "global.graph.disambiguator";;
 
 	/**
@@ -63,7 +58,7 @@ public final class GraphConfig {
 	public static <T extends SurfaceForm, U extends Sense> GlobalGraphDisambiguator<T, U> newGlobalDisambiguator(
 			Configuration configuration, SubgraphConstructionSettings subgraphConstructionSettings,
 			EdgeWeights graphWeights) {
-		String disambiguatorClassName = config.getString(GLOBAL_DISAMBIGUATOR_KEY, DEFAULT_GLOBAL_DISAMBIGUATOR);
+		String disambiguatorClassName = config.getString(GLOBAL_DISAMBIGUATOR_KEY);
 		try {
 			@SuppressWarnings("rawtypes")
 			Class<? extends GlobalGraphDisambiguator> globalDisambiguatorClass = Class.forName(disambiguatorClassName)
@@ -72,15 +67,17 @@ public final class GraphConfig {
 					.newInstance(subgraphConstructionSettings, graphWeights);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new RuntimeException("Error while trying to create disambiguator instance.", e);
+			throw new RuntimeException(
+					String.format(
+							"Error while trying to create global disambiguator instance. Check if provided global disambiguator class %s is valid.",
+							disambiguatorClassName), e);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T extends SurfaceForm, U extends Sense> LocalGraphDisambiguator<T, U> newLocalDisambiguator(
 			GraphType graphType, EdgeWeights graphWeights) {
-		// TODO log if no disambiguator in config
-		String disambiguatorClassName = config.getString(LOCAL_DISAMBIGUATOR_KEY, DEFAULT_LOCAL_DISAMBIGUATOR);
+		String disambiguatorClassName = config.getString(LOCAL_DISAMBIGUATOR_KEY);
 		try {
 			@SuppressWarnings("rawtypes")
 			Class<? extends LocalGraphDisambiguator> localDisambiguatorClass = Class.forName(disambiguatorClassName)
@@ -89,7 +86,10 @@ public final class GraphConfig {
 					graphWeights);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new RuntimeException("Error while trying to create disambiguator instance.", e);
+			throw new RuntimeException(
+					String.format(
+							"Error while trying to create local disambiguator instance. Check if provided local disambiguator class %s is valid.",
+							disambiguatorClassName), e);
 		}
 	}
 

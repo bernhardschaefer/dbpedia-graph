@@ -7,7 +7,6 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.unima.dws.dbpediagraph.disambiguate.GraphDisambiguator;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.util.FileUtils;
@@ -58,9 +57,4 @@ public class ExpectedDisambiguationResults<T extends SurfaceForm, U extends Sens
 		return allExpectedResults;
 	}
 
-	@Deprecated
-	public Map<Map<T, List<U>>, Double> getResultsForDisambiguator(Class<?> disambiguatorClass) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
