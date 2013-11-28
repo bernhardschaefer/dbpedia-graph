@@ -58,7 +58,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 
 			List<SurfaceFormSenseScore<T, U>> sFSS = new ArrayList<>();
 			for (U sense : sFSenses) { // get the score for each sense
-				Vertex v = Graphs.vertexByUri(subgraph, sense.fullUri());
+				Vertex v = Graphs.vertexByFullUri(subgraph, sense.fullUri());
 				double score = (v == null) ? -1 : vertexScorer.getVertexScore(v);
 				sFSS.add(new SurfaceFormSenseScore<T, U>(surfaceForm, sense, score));
 			}

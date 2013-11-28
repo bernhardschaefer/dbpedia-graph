@@ -19,7 +19,7 @@ public class VertexTest {
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		Graph graph = GraphFactory.getDBpediaGraph();
 		for (String fullUri : fullUris) {
-			Vertex v = Graphs.vertexByUri(graph, URLDecoder.decode( fullUri, "UTF-8" ));
+			Vertex v = Graphs.vertexByFullUri(graph, URLDecoder.decode( fullUri, "UTF-8" ));
 			String id = (v == null) ? "null" : v.getId().toString();
 			System.out.println(fullUri + " --> " + id);
 		}

@@ -20,6 +20,15 @@ public final class CollectionUtils {
 			combinedCollections.addAll(c);
 		return combinedCollections;
 	}
+	
+	public static int countCollectionValues(Map<?, ? extends Collection<?>> map) {
+		int counter = 0;
+		for (Collection<?> c : map.values()) {
+			if (c != null)
+				counter += c.size();
+		}
+		return counter;
+	}
 
 	public static <T> List<T> joinListValues(Map<?, List<T>> map) {
 		List<T> joinedValues = new ArrayList<>();

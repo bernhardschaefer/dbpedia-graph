@@ -38,7 +38,7 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 				SubgraphConstructions.addPathToSubGraph(current, path, subgraph, settings.graphType);
 
 			// explore further
-			for (Edge edge : Graphs.connectedEdges(current, settings.graphType)) {
+			for (Edge edge : current.getEdges(settings.graphType.getDirection())) {
 				Vertex child = Graphs.oppositeVertexUnsafe(edge, current);
 
 				// for undirected graph check if vertex/edge combination is worth exploring

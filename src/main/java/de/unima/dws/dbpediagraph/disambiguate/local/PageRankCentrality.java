@@ -37,8 +37,7 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 
 	private double calculateScoreSum(PageRank<Vertex, Edge> pageRank, Graph subgraph) {
 		double scoreSum = 0;
-		Iterable<Vertex> vertices = subgraph.getVertices();
-		for (Vertex v : vertices)
+		for (Vertex v : subgraph.getVertices())
 			scoreSum += pageRank.getVertexScore(v);
 		return scoreSum;
 	}

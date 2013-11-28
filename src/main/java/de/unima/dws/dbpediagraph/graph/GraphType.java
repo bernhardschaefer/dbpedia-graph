@@ -14,7 +14,7 @@ public enum GraphType {
 	DIRECTED_GRAPH {
 		@Override
 		public Direction getDirection() {
-			return Direction.IN;
+			return Direction.OUT;
 		}
 	},
 	UNDIRECTED_GRAPH {

@@ -35,7 +35,6 @@ public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> exten
 
 		@Override
 		public Double getVertexScore(Vertex v) {
-			// TODO change to weighted edge implementation
 			double score = betweenness.getVertexScore(v);
 			double normalizedScore = score / ((verticesCount - 1) * (verticesCount - 2));
 			return normalizedScore;

@@ -55,8 +55,7 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 		public Double getVertexScore(Vertex v) {
 			Scores scores = hits.getVertexScore(v);
 			// HitsScores scores = hitsScores.get(v);
-			double authority = Iterables.size(Graphs.connectedEdges(v, graphType)) != 0 ? scores.authority
-					: 0;
+			double authority = Iterables.size(v.getEdges(graphType.getDirection())) != 0 ? scores.authority : 0;
 			return authority;
 		}
 	}
@@ -65,7 +64,7 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
 		return new HITSVertexScorer(subgraph);
 	}
-	
+
 	@Override
 	public String toString() {
 		return new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")

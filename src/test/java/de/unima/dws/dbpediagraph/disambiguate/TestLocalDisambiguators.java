@@ -31,7 +31,10 @@ public class TestLocalDisambiguators {
 		List<LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> localDisambiguators = new ArrayList<>();
 		localDisambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
 		localDisambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
-		// localDisambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
+		// double alpha = 0;
+		// int iterations = 100;
+		// localDisambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights, alpha,
+		// iterations));
 		localDisambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
 		// localDisambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
 

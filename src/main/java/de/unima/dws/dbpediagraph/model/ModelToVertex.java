@@ -19,7 +19,7 @@ public final class ModelToVertex {
 	public static Set<Vertex> verticesFromSenses(Graph graph, Collection<? extends Sense> senses) {
 		Set<Vertex> vertices = new HashSet<>(senses.size());
 		for (Sense sense : senses) {
-			Vertex v = Graphs.vertexByUri(graph, sense.fullUri());
+			Vertex v = Graphs.vertexByFullUri(graph, sense.fullUri());
 			if (v != null)
 				vertices.add(v);
 		}

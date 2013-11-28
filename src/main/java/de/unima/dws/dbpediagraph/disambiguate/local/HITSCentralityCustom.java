@@ -11,7 +11,6 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graph.GraphType;
-import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
@@ -53,7 +52,7 @@ public class HITSCentralityCustom<T extends SurfaceForm, U extends Sense> extend
 		@Override
 		public Double getVertexScore(Vertex v) {
 			HitsScores scores = hitsScores.get(v);
-			double authority = Iterables.size(Graphs.connectedEdges(v, graphType)) != 0 ? scores.authority : 0;
+			double authority = Iterables.size(v.getEdges(graphType.getDirection())) != 0 ? scores.authority : 0;
 			return authority;
 		}
 	}

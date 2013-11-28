@@ -88,7 +88,7 @@ public final class Graphs {
 
 	public static Collection<Edge> connectedEdges(Vertex vertex, Direction direction, String... labels) {
 		Collection<Edge> edges;
-		final Iterable<Edge> itty = vertex.getEdges(direction);
+		final Iterable<Edge> itty = vertex.getEdges(direction, labels);
 		if (itty instanceof Collection)
 			edges = (Collection<Edge>) itty;
 		else {
@@ -97,17 +97,6 @@ public final class Graphs {
 				edges.add(edge);
 		}
 		return edges;
-	}
-
-	public static Iterable<Edge> connectedEdges(Vertex v, GraphType graphDirection) {
-		switch (graphDirection) {
-		case DIRECTED_GRAPH:
-			return v.getEdges(Direction.OUT);
-		case UNDIRECTED_GRAPH:
-			return v.getEdges(Direction.BOTH);
-		default:
-			throw new IllegalArgumentException("Suitable graph direction is missing: " + graphDirection);
-		}
 	}
 
 	public static Set<Vertex> connectedVerticesBothDirections(Vertex vertex) {
@@ -146,7 +135,7 @@ public final class Graphs {
 		return !graph.getEdges().iterator().hasNext();
 	}
 
-	public static boolean isNodeOnPath(Vertex child, Collection<Edge> path) {
+	public static boolean isNodeOnPath(Vertex child, List<Edge> path) {
 		for (Edge edge : path)
 			if (child.equals(edge.getVertex(Direction.IN)) || child.equals(edge.getVertex(Direction.OUT)))
 				return true;
@@ -189,7 +178,7 @@ public final class Graphs {
 		return uris;
 	}
 
-	public static Vertex vertexByUri(Graph graph, String fullUri) {
+	public static Vertex vertexByFullUri(Graph graph, String fullUri) {
 		String shortUri = GraphUriShortener.shorten(fullUri);
 		List<Vertex> vertices = Lists.newArrayList(graph.getVertices(GraphConfig.URI_PROPERTY, shortUri));
 		if (vertices.size() == 0) {
@@ -204,11 +193,6 @@ public final class Graphs {
 		return vertices.get(0);
 	}
 
-	@Deprecated
-	public static int vertexDegree(Vertex vertex, Direction direction) {
-		return Iterables.size(vertex.getEdges(direction));
-	}
-
 	public static double vertexDegreeWeighted(Vertex vertex, Direction direction, EdgeWeights edgeWeights) {
 		return sumWeightedEdges(vertex.getEdges(direction), edgeWeights);
 	}
@@ -220,18 +204,13 @@ public final class Graphs {
 		return sumWeights;
 	}
 
-	public static String vertexToString(Vertex v) {
-		String uri = v.getProperty(GraphConfig.URI_PROPERTY);
-		return String.format("vid: %s uri: %s", v.getId().toString(), uri);
-	}
-
 	/**
 	 * Converts the uris to vertices. Omits uris that cannot be found in the provided graph.
 	 */
 	public static Set<Vertex> verticesByFullUris(Graph graph, Collection<String> fullUris) {
 		Set<Vertex> vertices = new HashSet<Vertex>();
 		for (String fullUri : fullUris) {
-			Vertex v = vertexByUri(graph, fullUri);
+			Vertex v = vertexByFullUri(graph, fullUri);
 			if (v != null)
 				vertices.add(v);
 		}
@@ -240,60 +219,6 @@ public final class Graphs {
 
 	public static int verticesCount(Graph graph) {
 		return Iterables.size(graph.getVertices());
-	}
-
-	@Deprecated
-	public static Collection<Set<Vertex>> wordsVerticesByUri(Graph graph,
-			Collection<? extends Collection<String>> wordsSensesString) {
-		Collection<Set<Vertex>> wordVertices = new ArrayList<>();
-		for (Collection<String> uris : wordsSensesString)
-			wordVertices.add(verticesByFullUris(graph, uris));
-		return wordVertices;
-	}
-
-	@Deprecated
-	public static void addNodeAndEdgesByUriIfNonExistent(Graph graph, Collection<Edge> edges) {
-		for (Edge edge : edges) {
-			String outVertexUri = edge.getVertex(Direction.OUT).getProperty(GraphConfig.URI_PROPERTY).toString();
-			Vertex outVertex = addVertexByUri(graph, outVertexUri);
-
-			String inVertexUri = edge.getVertex(Direction.IN).getProperty(GraphConfig.URI_PROPERTY).toString();
-			Vertex inVertex = addVertexByUri(graph, inVertexUri);
-
-			addEdgeIfNonExistentUnsafe(graph, edge, outVertex, inVertex);
-		}
-	}
-
-	/**
-	 * Adds a vertex with the uri as property to the graph if it does not exist yet.
-	 */
-	@Deprecated
-	public static Vertex addVertexByUri(Graph graph, String fullUri) {
-		Vertex v = vertexByUri(graph, fullUri);
-		if (v == null) {
-			v = graph.addVertex(fullUri);
-			v.setProperty(GraphConfig.URI_PROPERTY, fullUri);
-		}
-		return v;
-	}
-
-	@Deprecated
-	public static void addVerticesByUrisOfVertices(Graph graph, Iterable<Vertex> vertices) {
-		for (Vertex v : vertices)
-			addVertexByUri(graph, v.getProperty(GraphConfig.URI_PROPERTY).toString());
-	}
-
-	@Deprecated
-	public static boolean containsVertexByUri(Collection<Vertex> vertices, Vertex searchVertex) {
-		for (Vertex v : vertices)
-			if (Graphs.equalByUri(searchVertex, v))
-				return true;
-		return false;
-	}
-
-	@Deprecated
-	public static boolean equalByUri(Vertex v1, Vertex v2) {
-		return shortUriOfVertex(v1).equals(shortUriOfVertex(v2));
 	}
 
 	// Suppress default constructor for noninstantiability
