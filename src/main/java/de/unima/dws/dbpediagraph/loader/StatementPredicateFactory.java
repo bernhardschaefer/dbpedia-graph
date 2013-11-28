@@ -55,7 +55,7 @@ class StatementPredicateFactory {
 		return Predicates.and(predicates);
 	}
 
-	private static Predicate<Statement> fromLoadingType(LoadingType type) {
+	static Predicate<Statement> fromLoadingType(LoadingType type) {
 		switch (type) {
 		case BLACKLIST:
 			return new BlacklistStatementPredicate();

@@ -5,6 +5,6 @@ import com.tinkerpop.blueprints.Edge;
 /**
  * @author Bernhard Schäfer
  */
-public interface EdgeWeight {
+public interface EdgeWeights {
 	Double weight(Edge e);
 }

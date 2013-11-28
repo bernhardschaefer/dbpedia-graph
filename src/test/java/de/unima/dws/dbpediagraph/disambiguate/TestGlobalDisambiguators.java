@@ -3,16 +3,19 @@ package de.unima.dws.dbpediagraph.disambiguate;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.unima.dws.dbpediagraph.disambiguate.global.*;
-import de.unima.dws.dbpediagraph.graph.*;
+import de.unima.dws.dbpediagraph.graph.SubgraphTester;
+import de.unima.dws.dbpediagraph.graph.TestSet;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
-import de.unima.dws.dbpediagraph.weights.EdgeWeight;
-import de.unima.dws.dbpediagraph.weights.EdgeWeightFactory;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory;
 
 public class TestGlobalDisambiguators {
 	private static final Logger logger = LoggerFactory.getLogger(TestGlobalDisambiguators.class);
@@ -25,11 +28,12 @@ public class TestGlobalDisambiguators {
 	private static Map<GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>, List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>>> disambiguatorResults;
 
 	@BeforeClass
-	public static void setUp() {
+	public static void setUp() throws ConfigurationException {
 
 		SubgraphConstructionSettings settings = SubgraphTester.getNavigliSettings();
-		EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImplFromConfig(GraphConfig.config());
 		subgraphTesterNavigli = SubgraphTester.newNavigliTester(settings);
+		EdgeWeights graphWeights = EdgeWeightsFactory.dbpediaImplFromConfig(new PropertiesConfiguration(
+				TestSet.NavigliTestSet.NL_TEST_PROPERTIES));
 
 		List<GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators = new ArrayList<>();
 		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(settings, graphWeights));

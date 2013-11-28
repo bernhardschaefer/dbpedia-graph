@@ -19,24 +19,29 @@ import de.unima.dws.dbpediagraph.util.PersistentMap;
  * @author Bernhard Schäfer
  * 
  */
-public final class EdgeWeightFactory {
-	private static final Logger logger = LoggerFactory.getLogger(EdgeWeightFactory.class);
+public final class EdgeWeightsFactory {
+	private static final Logger logger = LoggerFactory.getLogger(EdgeWeightsFactory.class);
 
 	private static final Map<String, Integer> occCounts;
-	private static final Map<EdgeWeightType,EdgeWeight> edgeWeightImpls;
+	private static final Map<EdgeWeightsType, EdgeWeights> edgeWeightsImpls;
 	static {
 		boolean readOnly = true, clear = false;
 		occCounts = loadPersistentOccCountsMap(GraphConfig.config(), clear, readOnly);
 
-		edgeWeightImpls = new EnumMap<>(EdgeWeightType.class);
-		edgeWeightImpls.put(EdgeWeightType.COMB_IC, new CombinedInformationContent(occCounts));
-		edgeWeightImpls.put(EdgeWeightType.JOINT_IC, new JointInformationContent(occCounts));
-		edgeWeightImpls.put(EdgeWeightType.IC_PMI, new InfContentAndPointwiseMutuaInf(occCounts));
+		edgeWeightsImpls = new EnumMap<>(EdgeWeightsType.class);
+		edgeWeightsImpls.put(EdgeWeightsType.DUMMY, DummyEdgeWeights.INSTANCE);
+		edgeWeightsImpls.put(EdgeWeightsType.COMB_IC, new CombinedInformationContent(occCounts));
+		edgeWeightsImpls.put(EdgeWeightsType.JOINT_IC, new JointInformationContent(occCounts));
+		edgeWeightsImpls.put(EdgeWeightsType.IC_PMI, new InfContentAndPointwiseMutuaInf(occCounts));
 	}
 
-	public static EdgeWeight getDBpediaImplFromConfig(Configuration config) {
-		EdgeWeightType edgeWeightType = EdgeWeightType.fromConfig(config);
-		return edgeWeightImpls.get(edgeWeightType);
+	public static EdgeWeights dbpediaImplFromConfig(Configuration config) {
+		EdgeWeightsType edgeWeightsType = EdgeWeightsType.fromConfig(config);
+		return dbpediaWeightsfromEdgeWeightsType(edgeWeightsType);
+	}
+
+	public static EdgeWeights dbpediaWeightsfromEdgeWeightsType(EdgeWeightsType edgeWeightsType) {
+		return edgeWeightsImpls.get(edgeWeightsType);
 	}
 
 	static Map<String, Integer> newTransientMap() {
@@ -58,7 +63,7 @@ public final class EdgeWeightFactory {
 				Integer.class).readOnly(readOnly).build();
 		if (clear)
 			db.clear();
-		
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -73,22 +78,22 @@ public final class EdgeWeightFactory {
 		return db;
 	}
 
-	enum EdgeWeightType {
-		JOINT_IC, COMB_IC, IC_PMI;
+	enum EdgeWeightsType {
+		DUMMY, JOINT_IC, COMB_IC, IC_PMI;
 
 		private static final String CONFIG_EDGE_WEIGHTS_IMPL = "graph.edge.weights.impl";
 
-		public static EdgeWeightType fromConfig(Configuration config) {
-			EdgeWeightType edgeWeightType;
+		public static EdgeWeightsType fromConfig(Configuration config) {
+			EdgeWeightsType edgeWeightType;
 			String edgeWeightsImplName = config.getString(CONFIG_EDGE_WEIGHTS_IMPL);
 			try {
-				edgeWeightType = EdgeWeightType.valueOf(edgeWeightsImplName);
+				edgeWeightType = EdgeWeightsType.valueOf(edgeWeightsImplName);
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException(
 						String.format(
 								"Unknown edge weight type '%s' specified in config for key '%s'. Only the following are allowed: %s",
-								edgeWeightsImplName, CONFIG_EDGE_WEIGHTS_IMPL, Arrays.toString(EdgeWeightType.values())),
-						e);
+								edgeWeightsImplName, CONFIG_EDGE_WEIGHTS_IMPL,
+								Arrays.toString(EdgeWeightsType.values())), e);
 			}
 			return edgeWeightType;
 		}
@@ -105,7 +110,7 @@ public final class EdgeWeightFactory {
 	}
 
 	// Suppress default constructor for noninstantiability
-	private EdgeWeightFactory() {
+	private EdgeWeightsFactory() {
 		throw new AssertionError();
 	}
 }

@@ -7,12 +7,12 @@ import java.util.Map;
 import com.tinkerpop.blueprints.Edge;
 
 /**
- * {@link EdgeWeight} adapter using a {@link Map} of occurrences counts.
+ * {@link EdgeWeights} adapter using a {@link Map} of occurrences counts.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeight {
+public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights {
 
 	private final Map<String, Integer> occCounts;
 	private final double totalEdges;

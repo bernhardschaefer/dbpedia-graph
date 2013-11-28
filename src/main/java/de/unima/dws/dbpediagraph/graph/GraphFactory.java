@@ -92,7 +92,7 @@ public final class GraphFactory {
 		long startTime = System.currentTimeMillis();
 
 		Graph graph = com.tinkerpop.blueprints.GraphFactory.open(GraphConfig.config());
-		if (needsToExist && Graphs.isEmptyGraph(graph))
+		if (needsToExist && Graphs.hasNoVertices(graph))
 			// TODO cleanup directory and delete empty graph that blueprints.GraphFactory created
 			throw new IllegalStateException(String.format(
 					"There is no existing graph with vertices in the directory %s. "

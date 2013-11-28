@@ -9,7 +9,7 @@ import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
-import de.unima.dws.dbpediagraph.weights.EdgeWeight;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
@@ -25,13 +25,13 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 	private final double alpha;
 	private final int iterations;
 
-	public PageRankCentrality(GraphType graphType, EdgeWeight graphWeights, double alpha, int iterations) {
+	public PageRankCentrality(GraphType graphType, EdgeWeights graphWeights, double alpha, int iterations) {
 		super(graphType, graphWeights);
 		this.alpha = alpha;
 		this.iterations = iterations;
 	}
 
-	public PageRankCentrality(GraphType graphType, EdgeWeight graphWeights) {
+	public PageRankCentrality(GraphType graphType, EdgeWeights graphWeights) {
 		this(graphType, graphWeights, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
 	}
 

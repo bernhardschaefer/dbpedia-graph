@@ -11,7 +11,7 @@ import com.tinkerpop.blueprints.Vertex;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.search.*;
 import de.unima.dws.dbpediagraph.subgraph.*;
-import de.unima.dws.dbpediagraph.weights.EdgeWeight;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 /**
  * Skeleton class which eases the implementation of {@link GraphDisambiguator}. Subclasses only need to implement
@@ -23,11 +23,11 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeight;
 public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense> implements
 		GlobalGraphDisambiguator<T, U> {
 	protected final SubgraphConstructionSettings subgraphConstructionSettings;
-	protected final EdgeWeight graphWeights;
+	protected final EdgeWeights edgeWeights;
 
-	public AbstractGlobalGraphDisambiguator(SubgraphConstructionSettings subgraphConstructionSettings, EdgeWeight graphWeights) {
+	public AbstractGlobalGraphDisambiguator(SubgraphConstructionSettings subgraphConstructionSettings, EdgeWeights edgeWeights) {
 		this.subgraphConstructionSettings = subgraphConstructionSettings;
-		this.graphWeights = graphWeights;
+		this.edgeWeights = edgeWeights;
 	}
 
 	@Override

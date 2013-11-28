@@ -22,7 +22,7 @@ public class TestStatementPredicateFactory {
 
 	@BeforeClass
 	public static void beforeClass() {
-		String prefix = "test-config/testconfig";
+		String prefix = "test-loader/testconfig";
 		String suffix = ".properties";
 		try {
 			config1 = new PropertiesConfiguration(prefix + "1" + suffix);
@@ -33,6 +33,14 @@ public class TestStatementPredicateFactory {
 		}
 	}
 
+	@Test
+	public void testFromLoadingType() {
+		for(LoadingType type: LoadingType.values()) {
+			Predicate<Statement> pred = StatementPredicateFactory.fromLoadingType(type);
+			assertNotNull(pred);
+		}
+	}
+	
 	@Test
 	public void testConfig1LoadingTypes() {
 		// config1 --> BLACKLIST, COMPLETE

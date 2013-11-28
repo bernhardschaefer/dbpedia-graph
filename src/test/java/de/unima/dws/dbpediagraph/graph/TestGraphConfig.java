@@ -10,8 +10,8 @@ import de.unima.dws.dbpediagraph.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.model.DefaultSense;
 import de.unima.dws.dbpediagraph.model.DefaultSurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
-import de.unima.dws.dbpediagraph.weights.EdgeWeight;
-import de.unima.dws.dbpediagraph.weights.EdgeWeightFactory;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory;
 
 /**
  * Tests for {@link GraphConfig}
@@ -24,7 +24,7 @@ public class TestGraphConfig {
 	private final Configuration config = GraphConfig.config();
 	private final SubgraphConstructionSettings subgraphConstructionSettings = SubgraphConstructionSettings.getDefault();
 	private final GraphType graphType = GraphType.DIRECTED_GRAPH;
-	private final EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImplFromConfig(GraphConfig.config());
+	private final EdgeWeights graphWeights = EdgeWeightsFactory.dbpediaImplFromConfig(config);
 
 	@Test
 	public void testNewGlobalDisambiguator() {

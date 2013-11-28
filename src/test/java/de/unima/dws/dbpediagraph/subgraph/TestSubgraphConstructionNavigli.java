@@ -3,16 +3,18 @@ package de.unima.dws.dbpediagraph.subgraph;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.graph.SubgraphTester;
+import de.unima.dws.dbpediagraph.weights.DummyEdgeWeights;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 public class TestSubgraphConstructionNavigli {
+	private static final EdgeWeights EDGE_WEIGHTS = DummyEdgeWeights.INSTANCE;
+
 	private SubgraphTester subgraphNavigli;
 
 	@Before
@@ -28,7 +30,9 @@ public class TestSubgraphConstructionNavigli {
 
 	@Test
 	public void testAllEdgesContainedDirected() {
-		assertEquals(subgraphNavigli.expectedSubgraphEdges.size(), Graphs.edgesCount(subgraphNavigli.getSubgraph()));
+		double delta = 0.01;
+		assertEquals(subgraphNavigli.expectedSubgraphEdges.size(),
+				Graphs.edgesCountWeighted(subgraphNavigli.getSubgraph(), EDGE_WEIGHTS), delta);
 	}
 
 	@Test

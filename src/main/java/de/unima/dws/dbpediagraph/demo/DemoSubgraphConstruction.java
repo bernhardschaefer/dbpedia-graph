@@ -21,8 +21,8 @@ import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.subgraph.*;
 import de.unima.dws.dbpediagraph.util.FileUtils;
-import de.unima.dws.dbpediagraph.weights.EdgeWeight;
-import de.unima.dws.dbpediagraph.weights.EdgeWeightFactory;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
@@ -37,7 +37,7 @@ public class DemoSubgraphConstruction {
 
 	private static final int MAX_DISTANCE = 4;
 	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
-	private static final EdgeWeight GRAPH_WEIGHTS = EdgeWeightFactory.getDBpediaImplFromConfig(GraphConfig.config());
+	private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.dbpediaImplFromConfig(GraphConfig.config());
 	private static final SubgraphConstructionSettings SETTINGS = new SubgraphConstructionSettings.Builder()
 			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build();
 
@@ -46,16 +46,16 @@ public class DemoSubgraphConstruction {
 		disambiguators = new ArrayList<>();
 
 		// local
-		disambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, GRAPH_WEIGHTS));
-		disambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, GRAPH_WEIGHTS));
-		disambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, GRAPH_WEIGHTS));
-		disambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, GRAPH_WEIGHTS));
-		disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, GRAPH_WEIGHTS));
+		disambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		disambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		disambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		disambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
 
 		// global
-		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(SETTINGS, GRAPH_WEIGHTS));
-		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(SETTINGS, GRAPH_WEIGHTS));
-		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(SETTINGS, GRAPH_WEIGHTS));
+		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(SETTINGS, EDGE_WEIGHTS));
+		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(SETTINGS, EDGE_WEIGHTS));
+		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(SETTINGS, EDGE_WEIGHTS));
 	}
 
 	private static final Dimension SCREEN_DIMENSION;
@@ -119,7 +119,7 @@ public class DemoSubgraphConstruction {
 		Transformer<Edge, String> edgeLabelTransformer = new Transformer<Edge, String>() {
 			@Override
 			public String transform(Edge edge) {
-				return Graphs.edgeToString(edge);
+				return Graphs.edgeToString(edge, EDGE_WEIGHTS);
 			}
 		};
 

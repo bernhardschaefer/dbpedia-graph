@@ -8,7 +8,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
-import de.unima.dws.dbpediagraph.weights.EdgeWeight;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 /**
  * Edge density global connectivity measure implemented as described in Navigli&Lapata (2010).
@@ -19,7 +19,7 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeight;
 public class EdgeDensity<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
 		implements GlobalGraphDisambiguator<T, U> {
 
-	public EdgeDensity(SubgraphConstructionSettings settings, EdgeWeight graphWeights) {
+	public EdgeDensity(SubgraphConstructionSettings settings, EdgeWeights graphWeights) {
 		super(settings, graphWeights);
 	}
 

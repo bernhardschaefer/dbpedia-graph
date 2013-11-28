@@ -13,7 +13,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.util.CollectionUtils;
-import de.unima.dws.dbpediagraph.weights.EdgeWeight;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import edu.uci.ics.jung.algorithms.scoring.*;
 import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
 
@@ -30,13 +30,13 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 	private final double alpha;
 	private final int iterations;
 
-	public HITSCentrality(GraphType graphType, EdgeWeight graphWeights, double alpha, int iterations) {
+	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights, double alpha, int iterations) {
 		super(graphType, graphWeights);
 		this.alpha = alpha;
 		this.iterations = iterations;
 	}
 
-	public HITSCentrality(GraphType graphType, EdgeWeight graphWeights) {
+	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights) {
 		this(graphType, graphWeights, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
 	}
 

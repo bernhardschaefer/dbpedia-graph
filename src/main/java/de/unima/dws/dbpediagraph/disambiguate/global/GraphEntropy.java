@@ -8,7 +8,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
-import de.unima.dws.dbpediagraph.weights.EdgeWeight;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 /**
  * Graph Entropy global connectivity measure implemented as described in Navigli&Lapata (2010).
@@ -19,8 +19,8 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeight;
 public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
 		implements GlobalGraphDisambiguator<T, U> {
 
-	public GraphEntropy(SubgraphConstructionSettings settings, EdgeWeight graphWeights) {
-		super(settings, graphWeights);
+	public GraphEntropy(SubgraphConstructionSettings settings, EdgeWeights edgeWeights) {
+		super(settings, edgeWeights);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends Abstra
 		double graphEntropy = 0;
 
 		for (Vertex vertex : sensegraph.getVertices()) {
-			double degree = Graphs.vertexDegree(vertex, Direction.BOTH);
+			double degree = Graphs.vertexDegreeWeighted(vertex, Direction.BOTH, edgeWeights);
 			if (degree != 0) {
 				double vertexProbability = degree / (2.0 * totalEdges);
 				graphEntropy += vertexProbability * Math.log(vertexProbability);

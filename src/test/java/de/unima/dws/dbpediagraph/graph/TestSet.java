@@ -27,6 +27,8 @@ public class TestSet {
 		public static final String NL_GLOBAL_RESULTS = NL_PKG + "/nl-global-test.results";
 		/** Local Connectivity Measure Results for the example from Navigli&Lapata (2010) */
 		public static final String NL_LOCAL_RESULTS = NL_PKG + "/nl-local-test.results";
+		
+		public static final String NL_TEST_PROPERTIES = NL_PKG.substring(1) + "/testnavigli.properties";
 	}
 
 	public static final TestSet NAVIGLI_FILE_NAMES = new TestSet(NavigliTestSet.NL_VERTICES, NavigliTestSet.NL_EDGES,

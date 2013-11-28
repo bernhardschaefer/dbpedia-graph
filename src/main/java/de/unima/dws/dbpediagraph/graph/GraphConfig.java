@@ -13,7 +13,7 @@ import de.unima.dws.dbpediagraph.disambiguate.local.DegreeCentrality;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
-import de.unima.dws.dbpediagraph.weights.EdgeWeight;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 /**
  * The configuration hub for the DBpedia graph project. The class is noninstantiable and needs to be accessed in a
@@ -62,13 +62,13 @@ public final class GraphConfig {
 	@SuppressWarnings("unchecked")
 	public static <T extends SurfaceForm, U extends Sense> GlobalGraphDisambiguator<T, U> newGlobalDisambiguator(
 			Configuration configuration, SubgraphConstructionSettings subgraphConstructionSettings,
-			EdgeWeight graphWeights) {
+			EdgeWeights graphWeights) {
 		String disambiguatorClassName = config.getString(GLOBAL_DISAMBIGUATOR_KEY, DEFAULT_GLOBAL_DISAMBIGUATOR);
 		try {
 			@SuppressWarnings("rawtypes")
 			Class<? extends GlobalGraphDisambiguator> globalDisambiguatorClass = Class.forName(disambiguatorClassName)
 					.asSubclass(GlobalGraphDisambiguator.class);
-			return globalDisambiguatorClass.getConstructor(SubgraphConstructionSettings.class, EdgeWeight.class)
+			return globalDisambiguatorClass.getConstructor(SubgraphConstructionSettings.class, EdgeWeights.class)
 					.newInstance(subgraphConstructionSettings, graphWeights);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -78,14 +78,14 @@ public final class GraphConfig {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends SurfaceForm, U extends Sense> LocalGraphDisambiguator<T, U> newLocalDisambiguator(
-			GraphType graphType, EdgeWeight graphWeights) {
+			GraphType graphType, EdgeWeights graphWeights) {
 		// TODO log if no disambiguator in config
 		String disambiguatorClassName = config.getString(LOCAL_DISAMBIGUATOR_KEY, DEFAULT_LOCAL_DISAMBIGUATOR);
 		try {
 			@SuppressWarnings("rawtypes")
 			Class<? extends LocalGraphDisambiguator> localDisambiguatorClass = Class.forName(disambiguatorClassName)
 					.asSubclass(LocalGraphDisambiguator.class);
-			return localDisambiguatorClass.getConstructor(GraphType.class, EdgeWeight.class).newInstance(graphType,
+			return localDisambiguatorClass.getConstructor(GraphType.class, EdgeWeights.class).newInstance(graphType,
 					graphWeights);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {

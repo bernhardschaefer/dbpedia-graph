@@ -12,7 +12,7 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.util.GraphJungUndirectedWrapper;
-import de.unima.dws.dbpediagraph.weights.EdgeWeightFactory;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 /**
  * Noninstantiable utility class for performing various graph operations. All operations are static.
@@ -80,7 +80,7 @@ public final class Graphs {
 	 * @return the provided graph.
 	 */
 	public static Graph checkHasVertices(Graph graph) {
-		if (isEmptyGraph(checkNotNull(graph)))
+		if (hasNoVertices(graph))
 			throw new IllegalArgumentException("Graph needs to have at least one vertex.");
 		return graph;
 	}
@@ -118,14 +118,19 @@ public final class Graphs {
 		return vertices;
 	}
 
+	public static double edgesCountWeighted(Graph graph, EdgeWeights edgeWeights) {
+		return sumWeightedEdges(graph.getEdges(), edgeWeights);
+	}
+
+	@Deprecated
 	public static int edgesCount(Graph graph) {
 		return CollectionUtils.iterableItemCount(graph.getEdges());
 	}
 
-	public static String edgeToString(Edge edge) {
+	public static String edgeToString(Edge edge, EdgeWeights edgeWeights) {
 		String shortUri = checkNotNull(edge).getProperty(GraphConfig.URI_PROPERTY);
 		return shortUri != null ? String.format("%s (%.3f)", shortUri,
-				EdgeWeightFactory.getDBpediaImplFromConfig(GraphConfig.config()).weight(edge)) : "";
+				edgeWeights.weight(edge)) : "";
 	}
 
 	public static String shortUriOfEdge(Edge edge) {
@@ -134,8 +139,12 @@ public final class Graphs {
 		return shortUri;
 	}
 
-	public static boolean isEmptyGraph(Graph graph) {
+	public static boolean hasNoVertices(Graph graph) {
 		return !graph.getVertices().iterator().hasNext();
+	}
+	
+	public static boolean hasNoEdges(Graph graph) {
+		return !graph.getEdges().iterator().hasNext();
 	}
 
 	public static boolean isNodeOnPath(Vertex child, Collection<Edge> path) {
@@ -211,8 +220,20 @@ public final class Graphs {
 		return vertices.get(0);
 	}
 
+	@Deprecated
 	public static int vertexDegree(Vertex vertex, Direction direction) {
 		return CollectionUtils.iterableItemCount(vertex.getEdges(direction));
+	}
+	
+	public static double vertexDegreeWeighted(Vertex vertex, Direction direction, EdgeWeights edgeWeights) {
+		return sumWeightedEdges(vertex.getEdges(direction), edgeWeights);
+	}
+	
+	private static double sumWeightedEdges(Iterable<Edge> edges, EdgeWeights edgeWeights) {
+		double sumWeights = 0;
+		for(Edge e: edges)
+			sumWeights += edgeWeights.weight(e);
+		return sumWeights;
 	}
 
 	public static String vertexToString(Vertex v) {

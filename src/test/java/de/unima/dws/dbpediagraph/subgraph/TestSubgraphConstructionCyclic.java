@@ -6,17 +6,17 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import de.unima.dws.dbpediagraph.graph.*;
-import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 import de.unima.dws.dbpediagraph.util.FileUtils;
+import de.unima.dws.dbpediagraph.weights.DummyEdgeWeights;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 public class TestSubgraphConstructionCyclic {
 	private static final int MAX_DISTANCE = 10;
-
+	private static final EdgeWeights EDGE_WEIGHTS = DummyEdgeWeights.INSTANCE;
+	
 	private static SubgraphTester subGraphData;
 
 	@BeforeClass
@@ -48,7 +48,9 @@ public class TestSubgraphConstructionCyclic {
 
 	@Test
 	public void testNumberOfEdges() {
-		assertEquals(subGraphData.expectedSubgraphEdges.size(), Graphs.edgesCount(subGraphData.getSubgraph()));
+		double delta = 0.01;
+		assertEquals(subGraphData.expectedSubgraphEdges.size(),
+				Graphs.edgesCountWeighted(subGraphData.getSubgraph(), EDGE_WEIGHTS), delta );
 	}
 
 	@Test
