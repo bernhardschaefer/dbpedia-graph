@@ -28,9 +28,9 @@ public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends Abstra
 		Graphs.checkHasVertices(sensegraph);
 
 		int totalVertices = Graphs.verticesCount(sensegraph);
-		int totalEdges = Graphs.edgesCount(sensegraph);
+		double totalEdgesWeighted = Graphs.edgesCountWeighted(sensegraph, edgeWeights);
 
-		if (totalEdges == 0)
+		if (totalEdgesWeighted == 0)
 			return 0; // shortcut
 
 		double graphEntropy = 0;
@@ -38,7 +38,7 @@ public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends Abstra
 		for (Vertex vertex : sensegraph.getVertices()) {
 			double degree = Graphs.vertexDegreeWeighted(vertex, Direction.BOTH, edgeWeights);
 			if (degree != 0) {
-				double vertexProbability = degree / (2.0 * totalEdges);
+				double vertexProbability = degree / (2.0 * totalEdgesWeighted);
 				graphEntropy += vertexProbability * Math.log(vertexProbability);
 			}
 		}

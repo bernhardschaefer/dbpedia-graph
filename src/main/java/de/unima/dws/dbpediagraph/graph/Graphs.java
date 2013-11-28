@@ -7,10 +7,11 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
-import de.unima.dws.dbpediagraph.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.util.GraphJungUndirectedWrapper;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
@@ -118,18 +119,17 @@ public final class Graphs {
 		return vertices;
 	}
 
+	public static int edgesCount(Graph graph) {
+		return Iterables.size(graph.getEdges());
+	}
+
 	public static double edgesCountWeighted(Graph graph, EdgeWeights edgeWeights) {
 		return sumWeightedEdges(graph.getEdges(), edgeWeights);
 	}
 
-	public static int edgesCount(Graph graph) {
-		return CollectionUtils.iterableItemCount(graph.getEdges());
-	}
-
 	public static String edgeToString(Edge edge, EdgeWeights edgeWeights) {
 		String shortUri = checkNotNull(edge).getProperty(GraphConfig.URI_PROPERTY);
-		return shortUri != null ? String.format("%s (%.3f)", shortUri,
-				edgeWeights.weight(edge)) : "";
+		return shortUri != null ? String.format("%s (%.3f)", shortUri, edgeWeights.transform(edge)) : "";
 	}
 
 	public static String shortUriOfEdge(Edge edge) {
@@ -141,7 +141,7 @@ public final class Graphs {
 	public static boolean hasNoVertices(Graph graph) {
 		return !graph.getVertices().iterator().hasNext();
 	}
-	
+
 	public static boolean hasNoEdges(Graph graph) {
 		return !graph.getEdges().iterator().hasNext();
 	}
@@ -151,12 +151,6 @@ public final class Graphs {
 			if (child.equals(edge.getVertex(Direction.IN)) || child.equals(edge.getVertex(Direction.OUT)))
 				return true;
 		return false;
-	}
-
-	public static boolean isVertexInGraph(Vertex v, Graph graph) {
-		String uri = Graphs.shortUriOfVertex(v);
-		Vertex graphVertex = vertexByUri(graph, uri);
-		return graphVertex != null;
 	}
 
 	public static Vertex oppositeVertexSafe(Edge edge, Vertex vertex) {
@@ -188,32 +182,23 @@ public final class Graphs {
 		return shortUri;
 	}
 
-	public static Set<String> urisOfVertices(Iterable<Vertex> vertices) {
+	public static Set<String> shortUrisOfVertices(Iterable<Vertex> vertices) {
 		Set<String> uris = new HashSet<>();
 		for (Vertex v : vertices)
 			uris.add(shortUriOfVertex(v));
 		return uris;
 	}
 
-	public static Vertex vertexByUri(Graph graph, String uri) {
-		String shortUri = GraphUriShortener.shorten(uri);
-		List<Vertex> vertices = new LinkedList<Vertex>();
-		Iterable<Vertex> verticesIter = graph.getVertices(GraphConfig.URI_PROPERTY, shortUri);
-		for (Vertex v : verticesIter)
-			vertices.add(v);
-
+	public static Vertex vertexByUri(Graph graph, String fullUri) {
+		String shortUri = GraphUriShortener.shorten(fullUri);
+		List<Vertex> vertices = Lists.newArrayList(graph.getVertices(GraphConfig.URI_PROPERTY, shortUri));
 		if (vertices.size() == 0) {
+			logger.warn("No vertex found for full uri {}", fullUri);
 			return null;
 		}
 		if (vertices.size() > 1) {
-			logger.warn("There is more than one vertex with the uri {}", uri);
-			for (Vertex v : vertices) {
-				int inDegree = vertexDegree(v, Direction.IN);
-				int outDegree = vertexDegree(v, Direction.OUT);
-				logger.warn("vid: {} uri: {} inDegree: {} outDegree {} ", v.getId(),
-						v.getProperty(GraphConfig.URI_PROPERTY), inDegree, outDegree);
-			}
-			logger.warn("");
+			throw new IllegalStateException("The graph is corrupted. There is more than one vertex with the uri "
+					+ fullUri);
 		}
 
 		return vertices.get(0);
@@ -221,17 +206,17 @@ public final class Graphs {
 
 	@Deprecated
 	public static int vertexDegree(Vertex vertex, Direction direction) {
-		return CollectionUtils.iterableItemCount(vertex.getEdges(direction));
+		return Iterables.size(vertex.getEdges(direction));
 	}
-	
+
 	public static double vertexDegreeWeighted(Vertex vertex, Direction direction, EdgeWeights edgeWeights) {
 		return sumWeightedEdges(vertex.getEdges(direction), edgeWeights);
 	}
-	
+
 	private static double sumWeightedEdges(Iterable<Edge> edges, EdgeWeights edgeWeights) {
 		double sumWeights = 0;
-		for(Edge e: edges)
-			sumWeights += edgeWeights.weight(e);
+		for (Edge e : edges)
+			sumWeights += edgeWeights.transform(e);
 		return sumWeights;
 	}
 
@@ -243,20 +228,18 @@ public final class Graphs {
 	/**
 	 * Converts the uris to vertices. Omits uris that cannot be found in the provided graph.
 	 */
-	public static Set<Vertex> verticesByUri(Graph graph, Collection<String> uris) {
+	public static Set<Vertex> verticesByFullUris(Graph graph, Collection<String> fullUris) {
 		Set<Vertex> vertices = new HashSet<Vertex>();
-		for (String uri : uris) {
-			Vertex v = vertexByUri(graph, uri);
+		for (String fullUri : fullUris) {
+			Vertex v = vertexByUri(graph, fullUri);
 			if (v != null)
 				vertices.add(v);
-			else
-				logger.warn("No vertex found for uri {}", uri);
 		}
 		return vertices;
 	}
 
 	public static int verticesCount(Graph graph) {
-		return CollectionUtils.iterableItemCount(graph.getVertices());
+		return Iterables.size(graph.getVertices());
 	}
 
 	@Deprecated
@@ -264,7 +247,7 @@ public final class Graphs {
 			Collection<? extends Collection<String>> wordsSensesString) {
 		Collection<Set<Vertex>> wordVertices = new ArrayList<>();
 		for (Collection<String> uris : wordsSensesString)
-			wordVertices.add(verticesByUri(graph, uris));
+			wordVertices.add(verticesByFullUris(graph, uris));
 		return wordVertices;
 	}
 

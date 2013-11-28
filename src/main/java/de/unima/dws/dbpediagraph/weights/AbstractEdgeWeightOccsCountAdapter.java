@@ -23,7 +23,7 @@ public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights 
 	}
 
 	@Override
-	abstract public Double weight(Edge e);
+	abstract public Double transform(Edge e);
 
 	/**
 	 * @return prior probability (number of occurrences) of the short URI.

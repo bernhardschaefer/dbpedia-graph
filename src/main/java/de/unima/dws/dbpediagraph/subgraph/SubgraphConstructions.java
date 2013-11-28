@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.graph.*;
+import de.unima.dws.dbpediagraph.util.Counter;
 
 /**
  * Noninstantiable utility class for static methods helping in {@link SubgraphConstruction}.
@@ -61,14 +62,14 @@ final class SubgraphConstructions {
 
 	}
 
-	public static void logSubgraphConstructionStats(Logger logger, Class<?> clazz, Graph subgraph, long startTime,
+	public static void logSubgraphConstructionStats(Logger logger, Class<?> clazz, Graph subgraph, long startTimeNano,
 			long traversedNodes, int maxDistance) {
 		// tradeoff between better performance of curly brackets notation
 		// vs. more convenient comma-separated traversed nodes
 		logger.info(String
 				.format("%s Stats: time [sec]: %.2f, subgraph vertices: %d, subgraph edges: %d, traversed nodes: %,d, max distance: %d",
-						clazz.getSimpleName(), (System.currentTimeMillis() - startTime) / 1000.0,
-						Graphs.verticesCount(subgraph), Graphs.edgesCount(subgraph), traversedNodes, maxDistance));
+						clazz.getSimpleName(), Counter.elapsedSecs(startTimeNano), Graphs.verticesCount(subgraph),
+						Graphs.edgesCount(subgraph), traversedNodes, maxDistance));
 	}
 
 	private static String toStringPath(List<Edge> path, Vertex start, Vertex end, GraphType graphType) {

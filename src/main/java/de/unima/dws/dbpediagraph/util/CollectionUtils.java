@@ -1,12 +1,9 @@
 package de.unima.dws.dbpediagraph.util;
 
 import java.util.*;
-import java.util.Map.Entry;
 
-import com.google.common.collect.Lists;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.disambiguate.local.HITSCentrality.HitsScores;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 
 /**
@@ -22,39 +19,6 @@ public final class CollectionUtils {
 		for (Collection<T> c : collections)
 			combinedCollections.addAll(c);
 		return combinedCollections;
-	}
-
-	public static Map<Vertex, HitsScores> deepCopy(Map<Vertex, HitsScores> scores) {
-		Map<Vertex, HitsScores> copy = new HashMap<>(scores.size());
-		for (Entry<Vertex, HitsScores> entry : scores.entrySet())
-			copy.put(entry.getKey(), new HitsScores(entry.getValue()));
-		return copy;
-	}
-
-	public static <T> int iterableItemCount(Iterable<T> iterable) {
-		return iterableItemCount(iterable, Integer.MAX_VALUE);
-	}
-
-	public static <T> int iterableItemCount(Iterable<T> iterable, int threshold) {
-		if (iterable instanceof Collection)
-			return ((Collection<T>) iterable).size();
-		return iteratorItemCount(iterable.iterator(), threshold);
-	}
-
-	public static <T> Collection<T> iterableToCollection(Iterable<T> itty) {
-		if (itty instanceof Collection)
-			return (Collection<T>) itty;
-		return Lists.newArrayList(itty);
-	}
-
-	private static int iteratorItemCount(Iterator<?> iter, int threshold) {
-		int counter = 0;
-		while (iter.hasNext()) {
-			iter.next();
-			if (counter++ >= threshold)
-				return counter;
-		}
-		return counter;
 	}
 
 	public static <T> List<T> joinListValues(Map<?, List<T>> map) {
@@ -98,20 +62,6 @@ public final class CollectionUtils {
 		return splitted;
 	}
 
-	// prevent default constructor for noninstantiability
-	private CollectionUtils() {
-		throw new AssertionError();
-	}
-
-	public static int countCollectionValues(Map<?, ? extends Collection<?>> map) {
-		int counter = 0;
-		for (Collection<?> c : map.values()) {
-			if (c != null)
-				counter += c.size();
-		}
-		return counter;
-	}
-
 	public static Set<Vertex> findContainingCollection(Collection<Collection<Vertex>> surfaceFormVertices,
 			Vertex searchVertex) {
 		for (Collection<Vertex> vertices : surfaceFormVertices)
@@ -121,5 +71,9 @@ public final class CollectionUtils {
 				if (Graphs.shortUriOfVertex(v).equals(Graphs.shortUriOfVertex(searchVertex)))
 					return new HashSet<>(vertices);
 		throw new IllegalArgumentException("Vertex is not in one of the provided collections.");
+	}
+
+	// prevent default constructor for non-instantiability
+	private CollectionUtils() {
 	}
 }

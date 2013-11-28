@@ -33,7 +33,7 @@ public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends Ab
 
 		@Override
 		public Double getVertexScore(Vertex v) {
-			double degree = Graphs.vertexDegreeWeighted(v, graphType.getDirection(), graphWeights);
+			double degree = Graphs.vertexDegreeWeighted(v, graphType.getDirection(), edgeWeights);
 			double centrality = degree / (verticesCount - 1);
 			return centrality;
 		}

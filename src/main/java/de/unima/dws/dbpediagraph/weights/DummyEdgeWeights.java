@@ -6,7 +6,7 @@ public enum DummyEdgeWeights implements EdgeWeights{
 	INSTANCE;
 	
 	@Override
-	public Double weight(Edge e) {
+	public Double transform(Edge e) {
 		return 1.0;
 	}
 

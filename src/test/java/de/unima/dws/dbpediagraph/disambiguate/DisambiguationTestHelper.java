@@ -49,7 +49,7 @@ public class DisambiguationTestHelper {
 
 		for (Entry<String, Map<Class<?>, Double>> measureEntry : expectedDisambiguationData.getRawResults().entrySet()) {
 			Collection<String> senseAssignments = DisambiguationTestHelper.split(measureEntry.getKey());
-			Collection<Vertex> assignmentVertices = Graphs.verticesByUri(subgraphData.getSubgraph(), senseAssignments);
+			Collection<Vertex> assignmentVertices = Graphs.verticesByFullUris(subgraphData.getSubgraph(), senseAssignments);
 
 			// create sense graph based on the sense assignments
 			double actualScore = disambiguator.globalConnectivityMeasure(assignmentVertices,

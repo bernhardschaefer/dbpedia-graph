@@ -28,11 +28,11 @@ public class EdgeDensity<T extends SurfaceForm, U extends Sense> extends Abstrac
 		Graphs.checkHasVertices(sensegraph);
 		
 		int totalVertices = Graphs.verticesCount(sensegraph);
-		int totalEdges = Graphs.edgesCount(sensegraph);
+		double totalEdgesWeighted = Graphs.edgesCountWeighted(sensegraph, edgeWeights);
 		
 		// binomial (v over 2) === v * (v-1) / 2
 		double edgesCompleteGraph = (totalVertices * (totalVertices - 1)) / 2.0;
-		return totalEdges / edgesCompleteGraph;
+		return totalEdgesWeighted / edgesCompleteGraph;
 	}
 
 }

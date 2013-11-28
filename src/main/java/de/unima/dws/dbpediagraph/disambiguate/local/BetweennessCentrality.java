@@ -28,12 +28,14 @@ public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> exten
 
 		public BetweennessVertexScorer(Graph subgraph) {
 			GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
-			betweenness = new edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge>(graphJung);
+			betweenness = new edu.uci.ics.jung.algorithms.scoring.BetweennessCentrality<Vertex, Edge>(graphJung,
+					edgeWeights);
 			verticesCount = Graphs.verticesCount(subgraph);
 		}
 
 		@Override
 		public Double getVertexScore(Vertex v) {
+			// TODO change to weighted edge implementation
 			double score = betweenness.getVertexScore(v);
 			double normalizedScore = score / ((verticesCount - 1) * (verticesCount - 2));
 			return normalizedScore;

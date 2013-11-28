@@ -26,11 +26,11 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	private static final Logger logger = LoggerFactory.getLogger(AbstractLocalGraphDisambiguator.class);
 
 	protected final GraphType graphType;
-	protected final EdgeWeights graphWeights;
+	protected final EdgeWeights edgeWeights;
 
-	public AbstractLocalGraphDisambiguator(GraphType graphType, EdgeWeights graphWeights) {
+	public AbstractLocalGraphDisambiguator(GraphType graphType, EdgeWeights edgeWeights) {
 		this.graphType = graphType;
-		this.graphWeights = graphWeights;
+		this.edgeWeights = edgeWeights;
 	}
 
 	@Override

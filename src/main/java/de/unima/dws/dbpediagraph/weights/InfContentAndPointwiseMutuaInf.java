@@ -15,7 +15,7 @@ public class InfContentAndPointwiseMutuaInf extends AbstractEdgeWeightOccsCountA
 	}
 
 	@Override
-	public Double weight(Edge e) {
+	public Double transform(Edge e) {
 		// PMI(w_Pred , w_Obj ) = log( P(w_Pred,w_Obj) / ( P(w_Pred) * P(w_Obj) ) )
 		String pred = e.getProperty(GraphConfig.URI_PROPERTY);
 		String obj = Graphs.shortUriOfVertex(e.getVertex(Direction.IN));

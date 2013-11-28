@@ -36,7 +36,7 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 
 	@Override
 	public Graph createSubgraph(Collection<Set<Vertex>> surfaceFormVertices) {
-		long startTime = System.currentTimeMillis();
+		long startTimeNano = System.nanoTime();
 
 		SubgraphConstructions.checkValidWordsSenses(graph, surfaceFormVertices);
 		traversedNodes = 0;
@@ -62,7 +62,7 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 		}
 
 		if (logger.isInfoEnabled())
-			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, startTime, traversedNodes,
+			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, startTimeNano, traversedNodes,
 					settings.maxDistance);
 
 		return subGraph;
@@ -76,7 +76,7 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 
 	@Override
 	public Graph createSubSubgraph(Collection<Vertex> assignments, Set<Vertex> allSensesVertices) {
-		long startTime = System.currentTimeMillis();
+		long startTimeNano = System.nanoTime();
 	
 		traversedNodes = 0;
 	
@@ -94,7 +94,7 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 		}
 	
 		if (logger.isDebugEnabled())
-			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, startTime,
+			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, startTimeNano,
 					traversedNodes, settings.maxDistance);
 	
 		return subsubgraph;

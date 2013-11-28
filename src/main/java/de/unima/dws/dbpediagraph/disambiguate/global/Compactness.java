@@ -13,8 +13,8 @@ import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
+import edu.uci.ics.jung.algorithms.shortestpath.DijkstraDistance;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
-import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 
 /**
  * Compactness global connectivity measure implemented as described in Navigli&Lapata (2010).
@@ -34,16 +34,18 @@ public class Compactness<T extends SurfaceForm, U extends Sense> extends Abstrac
 		Graphs.checkHasVertices(sensegraph);
 
 		if (Graphs.hasNoEdges(sensegraph))
-			return 0; // if there are paths between sense vertices in the graph, there is no compactness
+			return 0; // if there are no paths between sense vertices in the graph, there is no compactness
 
 		GraphJung<Graph> graphJung = Graphs.asGraphJung(subgraphConstructionSettings.graphType, sensegraph);
-		Distance<Vertex> distances = new UnweightedShortestPath<>(graphJung);
-		int sumDistances = 0;
+		// Distance<Vertex> distances = new UnweightedShortestPath<>(graphJung);
+		Distance<Vertex> distances = new DijkstraDistance<>(graphJung, edgeWeights);
+
+		double sumDistances = 0;
 		for (Vertex source : sensegraph.getVertices()) {
 			Map<Vertex, Number> distancesFromSource = distances.getDistanceMap(source);
 			for (Vertex target : sensegraph.getVertices()) {
 				Number distance = distancesFromSource.get(target);
-				sumDistances += distance == null ? 0 : distance.intValue();
+				sumDistances += distance == null ? 0.0 : distance.doubleValue();
 			}
 		}
 
@@ -52,7 +54,7 @@ public class Compactness<T extends SurfaceForm, U extends Sense> extends Abstrac
 		int K = totalVertices; // TODO find out what k actually means
 		int max = K * min;
 
-		double compactness = ((double) (max - sumDistances)) / (max - min);
+		double compactness = (max - sumDistances) / (max - min);
 		return compactness;
 	}
 

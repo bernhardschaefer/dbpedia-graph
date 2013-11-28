@@ -15,7 +15,7 @@ public class CombinedInformationContent extends AbstractEdgeWeightOccsCountAdapt
 	}
 
 	@Override
-	public Double weight(Edge e) {
+	public Double transform(Edge e) {
 		// w_combIC(e) = IC(w_Pred ) + IC(w_Obj) .
 		String pred = e.getProperty(GraphConfig.URI_PROPERTY);
 		String obj = Graphs.shortUriOfVertex(e.getVertex(Direction.IN));

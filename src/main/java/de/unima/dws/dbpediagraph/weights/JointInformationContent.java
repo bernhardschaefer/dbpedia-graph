@@ -15,7 +15,7 @@ public class JointInformationContent extends AbstractEdgeWeightOccsCountAdapter{
 	}
 
 	@Override
-	public Double weight(Edge e) {
+	public Double transform(Edge e) {
 		// w_jointIC(e) = IC(w_Pred) + IC(w_Obj | w_Pred)
 		String pred = e.getProperty(GraphConfig.URI_PROPERTY);
 		String obj = Graphs.shortUriOfVertex(e.getVertex(Direction.IN));

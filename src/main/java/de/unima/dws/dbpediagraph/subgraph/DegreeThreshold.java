@@ -5,12 +5,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tinkerpop.blueprints.Direction;
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Vertex;
+import com.google.common.collect.Iterables;
+import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
-import de.unima.dws.dbpediagraph.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.util.LRUMap;
 
 /**
@@ -45,7 +43,7 @@ public class DegreeThreshold implements ExplorationThreshold {
 		String uri = v.getProperty(GraphConfig.URI_PROPERTY);
 		if (blacklist.containsKey(uri))
 			return false;
-		int degree = CollectionUtils.iterableItemCount(v.getEdges(Direction.BOTH));
+		int degree = Iterables.size(v.getEdges(Direction.BOTH));
 		boolean isBelowThreshold = degree <= maxDegree;
 		if (!isBelowThreshold) {
 			logger.debug("Vertex {} with degree {} is above threshold {}", uri, degree, maxDegree);

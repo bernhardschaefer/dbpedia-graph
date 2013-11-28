@@ -2,7 +2,8 @@ package de.unima.dws.dbpediagraph.disambiguate.local;
 
 import java.util.Map;
 
-import com.tinkerpop.blueprints.*;
+import com.tinkerpop.blueprints.Graph;
+import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.disambiguate.AbstractLocalGraphDisambiguator;
@@ -13,7 +14,8 @@ import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
-import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
+import edu.uci.ics.jung.algorithms.shortestpath.DijkstraDistance;
+import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 
 /**
  * @author Bernhard Schäfer
@@ -26,14 +28,15 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 	}
 
 	class KPPVertexScorer implements VertexScorer<Vertex, Double> {
-		private final UnweightedShortestPath<Vertex, Edge> distances;
+		private final Distance<Vertex> distances;
 		private final int numberOfVertices;
 		private final Graph subgraph;
 
 		public KPPVertexScorer(Graph subgraph) {
 			this.subgraph = subgraph;
 			GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
-			distances = new UnweightedShortestPath<>(graphJung);
+//			distances = new UnweightedShortestPath<>(graphJung);
+			distances = new DijkstraDistance<>(graphJung, edgeWeights);
 			numberOfVertices = Graphs.verticesCount(subgraph);
 		}
 

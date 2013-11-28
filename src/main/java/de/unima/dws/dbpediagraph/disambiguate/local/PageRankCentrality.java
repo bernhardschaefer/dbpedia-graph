@@ -49,7 +49,7 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 
 		public PRVertexScorer(Graph subgraph) {
 			GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
-			pageRank = new PageRank<Vertex, Edge>(graphJung, alpha);
+			pageRank = new PageRank<Vertex, Edge>(graphJung, edgeWeights, alpha);
 			pageRank.setMaxIterations(iterations);
 			pageRank.evaluate();
 

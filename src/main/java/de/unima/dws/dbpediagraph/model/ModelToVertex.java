@@ -2,9 +2,6 @@ package de.unima.dws.dbpediagraph.model;
 
 import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
@@ -18,7 +15,6 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
  * 
  */
 public final class ModelToVertex {
-	private static final Logger logger = LoggerFactory.getLogger(ModelToVertex.class);
 
 	public static Set<Vertex> verticesFromSenses(Graph graph, Collection<? extends Sense> senses) {
 		Set<Vertex> vertices = new HashSet<>(senses.size());
@@ -26,8 +22,6 @@ public final class ModelToVertex {
 			Vertex v = Graphs.vertexByUri(graph, sense.fullUri());
 			if (v != null)
 				vertices.add(v);
-			else
-				logger.warn("No vertex found for uri {}", sense.fullUri());
 		}
 		return vertices;
 	}
