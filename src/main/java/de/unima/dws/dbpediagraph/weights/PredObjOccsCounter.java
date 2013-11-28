@@ -34,14 +34,15 @@ public class PredObjOccsCounter {
 			logger.info("Using fast counter since more than {} GB Ram available.", minGb);
 			Map<String, Integer> map = OccurrenceCounts.newTransientMap();
 			countGraphOccsIntoMap(graph, map);
+			graph.shutdown(); // free ram
 			dumpMapToPersistentMap(map, db);
+			db.close();
 		} else {
 			logger.info("Using slow counter since less than {} GB Ram available.", minGb);
 			countGraphOccsIntoMap(graph, db);
+			graph.shutdown();
+			db.close();
 		}
-
-		db.close();
-		graph.shutdown();
 	}
 
 	private static boolean runtimeHasEnoughMemory(double minGb) {
