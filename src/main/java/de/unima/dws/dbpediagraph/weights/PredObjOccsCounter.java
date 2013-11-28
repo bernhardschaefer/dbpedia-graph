@@ -24,22 +24,22 @@ public class PredObjOccsCounter {
 	public static void main(String[] args) {
 		countAndPersistDBpediaGraphOccs();
 	}
-	
+
 	public static void countAndPersistDBpediaGraphOccs() {
 		Graph graph = GraphFactory.getDBpediaGraph();
-		PersistentMap<String, Integer> db = EdgeWeightsFactory.newPersistentWeightsMap();
-		
+		PersistentMap<String, Integer> db = OccurrenceCounts.newPersistentWeightsMap();
+
 		double minGb = 2;
-		if(runtimeHasEnoughMemory(minGb)) {
+		if (runtimeHasEnoughMemory(minGb)) {
 			logger.info("Using fast counter since more than {} GB Ram available.", minGb);
-			Map<String, Integer> map = EdgeWeightsFactory.newTransientMap();
+			Map<String, Integer> map = OccurrenceCounts.newTransientMap();
 			countGraphOccsIntoMap(graph, map);
 			dumpMapToPersistentMap(map, db);
 		} else {
 			logger.info("Using slow counter since less than {} GB Ram available.", minGb);
 			countGraphOccsIntoMap(graph, db);
 		}
-		
+
 		db.close();
 		graph.shutdown();
 	}

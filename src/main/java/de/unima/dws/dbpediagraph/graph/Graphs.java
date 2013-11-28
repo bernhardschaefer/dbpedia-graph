@@ -122,7 +122,6 @@ public final class Graphs {
 		return sumWeightedEdges(graph.getEdges(), edgeWeights);
 	}
 
-	@Deprecated
 	public static int edgesCount(Graph graph) {
 		return CollectionUtils.iterableItemCount(graph.getEdges());
 	}
