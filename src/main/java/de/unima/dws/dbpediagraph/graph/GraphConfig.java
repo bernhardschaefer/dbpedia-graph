@@ -1,21 +1,11 @@
 package de.unima.dws.dbpediagraph.graph;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.apache.commons.configuration.*;
 
 import com.tinkerpop.blueprints.Graph;
 
-import de.unima.dws.dbpediagraph.disambiguate.GlobalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.disambiguate.LocalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.model.Sense;
-import de.unima.dws.dbpediagraph.model.SurfaceForm;
-import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
-import de.unima.dws.dbpediagraph.weights.EdgeWeights;
-
 /**
- * The configuration hub for the DBpedia graph project. The class is noninstantiable and needs to be accessed in a
- * static way.
+ * The configuration hub for the DBpedia graph project.
  * 
  * @author Bernhard Schäfer
  * 
@@ -28,16 +18,12 @@ public final class GraphConfig {
 
 	private static final String GRAPHDB_PROPERTY_FILE = "graphdb.properties";
 
-	private static final String GRAPH_DIRECTORY_KEY = "graph.directory";
-
-	private static final String LOCAL_DISAMBIGUATOR_KEY = "local.graph.disambiguator";
-	private static final String GLOBAL_DISAMBIGUATOR_KEY = "global.graph.disambiguator";;
+	private static final String CONFIG_GRAPH_DIRECTORY = "graph.directory";
 
 	/**
 	 * The config file that is used for retrieving {@link Graph} implementations.
 	 */
 	private static Configuration config;
-
 	static {
 		try {
 			config = new PropertiesConfiguration(GRAPHDB_PROPERTY_FILE);
@@ -51,51 +37,11 @@ public final class GraphConfig {
 	}
 
 	public static String graphDirectory() {
-		return config.getString(GRAPH_DIRECTORY_KEY);
+		return config.getString(CONFIG_GRAPH_DIRECTORY);
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <T extends SurfaceForm, U extends Sense> GlobalGraphDisambiguator<T, U> newGlobalDisambiguator(
-			Configuration configuration, SubgraphConstructionSettings subgraphConstructionSettings,
-			EdgeWeights graphWeights) {
-		String disambiguatorClassName = config.getString(GLOBAL_DISAMBIGUATOR_KEY);
-		try {
-			@SuppressWarnings("rawtypes")
-			Class<? extends GlobalGraphDisambiguator> globalDisambiguatorClass = Class.forName(disambiguatorClassName)
-					.asSubclass(GlobalGraphDisambiguator.class);
-			return globalDisambiguatorClass.getConstructor(SubgraphConstructionSettings.class, EdgeWeights.class)
-					.newInstance(subgraphConstructionSettings, graphWeights);
-		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new RuntimeException(
-					String.format(
-							"Error while trying to create global disambiguator instance. Check if provided global disambiguator class %s is valid.",
-							disambiguatorClassName), e);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T extends SurfaceForm, U extends Sense> LocalGraphDisambiguator<T, U> newLocalDisambiguator(
-			GraphType graphType, EdgeWeights graphWeights) {
-		String disambiguatorClassName = config.getString(LOCAL_DISAMBIGUATOR_KEY);
-		try {
-			@SuppressWarnings("rawtypes")
-			Class<? extends LocalGraphDisambiguator> localDisambiguatorClass = Class.forName(disambiguatorClassName)
-					.asSubclass(LocalGraphDisambiguator.class);
-			return localDisambiguatorClass.getConstructor(GraphType.class, EdgeWeights.class).newInstance(graphType,
-					graphWeights);
-		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new RuntimeException(
-					String.format(
-							"Error while trying to create local disambiguator instance. Check if provided local disambiguator class %s is valid.",
-							disambiguatorClassName), e);
-		}
-	}
-
-	// Suppress default constructor for noninstantiability
+	// Suppress default constructor for non-instantiability
 	private GraphConfig() {
-		throw new AssertionError();
 	}
 
 }

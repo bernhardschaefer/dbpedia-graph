@@ -5,8 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import org.apache.commons.configuration.Configuration;
 import org.junit.Test;
 
-import de.unima.dws.dbpediagraph.disambiguate.GlobalGraphDisambiguator;
-import de.unima.dws.dbpediagraph.disambiguate.LocalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.disambiguate.*;
 import de.unima.dws.dbpediagraph.model.DefaultSense;
 import de.unima.dws.dbpediagraph.model.DefaultSurfaceForm;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
@@ -29,16 +28,16 @@ public class TestGraphConfig {
 	@Test
 	public void testNewGlobalDisambiguator() {
 		// simply check if no exceptions are thrown during reflection calls and result != null
-		GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator = GraphConfig.newGlobalDisambiguator(
-				config, subgraphConstructionSettings, graphWeights);
+		GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator = GraphDisambiguatorFactory
+				.newGlobalFromConfig(config, subgraphConstructionSettings, graphWeights);
 		assertNotNull(disambiguator);
 	}
 
 	@Test
 	public void testNewLocalDisambiguator() {
 		// simply check if no exceptions are thrown during reflection calls and result != null
-		LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator = GraphConfig.newLocalDisambiguator(
-				graphType, graphWeights);
+		LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator = GraphDisambiguatorFactory
+				.newLocalFromConfig(config, graphType, graphWeights);
 		assertNotNull(disambiguator);
 	}
 }
