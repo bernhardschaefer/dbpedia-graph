@@ -54,7 +54,7 @@ public class OccurrenceCounts {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				if (db != null) {
+				if (db instanceof PersistentMap) {
 					logger.info("Shutting down occurrence counts");
 					db.close();
 				}

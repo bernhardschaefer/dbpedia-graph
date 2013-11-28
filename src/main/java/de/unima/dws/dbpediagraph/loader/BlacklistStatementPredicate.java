@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
 
-import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.util.FileUtils;
 
 /**
@@ -24,26 +23,24 @@ class BlacklistStatementPredicate implements Predicate<Statement> {
 	private static final Logger logger = LoggerFactory.getLogger(BlacklistStatementPredicate.class);
 
 	// Blacklists from "Exploiting Linked Data for Semantic Document Modelling"
-	private static final String KEY_CATEGORIES_FILE = "loading.filter.categories.file";
-	private static final String KEY_PREDICATES_FILE = "loading.filter.predicates.file";
+	private static final String CONFIG_CATEGORIES_FILE = "loading.filter.categories.file";
+	private static final String CONFIG_PREDICATES_FILE = "loading.filter.predicates.file";
 
 	private final HashSet<String> categories;
 	private final HashSet<String> predicates;
 
-	BlacklistStatementPredicate() {
-		Configuration conf = GraphConfig.config();
-
+	BlacklistStatementPredicate(Configuration config) {
 		categories = new HashSet<String>();
 		predicates = new HashSet<String>();
 
-		String categoriesFileName = conf.getString(KEY_CATEGORIES_FILE);
+		String categoriesFileName = config.getString(CONFIG_CATEGORIES_FILE);
 		try {
 			categories.addAll(FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), categoriesFileName));
 		} catch (URISyntaxException | IOException e) {
 			logger.warn("Category filter could not be loaded.", e);
 		}
 
-		String predicatesFileName = conf.getString(KEY_PREDICATES_FILE);
+		String predicatesFileName = config.getString(CONFIG_PREDICATES_FILE);
 		try {
 			predicates.addAll(FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), predicatesFileName));
 		} catch (URISyntaxException | IOException e) {

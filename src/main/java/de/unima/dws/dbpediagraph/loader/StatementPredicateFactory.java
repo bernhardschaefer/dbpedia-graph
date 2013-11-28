@@ -9,6 +9,8 @@ import org.openrdf.model.Statement;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+import de.unima.dws.dbpediagraph.graph.GraphConfig;
+
 /**
  * Factory for retrieving {@link Predicate}s for {@link Statement}s.
  * 
@@ -27,7 +29,7 @@ class StatementPredicateFactory {
 
 	enum LoadingType {
 		BLACKLIST, COMPLETE, DOMAIN, RESOURCE;
-		
+
 		static List<LoadingType> fromConfig(Configuration config) {
 			List<LoadingType> loadingTypes = new ArrayList<>();
 			@SuppressWarnings("unchecked")
@@ -40,8 +42,8 @@ class StatementPredicateFactory {
 				} catch (IllegalArgumentException e) {
 					throw new IllegalArgumentException(String.format(
 							"Unknown loading filter type '%s' specified in '%s'. Only the following are allowed: %s",
-							loadingTypeName, CONFIG_STATEMENT_PREDICATE, java.util.Arrays.toString(LoadingType.values())),
-							e);
+							loadingTypeName, CONFIG_STATEMENT_PREDICATE,
+							java.util.Arrays.toString(LoadingType.values())), e);
 				}
 			}
 			return loadingTypes;
@@ -58,7 +60,7 @@ class StatementPredicateFactory {
 	static Predicate<Statement> fromLoadingType(LoadingType type) {
 		switch (type) {
 		case BLACKLIST:
-			return new BlacklistStatementPredicate();
+			return new BlacklistStatementPredicate(GraphConfig.config());
 		case COMPLETE:
 			return new CompleteStatementPredicate();
 		case DOMAIN:

@@ -11,7 +11,7 @@ import org.openrdf.model.impl.URIImpl;
 
 import com.google.common.base.Predicate;
 
-import de.unima.dws.dbpediagraph.loader.BlacklistStatementPredicate;
+import de.unima.dws.dbpediagraph.graph.GraphConfig;
 
 public class TestBlacklistPredicate {
 	private static Predicate<Statement> predicate;
@@ -22,7 +22,7 @@ public class TestBlacklistPredicate {
 
 	@BeforeClass
 	public static void beforeClass() {
-		predicate = new BlacklistStatementPredicate();
+		predicate = new BlacklistStatementPredicate(GraphConfig.config());
 
 		invalidSubject = fromStringUris("http://dbpedia.org/resource/Category:Topic",
 				"http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://test.org/3");
