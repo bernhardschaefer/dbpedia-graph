@@ -2,8 +2,6 @@ package de.unima.dws.dbpediagraph.subgraph;
 
 import org.apache.commons.configuration.Configuration;
 
-import de.unima.dws.dbpediagraph.filter.DummyEdgeFilter;
-import de.unima.dws.dbpediagraph.filter.EdgeFilter;
 import de.unima.dws.dbpediagraph.graph.GraphType;
 
 /**
@@ -18,7 +16,6 @@ public final class SubgraphConstructionSettings {
 	private static final String CONFIG_MAX_DISTANCE = "de.unima.dws.dbpediagraph.graphdb.subgraph.maxDistance";
 	private static final String CONFIG_GRAPH_TYPE = "de.unima.dws.dbpediagraph.graphdb.subgraph.graphType";
 	private static final String CONFIG_EXPLORATION_THRESHOLD = "de.unima.dws.dbpediagraph.graphdb.subgraph.explorationThreshold";
-	private static final String CONFIG_EDGE_FILTER = "de.unima.dws.dbpediagraph.graphdb.subgraph.edgeFilter";
 
 	/**
 	 * Instance with default settings
@@ -26,7 +23,6 @@ public final class SubgraphConstructionSettings {
 	private static final SubgraphConstructionSettings DEFAULT = new SubgraphConstructionSettings.Builder().build();
 
 	final ExplorationThreshold explorationThreshold;
-	final EdgeFilter edgeFilter;
 	public final GraphType graphType;
 	/**
 	 * "the distance between two vertices in a graph is the <i>number of edges</i> in a shortest path connecting them."
@@ -38,7 +34,6 @@ public final class SubgraphConstructionSettings {
 
 	private SubgraphConstructionSettings(Builder builder) {
 		this.explorationThreshold = builder.explorationThreshold;
-		this.edgeFilter = builder.edgeFilter;
 		this.graphType = builder.graphType;
 		this.maxDistance = builder.maxDistance;
 	}
@@ -68,28 +63,17 @@ public final class SubgraphConstructionSettings {
 			// TODO implement
 		}
 
-		String edgeFilterClassName = config.getString(CONFIG_EDGE_FILTER);
-		if (edgeFilterClassName != null) {
-			// TODO implement
-		}
-
 		return builder.build();
 	}
 
 	public static class Builder {
 		// parameters are initialized to default values
 		private ExplorationThreshold explorationThreshold = DegreeThreshold.getDefault();
-		private EdgeFilter edgeFilter = new DummyEdgeFilter();
 		private GraphType graphType = GraphType.DIRECTED_GRAPH;
 		private int maxDistance = 4;
 
 		public SubgraphConstructionSettings build() {
 			return new SubgraphConstructionSettings(this);
-		}
-
-		public Builder edgeFilter(EdgeFilter edgeFilter) {
-			this.edgeFilter = edgeFilter;
-			return this;
 		}
 
 		public Builder graphType(GraphType graphType) {
