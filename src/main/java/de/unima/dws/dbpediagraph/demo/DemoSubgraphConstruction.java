@@ -37,7 +37,7 @@ public class DemoSubgraphConstruction {
 
 	private static final int MAX_DISTANCE = 4;
 	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
-	private static final EdgeWeight GRAPH_WEIGHTS = EdgeWeightFactory.getDBpediaImpl(GraphConfig.config());
+	private static final EdgeWeight GRAPH_WEIGHTS = EdgeWeightFactory.getDBpediaImplFromConfig(GraphConfig.config());
 	private static final SubgraphConstructionSettings SETTINGS = new SubgraphConstructionSettings.Builder()
 			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build();
 

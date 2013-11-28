@@ -24,7 +24,7 @@ public class TestGraphConfig {
 	private final Configuration config = GraphConfig.config();
 	private final SubgraphConstructionSettings subgraphConstructionSettings = SubgraphConstructionSettings.getDefault();
 	private final GraphType graphType = GraphType.DIRECTED_GRAPH;
-	private final EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImpl(GraphConfig.config());
+	private final EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImplFromConfig(GraphConfig.config());
 
 	@Test
 	public void testNewGlobalDisambiguator() {

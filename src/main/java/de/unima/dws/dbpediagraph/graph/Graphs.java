@@ -125,7 +125,7 @@ public final class Graphs {
 	public static String edgeToString(Edge edge) {
 		String shortUri = checkNotNull(edge).getProperty(GraphConfig.URI_PROPERTY);
 		return shortUri != null ? String.format("%s (%.3f)", shortUri,
-				EdgeWeightFactory.getDBpediaImpl(GraphConfig.config()).weight(edge)) : "";
+				EdgeWeightFactory.getDBpediaImplFromConfig(GraphConfig.config()).weight(edge)) : "";
 	}
 
 	public static String shortUriOfEdge(Edge edge) {

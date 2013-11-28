@@ -28,7 +28,7 @@ public class TestGlobalDisambiguators {
 	public static void setUp() {
 
 		SubgraphConstructionSettings settings = SubgraphTester.getNavigliSettings();
-		EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImpl(GraphConfig.config());
+		EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImplFromConfig(GraphConfig.config());
 		subgraphTesterNavigli = SubgraphTester.newNavigliTester(settings);
 
 		List<GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators = new ArrayList<>();

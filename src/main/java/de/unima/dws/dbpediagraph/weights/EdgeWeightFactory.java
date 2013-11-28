@@ -3,8 +3,7 @@ package de.unima.dws.dbpediagraph.weights;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -24,33 +23,20 @@ public final class EdgeWeightFactory {
 	private static final Logger logger = LoggerFactory.getLogger(EdgeWeightFactory.class);
 
 	private static final Map<String, Integer> occCounts;
+	private static final Map<EdgeWeightType,EdgeWeight> edgeWeightImpls;
 	static {
 		boolean readOnly = true, clear = false;
 		occCounts = loadPersistentOccCountsMap(GraphConfig.config(), clear, readOnly);
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				if (occCounts instanceof PersistentMap) {
-					logger.info("Shutting down occurrence counts");
-					((PersistentMap<String, Integer>) occCounts).close();
-				}
-			}
-		});
+		edgeWeightImpls = new EnumMap<>(EdgeWeightType.class);
+		edgeWeightImpls.put(EdgeWeightType.COMB_IC, new CombinedInformationContent(occCounts));
+		edgeWeightImpls.put(EdgeWeightType.JOINT_IC, new JointInformationContent(occCounts));
+		edgeWeightImpls.put(EdgeWeightType.IC_PMI, new InfContentAndPointwiseMutuaInf(occCounts));
 	}
 
-	public static EdgeWeight getDBpediaImpl(Configuration config) {
+	public static EdgeWeight getDBpediaImplFromConfig(Configuration config) {
 		EdgeWeightType edgeWeightType = EdgeWeightType.fromConfig(config);
-		switch (edgeWeightType) {
-		case COMB_IC:
-			return new CombinedInformationContent(occCounts);
-		case IC_PMI:
-			return new InfContentAndPointwiseMutuaInf(occCounts);
-		case JOINT_IC:
-			return new JointInformationContent(occCounts);
-		}
-		throw new IllegalArgumentException("The " + EdgeWeightType.class.getSimpleName()
-				+ " specified in config is not valid: " + edgeWeightType);
+		return edgeWeightImpls.get(edgeWeightType);
 	}
 
 	static Map<String, Integer> newTransientMap() {
@@ -72,6 +58,16 @@ public final class EdgeWeightFactory {
 				Integer.class).readOnly(readOnly).build();
 		if (clear)
 			db.clear();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				if (occCounts instanceof PersistentMap) {
+					logger.info("Shutting down occurrence counts");
+					((PersistentMap<String, Integer>) occCounts).close();
+				}
+			}
+		});
 
 		logger.info("Graph weights loading time {} sec", (System.currentTimeMillis() - startTime) / 1000.0);
 		return db;

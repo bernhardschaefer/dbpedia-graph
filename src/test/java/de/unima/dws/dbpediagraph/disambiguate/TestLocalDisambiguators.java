@@ -25,7 +25,7 @@ public class TestLocalDisambiguators {
 	@BeforeClass
 	public static void beforeClass() {
 		GraphType graphType = GraphType.UNDIRECTED_GRAPH;
-		EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImpl(GraphConfig.config());
+		EdgeWeight graphWeights = EdgeWeightFactory.getDBpediaImplFromConfig(GraphConfig.config());
 
 		List<LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> localDisambiguators = new ArrayList<>();
 		localDisambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
