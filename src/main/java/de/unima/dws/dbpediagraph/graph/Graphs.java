@@ -204,6 +204,23 @@ public final class Graphs {
 		return sumWeights;
 	}
 
+	public static String vertexToString(Vertex v) {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("vid: ").append(v.getId().toString());
+		builder.append(" shortUri: ").append(v.getProperty(GraphConfig.URI_PROPERTY));
+
+		List<Edge> edges = Lists.newArrayList(v.getEdges(Direction.BOTH));
+		builder.append(" num edges: ").append(edges.size());
+
+		builder.append("\nedges: ");
+		for (Edge e : edges)
+			builder.append(e.getProperty(GraphConfig.URI_PROPERTY)).append("--")
+					.append(Graphs.oppositeVertexSafe(e, v).getProperty(GraphConfig.URI_PROPERTY)).append("\t");
+
+		return builder.toString();
+	}
+
 	/**
 	 * Converts the uris to vertices. Omits uris that cannot be found in the provided graph.
 	 */

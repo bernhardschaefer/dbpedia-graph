@@ -1,5 +1,7 @@
 package de.unima.dws.dbpediagraph.graph;
 
+import java.io.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,6 +111,36 @@ public final class GraphFactory {
 			return (TransactionalGraph) graph;
 		else
 			throw new IllegalArgumentException("Graph specified in properties needs to be a transactional graph.");
+	}
+
+	public static void queryGraph(Graph graph) {
+		String line = "";
+
+		while (true) {
+			System.out.println("Please enter a URI, then press <return> (type \"exit\" to quit)");
+			BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+			try {
+				line = input.readLine();
+				if (line.startsWith("exit")) {
+					System.out.println("QUITTING, thank you ... ");
+					break;
+				}
+
+				Vertex v = Graphs.vertexByFullUri(graph, line);
+				if (v != null)
+					System.out.println("VERTEX STATS: " + Graphs.vertexToString(v));
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void main(String[] args) {
+		Graph graph = getDBpediaGraph();
+		queryGraph(graph);
+		graph.shutdown();
 	}
 
 	// Suppress default constructor for noninstantiability
