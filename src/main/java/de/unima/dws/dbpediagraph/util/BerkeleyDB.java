@@ -34,8 +34,8 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentM
 	private transient StoredMap<K, V> mapView;
 
 	public BerkeleyDB(final File location, final String dbName, final Class<K> keyClass, final Class<V> valueClass,
-			boolean allowSortedDuplicates, boolean readOnly) {
-		createDBEnvironment(location);
+			boolean allowSortedDuplicates, boolean readOnly, boolean allowCreate) {
+		createDBEnvironment(location, allowCreate);
 		initDB(dbName, keyClass, valueClass, allowSortedDuplicates, readOnly);
 	}
 
@@ -44,14 +44,14 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentM
 		return mapView;
 	}
 
-	private void createDBEnvironment(final File location) {
+	private void createDBEnvironment(final File location, boolean allowCreate) {
 		if (!location.exists())
 			location.mkdirs();
 
 		try {
 			final EnvironmentConfig envConfig = new EnvironmentConfig();
-			envConfig.setCachePercent(60);
-			envConfig.setAllowCreate(true);
+			// envConfig.setCachePercent(60);
+			envConfig.setAllowCreate(allowCreate);
 			// log files are 100 MB each
 			envConfig.setConfigParam(EnvironmentConfig.LOG_FILE_MAX, "100000000");
 			this.dbEnv = new Environment(location, envConfig);
@@ -133,6 +133,7 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentM
 		// optional parameters - initialized to default values
 		private boolean allowSortedDuplicates = false;
 		private boolean readOnly = false;
+		private boolean allowCreate = true;
 
 		public Builder(File location, String dbName, Class<K> keyClass, Class<V> valueClass) {
 			this.location = location;
@@ -151,8 +152,14 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentM
 			return this;
 		}
 
+		public Builder<K, V> allowCreate(boolean allowCreate) {
+			this.allowCreate = allowCreate;
+			return this;
+		}
+
 		public BerkeleyDB<K, V> build() {
-			return new BerkeleyDB<>(location, dbName, keyClass, valueClass, allowSortedDuplicates, readOnly);
+			return new BerkeleyDB<>(location, dbName, keyClass, valueClass, allowSortedDuplicates, readOnly,
+					allowCreate);
 		}
 	}
 
