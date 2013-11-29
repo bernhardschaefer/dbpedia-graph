@@ -1,5 +1,7 @@
-# Napoleon was the emperor of the First French Empire. He was defeated at Waterloo by Wellington and [[Blücher]]. He was banned to Saint Helena, died of stomach cancer, and was buried at Invalides.
+# Sentence: Napoleon was the emperor of the First French Empire. He was defeated at Waterloo by Wellington and [[Blücher]]. He was banned to Saint Helena, died of stomach cancer, and was buried at Invalides.
 
+# each row is modeled as follows: surfaceForm	candEntity1	candEntity2 ...
+ 
 NAPOLEON	Napoleon	Napoleon_II		Napoleon_III	Napoleon_Louis_Bonaparte
 
 WATERLOO	Battle_of_Waterloo		Waterloo,_Belgium 		Waterloo,_Ontario

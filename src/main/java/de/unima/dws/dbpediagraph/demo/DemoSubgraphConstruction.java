@@ -86,17 +86,18 @@ public class DemoSubgraphConstruction {
 		visualizeGraph(subGraph, sc.getClass().getSimpleName() + " (max distance: " + MAX_DISTANCE + ")");
 
 		subGraph.shutdown();
-		graph.shutdown();
 	}
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		String sensesFileName = "/demo/napoleon-sentence-test";
+		String sensesFileName = "/demo/dylan-sentence";
+//		String sensesFileName = "/demo/napoleon-sentence-test";
 		// String sensesFileName = "/dbpedia-default-sentence-test";
 		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
 				sensesFileName, DemoSubgraphConstruction.class, GraphConfig.DBPEDIA_RESOURCE_PREFIX);
 
 		Graph graph = GraphFactory.getDBpediaGraph();
 		demo(graph, wordsSensesString, disambiguators);
+		graph.shutdown();
 	}
 
 	private static void visualizeGraph(Graph graph, String frameTitle) {
