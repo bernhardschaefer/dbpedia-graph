@@ -34,8 +34,8 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentM
 	private transient StoredMap<K, V> mapView;
 
 	public BerkeleyDB(final File location, final String dbName, final Class<K> keyClass, final Class<V> valueClass,
-			boolean allowSortedDuplicates, boolean readOnly, boolean allowCreate) {
-		createDBEnvironment(location, allowCreate);
+			boolean allowSortedDuplicates, boolean readOnly, boolean allowCreate, int cachePercent) {
+		createDBEnvironment(location, allowCreate, cachePercent);
 		initDB(dbName, keyClass, valueClass, allowSortedDuplicates, readOnly);
 	}
 
@@ -44,16 +44,16 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentM
 		return mapView;
 	}
 
-	private void createDBEnvironment(final File location, boolean allowCreate) {
+	private void createDBEnvironment(final File location, boolean allowCreate, int cachePercent) {
 		if (!location.exists())
 			location.mkdirs();
 
 		try {
-			final EnvironmentConfig envConfig = new EnvironmentConfig();
-			// envConfig.setCachePercent(60);
+			final com.sleepycat.je.EnvironmentConfig envConfig = new com.sleepycat.je.EnvironmentConfig();
+			envConfig.setCachePercent(cachePercent);
 			envConfig.setAllowCreate(allowCreate);
 			// log files are 100 MB each
-			envConfig.setConfigParam(EnvironmentConfig.LOG_FILE_MAX, "100000000");
+			envConfig.setConfigParam(com.sleepycat.je.EnvironmentConfig.LOG_FILE_MAX, "100000000");
 			this.dbEnv = new Environment(location, envConfig);
 		} catch (DatabaseException dbe) {
 			dbe.printStackTrace();
@@ -134,6 +134,7 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentM
 		private boolean allowSortedDuplicates = false;
 		private boolean readOnly = false;
 		private boolean allowCreate = true;
+		private int cachePercent = 60;
 
 		public Builder(File location, String dbName, Class<K> keyClass, Class<V> valueClass) {
 			this.location = location;
@@ -157,9 +158,14 @@ public class BerkeleyDB<K, V> extends ForwardingMap<K, V> implements PersistentM
 			return this;
 		}
 
+		public Builder<K, V> cachePercent(int cachePercent) {
+			this.cachePercent = cachePercent;
+			return this;
+		}
+
 		public BerkeleyDB<K, V> build() {
 			return new BerkeleyDB<>(location, dbName, keyClass, valueClass, allowSortedDuplicates, readOnly,
-					allowCreate);
+					allowCreate, cachePercent);
 		}
 	}
 
