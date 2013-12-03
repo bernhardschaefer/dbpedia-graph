@@ -20,7 +20,9 @@ import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
 public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
 		implements LocalGraphDisambiguator<T, U> {
 
-	private static final int DEFAULT_ITERATIONS = 10;
+	/** According to the founder of HITS (Kleinberg, 1999), 20 is sufficient for stable values in most cases. */
+	private static final int DEFAULT_ITERATIONS = 20;
+	
 	private static final double DEFAULT_ALPHA = 0;
 
 	private final double alpha;
