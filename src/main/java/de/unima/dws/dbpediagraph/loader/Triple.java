@@ -1,6 +1,7 @@
 package de.unima.dws.dbpediagraph.loader;
 
-import org.openrdf.model.Statement;
+import org.openrdf.model.*;
+import org.openrdf.model.impl.URIImpl;
 
 import de.unima.dws.dbpediagraph.graph.UriTransformer;
 
@@ -10,31 +11,41 @@ import de.unima.dws.dbpediagraph.graph.UriTransformer;
  * @author Bernhard Schäfer
  * 
  */
-public class Triple {
+class Triple {
 	private final String subject;
 	private final String predicate;
 	private final String object;
 
-	public Triple(String subject, String predicate, String object) {
-		this.subject = UriTransformer.decode(subject);
-		this.predicate = UriTransformer.decode(predicate);
-		this.object = UriTransformer.decode(object);
+	Triple(Resource subject, URI predicate, Value object) {
+		this.subject = UriTransformer.decode(subject.stringValue());
+		this.predicate = UriTransformer.decode(predicate.stringValue());
+		if (object instanceof Literal) // only decode if the object is an url
+			this.object = object.stringValue();
+		else
+			this.object = UriTransformer.decode(object.stringValue());
 	}
 
-	public String subject() {
+	String subject() {
 		return subject;
 	}
 
-	public String predicate() {
+	String predicate() {
 		return predicate;
 	}
 
-	public String object() {
+	String object() {
 		return object;
 	}
 
-	public static Triple fromStatement(Statement st) {
-		return new Triple(st.getSubject().stringValue(), st.getPredicate().stringValue(), st.getObject().stringValue());
+	static Triple fromStatement(Statement st) {
+		return new Triple(st.getSubject(), st.getPredicate(), st.getObject());
+	}
+
+	/**
+	 * This method is mostly for testing purposes. It assumes that the object is an URI.
+	 */
+	static Triple fromStringUris(String sub, String pred, String obj) {
+		return new Triple(new URIImpl(sub), new URIImpl(pred), new URIImpl(obj));
 	}
 
 }

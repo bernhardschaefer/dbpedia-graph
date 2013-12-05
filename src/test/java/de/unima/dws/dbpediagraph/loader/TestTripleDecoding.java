@@ -40,7 +40,7 @@ public class TestTripleDecoding {
 	}
 
 	private static void checkUri(String fullUriEncoded, String fullUriDecoded) {
-		Triple t = new Triple(fullUriEncoded, fullUriEncoded, fullUriEncoded);
+		Triple t = Triple.fromStringUris(fullUriEncoded, fullUriEncoded, fullUriEncoded);
 		assertEquals(fullUriDecoded, t.subject());
 		assertEquals(fullUriDecoded, t.predicate());
 		assertEquals(fullUriDecoded, t.object());

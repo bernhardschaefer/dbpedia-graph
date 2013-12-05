@@ -21,11 +21,11 @@ public class TestBlacklistPredicate {
 	public static void beforeClass() {
 		predicate = new BlacklistTriplePredicate(GraphConfig.config());
 
-		invalidSubject = new Triple("http://dbpedia.org/resource/Category:Topic",
+		invalidSubject = Triple.fromStringUris("http://dbpedia.org/resource/Category:Topic",
 				"http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://test.org/3");
-		invalidObject = new Triple("http://test.org/1", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+		invalidObject = Triple.fromStringUris("http://test.org/1", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
 				"http://www.w3.org/2002/07/owl#Class");
-		validTriple = new Triple("http://test.org/2", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+		validTriple = Triple.fromStringUris("http://test.org/2", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
 				"http://do.not.filter.org");
 	}
 

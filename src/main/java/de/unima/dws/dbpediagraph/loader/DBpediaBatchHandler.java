@@ -1,5 +1,6 @@
 package de.unima.dws.dbpediagraph.loader;
 
+import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ public class DBpediaBatchHandler extends RDFHandlerVerbose {
 	/** Start logging time once the object has been created */
 	private long tick = System.currentTimeMillis();
 
-	/** the statement filter that decides if a triple is valid */
+	/** the triple filter that decides if a triple is valid */
 	private final Predicate<Triple> tripleFilter;
 
 	private static final Logger logger = LoggerFactory.getLogger(DBpediaBatchHandler.class);
@@ -75,19 +76,24 @@ public class DBpediaBatchHandler extends RDFHandlerVerbose {
 
 	@Override
 	public void handleStatement(Statement st) {
-		Triple triple = Triple.fromStatement(st);
-		if (!tripleFilter.apply(triple)) {
+		if (st.getObject() instanceof Literal) 
+			// shortcut to prevent object creation
 			invalidTriples++;
-		} else {
-			validTriples++;
-			String subject = UriTransformer.shorten(triple.subject());
-			String predicate = UriTransformer.shorten(triple.predicate());
-			String object = UriTransformer.shorten(triple.object());
+		else {
+			Triple triple = Triple.fromStatement(st);
+			if (!tripleFilter.apply(triple)) 
+				invalidTriples++;
+			else {
+				validTriples++;
+				String subject = UriTransformer.shorten(triple.subject());
+				String predicate = UriTransformer.shorten(triple.predicate());
+				String object = UriTransformer.shorten(triple.object());
 
-			Vertex out = addVertexByUriBatchIfNonExistent(subject);
-			Vertex in = addVertexByUriBatchIfNonExistent(object);
-			Edge e = bgraph.addEdge(null, out, in, GraphConfig.EDGE_LABEL);
-			e.setProperty(GraphConfig.URI_PROPERTY, predicate);
+				Vertex out = addVertexByUriBatchIfNonExistent(subject);
+				Vertex in = addVertexByUriBatchIfNonExistent(object);
+				Edge e = bgraph.addEdge(null, out, in, GraphConfig.EDGE_LABEL);
+				e.setProperty(GraphConfig.URI_PROPERTY, predicate);
+			}
 		}
 
 		// logging metrics
