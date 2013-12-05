@@ -155,7 +155,7 @@
 					<!-- define main class in MANIFEST.MF for convenient java -jar execution -->
 					<archive>
 						<manifest>
-							<mainClass>de.unima.dws.dbpediagraph.graphdb.loader.DBpediaGraphLoader</mainClass>
+							<mainClass>de.unima.dws.dbpediagraph.loader.DBpediaGraphLoader</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
