@@ -14,12 +14,12 @@ import com.google.common.base.Predicate;
 import de.unima.dws.dbpediagraph.util.FileUtils;
 
 /**
- * Custom blacklist statement filter which uses blacklists for subjects, predicates and objects.
+ * Custom blacklist triple filter which uses blacklists for subjects, predicates and objects.
  * 
  * @author Bernhard Schäfer
  */
-class BlacklistStatementPredicate implements Predicate<Triple> {
-	private static final Logger logger = LoggerFactory.getLogger(BlacklistStatementPredicate.class);
+class BlacklistTriplePredicate implements Predicate<Triple> {
+	private static final Logger logger = LoggerFactory.getLogger(BlacklistTriplePredicate.class);
 
 	// Blacklists from "Exploiting Linked Data for Semantic Document Modelling"
 	private static final String CONFIG_CATEGORIES_FILE = "loading.filter.categories.file";
@@ -28,7 +28,7 @@ class BlacklistStatementPredicate implements Predicate<Triple> {
 	private final HashSet<String> categories;
 	private final HashSet<String> predicates;
 
-	BlacklistStatementPredicate(Configuration config) {
+	BlacklistTriplePredicate(Configuration config) {
 		categories = new HashSet<String>();
 		predicates = new HashSet<String>();
 
@@ -47,16 +47,16 @@ class BlacklistStatementPredicate implements Predicate<Triple> {
 		}
 	}
 
-	private static boolean isStatementUriInBlacklist(Triple t, Set<String> blacklist) {
+	private static boolean isTripleUriInBlacklist(Triple t, Set<String> blacklist) {
 		return blacklist.contains(t.subject()) || blacklist.contains(t.predicate()) || blacklist.contains(t.object());
 	}
 
 	@Override
 	public boolean apply(Triple t) {
-		// TODO check if enough to look at statement subject and object
-		boolean validCategory = !(isStatementUriInBlacklist(t, categories));
-		// TODO check if enough to look at statement predicate
-		boolean validPredicate = !(isStatementUriInBlacklist(t, predicates));
+		// TODO check if enough to look at triple subject and object
+		boolean validCategory = !(isTripleUriInBlacklist(t, categories));
+		// TODO check if enough to look at triple predicate
+		boolean validPredicate = !(isTripleUriInBlacklist(t, predicates));
 		return validCategory && validPredicate;
 	}
 

@@ -73,7 +73,7 @@ public final class DBpediaGraphLoader {
 			LoadingMetrics metric = new LoadingMetrics(f.getName());
 
 			// get appropriate handler
-			Predicate<Triple> filter = StatementPredicateFactory.fromConfig(GraphConfig.config());
+			Predicate<Triple> filter = TriplePredicateFactory.fromConfig(GraphConfig.config());
 			RDFHandlerVerbose handler = new DBpediaBatchHandler(graph, filter);
 
 			// get appropriate parser

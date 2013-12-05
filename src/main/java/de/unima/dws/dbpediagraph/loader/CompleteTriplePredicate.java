@@ -3,13 +3,13 @@ package de.unima.dws.dbpediagraph.loader;
 import com.google.common.base.Predicate;
 
 /**
- * Filter that yields all statement with DBpedia resources, ontologies, or yago classes as object. This includes the
- * entire class hierarchy and classes such as foaf:Person.
+ * Filter that yields all triple with DBpedia resources, ontologies, or yago classes as object. This includes the entire
+ * class hierarchy and classes such as foaf:Person.
  * 
  * @author Bernhard Schäfer
  * 
  */
-class CompleteStatementPredicate implements Predicate<Triple> {
+class CompleteTriplePredicate implements Predicate<Triple> {
 
 	/**
 	 * valid uri prefixes from http://dbpedia.org/snorql/.

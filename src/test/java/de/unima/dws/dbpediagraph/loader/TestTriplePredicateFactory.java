@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import com.google.common.base.Predicate;
 
-import de.unima.dws.dbpediagraph.loader.StatementPredicateFactory.LoadingType;
+import de.unima.dws.dbpediagraph.loader.TriplePredicateFactory.LoadingType;
 
-public class TestStatementPredicateFactory {
+public class TestTriplePredicateFactory {
 
 	private static Configuration config1;
 	private static Configuration config2;
@@ -34,16 +34,16 @@ public class TestStatementPredicateFactory {
 
 	@Test
 	public void testFromLoadingType() {
-		for(LoadingType type: LoadingType.values()) {
-			Predicate<Triple> pred = StatementPredicateFactory.fromLoadingType(type);
+		for (LoadingType type : LoadingType.values()) {
+			Predicate<Triple> pred = TriplePredicateFactory.fromLoadingType(type);
 			assertNotNull(pred);
 		}
 	}
-	
+
 	@Test
 	public void testConfig1LoadingTypes() {
 		// config1 --> BLACKLIST, COMPLETE
-		List<LoadingType> loadingTypes = StatementPredicateFactory.LoadingType.fromConfig(config1);
+		List<LoadingType> loadingTypes = TriplePredicateFactory.LoadingType.fromConfig(config1);
 		assertTrue(loadingTypes.size() == 2);
 		assertTrue(loadingTypes.get(0).equals(LoadingType.BLACKLIST));
 		assertTrue(loadingTypes.get(1).equals(LoadingType.COMPLETE));
@@ -51,14 +51,14 @@ public class TestStatementPredicateFactory {
 
 	@Test
 	public void testConfig1Predicates() {
-		Predicate<Triple> loadingTypes = StatementPredicateFactory.fromConfig(config1);
+		Predicate<Triple> loadingTypes = TriplePredicateFactory.fromConfig(config1);
 		assertNotNull(loadingTypes);
 	}
 
 	@Test
 	public void testConfig2LoadingTypes() {
 		// config2 --> COMPLETE
-		List<LoadingType> loadingTypes = StatementPredicateFactory.LoadingType.fromConfig(config2);
+		List<LoadingType> loadingTypes = TriplePredicateFactory.LoadingType.fromConfig(config2);
 		assertTrue(loadingTypes.size() == 1);
 		assertTrue(loadingTypes.get(0).equals(LoadingType.COMPLETE));
 	}
@@ -66,7 +66,7 @@ public class TestStatementPredicateFactory {
 	@Test
 	public void testConfig3LoadingTypes() {
 		// config3 --> no key and value
-		List<LoadingType> loadingTypes = StatementPredicateFactory.LoadingType.fromConfig(config3);
+		List<LoadingType> loadingTypes = TriplePredicateFactory.LoadingType.fromConfig(config3);
 		assertTrue(loadingTypes.size() == 0);
 	}
 }

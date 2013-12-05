@@ -16,9 +16,9 @@ import de.unima.dws.dbpediagraph.graph.GraphConfig;
  * @author Bernhard Schäfer
  * 
  */
-class StatementPredicateFactory {
+class TriplePredicateFactory {
 
-	private static final String CONFIG_STATEMENT_PREDICATE = "loading.filter.impl";
+	private static final String CONFIG_TRIPLE_PREDICATE = "loading.filter.impl";
 	private static final Predicate<Triple> DUMMY_PREDICATE = new Predicate<Triple>() {
 		@Override
 		public boolean apply(Triple t) {
@@ -33,7 +33,7 @@ class StatementPredicateFactory {
 			List<LoadingType> loadingTypes = new ArrayList<>();
 			@SuppressWarnings("unchecked")
 			// apache commons config does not support generics
-			List<String> loadingTypeNames = config.getList(CONFIG_STATEMENT_PREDICATE);
+			List<String> loadingTypeNames = config.getList(CONFIG_TRIPLE_PREDICATE);
 
 			for (String loadingTypeName : loadingTypeNames) {
 				try {
@@ -41,7 +41,7 @@ class StatementPredicateFactory {
 				} catch (IllegalArgumentException e) {
 					throw new IllegalArgumentException(String.format(
 							"Unknown loading filter type '%s' specified in '%s'. Only the following are allowed: %s",
-							loadingTypeName, CONFIG_STATEMENT_PREDICATE,
+							loadingTypeName, CONFIG_TRIPLE_PREDICATE,
 							java.util.Arrays.toString(LoadingType.values())), e);
 				}
 			}
@@ -59,13 +59,13 @@ class StatementPredicateFactory {
 	static Predicate<Triple> fromLoadingType(LoadingType type) {
 		switch (type) {
 		case BLACKLIST:
-			return new BlacklistStatementPredicate(GraphConfig.config());
+			return new BlacklistTriplePredicate(GraphConfig.config());
 		case COMPLETE:
-			return new CompleteStatementPredicate();
+			return new CompleteTriplePredicate();
 		case DOMAIN:
-			return new DomainStatementPredicate();
+			return new DomainTriplePredicate();
 		case RESOURCE:
-			return new ResourceStatementPredicate();
+			return new ResourceTriplePredicate();
 		}
 		throw new IllegalArgumentException("The provided " + LoadingType.class.getSimpleName() + " is not valid: "
 				+ type);
