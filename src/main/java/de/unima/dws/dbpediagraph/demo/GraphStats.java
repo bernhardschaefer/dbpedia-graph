@@ -14,8 +14,8 @@ public class GraphStats {
 	}
 
 	private static void printGraphStats(Graph graph) {
-		System.out.printf("Vertices: %d ", Graphs.verticesCount(graph));
-		System.out.printf("Edges: %d %n", Graphs.edgesCount(graph));
+		System.out.printf("Vertices: %,d ", Graphs.verticesCount(graph));
+		System.out.printf("Edges: %,d %n", Graphs.edgesCount(graph));
 	}
 
 }
