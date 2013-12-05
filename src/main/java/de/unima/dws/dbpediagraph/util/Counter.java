@@ -48,6 +48,12 @@ public class Counter {
 		logger.info(String.format("DONE with %s (%,d items @ ~%.2f sec.) %n", name, count, elapsedSecs(startTime)));
 	}
 
+	/**
+	 * Calculates the elapsed seconds from a given nano start time.
+	 * 
+	 * @param nanoStartTime
+	 *            the start time as nanos
+	 */
 	public static double elapsedSecs(long nanoStartTime) {
 		long now = System.nanoTime();
 		long timeDelta = now - nanoStartTime;

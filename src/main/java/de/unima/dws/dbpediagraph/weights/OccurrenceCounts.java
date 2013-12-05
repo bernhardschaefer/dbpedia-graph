@@ -10,8 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
-import de.unima.dws.dbpediagraph.util.BerkeleyDB;
-import de.unima.dws.dbpediagraph.util.PersistentMap;
+import de.unima.dws.dbpediagraph.util.*;
 
 public class OccurrenceCounts {
 	private static final Logger logger = LoggerFactory.getLogger(OccurrenceCounts.class);
@@ -42,7 +41,7 @@ public class OccurrenceCounts {
 
 	static PersistentMap<String, Integer> loadPersistentOccCountsMap(Configuration config, boolean clear,
 			boolean readOnly) {
-		long startTime = System.currentTimeMillis();
+		long startTime = System.nanoTime();
 
 		String dbName = "all";
 		String location = config.getString("graph.occ.counts.directory");
@@ -61,7 +60,7 @@ public class OccurrenceCounts {
 			}
 		});
 
-		logger.info("Graph weights loading time {} sec", (System.currentTimeMillis() - startTime) / 1000.0);
+		logger.info("Graph weights loading time {} sec", Counter.elapsedSecs(startTime));
 		return db;
 	}
 
