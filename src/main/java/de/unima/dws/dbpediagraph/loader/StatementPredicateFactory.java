@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
-import org.openrdf.model.Statement;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -12,7 +11,7 @@ import com.google.common.base.Predicates;
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
 
 /**
- * Factory for retrieving {@link Predicate}s for {@link Statement}s.
+ * Factory for retrieving {@link Predicate}s for {@link Triple}s.
  * 
  * @author Bernhard Schäfer
  * 
@@ -20,9 +19,9 @@ import de.unima.dws.dbpediagraph.graph.GraphConfig;
 class StatementPredicateFactory {
 
 	private static final String CONFIG_STATEMENT_PREDICATE = "loading.filter.impl";
-	private static final Predicate<Statement> DUMMY_PREDICATE = new Predicate<Statement>() {
+	private static final Predicate<Triple> DUMMY_PREDICATE = new Predicate<Triple>() {
 		@Override
-		public boolean apply(Statement input) {
+		public boolean apply(Triple t) {
 			return true;
 		}
 	};
@@ -50,14 +49,14 @@ class StatementPredicateFactory {
 		}
 	}
 
-	static Predicate<Statement> fromLoadingTypes(List<LoadingType> types) {
-		List<Predicate<Statement>> predicates = new ArrayList<>();
+	static Predicate<Triple> fromLoadingTypes(List<LoadingType> types) {
+		List<Predicate<Triple>> predicates = new ArrayList<>();
 		for (LoadingType type : types)
 			predicates.add(fromLoadingType(type));
 		return Predicates.and(predicates);
 	}
 
-	static Predicate<Statement> fromLoadingType(LoadingType type) {
+	static Predicate<Triple> fromLoadingType(LoadingType type) {
 		switch (type) {
 		case BLACKLIST:
 			return new BlacklistStatementPredicate(GraphConfig.config());
@@ -79,7 +78,7 @@ class StatementPredicateFactory {
 	 *            A configuration object where the {@link LoadingType} is looked up.
 	 * @return A {@link Predicate} instance.
 	 */
-	static Predicate<Statement> fromConfig(final Configuration config) {
+	static Predicate<Triple> fromConfig(final Configuration config) {
 		List<LoadingType> loadingTypes = LoadingType.fromConfig(config);
 
 		if (loadingTypes == null || loadingTypes.isEmpty()) // no loading filter requested

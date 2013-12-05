@@ -1,8 +1,5 @@
 package de.unima.dws.dbpediagraph.loader;
 
-import org.openrdf.model.Literal;
-import org.openrdf.model.Statement;
-
 import com.google.common.base.Predicate;
 
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
@@ -14,17 +11,12 @@ import de.unima.dws.dbpediagraph.graph.GraphConfig;
  * @author Bernhard Schäfer
  * 
  */
-class ResourceStatementPredicate implements Predicate<Statement> {
+class ResourceStatementPredicate implements Predicate<Triple> {
 
 	@Override
-	public boolean apply(Statement st) {
-		// continue if object is literal
-		if (st.getObject() instanceof Literal)
+	public boolean apply(Triple t) {
+		if (!t.object().startsWith(GraphConfig.DBPEDIA_RESOURCE_PREFIX))
 			return false;
-
-		if (!st.getObject().stringValue().startsWith(GraphConfig.DBPEDIA_RESOURCE_PREFIX))
-			return false;
-
 		return true;
 	}
 

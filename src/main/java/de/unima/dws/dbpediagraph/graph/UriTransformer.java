@@ -1,17 +1,20 @@
 package de.unima.dws.dbpediagraph.graph;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.Map.Entry;
 
 import com.tinkerpop.blueprints.Graph;
 
 /**
- * Implementation for shortening and unshortening uris using prefixes to reduce the persisted size of the {@link Graph}.
+ * Implementation for shortening and unshortening URIs using prefixes to reduce the persisted size of the {@link Graph}.
+ * Also performs URI decoding.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public final class GraphUriShortener {
+public final class UriTransformer {
 	private static final Map<String, String> URI_TO_PREFIX;
 	static {
 		URI_TO_PREFIX = new LinkedHashMap<String, String>();
@@ -56,6 +59,18 @@ public final class GraphUriShortener {
 				// there should be at most one replacement
 				return uri.replace(e.getValue(), e.getKey());
 		return uri;
+	}
+
+	/**
+	 * Decode the provided URI assuming UTF-8 encoding.
+	 */
+	public static String decode(String uri) {
+		try {
+			return URLDecoder.decode(uri, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// this really shouldn't happen since UTF-8 is a valid encoding
+			throw new IllegalStateException(e);
+		}
 	}
 
 }

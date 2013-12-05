@@ -78,7 +78,7 @@ public class DemoSubgraphConstruction {
 
 			List<SurfaceFormSenseScore<T, U>> senseScores = d.disambiguate(surfaceFormsSenses, subGraph);
 			for (SurfaceFormSenseScore<T, U> senseScore : senseScores)
-				System.out.printf("  %s (%.2f)", GraphUriShortener.shorten(senseScore.sense().fullUri()),
+				System.out.printf("  %s (%.2f)", UriTransformer.shorten(senseScore.sense().fullUri()),
 						senseScore.score());
 			System.out.println();
 		}

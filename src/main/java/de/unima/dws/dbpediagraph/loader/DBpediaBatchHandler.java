@@ -10,7 +10,7 @@ import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
-import de.unima.dws.dbpediagraph.graph.GraphUriShortener;
+import de.unima.dws.dbpediagraph.graph.UriTransformer;
 
 /**
  * Full blueprints compatible batch handler for creating a graph from RDF files. Uses {@link BatchGraph} and the
@@ -31,17 +31,17 @@ public class DBpediaBatchHandler extends RDFHandlerVerbose {
 	/** Start logging time once the object has been created */
 	private long tick = System.currentTimeMillis();
 
-	/** the statement filter that decides if a statement is valid */
-	private final Predicate<Statement> statementFilter;
+	/** the statement filter that decides if a triple is valid */
+	private final Predicate<Triple> tripleFilter;
 
 	private static final Logger logger = LoggerFactory.getLogger(DBpediaBatchHandler.class);
 
 	/**
 	 * Initialize the handler with a graph object the statements should be added to.
 	 */
-	public DBpediaBatchHandler(Graph graph, Predicate<Statement> statementFilter) {
+	public DBpediaBatchHandler(Graph graph, Predicate<Triple> tripleFilter) {
 		this.bgraph = graph;
-		this.statementFilter = statementFilter;
+		this.tripleFilter = tripleFilter;
 	}
 
 	/**
@@ -75,13 +75,14 @@ public class DBpediaBatchHandler extends RDFHandlerVerbose {
 
 	@Override
 	public void handleStatement(Statement st) {
-		if (!statementFilter.apply(st)) {
+		Triple triple = Triple.fromStatement(st);
+		if (!tripleFilter.apply(triple)) {
 			invalidTriples++;
 		} else {
 			validTriples++;
-			String subject = GraphUriShortener.shorten(st.getSubject().stringValue());
-			String predicate = GraphUriShortener.shorten(st.getPredicate().stringValue());
-			String object = GraphUriShortener.shorten(st.getObject().stringValue());
+			String subject = UriTransformer.shorten(triple.subject());
+			String predicate = UriTransformer.shorten(triple.predicate());
+			String object = UriTransformer.shorten(triple.object());
 
 			Vertex out = addVertexByUriBatchIfNonExistent(subject);
 			Vertex in = addVertexByUriBatchIfNonExistent(object);

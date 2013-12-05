@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.unima.dws.dbpediagraph.graph.GraphUriShortener;
+import de.unima.dws.dbpediagraph.graph.UriTransformer;
 
 public class TestUriShortener {
 
@@ -41,7 +41,7 @@ public class TestUriShortener {
 		for (Entry<String, String> e : uriToPrefix.entrySet()) {
 			String uri = e.getKey();
 			String shortUri = e.getValue();
-			String shortenedUri = GraphUriShortener.shorten(uri);
+			String shortenedUri = UriTransformer.shorten(uri);
 			assertEquals(shortenedUri, shortUri);
 		}
 	}
@@ -51,7 +51,7 @@ public class TestUriShortener {
 		for (Entry<String, String> e : uriToPrefix.entrySet()) {
 			String uri = e.getKey();
 			String shortUri = e.getValue();
-			String unshortenedUri = GraphUriShortener.unshorten(shortUri);
+			String unshortenedUri = UriTransformer.unshorten(shortUri);
 			assertEquals(unshortenedUri, uri);
 		}
 

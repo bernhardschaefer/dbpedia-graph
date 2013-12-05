@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.openrdf.model.Statement;
 import org.openrdf.rio.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +73,7 @@ public final class DBpediaGraphLoader {
 			LoadingMetrics metric = new LoadingMetrics(f.getName());
 
 			// get appropriate handler
-			Predicate<Statement> filter = StatementPredicateFactory.fromConfig(GraphConfig.config());
+			Predicate<Triple> filter = StatementPredicateFactory.fromConfig(GraphConfig.config());
 			RDFHandlerVerbose handler = new DBpediaBatchHandler(graph, filter);
 
 			// get appropriate parser

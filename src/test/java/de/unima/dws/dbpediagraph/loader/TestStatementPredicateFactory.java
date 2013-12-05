@@ -8,7 +8,6 @@ import java.util.List;
 import org.apache.commons.configuration.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openrdf.model.Statement;
 
 import com.google.common.base.Predicate;
 
@@ -36,7 +35,7 @@ public class TestStatementPredicateFactory {
 	@Test
 	public void testFromLoadingType() {
 		for(LoadingType type: LoadingType.values()) {
-			Predicate<Statement> pred = StatementPredicateFactory.fromLoadingType(type);
+			Predicate<Triple> pred = StatementPredicateFactory.fromLoadingType(type);
 			assertNotNull(pred);
 		}
 	}
@@ -52,7 +51,7 @@ public class TestStatementPredicateFactory {
 
 	@Test
 	public void testConfig1Predicates() {
-		Predicate<Statement> loadingTypes = StatementPredicateFactory.fromConfig(config1);
+		Predicate<Triple> loadingTypes = StatementPredicateFactory.fromConfig(config1);
 		assertNotNull(loadingTypes);
 	}
 

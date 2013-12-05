@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
-import org.openrdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,7 @@ import de.unima.dws.dbpediagraph.util.FileUtils;
  * 
  * @author Bernhard Schäfer
  */
-class BlacklistStatementPredicate implements Predicate<Statement> {
+class BlacklistStatementPredicate implements Predicate<Triple> {
 	private static final Logger logger = LoggerFactory.getLogger(BlacklistStatementPredicate.class);
 
 	// Blacklists from "Exploiting Linked Data for Semantic Document Modelling"
@@ -48,17 +47,16 @@ class BlacklistStatementPredicate implements Predicate<Statement> {
 		}
 	}
 
-	private static boolean isStatementUriInBlacklist(Statement st, Set<String> blacklist) {
-		return blacklist.contains(st.getSubject().stringValue()) || blacklist.contains(st.getPredicate().stringValue())
-				|| blacklist.contains(st.getObject().stringValue());
+	private static boolean isStatementUriInBlacklist(Triple t, Set<String> blacklist) {
+		return blacklist.contains(t.subject()) || blacklist.contains(t.predicate()) || blacklist.contains(t.object());
 	}
 
 	@Override
-	public boolean apply(Statement st) {
+	public boolean apply(Triple t) {
 		// TODO check if enough to look at statement subject and object
-		boolean validCategory = !(isStatementUriInBlacklist(st, categories));
+		boolean validCategory = !(isStatementUriInBlacklist(t, categories));
 		// TODO check if enough to look at statement predicate
-		boolean validPredicate = !(isStatementUriInBlacklist(st, predicates));
+		boolean validPredicate = !(isStatementUriInBlacklist(t, predicates));
 		return validCategory && validPredicate;
 	}
 

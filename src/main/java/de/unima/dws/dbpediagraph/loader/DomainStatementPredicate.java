@@ -1,8 +1,5 @@
 package de.unima.dws.dbpediagraph.loader;
 
-import org.openrdf.model.Literal;
-import org.openrdf.model.Statement;
-
 import com.google.common.base.Predicate;
 
 /**
@@ -12,17 +9,12 @@ import com.google.common.base.Predicate;
  * @author Bernhard Schäfer
  * 
  */
-class DomainStatementPredicate implements Predicate<Statement> {
+class DomainStatementPredicate implements Predicate<Triple> {
 
 	@Override
-	public boolean apply(Statement st) {
-		// continue if object is literal
-		if (st.getObject() instanceof Literal)
+	public boolean apply(Triple t) {
+		if (!t.object().startsWith("http://dbpedia.org/"))
 			return false;
-
-		if (!st.getObject().stringValue().startsWith("http://dbpedia.org/"))
-			return false;
-
 		return true;
 	}
 

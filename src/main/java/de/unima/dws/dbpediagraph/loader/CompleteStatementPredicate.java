@@ -1,8 +1,5 @@
 package de.unima.dws.dbpediagraph.loader;
 
-import org.openrdf.model.Literal;
-import org.openrdf.model.Statement;
-
 import com.google.common.base.Predicate;
 
 /**
@@ -12,7 +9,7 @@ import com.google.common.base.Predicate;
  * @author Bernhard Schäfer
  * 
  */
-class CompleteStatementPredicate implements Predicate<Statement> {
+class CompleteStatementPredicate implements Predicate<Triple> {
 
 	/**
 	 * valid uri prefixes from http://dbpedia.org/snorql/.
@@ -25,14 +22,9 @@ class CompleteStatementPredicate implements Predicate<Statement> {
 	};
 
 	@Override
-	public boolean apply(Statement st) {
-		// continue if object is literal
-		if (st.getObject() instanceof Literal)
-			return false;
-
-		String objectUri = st.getObject().stringValue();
+	public boolean apply(Triple t) {
 		for (String uriPrefix : uriPrefixes)
-			if (objectUri.startsWith(uriPrefix))
+			if (t.object().startsWith(uriPrefix))
 				return true;
 		return false;
 	}

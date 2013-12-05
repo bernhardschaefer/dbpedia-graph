@@ -179,7 +179,7 @@ public final class Graphs {
 	}
 
 	public static Vertex vertexByFullUri(Graph graph, String fullUri) {
-		String shortUri = GraphUriShortener.shorten(fullUri);
+		String shortUri = UriTransformer.shorten(fullUri);
 		List<Vertex> vertices = Lists.newArrayList(graph.getVertices(GraphConfig.URI_PROPERTY, shortUri));
 		if (vertices.size() == 0) {
 			logger.warn("No vertex found for full uri {}", fullUri);
