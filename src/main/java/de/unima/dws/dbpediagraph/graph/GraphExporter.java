@@ -39,7 +39,7 @@ public final class GraphExporter {
 	}
 
 	public static void persistGraphInDirectory(Graph graph, boolean normalize, String dirName) {
-		String fileName = dirName + File.separator + "subgraph" + DATE_FORMATTER.format(new Date() + ".xml");
+		String fileName = dirName + File.separator + "subgraph" + DATE_FORMATTER.format(new Date()) + ".xml";
 		persistGraph(graph, normalize, fileName);
 	}
 
