@@ -62,28 +62,32 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 		}
 
 		if (logger.isInfoEnabled())
-			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, startTimeNano, traversedNodes,
-					settings.maxDistance);
+			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, startTimeNano,
+					traversedNodes, settings.maxDistance);
+
+		if (settings.persistSubgraph)
+			GraphExporter.persistGraphInDirectory(subGraph, true, settings.persistSubgraphDirectory);
 
 		return subGraph;
 	}
-	
+
 	@Override
 	public Graph createSubgraph(Map<? extends SurfaceForm, ? extends List<? extends Sense>> surfaceFormSenses) {
-		Collection<Set<Vertex>> surfaceFormVertices = ModelToVertex.verticesFromSurfaceFormSenses(graph, surfaceFormSenses);
+		Collection<Set<Vertex>> surfaceFormVertices = ModelToVertex.verticesFromSurfaceFormSenses(graph, 
+				surfaceFormSenses);
 		return createSubgraph(surfaceFormVertices);
 	}
 
 	@Override
 	public Graph createSubSubgraph(Collection<Vertex> assignments, Set<Vertex> allSensesVertices) {
 		long startTimeNano = System.nanoTime();
-	
+
 		traversedNodes = 0;
-	
+
 		// initialize subgraph with all assignments
 		Graph subsubgraph = GraphFactory.newInMemoryGraph();
 		Graphs.addVerticesByIdIfNonExistent(subsubgraph, assignments);
-	
+
 		for (Vertex start : assignments) {
 			Set<Vertex> targetSenses = CollectionUtils.remove(assignments, start);
 			if (logger.isDebugEnabled())
@@ -92,11 +96,11 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 			Set<Vertex> stopVertices = Sets.difference(allSensesVertices, targetSenses);
 			dfs(new Path(start), targetSenses, subsubgraph, stopVertices);
 		}
-	
+
 		if (logger.isDebugEnabled())
 			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, startTimeNano,
 					traversedNodes, settings.maxDistance);
-	
+
 		return subsubgraph;
 	}
 

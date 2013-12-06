@@ -1,5 +1,7 @@
 package de.unima.dws.dbpediagraph.weights;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.*;
 
 import org.apache.commons.configuration.Configuration;
@@ -52,7 +54,11 @@ public final class EdgeWeightsFactory {
 	}
 
 	public static EdgeWeights dbpediaFromEdgeWeightsType(EdgeWeightsType edgeWeightsType) {
-		return DBpediaEdgeWeights.DBPEDIA_EDGE_WEIGHTS.get(edgeWeightsType);
+		// prevent loading of DBpedia edge weights when DUMMY is requested
+		if (checkNotNull(edgeWeightsType) == EdgeWeightsType.DUMMY)
+			return DummyEdgeWeights.INSTANCE;
+		else
+			return DBpediaEdgeWeights.DBPEDIA_EDGE_WEIGHTS.get(edgeWeightsType);
 	}
 
 	/**
