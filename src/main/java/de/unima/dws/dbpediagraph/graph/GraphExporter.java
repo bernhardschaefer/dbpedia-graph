@@ -16,6 +16,8 @@ import com.google.common.io.Files;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.util.io.graphml.GraphMLWriter;
 
+import de.unima.dws.dbpediagraph.util.Counter;
+
 /**
  * Utilities for serializing {@link Graph}s.
  * 
@@ -28,6 +30,7 @@ public final class GraphExporter {
 
 	public static void persistGraph(Graph graph, boolean normalize, String fileName) {
 		checkState(checkNotNull(fileName).length() > 0);
+		long nanoStartTime = System.nanoTime();
 		GraphMLWriter writer = new GraphMLWriter(graph);
 		writer.setNormalize(normalize);
 		try {
@@ -36,10 +39,11 @@ public final class GraphExporter {
 		} catch (IOException e) {
 			logger.error("Error while trying to persist subgraph.", e);
 		}
+		logger.info("Time for writing subgraph to file: %.3f sec", Counter.elapsedSecs(nanoStartTime));
 	}
 
 	public static void persistGraphInDirectory(Graph graph, boolean normalize, String dirName) {
-		String fileName = dirName + File.separator + "subgraph" + DATE_FORMATTER.format(new Date()) + ".xml";
+		String fileName = dirName + File.separator + "subgraph" + DATE_FORMATTER.format(new Date()) + ".graphml";
 		persistGraph(graph, normalize, fileName);
 	}
 
