@@ -128,11 +128,11 @@ public final class Graphs {
 	}
 
 	public static boolean hasNoVertices(Graph graph) {
-		return !graph.getVertices().iterator().hasNext();
+		return Iterables.isEmpty(graph.getVertices());
 	}
 
 	public static boolean hasNoEdges(Graph graph) {
-		return !graph.getEdges().iterator().hasNext();
+		return Iterables.isEmpty(graph.getEdges());
 	}
 
 	public static boolean isNodeOnPath(Vertex child, List<Edge> path) {
@@ -140,6 +140,12 @@ public final class Graphs {
 			if (child.equals(edge.getVertex(Direction.IN)) || child.equals(edge.getVertex(Direction.OUT)))
 				return true;
 		return false;
+	}
+
+	// ----------- Vertex related methods ------------
+
+	public static boolean vertexHasNoNeighbours(Vertex v) {
+		return Iterables.isEmpty(v.getEdges(Direction.BOTH));
 	}
 
 	public static Vertex oppositeVertexSafe(Edge edge, Vertex vertex) {
@@ -242,4 +248,5 @@ public final class Graphs {
 	private Graphs() {
 		throw new AssertionError();
 	}
+
 }

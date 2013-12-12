@@ -1,7 +1,6 @@
 package de.unima.dws.dbpediagraph.disambiguate.local;
 
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.disambiguate.*;
 import de.unima.dws.dbpediagraph.graph.GraphType;
@@ -33,7 +32,8 @@ public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends Ab
 
 		@Override
 		public Double getVertexScore(Vertex v) {
-			double degree = Graphs.vertexDegreeWeighted(v, graphType.getDirection(), edgeWeights);
+			// TODO should Direction.IN be used for directed graphs?
+			double degree = Graphs.vertexDegreeWeighted(v, Direction.BOTH, edgeWeights);
 			double centrality = degree / (verticesCount - 1);
 			return centrality;
 		}

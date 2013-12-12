@@ -1,6 +1,5 @@
 package de.unima.dws.dbpediagraph.disambiguate.local;
 
-import com.google.common.collect.Iterables;
 import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
@@ -22,7 +21,7 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 
 	/** According to the founder of HITS (Kleinberg, 1999), 20 is sufficient for stable values in most cases. */
 	private static final int DEFAULT_ITERATIONS = 20;
-	
+
 	private static final double DEFAULT_ALPHA = 0;
 
 	private final double alpha;
@@ -57,7 +56,8 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 		public Double getVertexScore(Vertex v) {
 			Scores scores = hits.getVertexScore(v);
 			// HitsScores scores = hitsScores.get(v);
-			double authority = Iterables.size(v.getEdges(graphType.getDirection())) != 0 ? scores.authority : 0;
+			// assign authority of 0 if v is not connected to any other vertex.
+			double authority = Graphs.vertexHasNoNeighbours(v) ? 0 : scores.authority;
 			return authority;
 		}
 	}
