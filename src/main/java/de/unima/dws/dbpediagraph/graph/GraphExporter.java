@@ -39,7 +39,7 @@ public final class GraphExporter {
 		} catch (IOException e) {
 			logger.error("Error while trying to persist subgraph.", e);
 		}
-		logger.info("Time for writing subgraph to file: %.3f sec", Counter.elapsedSecs(nanoStartTime));
+		logger.info(String.format("Time for writing subgraph to file: %.3f sec", Counter.elapsedSecs(nanoStartTime)));
 	}
 
 	public static void persistGraphInDirectory(Graph graph, boolean normalize, String dirName) {
