@@ -12,11 +12,10 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.io.Files;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.util.io.graphml.GraphMLWriter;
-
-import de.unima.dws.dbpediagraph.util.Counter;
 
 /**
  * Utilities for serializing {@link Graph}s.
@@ -29,8 +28,11 @@ public final class GraphExporter {
 	private static final DateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss.SSS");
 
 	public static void persistGraph(Graph graph, boolean normalize, String fileName) {
-		checkState(checkNotNull(fileName).length() > 0);
-		long nanoStartTime = System.nanoTime();
+		checkNotNull(fileName);
+		checkState(fileName.length() > 0);
+
+		Stopwatch stopwatch = Stopwatch.createStarted();
+
 		GraphMLWriter writer = new GraphMLWriter(graph);
 		writer.setNormalize(normalize);
 		try {
@@ -39,7 +41,7 @@ public final class GraphExporter {
 		} catch (IOException e) {
 			logger.error("Error while trying to persist subgraph.", e);
 		}
-		logger.info(String.format("Time for writing subgraph to file: %.3f sec", Counter.elapsedSecs(nanoStartTime)));
+		logger.info("Time for writing subgraph to file: {}", stopwatch);
 	}
 
 	public static void persistGraphInDirectory(Graph graph, boolean normalize, String dirName) {

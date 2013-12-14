@@ -5,12 +5,11 @@ import java.io.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
 import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
-
-import de.unima.dws.dbpediagraph.util.Counter;
 
 /**
  * Noninstantiable graph factory class that provides graph instances.
@@ -93,7 +92,7 @@ public final class GraphFactory {
 	 *             if needsToExist==true and there is no existing graph with vertices.
 	 */
 	private static TransactionalGraph openGraph(boolean needsToExist) {
-		long startTime = System.nanoTime();
+		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		Graph graph = com.tinkerpop.blueprints.GraphFactory.open(GraphConfig.config());
 		if (needsToExist && Graphs.hasNoVertices(graph))
@@ -108,7 +107,7 @@ public final class GraphFactory {
 			nGraph.createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
 		}
 
-		logger.info("Graph loading time {} sec", Counter.elapsedSecs(startTime));
+		logger.info("Graph loading time {}", stopwatch);
 		if (graph instanceof TransactionalGraph)
 			return (TransactionalGraph) graph;
 		else

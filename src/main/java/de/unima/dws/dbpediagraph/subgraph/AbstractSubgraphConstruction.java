@@ -5,6 +5,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.tinkerpop.blueprints.Graph;
@@ -36,7 +37,7 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 
 	@Override
 	public Graph createSubgraph(Collection<Set<Vertex>> surfaceFormVertices) {
-		long startTimeNano = System.nanoTime();
+		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		SubgraphConstructions.checkValidWordsSenses(graph, surfaceFormVertices);
 		traversedNodes = 0;
@@ -62,8 +63,8 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 		}
 
 		if (logger.isInfoEnabled())
-			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, startTimeNano,
-					traversedNodes, settings.maxDistance);
+			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, stopwatch, traversedNodes,
+					settings.maxDistance);
 
 		if (settings.persistSubgraph)
 			GraphExporter.persistGraphInDirectory(subGraph, true, settings.persistSubgraphDirectory);
@@ -73,14 +74,14 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 
 	@Override
 	public Graph createSubgraph(Map<? extends SurfaceForm, ? extends List<? extends Sense>> surfaceFormSenses) {
-		Collection<Set<Vertex>> surfaceFormVertices = ModelToVertex.verticesFromSurfaceFormSenses(graph, 
+		Collection<Set<Vertex>> surfaceFormVertices = ModelToVertex.verticesFromSurfaceFormSenses(graph,
 				surfaceFormSenses);
 		return createSubgraph(surfaceFormVertices);
 	}
 
 	@Override
 	public Graph createSubSubgraph(Collection<Vertex> assignments, Set<Vertex> allSensesVertices) {
-		long startTimeNano = System.nanoTime();
+		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		traversedNodes = 0;
 
@@ -98,7 +99,7 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 		}
 
 		if (logger.isDebugEnabled())
-			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, startTimeNano,
+			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, stopwatch,
 					traversedNodes, settings.maxDistance);
 
 		return subsubgraph;

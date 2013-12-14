@@ -9,8 +9,11 @@ import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
+
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
-import de.unima.dws.dbpediagraph.util.*;
+import de.unima.dws.dbpediagraph.util.BerkeleyDB;
+import de.unima.dws.dbpediagraph.util.PersistentMap;
 
 public class OccurrenceCounts {
 	private static final Logger logger = LoggerFactory.getLogger(OccurrenceCounts.class);
@@ -41,14 +44,16 @@ public class OccurrenceCounts {
 
 	static PersistentMap<String, Integer> loadPersistentOccCountsMap(Configuration config, boolean clear,
 			boolean readOnly) {
-		long startTime = System.nanoTime();
+		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		String dbName = "all";
 		String location = config.getString("graph.occ.counts.directory");
 		final PersistentMap<String, Integer> db = new BerkeleyDB.Builder<>(new File(location), dbName, String.class,
 				Integer.class).readOnly(readOnly).build();
-		if (clear)
+		if (clear) {
 			db.clear();
+			logger.info("Clearing existing DBpedia URI count map at {}", location);
+		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -60,7 +65,7 @@ public class OccurrenceCounts {
 			}
 		});
 
-		logger.info("Graph weights loading time {} sec", Counter.elapsedSecs(startTime));
+		logger.info("Graph weights loading time {}", stopwatch);
 		return db;
 	}
 

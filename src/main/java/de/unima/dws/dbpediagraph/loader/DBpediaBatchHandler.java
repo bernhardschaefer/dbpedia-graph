@@ -7,12 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Stopwatch;
 import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.graph.UriTransformer;
-import de.unima.dws.dbpediagraph.util.Counter;
 
 /**
  * Full blueprints compatible batch handler for creating a graph from RDF files. Uses {@link BatchGraph} and the
@@ -31,7 +31,7 @@ public class DBpediaBatchHandler extends RDFHandlerVerbose {
 	private final Graph bgraph;
 
 	/** Start logging time once the object has been created */
-	private long tickNano = System.nanoTime();
+	private final Stopwatch tickTime = Stopwatch.createStarted();
 
 	/** the triple filter that decides if a triple is valid */
 	private final Predicate<Triple> tripleFilter;
@@ -100,9 +100,9 @@ public class DBpediaBatchHandler extends RDFHandlerVerbose {
 		// logging metrics
 		long totalTriples = validTriples + invalidTriples;
 		if (totalTriples % TICK_SIZE == 0) {
-			logger.info(String.format("triples: %,d (valid: %,d, invalid: %,d)  @ ~%.2f sec/%,d triples.",
-					totalTriples, validTriples, invalidTriples, Counter.elapsedSecs(tickNano), TICK_SIZE));
-			tickNano = System.nanoTime();
+			logger.info(String.format("triples: %,d (valid: %,d, invalid: %,d) @ %s / %,d triples.", totalTriples,
+					validTriples, invalidTriples, tickTime, TICK_SIZE));
+			tickTime.reset().start();
 		}
 
 	}

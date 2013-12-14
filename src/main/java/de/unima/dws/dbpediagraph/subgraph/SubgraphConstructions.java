@@ -5,10 +5,10 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
 import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.graph.*;
-import de.unima.dws.dbpediagraph.util.Counter;
 
 /**
  * Noninstantiable utility class for static methods helping in {@link SubgraphConstruction}.
@@ -62,13 +62,13 @@ final class SubgraphConstructions {
 
 	}
 
-	public static void logSubgraphConstructionStats(Logger logger, Class<?> clazz, Graph subgraph, long startTimeNano,
+	public static void logSubgraphConstructionStats(Logger logger, Class<?> clazz, Graph subgraph, Stopwatch stopwatch,
 			long traversedNodes, int maxDistance) {
 		// tradeoff between better performance of curly brackets notation
 		// vs. more convenient comma-separated traversed nodes
 		logger.info(String
-				.format("%s Stats: time [sec]: %.2f, subgraph vertices: %d, subgraph edges: %d, traversed nodes: %,d, max distance: %d",
-						clazz.getSimpleName(), Counter.elapsedSecs(startTimeNano), Graphs.verticesCount(subgraph),
+				.format("%s Stats: time: %s, subgraph vertices: %d, subgraph edges: %d, traversed nodes: %,d, max distance: %d",
+						clazz.getSimpleName(), stopwatch, Graphs.verticesCount(subgraph),
 						Graphs.edgesCount(subgraph), traversedNodes, maxDistance));
 	}
 

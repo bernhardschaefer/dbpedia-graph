@@ -26,6 +26,7 @@ public class PredObjOccsCounter {
 	}
 
 	public static void countAndPersistDBpediaGraphOccs() {
+		logger.info("STARTING with counting and persisting DBpedia graph URI occurrences.");
 		Graph graph = GraphFactory.getDBpediaGraph();
 		PersistentMap<String, Integer> db = OccurrenceCounts.newPersistentWeightsMap();
 

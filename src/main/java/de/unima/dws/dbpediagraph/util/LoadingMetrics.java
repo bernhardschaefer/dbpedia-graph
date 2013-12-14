@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
+
 /**
  * Helper class to record graph loading metrics.
  * 
@@ -14,20 +16,14 @@ import org.slf4j.LoggerFactory;
 public class LoadingMetrics {
 	private static final Logger logger = LoggerFactory.getLogger(LoadingMetrics.class);
 
-	private long startTime;
-
-	/**
-	 * Stores the time of when the last {@link #add(int, int)} has been called.
-	 */
-	private long lastAddTime;
-
 	private final String metricName;
 
 	private int validTriples;
 	private int invalidTriples;
 	private int totalTriples;
 
-	private long timeDelta;
+	private final Stopwatch totalTime = Stopwatch.createStarted();
+	private final Stopwatch tickTime = Stopwatch.createStarted();
 
 	/**
 	 * Generate a new loading statistic and start the timer.
@@ -37,7 +33,7 @@ public class LoadingMetrics {
 	 */
 	public LoadingMetrics(String name) {
 		this.metricName = name;
-		start();
+		logger.info("START parsing " + metricName);
 	}
 
 	/**
@@ -49,12 +45,9 @@ public class LoadingMetrics {
 		long tickTotalTriples = tickValidTriples + tickInvalidTriples;
 		this.totalTriples += tickTotalTriples;
 
-		long addTime = System.currentTimeMillis();
-		long tickTimeDelta = addTime - lastAddTime;
-		lastAddTime = addTime;
-
-		logger.info(String.format("triples: %,d (valid: %,d, invalid: %,d)  @ ~%.2f sec/%,d triples.", totalTriples,
-				tickValidTriples, tickInvalidTriples, tickTimeDelta / 1000.0, tickTotalTriples));
+		logger.info(String.format("triples: %,d (valid: %,d, invalid: %,d) @ %s / %,d triples.", totalTriples,
+				tickValidTriples, tickInvalidTriples, tickTime, tickTotalTriples));
+		tickTime.reset().start();
 	}
 
 	/**
@@ -67,8 +60,7 @@ public class LoadingMetrics {
 
 		this.totalTriples = validTriples + invalidTriples;
 
-		this.timeDelta = System.currentTimeMillis() - startTime;
-
+		totalTime.stop();
 		logger.info(toString());
 	}
 
@@ -87,21 +79,12 @@ public class LoadingMetrics {
 	}
 
 	/**
-	 * Start the timer.
-	 */
-	private void start() {
-		startTime = System.currentTimeMillis();
-		lastAddTime = startTime;
-		logger.info("START parsing " + metricName);
-	}
-
-	/**
 	 * Returns a string with all metrics that can e.g. be used for logging.
 	 */
 	@Override
 	public String toString() {
-		return String.format("DONE with %s. Overall time ~%.2f sec. %,d total triples (%,d valid, %,d invalid).%n",
-				metricName, timeDelta / 1000.0, totalTriples, validTriples, invalidTriples);
+		return String.format("DONE with %s. Overall time %s / %,d total triples (%,d valid, %,d invalid).%n",
+				metricName, totalTime, totalTriples, validTriples, invalidTriples);
 	}
 
 }

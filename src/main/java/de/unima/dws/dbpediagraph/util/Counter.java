@@ -3,6 +3,8 @@ package de.unima.dws.dbpediagraph.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
+
 /**
  * Single item counter that performs logging.
  * 
@@ -15,8 +17,9 @@ public class Counter {
 	private final long tickRate;
 	private final String name;
 
-	private final long startTime = System.nanoTime();
-	private long lastTickTime = startTime;
+	private final Stopwatch totalTime = Stopwatch.createStarted();
+	private final Stopwatch tickTime = Stopwatch.createStarted();
+
 	private int count = 0;
 
 	/**
@@ -32,11 +35,8 @@ public class Counter {
 
 	public void inc() {
 		if ((++count % tickRate) == 0) {
-			long now = System.nanoTime();
-			long tickTimeDelta = now - lastTickTime;
-			lastTickTime = now;
-			logger.info(String
-					.format("%s: %,d @ ~%.2f sec/%,d items.", name, count, nanoToSec(tickTimeDelta), tickRate));
+			logger.info(String.format("%s: %,d @ %s / %,d items.", name, count, tickTime, tickRate));
+			tickTime.reset().start();
 		}
 	}
 
@@ -45,23 +45,7 @@ public class Counter {
 	}
 
 	public void finish() {
-		logger.info(String.format("DONE with %s (%,d items @ ~%.2f sec.) %n", name, count, elapsedSecs(startTime)));
-	}
-
-	/**
-	 * Calculates the elapsed seconds from a given nano start time.
-	 * 
-	 * @param nanoStartTime
-	 *            the start time as nanos
-	 */
-	public static double elapsedSecs(long nanoStartTime) {
-		long now = System.nanoTime();
-		long timeDelta = now - nanoStartTime;
-		return nanoToSec(timeDelta);
-	}
-
-	public static double nanoToSec(long nanos) {
-		return nanos / 1_000_000_000.0;
+		logger.info(String.format("DONE with %s (%,d items @ %s) %n", name, count, totalTime));
 	}
 
 }
