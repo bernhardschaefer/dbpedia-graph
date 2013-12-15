@@ -48,6 +48,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 
 	@Override
 	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, int k) {
+		logger.info("Using disambiguator {}", this);
 		VertexScorer<Vertex, Double> vertexScorer = getVertexScorer(subgraph);
 
 		Map<T, List<SurfaceFormSenseScore<T, U>>> senseScores = new HashMap<>();

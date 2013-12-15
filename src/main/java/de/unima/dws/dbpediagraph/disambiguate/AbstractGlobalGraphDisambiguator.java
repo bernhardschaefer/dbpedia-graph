@@ -3,6 +3,9 @@ package de.unima.dws.dbpediagraph.disambiguate;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.tinkerpop.blueprints.Graph;
@@ -22,10 +25,13 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeights;
  */
 public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense> implements
 		GlobalGraphDisambiguator<T, U> {
+	private static final Logger logger = LoggerFactory.getLogger(AbstractGlobalGraphDisambiguator.class);
+
 	protected final SubgraphConstructionSettings subgraphConstructionSettings;
 	protected final EdgeWeights edgeWeights;
 
-	public AbstractGlobalGraphDisambiguator(SubgraphConstructionSettings subgraphConstructionSettings, EdgeWeights edgeWeights) {
+	public AbstractGlobalGraphDisambiguator(SubgraphConstructionSettings subgraphConstructionSettings,
+			EdgeWeights edgeWeights) {
 		this.subgraphConstructionSettings = subgraphConstructionSettings;
 		this.edgeWeights = edgeWeights;
 	}
@@ -40,6 +46,7 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 	public List<SurfaceFormSenseScore<T, U>> disambiguate(final Map<T, List<U>> surfaceFormsSenses, Graph subgraph) {
 		// TODO check optaplanner:
 		// http://docs.jboss.org/drools/release/latest/optaplanner-docs/html_single/index.html#optimizationAlgorithms
+		logger.info("Using disambiguator {}", this);
 
 		final Set<Vertex> allSensesVertices = Sets.newHashSet(Iterables.concat(ModelToVertex
 				.verticesFromSurfaceFormSenses(subgraph, surfaceFormsSenses)));
@@ -82,8 +89,8 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 	@Override
 	public double globalConnectivityMeasure(Map<T, U> surfaceFormSenseAssigments, Graph subgraph,
 			Set<Vertex> sensesVertices) {
-		Collection<Vertex> assignments = ModelToVertex.verticesFromSenses(subgraph,
-				surfaceFormSenseAssigments.values());
+		Collection<Vertex> assignments = ModelToVertex
+				.verticesFromSenses(subgraph, surfaceFormSenseAssigments.values());
 		return globalConnectivityMeasure(assignments, subgraph, sensesVertices);
 	}
 
