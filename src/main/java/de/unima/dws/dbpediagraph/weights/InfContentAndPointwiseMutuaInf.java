@@ -7,6 +7,7 @@ import com.tinkerpop.blueprints.Edge;
 
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.graph.Graphs;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory.EdgeWeightsType;
 
 public class InfContentAndPointwiseMutuaInf extends AbstractEdgeWeightOccsCountAdapter {
 
@@ -22,4 +23,8 @@ public class InfContentAndPointwiseMutuaInf extends AbstractEdgeWeightOccsCountA
 		return Math.log(p(pred + obj) / (p(pred) * p(obj)));
 	}
 
+	@Override
+	public EdgeWeightsType type() {
+		return EdgeWeightsType.IC_PMI;
+	}
 }

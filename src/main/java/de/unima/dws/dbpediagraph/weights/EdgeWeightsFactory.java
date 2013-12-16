@@ -14,6 +14,8 @@ import org.apache.commons.configuration.Configuration;
  */
 public final class EdgeWeightsFactory {
 
+	private static EdgeWeights cachedDBpediaEdgeWeights;
+
 	/**
 	 * Inner class for lazy-loading DBpedia edge weights so that other edge weights could be used in future.
 	 */
@@ -48,17 +50,32 @@ public final class EdgeWeightsFactory {
 		throw new IllegalArgumentException("The specified edge weights type is not valid: " + edgeWeightsType);
 	}
 
+	/**
+	 * Retrieve the {@link EdgeWeights} implementation that is specified in the provided {@link Configuration}. See
+	 * {@link #dbpediaFromEdgeWeightsType(EdgeWeightsType)} for further details.
+	 */
 	public static EdgeWeights dbpediaFromConfig(Configuration config) {
 		EdgeWeightsType edgeWeightsType = EdgeWeightsType.fromConfig(config);
 		return dbpediaFromEdgeWeightsType(edgeWeightsType);
 	}
 
+	/**
+	 * Retrieve the {@link EdgeWeights} implementation that matches the provided {@link EdgeWeightsType}. Internally,
+	 * this class caches the {@link EdgeWeights} implementation, so multiple requests for the same edge weights type
+	 * won't result in loading the edge weights implementation multiple times.
+	 */
 	public static EdgeWeights dbpediaFromEdgeWeightsType(EdgeWeightsType edgeWeightsType) {
-		// prevent loading of DBpedia edge weights when DUMMY is requested
-		if (checkNotNull(edgeWeightsType) == EdgeWeightsType.DUMMY)
-			return DummyEdgeWeights.INSTANCE;
-		else
-			return DBpediaEdgeWeights.DBPEDIA_EDGE_WEIGHTS.get(edgeWeightsType);
+		checkNotNull(edgeWeightsType);
+		if (cachedDBpediaEdgeWeights == null || cachedDBpediaEdgeWeights.type() != edgeWeightsType) {
+			// either there is no cached edge weights or the requested is different from the cached edgeWeightsType
+
+			// prevent loading of DBpedia edge weights when DUMMY is requested
+			if (edgeWeightsType == EdgeWeightsType.DUMMY)
+				cachedDBpediaEdgeWeights = DummyEdgeWeights.INSTANCE;
+			else
+				cachedDBpediaEdgeWeights = DBpediaEdgeWeights.DBPEDIA_EDGE_WEIGHTS.get(edgeWeightsType);
+		}
+		return cachedDBpediaEdgeWeights;
 	}
 
 	/**
