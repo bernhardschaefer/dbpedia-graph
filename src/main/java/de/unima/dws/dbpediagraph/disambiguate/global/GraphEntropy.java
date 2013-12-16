@@ -4,10 +4,10 @@ import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.disambiguate.AbstractGlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.GlobalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
-import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 /**
@@ -19,8 +19,8 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 public class GraphEntropy<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
 		implements GlobalGraphDisambiguator<T, U> {
 
-	public GraphEntropy(SubgraphConstructionSettings settings, EdgeWeights edgeWeights) {
-		super(settings, edgeWeights);
+	public GraphEntropy(GraphType graphType, EdgeWeights edgeWeights) {
+		super(graphType, edgeWeights);
 	}
 
 	@Override

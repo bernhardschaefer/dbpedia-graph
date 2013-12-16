@@ -11,9 +11,11 @@ import com.google.common.collect.Sets;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
+import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.search.*;
-import de.unima.dws.dbpediagraph.subgraph.*;
+import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionFactory;
+import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 /**
@@ -27,12 +29,15 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 		GlobalGraphDisambiguator<T, U> {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractGlobalGraphDisambiguator.class);
 
-	protected final SubgraphConstructionSettings subgraphConstructionSettings;
-	protected final EdgeWeights edgeWeights;
+	private final SubgraphConstructionSettings assignmentGraphConstrSettings;
 
-	public AbstractGlobalGraphDisambiguator(SubgraphConstructionSettings subgraphConstructionSettings,
-			EdgeWeights edgeWeights) {
-		this.subgraphConstructionSettings = subgraphConstructionSettings;
+	protected final EdgeWeights edgeWeights;
+	protected GraphType graphType;
+
+	public AbstractGlobalGraphDisambiguator(GraphType graphType, EdgeWeights edgeWeights) {
+		this.assignmentGraphConstrSettings = new SubgraphConstructionSettings.Builder().graphType(graphType)
+				.maxDistance(Integer.MAX_VALUE).persistSubgraph(false).build();
+		this.graphType = graphType;
 		this.edgeWeights = edgeWeights;
 	}
 
@@ -76,9 +81,8 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 
 	@Override
 	public double globalConnectivityMeasure(Collection<Vertex> assigments, Graph subgraph, Set<Vertex> sensesVertices) {
-		SubgraphConstruction sensegraphConstruction = SubgraphConstructionFactory.newSubgraphConstruction(subgraph,
-				subgraphConstructionSettings);
-		Graph sensegraph = sensegraphConstruction.createSubSubgraph(assigments, sensesVertices);
+		Graph sensegraph = SubgraphConstructionFactory.newSubgraphConstruction(subgraph, assignmentGraphConstrSettings)
+				.createSubSubgraph(assigments, sensesVertices);
 		double score = globalConnectivityMeasure(sensegraph);
 		sensegraph.shutdown();
 		return score;

@@ -1,5 +1,7 @@
 package de.unima.dws.dbpediagraph.graph;
 
+import org.apache.commons.configuration.Configuration;
+
 import com.tinkerpop.blueprints.Direction;
 
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstruction;
@@ -30,5 +32,18 @@ public enum GraphType {
 	 * @return the direction corresponding to this graph type.
 	 */
 	public abstract Direction getTraversalDirection();
+
+	private static final String CONFIG_GRAPH_TYPE = "de.unima.dws.dbpediagraph.graph.graphType";
+
+	/**
+	 * Retrieves a {@link GraphType} instance from the configuration object. In case there is no such mapping in the
+	 * configuration, it returns null.
+	 */
+	public static GraphType fromConfig(Configuration config) {
+		String graphTypeString = config.getString(CONFIG_GRAPH_TYPE);
+		if (graphTypeString == null)
+			return null;
+		return GraphType.valueOf(graphTypeString);
+	}
 
 }

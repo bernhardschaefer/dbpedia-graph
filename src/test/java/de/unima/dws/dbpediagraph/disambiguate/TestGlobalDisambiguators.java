@@ -9,8 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.unima.dws.dbpediagraph.disambiguate.global.*;
-import de.unima.dws.dbpediagraph.graph.SubgraphTester;
-import de.unima.dws.dbpediagraph.graph.TestSet;
+import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 import de.unima.dws.dbpediagraph.weights.DummyEdgeWeights;
@@ -32,11 +31,12 @@ public class TestGlobalDisambiguators {
 		SubgraphConstructionSettings settings = SubgraphTester.getNavigliSettings();
 		subgraphTesterNavigli = SubgraphTester.newNavigliTester(settings);
 		EdgeWeights graphWeights = DummyEdgeWeights.INSTANCE;
+		GraphType graphType = settings.graphType;
 
 		List<GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators = new ArrayList<>();
-		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(settings, graphWeights));
-		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(settings, graphWeights));
-		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(settings, graphWeights));
+		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
+		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
+		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
 
 		disambiguatorResults = new HashMap<>();
 		for (GlobalGraphDisambiguator<DefaultSurfaceForm, DefaultSense> disambiguator : disambiguators) {

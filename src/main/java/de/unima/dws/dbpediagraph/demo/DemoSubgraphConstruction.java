@@ -53,9 +53,9 @@ public class DemoSubgraphConstruction {
 		disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
 
 		// global
-		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(SETTINGS, EDGE_WEIGHTS));
-		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(SETTINGS, EDGE_WEIGHTS));
-		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(SETTINGS, EDGE_WEIGHTS));
+		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
 	}
 
 	private static final Dimension SCREEN_DIMENSION;
@@ -90,7 +90,7 @@ public class DemoSubgraphConstruction {
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		String sensesFileName = "/demo/dylan-sentence";
-//		String sensesFileName = "/demo/napoleon-sentence-test";
+		// String sensesFileName = "/demo/napoleon-sentence-test";
 		// String sensesFileName = "/dbpedia-default-sentence-test";
 		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
 				sensesFileName, DemoSubgraphConstruction.class, GraphConfig.DBPEDIA_RESOURCE_PREFIX);

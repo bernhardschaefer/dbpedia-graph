@@ -15,7 +15,6 @@ public final class SubgraphConstructionSettings {
 	// keys in configuration file
 	private static final String CONFIG_BASE = "de.unima.dws.dbpediagraph.subgraph.";
 	private static final String CONFIG_MAX_DISTANCE = CONFIG_BASE + "maxDistance";
-	private static final String CONFIG_GRAPH_TYPE = CONFIG_BASE + "graphType";
 	private static final String CONFIG_EXPLORATION_THRESHOLD = CONFIG_BASE + "explorationThreshold";
 	private static final String CONFIG_PERSIST_SUBGRAPH = CONFIG_BASE + "persistSubgraph";
 	private static final String CONFIG_PERSIST_SUBGRAPH_DIRECTORY = CONFIG_BASE + "persistSubgraphDirectory";
@@ -60,9 +59,8 @@ public final class SubgraphConstructionSettings {
 		if (maxDistance != null)
 			builder.maxDistance(maxDistance);
 
-		String graphTypeString = config.getString(CONFIG_GRAPH_TYPE);
-		if (graphTypeString != null) {
-			GraphType graphType = GraphType.valueOf(graphTypeString);
+		GraphType graphType = GraphType.fromConfig(config);
+		if (graphType != null) {
 			builder.graphType(graphType);
 		}
 

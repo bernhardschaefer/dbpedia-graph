@@ -8,10 +8,10 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.disambiguate.AbstractGlobalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.GlobalGraphDisambiguator;
+import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
-import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraDistance;
 import edu.uci.ics.jung.algorithms.shortestpath.Distance;
@@ -25,8 +25,8 @@ import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 public class Compactness<T extends SurfaceForm, U extends Sense> extends AbstractGlobalGraphDisambiguator<T, U>
 		implements GlobalGraphDisambiguator<T, U> {
 
-	public Compactness(SubgraphConstructionSettings settings, EdgeWeights graphWeights) {
-		super(settings, graphWeights);
+	public Compactness(GraphType graphType, EdgeWeights graphWeights) {
+		super(graphType, graphWeights);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class Compactness<T extends SurfaceForm, U extends Sense> extends Abstrac
 		if (Graphs.hasNoEdges(sensegraph))
 			return 0; // if there are no paths between sense vertices in the graph, there is no compactness
 
-		GraphJung<Graph> graphJung = Graphs.asGraphJung(subgraphConstructionSettings.graphType, sensegraph);
+		GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, sensegraph);
 		// Distance<Vertex> distances = new UnweightedShortestPath<>(graphJung);
 		Distance<Vertex> distances = new DijkstraDistance<>(graphJung, edgeWeights);
 
