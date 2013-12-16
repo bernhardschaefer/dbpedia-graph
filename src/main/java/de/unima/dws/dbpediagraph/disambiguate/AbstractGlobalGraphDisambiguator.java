@@ -100,7 +100,7 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName();
+		return getClass().getSimpleName() + "[ graphType: " + graphType + " ]";
 	}
 
 }
