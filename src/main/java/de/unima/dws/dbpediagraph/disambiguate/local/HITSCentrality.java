@@ -27,14 +27,15 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 	private final double alpha;
 	private final int iterations;
 
-	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights, double alpha, int iterations) {
-		super(graphType, graphWeights);
+	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights, boolean usePriorFallback, double alpha,
+			int iterations) {
+		super(graphType, graphWeights, usePriorFallback);
 		this.alpha = alpha;
 		this.iterations = iterations;
 	}
 
-	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights) {
-		this(graphType, graphWeights, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
+	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights, Boolean usePriorFallback) {
+		this(graphType, graphWeights, usePriorFallback, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
 	}
 
 	class HITSVertexScorer implements VertexScorer<Vertex, Double> {
@@ -60,6 +61,12 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 			double authority = Graphs.vertexHasNoNeighbours(v) ? 0 : scores.authority;
 			return authority;
 		}
+
+		@Override
+		public String toString() {
+			return new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")
+					.append(iterations).append(")").toString();
+		}
 	}
 
 	@Override
@@ -67,9 +74,4 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 		return new HITSVertexScorer(subgraph);
 	}
 
-	@Override
-	public String toString() {
-		return new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")
-				.append(iterations).append(")").toString();
-	}
 }

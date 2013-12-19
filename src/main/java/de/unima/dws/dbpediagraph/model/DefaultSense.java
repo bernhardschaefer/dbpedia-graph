@@ -11,14 +11,25 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DefaultSense implements Sense {
 	private final String fullUri;
+	private final Double prior;
+
+	public DefaultSense(String fullUri, Double prior) {
+		this.fullUri = checkNotNull(fullUri, "Full uri cannot be null");
+		this.prior = prior;
+	}
 
 	public DefaultSense(String fullUri) {
-		this.fullUri = checkNotNull(fullUri, "Full uri cannot be null");
+		this(fullUri, null);
 	}
 
 	@Override
 	public String fullUri() {
 		return fullUri;
+	}
+
+	@Override
+	public Double prior() {
+		return prior;
 	}
 
 	@Override
@@ -40,7 +51,7 @@ public class DefaultSense implements Sense {
 
 	@Override
 	public String toString() {
-		return fullUri();
+		return fullUri + " (prior: " + prior + " )";
 	}
 
 }

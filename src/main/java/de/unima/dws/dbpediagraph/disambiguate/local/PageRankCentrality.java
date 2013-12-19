@@ -25,14 +25,15 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 	private final double alpha;
 	private final int iterations;
 
-	public PageRankCentrality(GraphType graphType, EdgeWeights graphWeights, double alpha, int iterations) {
-		super(graphType, graphWeights);
+	public PageRankCentrality(GraphType graphType, EdgeWeights graphWeights, boolean usePriorFallback, double alpha,
+			int iterations) {
+		super(graphType, graphWeights, usePriorFallback);
 		this.alpha = alpha;
 		this.iterations = iterations;
 	}
 
-	public PageRankCentrality(GraphType graphType, EdgeWeights graphWeights) {
-		this(graphType, graphWeights, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
+	public PageRankCentrality(GraphType graphType, EdgeWeights graphWeights, Boolean usePriorFallback) {
+		this(graphType, graphWeights, usePriorFallback, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
 	}
 
 	private double calculateScoreSum(PageRank<Vertex, Edge> pageRank, Graph subgraph) {

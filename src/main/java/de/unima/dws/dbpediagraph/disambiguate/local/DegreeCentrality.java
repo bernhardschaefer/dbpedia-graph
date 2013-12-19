@@ -19,8 +19,8 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
 		implements LocalGraphDisambiguator<T, U> {
 
-	public DegreeCentrality(GraphType graphType, EdgeWeights graphWeights) {
-		super(graphType, graphWeights);
+	public DegreeCentrality(GraphType graphType, EdgeWeights graphWeights, Boolean usePriorFallback) {
+		super(graphType, graphWeights, usePriorFallback);
 	}
 
 	class DegreeVertexScorer implements VertexScorer<Vertex, Double> {

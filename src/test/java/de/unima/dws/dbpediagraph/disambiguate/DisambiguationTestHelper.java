@@ -36,10 +36,10 @@ public class DisambiguationTestHelper {
 
 		for (SurfaceFormSenseScore<T, U> surfaceFormSenseScore : actualAllScoresResults) {
 			double expected = expectedDisambiguationResults.getRawResults()
-					.get(surfaceFormSenseScore.sense().fullUri()).get(localDisambiguator.getClass());
-			logger.info("uri: {} actual weight: {} expected weight: {}", surfaceFormSenseScore.sense().fullUri(),
-					surfaceFormSenseScore.score(), expected);
-			assertEquals(expected, surfaceFormSenseScore.score(), ALLOWED_SCORE_DEVIATION);
+					.get(surfaceFormSenseScore.getSense().fullUri()).get(localDisambiguator.getClass());
+			logger.info("uri: {} actual weight: {} expected weight: {}", surfaceFormSenseScore.getSense().fullUri(),
+					surfaceFormSenseScore.getScore(), expected);
+			assertEquals(expected, surfaceFormSenseScore.getScore(), ALLOWED_SCORE_DEVIATION);
 		}
 	}
 
@@ -49,7 +49,8 @@ public class DisambiguationTestHelper {
 
 		for (Entry<String, Map<Class<?>, Double>> measureEntry : expectedDisambiguationData.getRawResults().entrySet()) {
 			Collection<String> senseAssignments = DisambiguationTestHelper.split(measureEntry.getKey());
-			Collection<Vertex> assignmentVertices = Graphs.verticesByFullUris(subgraphData.getSubgraph(), senseAssignments);
+			Collection<Vertex> assignmentVertices = Graphs.verticesByFullUris(subgraphData.getSubgraph(),
+					senseAssignments);
 
 			// create sense graph based on the sense assignments
 			double actualScore = disambiguator.globalConnectivityMeasure(assignmentVertices,
@@ -86,7 +87,7 @@ public class DisambiguationTestHelper {
 			// equals surface form sense score is not applicable since there can be multiple assignments with max score
 			assertEquals(String.format("Disambiguator: %s, Expected Assignment: %s, Actual Assignment: %s",
 					disambiguatorClass.getSimpleName(), expectedAssignment, actualAssignment), expectedAssignment
-					.get(i).score(), actualAssignment.get(i).score(), 0.01);
+					.get(i).getScore(), actualAssignment.get(i).getScore(), 0.01);
 	}
 
 	public static List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> getHighestGlobalScoreResult(
@@ -94,7 +95,7 @@ public class DisambiguationTestHelper {
 		List<SurfaceFormSenseScore<DefaultSurfaceForm, DefaultSense>> highest = null;
 		for (Entry<String, Map<Class<?>, Double>> entry : allExpected.getRawResults().entrySet()) {
 			double expected = entry.getValue().get(disambiguatorClass);
-			if (highest == null || expected >= highest.get(0).score()) {
+			if (highest == null || expected >= highest.get(0).getScore()) {
 				highest = transform(entry.getKey(), expected);
 			}
 		}

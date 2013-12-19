@@ -13,4 +13,9 @@ public interface Sense {
 	 * @return the unshortened URI
 	 */
 	public String fullUri();
+
+	/**
+	 * Prior probability of a sense.
+	 */
+	public Double prior();
 }
