@@ -1,7 +1,6 @@
 package de.unima.dws.dbpediagraph.disambiguate;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,33 +59,28 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 				double score = (v == null) ? -1 : vertexScorer.getVertexScore(v);
 				sfss.add(new SurfaceFormSenseScore<T, U>(surfaceForm, sense, score));
 			}
+			if (usePriorFallback
+					&& Collections.max(sfss, SurfaceFormSenseScore.ASCENDING_SCORE_COMPARATOR).getScore() == 0.0)
+				assignPriors(surfaceForm, sfss);
 
+			// take best k
 			Collections.sort(sfss, SurfaceFormSenseScore.DESCENDING_SCORE_COMPARATOR);
 			int toIndex = k > sfss.size() ? sfss.size() : k;
 			senseScores.put(surfaceForm, sfss.subList(0, toIndex));
 		}
 
-		if (usePriorFallback)
-			handleSingletons(senseScores);
-
 		return senseScores;
 	}
 
-	private void handleSingletons(Map<T, List<SurfaceFormSenseScore<T, U>>> senseScores) {
-		logger.info("Using prior fallback for all candidate singletons.");
-		for (Entry<T, List<SurfaceFormSenseScore<T, U>>> entry : senseScores.entrySet()) {
-			T sf = entry.getKey();
-			List<SurfaceFormSenseScore<T, U>> sfss = entry.getValue();
-			if (Collections.max(sfss, SurfaceFormSenseScore.ASCENDING_SCORE_COMPARATOR).getScore() == 0) {
-				logger.info("Surface form {} has only candidate singletons {}.", sf, sfss);
-				// set priors as scores
-				for (SurfaceFormSenseScore<?, ?> surfaceFormSenseScore : sfss) {
-					Double prior = surfaceFormSenseScore.getSense().prior();
-					if (prior != null)
-						surfaceFormSenseScore.setScore(prior);
-				}
-				Collections.sort(sfss, SurfaceFormSenseScore.DESCENDING_SCORE_COMPARATOR);
-			}
+	/**
+	 * Set priors as scores if available for all surface form sense scores
+	 */
+	private void assignPriors(T surfaceForm, List<SurfaceFormSenseScore<T, U>> sfss) {
+		logger.info("Surface form {} has only candidate singletons {}. Using priors.", surfaceForm, sfss);
+		for (SurfaceFormSenseScore<?, ?> surfaceFormSenseScore : sfss) {
+			Double prior = surfaceFormSenseScore.getSense().prior();
+			if (prior != null)
+				surfaceFormSenseScore.setScore(prior);
 		}
 	}
 
