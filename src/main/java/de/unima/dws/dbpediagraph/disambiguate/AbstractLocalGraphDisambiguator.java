@@ -85,6 +85,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 					if (prior != null)
 						surfaceFormSenseScore.setScore(prior);
 				}
+				Collections.sort(sfss, SurfaceFormSenseScore.DESCENDING_SCORE_COMPARATOR);
 			}
 		}
 	}
