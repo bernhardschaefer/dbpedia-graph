@@ -59,7 +59,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 				double score = (v == null) ? -1 : vertexScorer.getVertexScore(v);
 				sfss.add(new SurfaceFormSenseScore<T, U>(surfaceForm, sense, score));
 			}
-			if (usePriorFallback
+			if (usePriorFallback && !sfss.isEmpty()
 					&& Collections.max(sfss, SurfaceFormSenseScore.ASCENDING_SCORE_COMPARATOR).getScore() == 0.0)
 				assignPriors(surfaceForm, sfss);
 
