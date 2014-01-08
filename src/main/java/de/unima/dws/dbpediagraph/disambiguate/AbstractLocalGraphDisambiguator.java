@@ -59,9 +59,15 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 				double score = (v == null) ? -1 : vertexScorer.getVertexScore(v);
 				sfss.add(new SurfaceFormSenseScore<T, U>(surfaceForm, sense, score));
 			}
-			if (usePriorFallback && !sfss.isEmpty()
-					&& Collections.max(sfss, SurfaceFormSenseScore.ASCENDING_SCORE_COMPARATOR).getScore() == 0.0)
-				assignPriors(surfaceForm, sfss);
+
+			// check if there are only singletons
+			if (!sfss.isEmpty() // Prevent NoSuchElementException from Collections.max() if there are no candidates
+					&& Collections.max(sfss, SurfaceFormSenseScore.ASCENDING_SCORE_COMPARATOR).getScore() <= 0.0) {
+				if (usePriorFallback)
+					assignPriors(surfaceForm, sfss);
+				else
+					sfss.clear(); // delete singleton candidates to prevent random selection of a singleton
+			}
 
 			// take best k
 			Collections.sort(sfss, SurfaceFormSenseScore.DESCENDING_SCORE_COMPARATOR);
