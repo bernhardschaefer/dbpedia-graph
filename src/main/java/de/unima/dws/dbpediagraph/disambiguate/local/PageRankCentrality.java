@@ -19,7 +19,8 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
 		implements LocalGraphDisambiguator<T, U> {
 
-	private static final int DEFAULT_ITERATIONS = 10;
+	/** Default Iterations value from "The PageRank Citation Ranking: Bringing Order to the Web" */
+	private static final int DEFAULT_ITERATIONS = 52;
 	private static final double DEFAULT_ALPHA = 0;
 
 	private final double alpha;
