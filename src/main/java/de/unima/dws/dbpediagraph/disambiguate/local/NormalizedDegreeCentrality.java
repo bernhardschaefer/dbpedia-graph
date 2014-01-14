@@ -20,8 +20,8 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 public class NormalizedDegreeCentrality<T extends SurfaceForm, U extends Sense> extends
 		AbstractLocalGraphDisambiguator<T, U> implements LocalGraphDisambiguator<T, U> {
 
-	public NormalizedDegreeCentrality(GraphType graphType, EdgeWeights graphWeights, Boolean usePriorFallback) {
-		super(graphType, graphWeights, usePriorFallback);
+	public NormalizedDegreeCentrality(GraphType graphType, EdgeWeights graphWeights) {
+		super(graphType, graphWeights);
 	}
 
 	class DegreeVertexScorer implements VertexScorer<Vertex, Double> {

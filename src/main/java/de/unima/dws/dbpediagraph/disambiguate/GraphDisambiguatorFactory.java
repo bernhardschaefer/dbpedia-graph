@@ -11,7 +11,7 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory;
 
 /**
- * Factory for retrieving {@link GraphDisambiguatorFactory} implementations from {@link Configuration}.
+ * Factory for retrieving {@link GraphDisambiguator} implementations from {@link Configuration}.
  * 
  * @author Bernhard Schäfer
  * 
@@ -20,22 +20,19 @@ public final class GraphDisambiguatorFactory {
 
 	private static final String CONFIG_DISAMBIGUATOR = "de.unima.dws.dbpediagraph.graph.disambiguator";
 
-	/** use prior probability of entities if all candidates are unconnected singletons */
-	private static final String CONFIG_PRIOR_FALLBACK = "de.unima.dws.dbpediagraph.graph.disambiguator.singletonprior";
-
 	@SuppressWarnings("unchecked")
 	public static <T extends SurfaceForm, U extends Sense> GraphDisambiguator<T, U> newFromConfig(Configuration config) {
 		EdgeWeights edgeWeights = EdgeWeightsFactory.dbpediaFromConfig(config);
 		GraphType graphType = GraphType.fromConfig(config);
-		boolean usePriorFallback = config.getBoolean(CONFIG_PRIOR_FALLBACK);
 
+		GraphDisambiguator<T, U> disambiguator;
 		String disambiguatorClassName = config.getString(CONFIG_DISAMBIGUATOR);
 		try {
 			@SuppressWarnings("rawtypes")
 			Class<? extends GraphDisambiguator> disambiguatorClass = Class.forName(disambiguatorClassName).asSubclass(
 					GraphDisambiguator.class);
-			return disambiguatorClass.getConstructor(GraphType.class, EdgeWeights.class, Boolean.class).newInstance(
-					graphType, edgeWeights, usePriorFallback);
+			disambiguator = disambiguatorClass.getConstructor(GraphType.class, EdgeWeights.class).newInstance(
+					graphType, edgeWeights);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException(
@@ -43,6 +40,9 @@ public final class GraphDisambiguatorFactory {
 							"Error while trying to create disambiguator instance. Check if provided disambiguator class %s is valid.",
 							disambiguatorClassName), e);
 		}
+
+		PriorStrategy priorStrategy = PriorStrategyFactory.fromConfig(config);
+		return new PriorStrategyDisambiguatorDecorator<>(disambiguator, priorStrategy);
 	}
 
 	// Suppress default constructor for non-instantiability

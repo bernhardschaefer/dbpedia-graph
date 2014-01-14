@@ -42,8 +42,8 @@ public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> exten
 
 	}
 
-	public BetweennessCentrality(GraphType graphType, EdgeWeights graphWeights, Boolean usePriorFallback) {
-		super(graphType, graphWeights, usePriorFallback);
+	public BetweennessCentrality(GraphType graphType, EdgeWeights graphWeights) {
+		super(graphType, graphWeights);
 	}
 
 	@Override

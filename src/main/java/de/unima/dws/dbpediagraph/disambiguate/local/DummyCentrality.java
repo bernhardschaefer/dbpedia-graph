@@ -18,8 +18,8 @@ import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 public class DummyCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
 		implements LocalGraphDisambiguator<T, U> {
 
-	public DummyCentrality(GraphType graphType, EdgeWeights graphWeights, Boolean usePriorFallback) {
-		super(graphType, graphWeights, usePriorFallback);
+	public DummyCentrality(GraphType graphType, EdgeWeights graphWeights) {
+		super(graphType, graphWeights);
 	}
 
 	private static final VertexScorer<Vertex, Double> DUMMY_SCORER = new VertexScorer<Vertex, Double>() {

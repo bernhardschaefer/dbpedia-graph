@@ -22,8 +22,8 @@ public class GlobalDegreeCentrality<T extends SurfaceForm, U extends Sense> exte
 
 	private static final double globalVerticesCount = Graphs.verticesCount(GraphFactory.getDBpediaGraph());
 	
-	public GlobalDegreeCentrality(GraphType graphType, EdgeWeights graphWeights, Boolean usePriorFallback) {
-		super(graphType, graphWeights, usePriorFallback);
+	public GlobalDegreeCentrality(GraphType graphType, EdgeWeights graphWeights) {
+		super(graphType, graphWeights);
 	}
 
 	class DegreeVertexScorer implements VertexScorer<Vertex, Double> {

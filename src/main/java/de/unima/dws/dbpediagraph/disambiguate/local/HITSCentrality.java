@@ -27,15 +27,14 @@ public class HITSCentrality<T extends SurfaceForm, U extends Sense> extends Abst
 	private final double alpha;
 	private final int iterations;
 
-	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights, boolean usePriorFallback, double alpha,
-			int iterations) {
-		super(graphType, graphWeights, usePriorFallback);
+	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights, double alpha, int iterations) {
+		super(graphType, graphWeights);
 		this.alpha = alpha;
 		this.iterations = iterations;
 	}
 
-	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights, Boolean usePriorFallback) {
-		this(graphType, graphWeights, usePriorFallback, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
+	public HITSCentrality(GraphType graphType, EdgeWeights graphWeights) {
+		this(graphType, graphWeights, DEFAULT_ALPHA, DEFAULT_ITERATIONS);
 	}
 
 	class HITSVertexScorer implements VertexScorer<Vertex, Double> {

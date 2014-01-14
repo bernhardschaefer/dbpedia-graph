@@ -86,6 +86,7 @@ public final class EdgeWeightsFactory {
 
 		private static final String CONFIG_EDGE_WEIGHTS_IMPL = "graph.edge.weights.impl";
 
+		//TODO use generic method from ConfigUtils instead
 		public static EdgeWeightsType fromConfig(Configuration config) {
 			EdgeWeightsType edgeWeightType;
 			String edgeWeightsImplName = config.getString(CONFIG_EDGE_WEIGHTS_IMPL);

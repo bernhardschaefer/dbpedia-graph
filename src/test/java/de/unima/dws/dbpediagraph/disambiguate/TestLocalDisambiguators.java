@@ -27,19 +27,15 @@ public class TestLocalDisambiguators {
 	public static void beforeClass() throws ConfigurationException {
 		GraphType graphType = GraphType.UNDIRECTED_GRAPH;
 		EdgeWeights graphWeights = DummyEdgeWeights.INSTANCE;
-		boolean usePriorFallback = false;
 
 		List<LocalGraphDisambiguator<DefaultSurfaceForm, DefaultSense>> localDisambiguators = new ArrayList<>();
-		localDisambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights,
-				usePriorFallback));
-		localDisambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights,
-				usePriorFallback));
+		localDisambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
+		localDisambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
 		// double alpha = 0;
 		// int iterations = 100;
 		// localDisambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights, alpha,
 		// iterations));
-		localDisambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights,
-				usePriorFallback));
+		localDisambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
 		// localDisambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
 
 		disambiguatorResults = new HashMap<>();

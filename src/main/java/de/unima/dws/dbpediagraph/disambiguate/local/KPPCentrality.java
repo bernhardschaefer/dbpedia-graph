@@ -23,8 +23,8 @@ import edu.uci.ics.jung.algorithms.shortestpath.Distance;
 public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
 		implements LocalGraphDisambiguator<T, U> {
 
-	public KPPCentrality(GraphType graphType, EdgeWeights graphWeights, Boolean usePriorFallback) {
-		super(graphType, graphWeights, usePriorFallback);
+	public KPPCentrality(GraphType graphType, EdgeWeights graphWeights) {
+		super(graphType, graphWeights);
 	}
 
 	class KPPVertexScorer implements VertexScorer<Vertex, Double> {

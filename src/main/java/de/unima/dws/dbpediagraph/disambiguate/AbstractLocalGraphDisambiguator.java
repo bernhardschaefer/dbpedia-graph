@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graph.GraphType;
-import de.unima.dws.dbpediagraph.graph.Graphs;
+import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
@@ -28,12 +27,9 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	protected final GraphType graphType;
 	protected final EdgeWeights edgeWeights;
 
-	private final boolean usePriorFallback;
-
-	public AbstractLocalGraphDisambiguator(GraphType graphType, EdgeWeights edgeWeights, boolean usePriorFallback) {
+	public AbstractLocalGraphDisambiguator(GraphType graphType, EdgeWeights edgeWeights) {
 		this.graphType = graphType;
 		this.edgeWeights = edgeWeights;
-		this.usePriorFallback = usePriorFallback;
 	}
 
 	@Override
@@ -56,17 +52,8 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 			List<SurfaceFormSenseScore<T, U>> sfss = new ArrayList<>();
 			for (U sense : sFSenses) { // get the score for each sense
 				Vertex v = Graphs.vertexByFullUri(subgraph, sense.fullUri());
-				double score = (v == null) ? -1 : vertexScorer.getVertexScore(v);
+				double score = (v == null) ? 0 : vertexScorer.getVertexScore(v);
 				sfss.add(new SurfaceFormSenseScore<T, U>(surfaceForm, sense, score));
-			}
-
-			// check if there are only singletons
-			if (!sfss.isEmpty() // Prevent NoSuchElementException from Collections.max() if there are no candidates
-					&& Collections.max(sfss, SurfaceFormSenseScore.ASCENDING_SCORE_COMPARATOR).getScore() <= 0.0) {
-				if (usePriorFallback)
-					assignPriors(surfaceForm, sfss);
-				else
-					sfss.clear(); // delete singleton candidates to prevent random selection of a singleton
 			}
 
 			// take best k
@@ -76,18 +63,6 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 		}
 
 		return senseScores;
-	}
-
-	/**
-	 * Set priors as scores if available for all surface form sense scores
-	 */
-	private void assignPriors(T surfaceForm, List<SurfaceFormSenseScore<T, U>> sfss) {
-		logger.info("Surface form {} has only candidate singletons {}. Using priors.", surfaceForm, sfss);
-		for (SurfaceFormSenseScore<?, ?> surfaceFormSenseScore : sfss) {
-			Double prior = surfaceFormSenseScore.getSense().prior();
-			if (prior != null)
-				surfaceFormSenseScore.setScore(prior);
-		}
 	}
 
 	@Override
