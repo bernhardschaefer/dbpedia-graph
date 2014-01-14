@@ -7,8 +7,7 @@ import de.unima.dws.dbpediagraph.model.*;
 
 /**
  * Confidence-based prior strategy that assigns prior probabilities to each score of all candidate entities of a surface
- * form if the confidence for the first candidate falls below a specified threshold. In this implementation the
- * confidence is estimated as e^(score-2nd-candidate - score-1st-candidate).
+ * form if the confidence for the first candidate falls below a specified threshold.
  * 
  * @author Bernhard Schäfer
  * 
@@ -30,11 +29,17 @@ class ConfidenceFallbackPriorStrategy implements PriorStrategy {
 			SurfaceFormSenseScore<T, U> first = sfss.get(0);
 			SurfaceFormSenseScore<T, U> second = sfss.get(1);
 
-			// confidence calculation from DBTwoStepDisambiguator.bestK_()
-			double confidence = Math.exp(second.getScore() - first.getScore());
-			if (confidence < threshold) {
+			// see ConfidenceFilter.scala for further details (esp. PercentageOfSecondRank Filter)
+			// // confidence calculation from DBTwoStepDisambiguator.bestK_()
+			// double confidence = Math.exp(second.getScore() - first.getScore());
+			// if (confidence < threshold) {
+			// PriorStrategyFactory.assignPriors(surfaceForm, sfss);
+			// }
+
+			// naive confidence calculation
+			double confidence = 1 - (second.getScore() / first.getScore());
+			if (confidence < threshold)
 				PriorStrategyFactory.assignPriors(surfaceForm, sfss);
-			}
 		}
 	}
 }
