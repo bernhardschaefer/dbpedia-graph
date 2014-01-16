@@ -11,6 +11,8 @@ import de.unima.dws.dbpediagraph.model.*;
  * @author Bernhard Schäfer
  * 
  */
+// TODO rename; this is not prior strategy but more like graphConfidenceThresholdStrategy since e.g. with NoAnnotation
+// priors are not used
 interface PriorStrategy {
 	<T extends SurfaceForm, U extends Sense> void reviseScores(T surfaceForm, List<SurfaceFormSenseScore<T, U>> sfss);
 }

@@ -13,6 +13,7 @@ import de.unima.dws.dbpediagraph.model.*;
  * 
  */
 class ConfidenceFallbackPriorStrategy implements PriorStrategy {
+
 	private final double threshold;
 
 	public ConfidenceFallbackPriorStrategy(double threshold) {
@@ -32,14 +33,16 @@ class ConfidenceFallbackPriorStrategy implements PriorStrategy {
 			// see ConfidenceFilter.scala for further details (esp. PercentageOfSecondRank Filter)
 			// // confidence calculation from DBTwoStepDisambiguator.bestK_()
 			// double confidence = Math.exp(second.getScore() - first.getScore());
-			// if (confidence < threshold) {
+			// if (confidence <= threshold) {
 			// PriorStrategyFactory.assignPriors(surfaceForm, sfss);
 			// }
 
 			// naive confidence calculation
-			double confidence = 1 - (second.getScore() / first.getScore());
-			if (confidence < threshold)
+			double confidence = 1.0 - (second.getScore() / first.getScore());
+			if (confidence <= threshold)
 				PriorStrategyFactory.assignPriors(surfaceForm, sfss);
+			
+			PriorStrategyFactory.logUsedStrategy(confidence, threshold, this);
 		}
 	}
 }

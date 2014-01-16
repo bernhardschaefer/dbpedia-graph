@@ -3,9 +3,6 @@ package de.unima.dws.dbpediagraph.disambiguate;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.unima.dws.dbpediagraph.model.*;
 
 /**
@@ -15,18 +12,24 @@ import de.unima.dws.dbpediagraph.model.*;
  * @author Bernhard Schäfer
  * 
  */
+// TODO change to MinScoreFallbackPriorStrategy; change enum; add explanation that threshold == 0 means
+// SingletonFallback
 class SingletonFallbackPriorStrategy implements PriorStrategy {
-	private static final Logger logger = LoggerFactory.getLogger(NoAnnotationPriorStrategy.class);
+	private final double threshold;
+
+	public SingletonFallbackPriorStrategy(double threshold) {
+		this.threshold = threshold;
+	}
 
 	@Override
 	public <T extends SurfaceForm, U extends Sense> void reviseScores(T surfaceForm,
 			List<SurfaceFormSenseScore<T, U>> sfss) {
 		// check if there are only singletons
-		// TODO compare max with threshold
-		if (!sfss.isEmpty() // Prevent NoSuchElementException from Collections.max() if there are no candidates
-				&& Collections.max(sfss, SurfaceFormSenseScore.ASCENDING_SCORE_COMPARATOR).getScore() <= 0.0) {
-			logger.debug("Surface form {} has only candidate singletons {}. Using priors.", surfaceForm, sfss);
+		double confidence = sfss.isEmpty() ? 1.0 : Collections.max(sfss,
+				SurfaceFormSenseScore.ASCENDING_SCORE_COMPARATOR).getScore();
+		if (confidence <= threshold)
 			PriorStrategyFactory.assignPriors(surfaceForm, sfss);
-		}
+
+		PriorStrategyFactory.logUsedStrategy(confidence, threshold, this);
 	}
 }
