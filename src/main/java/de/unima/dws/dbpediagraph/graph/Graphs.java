@@ -196,7 +196,7 @@ public final class Graphs {
 		String shortUri = UriTransformer.shorten(fullUri);
 		List<Vertex> vertices = Lists.newArrayList(graph.getVertices(GraphConfig.URI_PROPERTY, shortUri));
 		if (vertices.size() == 0) {
-			logger.warn("No vertex found for full uri {}", fullUri);
+			logger.warn("No vertex found for full uri {} with short uri {}", fullUri, shortUri);
 			return null;
 		}
 		if (vertices.size() > 1) {

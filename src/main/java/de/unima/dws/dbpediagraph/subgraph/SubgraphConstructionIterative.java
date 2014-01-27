@@ -43,14 +43,14 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 					settings.edgeFilter)) { // get all edges in traversal direction that are not being filtered
 				Vertex child = Graphs.oppositeVertexUnsafe(edge, current);
 
-				// for undirected graph check if vertex/edge combination is worth exploring
-				if (settings.graphType.equals(GraphType.UNDIRECTED_GRAPH)
-						&& !settings.explorationThreshold.isBelowThreshold(child, edge))
-					continue;
-
 				// According to Navigli&Lapata algorithm, do not accept paths crossing vertices of the source
 				// surface form.
 				if (!path.getVertices().contains(child) && !stopVertices.contains(child)) {
+					// for undirected graph check if vertex/edge combination is worth exploring
+					if (settings.graphType.equals(GraphType.UNDIRECTED_GRAPH)
+							&& !settings.explorationThreshold.isBelowThreshold(child, edge))
+					continue;
+					
 					Path newPath = Path.newHop(path, edge, child);
 					stack.push(newPath);
 					// recursive: dfs(newPath, targets, subGraph, stopSenses);
