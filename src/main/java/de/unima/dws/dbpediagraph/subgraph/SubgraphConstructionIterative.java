@@ -2,6 +2,7 @@ package de.unima.dws.dbpediagraph.subgraph;
 
 import java.util.*;
 
+import com.google.common.collect.Iterables;
 import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.graph.GraphType;
@@ -29,16 +30,17 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 			path = stack.pop();
 			Vertex current = path.getLast();
 
-			// check limit
-			if (path.getEdges().size() > settings.maxDistance)
-				continue;
-
 			// check if target node
 			if (targets.contains(current))
 				SubgraphConstructions.addPathToSubGraph(current, path, subgraph, settings.graphType);
 
+			// do not explore further if we are at max distance already
+			if (path.getEdges().size() >= settings.maxDistance)
+				continue;
+			
 			// explore further
-			for (Edge edge : current.getEdges(settings.graphType.getTraversalDirection())) {
+			for (Edge edge : Iterables.filter(current.getEdges(settings.graphType.getTraversalDirection()),
+					settings.edgeFilter)) { // get all edges in traversal direction that are not being filtered
 				Vertex child = Graphs.oppositeVertexUnsafe(edge, current);
 
 				// for undirected graph check if vertex/edge combination is worth exploring

@@ -10,6 +10,7 @@ import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
+import de.unima.dws.dbpediagraph.subgraph.EdgePredicate;
 
 public class TestEdgeFilters {
 
@@ -53,7 +54,7 @@ public class TestEdgeFilters {
 
 	@Test
 	public void testOntologyFilter() {
-		Predicate<Edge> p = new OntologyEdgePredicate();
+		Predicate<Edge> p = EdgePredicate.ONTOLOGY;
 		assertTrue(p.apply(CATEGORY_EDGE));
 		assertFalse(p.apply(ONTOLOGY_EDGE));
 		assertTrue(p.apply(PROPERTY_EDGE));
@@ -61,7 +62,7 @@ public class TestEdgeFilters {
 
 	@Test
 	public void testCategoryFilter() {
-		Predicate<Edge> p = new CategoriesEdgePredicate();
+		Predicate<Edge> p = EdgePredicate.CATEGORY;
 		assertFalse(p.apply(CATEGORY_EDGE));
 		assertTrue(p.apply(ONTOLOGY_EDGE));
 		assertTrue(p.apply(PROPERTY_EDGE));
@@ -69,29 +70,29 @@ public class TestEdgeFilters {
 
 	@Test
 	public void testOntologyCategoryPredicateFromConfig() {
-		Predicate<Edge> p = EdgePredicateFactory.fromConfig(ontCatConfig, configKey);
+		Predicate<Edge> p = EdgePredicate.fromConfig(ontCatConfig, configKey);
 		assertFalse(p.apply(CATEGORY_EDGE));
 		assertFalse(p.apply(ONTOLOGY_EDGE));
 		assertTrue(p.apply(PROPERTY_EDGE));
 	}
-	
+
 	@Test
 	public void testDummyPredicateFromConfig() {
-		Predicate<Edge> p = EdgePredicateFactory.fromConfig(dummyConfig, configKey);
+		Predicate<Edge> p = EdgePredicate.fromConfig(dummyConfig, configKey);
 		assertTrue(p.apply(CATEGORY_EDGE));
 		assertTrue(p.apply(ONTOLOGY_EDGE));
 		assertTrue(p.apply(PROPERTY_EDGE));
 	}
-	
+
 	private static Edge createEdge(Graph g, Vertex sub, String pred, Vertex obj) {
 		Edge e = g.addEdge(null, sub, obj, GraphConfig.EDGE_LABEL);
-		e.setProperty(GraphConfig.URI_PROPERTY, pred);
+		e.setProperty(GraphConfig.URI_PROPERTY, UriTransformer.shorten(pred));
 		return e;
 	}
 
 	private static Vertex createVertex(Graph graph, String fullUri) {
 		Vertex vertex = graph.addVertex(null);
-		vertex.setProperty(GraphConfig.URI_PROPERTY, fullUri);
+		vertex.setProperty(GraphConfig.URI_PROPERTY, UriTransformer.shorten(fullUri));
 		return vertex;
 	}
 

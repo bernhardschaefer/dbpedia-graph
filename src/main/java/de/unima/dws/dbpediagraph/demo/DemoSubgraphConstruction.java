@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 
 import org.apache.commons.collections15.Transformer;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
@@ -35,11 +37,12 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
  */
 public class DemoSubgraphConstruction {
 
-	private static final int MAX_DISTANCE = 4;
+	private static final int MAX_DISTANCE = 3;
 	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
+	private static final Predicate<Edge> EDGE_FILTER = Predicates.and(EdgePredicate.CATEGORY, EdgePredicate.ONTOLOGY);
 	private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.dbpediaFromConfig(GraphConfig.config());
 	private static final SubgraphConstructionSettings SETTINGS = new SubgraphConstructionSettings.Builder()
-			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).build();
+			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).edgeFilter(EDGE_FILTER).build();
 
 	private static final Collection<GraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators;
 	static {

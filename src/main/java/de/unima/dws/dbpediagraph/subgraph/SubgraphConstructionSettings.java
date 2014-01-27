@@ -4,9 +4,9 @@ import org.apache.commons.configuration.Configuration;
 
 import com.google.common.base.Predicate;
 import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.graph.GraphType;
-import de.unima.dws.dbpediagraph.subgraph.filter.EdgePredicateFactory;
 
 /**
  * Immutable holder class for parameters relevant for constructing a subgraph using a {@link SubgraphConstruction}.
@@ -29,6 +29,13 @@ public final class SubgraphConstructionSettings {
 	 */
 	private static final SubgraphConstructionSettings DEFAULT = new SubgraphConstructionSettings.Builder().build();
 
+	private static final ExplorationThreshold DUMMY_EXPLORATION_THRESHOLD = new ExplorationThreshold() {
+		@Override
+		public boolean isBelowThreshold(Vertex v, Edge e) {
+			return true;
+		}
+	};
+	
 	final ExplorationThreshold explorationThreshold;
 	final Predicate<Edge> edgeFilter;
 	public final GraphType graphType;
@@ -76,7 +83,7 @@ public final class SubgraphConstructionSettings {
 			// TODO implement
 		}
 		
-		builder.edgeFilter(EdgePredicateFactory.fromConfig(config, CONFIG_EDGE_FILTER));
+		builder.edgeFilter(EdgePredicate.fromConfig(config, CONFIG_EDGE_FILTER));
 
 		boolean persistSubgraph = config.getBoolean(CONFIG_PERSIST_SUBGRAPH, false);
 		builder.persistSubgraph(persistSubgraph);
@@ -92,8 +99,8 @@ public final class SubgraphConstructionSettings {
 
 	public static class Builder {
 		// parameters are initialized to default values
-		private ExplorationThreshold explorationThreshold = DegreeThreshold.getDefault();
-		private Predicate<Edge> edgeFilter = EdgePredicateFactory.DUMMY_PREDICATE;
+		private ExplorationThreshold explorationThreshold = DUMMY_EXPLORATION_THRESHOLD;
+		private Predicate<Edge> edgeFilter = EdgePredicate.DUMMY;
 		private GraphType graphType = GraphType.DIRECTED_GRAPH;
 		private int maxDistance = 4;
 		private boolean persistSubgraph = false;
@@ -132,6 +139,7 @@ public final class SubgraphConstructionSettings {
 			this.persistSubgraphDirectory = persistSubgraphDirectory;
 			return this;
 		}
+		
 	}
 
 }
