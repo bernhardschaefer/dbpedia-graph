@@ -121,6 +121,10 @@ public final class Graphs {
 		return shortUri != null ? String.format("%s (%.3f)", shortUri, edgeWeights.transform(edge)) : "";
 	}
 
+	public static String fullUriOfEdge(Edge edge) {
+		return UriTransformer.unshorten(shortUriOfEdge(edge));
+	}
+	
 	public static String shortUriOfEdge(Edge edge) {
 		String shortUri = edge.getProperty(GraphConfig.URI_PROPERTY);
 		checkNotNull(shortUri, "Graph is corrupted. The edge %s has no uri property.", edge.getId().toString());
@@ -171,6 +175,10 @@ public final class Graphs {
 			return edge.getVertex(Direction.OUT);
 	}
 
+	public static String fullUriOfVertex(Vertex v) {
+		return UriTransformer.unshorten(shortUriOfVertex(v));
+	}
+	
 	public static String shortUriOfVertex(Vertex v) {
 		String shortUri = v.getProperty(GraphConfig.URI_PROPERTY);
 		checkNotNull(shortUri, "Graph is corrupted. The vertex %s has no uri property.", v.getId().toString());

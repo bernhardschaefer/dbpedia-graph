@@ -2,7 +2,11 @@ package de.unima.dws.dbpediagraph.subgraph;
 
 import org.apache.commons.configuration.Configuration;
 
+import com.google.common.base.Predicate;
+import com.tinkerpop.blueprints.Edge;
+
 import de.unima.dws.dbpediagraph.graph.GraphType;
+import de.unima.dws.dbpediagraph.subgraph.filter.EdgePredicateFactory;
 
 /**
  * Immutable holder class for parameters relevant for constructing a subgraph using a {@link SubgraphConstruction}.
@@ -18,6 +22,7 @@ public final class SubgraphConstructionSettings {
 	private static final String CONFIG_EXPLORATION_THRESHOLD = CONFIG_BASE + "explorationThreshold";
 	private static final String CONFIG_PERSIST_SUBGRAPH = CONFIG_BASE + "persistSubgraph";
 	private static final String CONFIG_PERSIST_SUBGRAPH_DIRECTORY = CONFIG_BASE + "persistSubgraphDirectory";
+	private static final String CONFIG_EDGE_FILTER = CONFIG_BASE + "edgeFilter";
 
 	/**
 	 * Instance with default settings
@@ -25,6 +30,7 @@ public final class SubgraphConstructionSettings {
 	private static final SubgraphConstructionSettings DEFAULT = new SubgraphConstructionSettings.Builder().build();
 
 	final ExplorationThreshold explorationThreshold;
+	final Predicate<Edge> edgeFilter;
 	public final GraphType graphType;
 	/**
 	 * "the distance between two vertices in a graph is the <i>number of edges</i> in a shortest path connecting them."
@@ -39,6 +45,7 @@ public final class SubgraphConstructionSettings {
 
 	private SubgraphConstructionSettings(Builder builder) {
 		this.explorationThreshold = builder.explorationThreshold;
+		this.edgeFilter = builder.edgeFilter;
 		this.graphType = builder.graphType;
 		this.maxDistance = builder.maxDistance;
 		this.persistSubgraph = builder.persistSubgraph;
@@ -68,6 +75,8 @@ public final class SubgraphConstructionSettings {
 		if (explorationThresholdClassName != null) {
 			// TODO implement
 		}
+		
+		builder.edgeFilter(EdgePredicateFactory.fromConfig(config, CONFIG_EDGE_FILTER));
 
 		boolean persistSubgraph = config.getBoolean(CONFIG_PERSIST_SUBGRAPH, false);
 		builder.persistSubgraph(persistSubgraph);
@@ -84,6 +93,7 @@ public final class SubgraphConstructionSettings {
 	public static class Builder {
 		// parameters are initialized to default values
 		private ExplorationThreshold explorationThreshold = DegreeThreshold.getDefault();
+		private Predicate<Edge> edgeFilter = EdgePredicateFactory.DUMMY_PREDICATE;
 		private GraphType graphType = GraphType.DIRECTED_GRAPH;
 		private int maxDistance = 4;
 		private boolean persistSubgraph = false;
@@ -105,6 +115,11 @@ public final class SubgraphConstructionSettings {
 
 		public Builder explorationThreshold(ExplorationThreshold explorationThreshold) {
 			this.explorationThreshold = explorationThreshold;
+			return this;
+		}
+		
+		public Builder edgeFilter(Predicate<Edge> edgeFilter) {
+			this.edgeFilter = edgeFilter;
 			return this;
 		}
 

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.unima.dws.dbpediagraph.model.*;
-import de.unima.dws.dbpediagraph.util.ConfigUtils;
+import de.unima.dws.dbpediagraph.util.EnumUtils;
 
 /**
  * Factory for retrieving {@link PriorStrategy} implementations.
@@ -26,7 +26,7 @@ class PriorStrategyFactory {
 	}
 
 	public static PriorStrategy fromConfig(Configuration config) {
-		PriorStrategyType priorStrategyType = ConfigUtils.enumFromConfig(PriorStrategyType.class, config,
+		PriorStrategyType priorStrategyType = EnumUtils.fromConfig(PriorStrategyType.class, config,
 				CONFIG_PRIOR_STRATEGY);
 		double threshold = config.getDouble(CONFIG_PRIOR_STRATEGY_THRESHOLD);
 		return fromPriorStrategyType(priorStrategyType, threshold);

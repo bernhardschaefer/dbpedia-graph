@@ -27,6 +27,8 @@ class Path {
 	 * @return new path object
 	 */
 	public static Path newHop(Path path, Edge edge, Vertex child) {
+		//TODO(perf impr) use Sets.union() to create view (and measure if better performance)
+		//TODO(perf impr) store last vertex but only ids of path vertices and edges?
 		Path newPath = new Path(path);
 		newPath.last = child;
 		newPath.vertices.add(child);
