@@ -37,10 +37,13 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
  */
 public class DemoSubgraphConstruction {
 
-	private static final int MAX_DISTANCE = 3;
-	private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
-	private static final Predicate<Edge> EDGE_FILTER = Predicates.and(EdgePredicate.CATEGORY, EdgePredicate.ONTOLOGY);
+	private static final int MAX_DISTANCE = 2;
+	private static final GraphType GRAPH_TYPE = GraphType.UNDIRECTED_GRAPH;
+	// private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
 	private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.dbpediaFromConfig(GraphConfig.config());
+	private static final Predicate<Edge> EDGE_FILTER = Predicates.and(EdgePredicate.CATEGORY, EdgePredicate.ONTOLOGY);
+	// private static final Predicate<Edge> EDGE_FILTER = EdgePredicate.DUMMY;
+
 	private static final SubgraphConstructionSettings SETTINGS = new SubgraphConstructionSettings.Builder()
 			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).edgeFilter(EDGE_FILTER).build();
 
@@ -59,16 +62,6 @@ public class DemoSubgraphConstruction {
 		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
 		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
 		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
-	}
-
-	private static final Dimension SCREEN_DIMENSION;
-	static {
-		double percentageOfScreen = 0.95;
-		int height = (int) (percentageOfScreen * GraphicsEnvironment.getLocalGraphicsEnvironment()
-				.getMaximumWindowBounds().height);
-		int width = (int) (percentageOfScreen * GraphicsEnvironment.getLocalGraphicsEnvironment()
-				.getMaximumWindowBounds().width);
-		SCREEN_DIMENSION = new Dimension(width, height);
 	}
 
 	private static <T extends SurfaceForm, U extends Sense> void demo(Graph graph, Map<T, List<U>> surfaceFormsSenses,
@@ -92,8 +85,7 @@ public class DemoSubgraphConstruction {
 	}
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		// String sensesFileName = "/demo/dylan-sentence"; //TODO figure out why Compactness has endless loop in this
-		// example
+		// String sensesFileName = "/demo/dylan-sentence";
 		String sensesFileName = "/demo/napoleon-sentence-test";
 		// String sensesFileName = "/dbpedia-default-sentence-test";
 		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
@@ -102,6 +94,16 @@ public class DemoSubgraphConstruction {
 		Graph graph = GraphFactory.getDBpediaGraph();
 		demo(graph, wordsSensesString, disambiguators);
 		graph.shutdown();
+	}
+
+	private static final Dimension SCREEN_DIMENSION;
+	static {
+		double percentageOfScreen = 0.95;
+		int height = (int) (percentageOfScreen * GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getMaximumWindowBounds().height);
+		int width = (int) (percentageOfScreen * GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getMaximumWindowBounds().width);
+		SCREEN_DIMENSION = new Dimension(width, height);
 	}
 
 	private static void visualizeGraph(Graph graph, String frameTitle) {
