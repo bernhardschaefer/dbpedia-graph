@@ -41,7 +41,7 @@ public class DemoSubgraphConstruction {
 	private static final GraphType GRAPH_TYPE = GraphType.UNDIRECTED_GRAPH;
 	// private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
 	private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.dbpediaFromConfig(GraphConfig.config());
-	private static final Predicate<Edge> EDGE_FILTER = Predicates.and(EdgePredicate.CATEGORY, EdgePredicate.ONTOLOGY);
+	private static final Predicate<Edge> EDGE_FILTER = Predicates.and(EdgePredicate.NON_CATEGORY, EdgePredicate.NON_ONTOLOGY);
 	// private static final Predicate<Edge> EDGE_FILTER = EdgePredicate.DUMMY;
 
 	private static final SubgraphConstructionSettings SETTINGS = new SubgraphConstructionSettings.Builder()
