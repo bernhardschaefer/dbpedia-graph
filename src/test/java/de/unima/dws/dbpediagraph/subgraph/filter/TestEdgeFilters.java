@@ -54,7 +54,7 @@ public class TestEdgeFilters {
 
 	@Test
 	public void testOntologyFilter() {
-		Predicate<Edge> p = EdgePredicate.ONTOLOGY;
+		Predicate<Edge> p = EdgePredicate.NON_ONTOLOGY;
 		assertTrue(p.apply(CATEGORY_EDGE));
 		assertFalse(p.apply(ONTOLOGY_EDGE));
 		assertTrue(p.apply(PROPERTY_EDGE));
@@ -62,7 +62,7 @@ public class TestEdgeFilters {
 
 	@Test
 	public void testCategoryFilter() {
-		Predicate<Edge> p = EdgePredicate.CATEGORY;
+		Predicate<Edge> p = EdgePredicate.NON_CATEGORY;
 		assertFalse(p.apply(CATEGORY_EDGE));
 		assertTrue(p.apply(ONTOLOGY_EDGE));
 		assertTrue(p.apply(PROPERTY_EDGE));
