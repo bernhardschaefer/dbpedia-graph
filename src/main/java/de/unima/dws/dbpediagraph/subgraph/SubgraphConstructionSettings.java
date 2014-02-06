@@ -100,7 +100,7 @@ public final class SubgraphConstructionSettings {
 	public static class Builder {
 		// parameters are initialized to default values
 		private ExplorationThreshold explorationThreshold = DUMMY_EXPLORATION_THRESHOLD;
-		private Predicate<Edge> edgeFilter = EdgePredicate.DUMMY;
+		private Predicate<Edge> edgeFilter = EdgePredicate.ALL;
 		private GraphType graphType = GraphType.DIRECTED_GRAPH;
 		private int maxDistance = 4;
 		private boolean persistSubgraph = false;

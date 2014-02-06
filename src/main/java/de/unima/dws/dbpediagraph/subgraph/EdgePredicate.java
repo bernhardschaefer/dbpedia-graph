@@ -12,15 +12,20 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.graph.UriTransformer;
 import de.unima.dws.dbpediagraph.util.EnumUtils;
 
+/**
+ * Edge Predicate enum used for filtering edges during graph traversal in {@link SubgraphConstruction}.
+ * @author Bernhard Schäfer
+ *
+ */
 public enum EdgePredicate implements Predicate<Edge> {
-	DUMMY {
+	ALL {
 		@Override
 		public boolean apply(Edge input) {
 			// e.getLabel().equals(GraphConfig.EDGE_LABEL);
 			return true;
 		}
 	},
-	CATEGORY {
+	NON_CATEGORY {
 		// e.g. http://dbpedia.org/resource/Category:Financial_institutions
 		private final String CATEGORY_PREFIX = UriTransformer.shorten("http://dbpedia.org/resource/Category:");
 
@@ -29,7 +34,7 @@ public enum EdgePredicate implements Predicate<Edge> {
 			return !Graphs.shortUriOfVertex(e.getVertex(Direction.IN)).startsWith(CATEGORY_PREFIX);
 		}
 	},
-	ONTOLOGY {
+	NON_ONTOLOGY {
 		private final String RDF_TYPE = UriTransformer.shorten("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 
 		@Override
@@ -42,7 +47,7 @@ public enum EdgePredicate implements Predicate<Edge> {
 		List<EdgePredicate> edgePredicates = EnumUtils.enumsfromConfig(EdgePredicate.class, config, configKey);
 
 		if (edgePredicates == null || edgePredicates.isEmpty()) // no edge filter requested
-			return EdgePredicate.DUMMY; // return dummy filter to use all triples
+			return EdgePredicate.ALL; // return dummy filter to use all triples
 
 		return Predicates.and(edgePredicates);
 	}
