@@ -15,6 +15,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
  * 
  */
 class SubgraphConstructionIterative extends AbstractSubgraphConstruction implements SubgraphConstruction {
+	private static final int TRAVERSAL_TICK_RATE = 1_000_000;
 
 	public SubgraphConstructionIterative(Graph graph, SubgraphConstructionSettings settings) {
 		super(graph, settings);
@@ -22,10 +23,15 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 
 	@Override
 	protected void dfs(Path path, Set<Vertex> targets, Graph subgraph, Set<Vertex> stopVertices) {
+		if (targets.isEmpty()) // do nothing if there are no targets
+			return;
+
 		Deque<Path> stack = new ArrayDeque<>();
 		stack.push(path);
 		while (!stack.isEmpty()) {
 			traversedNodes++;
+			if (logger.isDebugEnabled() && traversedNodes % TRAVERSAL_TICK_RATE == 0)
+				logger.debug("{} traversed nodes", traversedNodes);
 
 			path = stack.pop();
 			Vertex current = path.getLast();
@@ -37,7 +43,7 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 			// do not explore further if we are at max distance already
 			if (path.getEdges().size() >= settings.maxDistance)
 				continue;
-			
+
 			// explore further
 			for (Edge edge : Iterables.filter(current.getEdges(settings.graphType.getTraversalDirection()),
 					settings.edgeFilter)) { // get all edges in traversal direction that are not being filtered
@@ -49,8 +55,8 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 					// for undirected graph check if vertex/edge combination is worth exploring
 					if (settings.graphType.equals(GraphType.UNDIRECTED_GRAPH)
 							&& !settings.explorationThreshold.isBelowThreshold(child, edge))
-					continue;
-					
+						continue;
+
 					Path newPath = Path.newHop(path, edge, child);
 					stack.push(newPath);
 					// recursive: dfs(newPath, targets, subGraph, stopSenses);
