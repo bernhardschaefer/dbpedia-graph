@@ -36,40 +36,39 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 	}
 
 	@Override
-	public Graph createSubgraph(Collection<Set<Vertex>> surfaceFormVertices) {
+	public Graph createSubgraph(Collection<Set<Vertex>> surfaceFormsVertices) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
-		SubgraphConstructions.checkValidWordsSenses(graph, surfaceFormVertices);
+		SubgraphConstructions.checkValidWordsSenses(graph, surfaceFormsVertices);
 		traversedNodes = 0;
 
-		Set<Vertex> allSenses = Sets.newHashSet(Iterables.concat(surfaceFormVertices));
+		Set<Vertex> allCandidates = Sets.newHashSet(Iterables.concat(surfaceFormsVertices));
 
 		// initialize subgraph with all senses of all words
-		Graph subGraph = GraphFactory.newInMemoryGraph();
+		Graph subgraph = GraphFactory.newInMemoryGraph();
 		// Graphs.addVerticesByUrisOfVertices(subGraph, allSenses);
-		Graphs.addVerticesByIdIfNonExistent(subGraph, allSenses);
+		Graphs.addVerticesByIdIfNonExistent(subgraph, allCandidates);
 
-		// perform a DFS for each sense trying to find path to senses of other
-		// words
-		for (Set<Vertex> senses : surfaceFormVertices) {
-			Set<Vertex> targetSenses = Sets.difference(allSenses, senses);
-			for (Vertex start : senses) {
+		// perform a DFS for each sense trying to find path to candidates of other surface forms
+		for (Set<Vertex> sfCandidates : surfaceFormsVertices) {
+			Set<Vertex> targetCandidates = Sets.difference(allCandidates, sfCandidates);
+			for (Vertex start : sfCandidates) {
 				if (logger.isDebugEnabled())
 					logger.debug("Starting DFS with vid: {}, uri: {}", start.getId(),
 							start.getProperty(GraphConfig.URI_PROPERTY));
-				Set<Vertex> stopVertices = Sets.difference(senses, Sets.newHashSet(start));
-				dfs(new Path(start), targetSenses, subGraph, stopVertices);
+				Set<Vertex> stopVertices = Sets.difference(sfCandidates, Sets.newHashSet(start));
+				dfs(new Path(start), targetCandidates, subgraph, stopVertices);
 			}
 		}
 
 		if (logger.isInfoEnabled())
-			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subGraph, stopwatch, traversedNodes,
+			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subgraph, stopwatch, traversedNodes,
 					settings.maxDistance);
 
 		if (settings.persistSubgraph)
-			GraphExporter.persistGraphInDirectory(subGraph, true, settings.persistSubgraphDirectory);
+			GraphExporter.persistGraphInDirectory(subgraph, true, settings.persistSubgraphDirectory);
 
-		return subGraph;
+		return subgraph;
 	}
 
 	@Override
