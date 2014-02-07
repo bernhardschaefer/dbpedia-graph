@@ -142,23 +142,32 @@ public final class GraphFactory {
 	}
 
 	public static void warmUpGraph(Graph graph) {
-		Stopwatch stopwatch = Stopwatch.createStarted();
+		logger.info("Starting graph warmup");
+		Stopwatch totalTime = Stopwatch.createStarted();
 
-		int vertCount = 0;
+		Stopwatch vertCountTime = Stopwatch.createStarted();
+		int vertCount = Graphs.verticesCount(graph);
+		logger.info("Found {} vertices in {}", vertCount, vertCountTime);
+
+		Stopwatch edgesCountTime = Stopwatch.createStarted();
+		int edgesCount = Graphs.edgesCount(graph);
+		logger.info("Found {} edges in {}", edgesCount, edgesCountTime);
+
+		Stopwatch vertUriTime = Stopwatch.createStarted();
 		for (Vertex v : graph.getVertices()) {
 			String uri = Graphs.shortUriOfVertex(v);
 			logger.trace("Found uri {}", uri);
-			vertCount++;
 		}
+		logger.info("Iterated over all vertex uris in {}", vertUriTime);
 
-		int edgesCount = 0;
+		Stopwatch edgesUriTime = Stopwatch.createStarted();
 		for (Edge e : graph.getEdges()) {
 			String uri = Graphs.shortUriOfEdge(e);
 			logger.trace("Found uri {}", uri);
-			edgesCount++;
 		}
+		logger.info("Iterated over all edges uris in {}", edgesUriTime);
 
-		logger.info("Done with warmup in {} ({} vertices, {} edges)", stopwatch, vertCount, edgesCount);
+		logger.info("Done with graph warmup (overall time {})", totalTime);
 	}
 
 	public static void main(String[] args) {
