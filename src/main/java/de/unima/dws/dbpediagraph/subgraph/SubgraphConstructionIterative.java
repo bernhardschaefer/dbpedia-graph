@@ -22,18 +22,18 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 	}
 
 	@Override
-	protected void dfs(Path path, Set<Vertex> targets, Graph subgraph, Set<Vertex> stopVertices) {
+	protected void dfs(final Path start, Set<Vertex> targets, Graph subgraph, Set<Vertex> stopVertices) {
 		if (targets.isEmpty()) // do nothing if there are no targets
 			return;
 
 		Deque<Path> stack = new ArrayDeque<>();
-		stack.push(path);
+		stack.push(start);
 		while (!stack.isEmpty()) {
 			traversedNodes++;
 			if (logger.isDebugEnabled() && traversedNodes % TRAVERSAL_TICK_RATE == 0)
-				logger.debug("{} traversed nodes", traversedNodes);
+				logger.debug("Start vertex: {}, traversed nodes: {}", Graphs.fullUriOfVertex(start.getLast()), traversedNodes);
 
-			path = stack.pop();
+			Path path = stack.pop();
 			Vertex current = path.getLast();
 
 			// check if target node
