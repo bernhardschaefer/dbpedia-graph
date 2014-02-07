@@ -31,6 +31,9 @@ public final class GraphFactory {
 		static {
 			GRAPH = openGraph(true);
 
+			if (GraphConfig.config().getBoolean("graph.warmup"))
+				warmUpGraph(GRAPH);
+
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
 				public void run() {
@@ -136,6 +139,26 @@ public final class GraphFactory {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public static void warmUpGraph(Graph graph) {
+		Stopwatch stopwatch = Stopwatch.createStarted();
+
+		int vertCount = 0;
+		for (Vertex v : graph.getVertices()) {
+			String uri = Graphs.shortUriOfVertex(v);
+			logger.trace("Found uri {}", uri);
+			vertCount++;
+		}
+
+		int edgesCount = 0;
+		for (Edge e : graph.getEdges()) {
+			String uri = Graphs.shortUriOfEdge(e);
+			logger.trace("Found uri {}", uri);
+			edgesCount++;
+		}
+
+		logger.info("Done with warmup in {} ({} vertices, {} edges)", stopwatch, vertCount, edgesCount);
 	}
 
 	public static void main(String[] args) {
