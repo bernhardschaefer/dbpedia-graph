@@ -15,7 +15,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
  * 
  */
 class SubgraphConstructionIterative extends AbstractSubgraphConstruction implements SubgraphConstruction {
-	private static final int TRAVERSAL_TICK_RATE = 1_000_000;
+	private static final long TRAVERSAL_TICK_RATE = 1_000_000;
 
 	public SubgraphConstructionIterative(Graph graph, SubgraphConstructionSettings settings) {
 		super(graph, settings);
@@ -30,8 +30,8 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 		stack.push(path);
 		while (!stack.isEmpty()) {
 			traversedNodes++;
-			if (logger.isDebugEnabled() && traversedNodes % TRAVERSAL_TICK_RATE == 0)
-				logger.debug("{} traversed nodes", traversedNodes);
+			if (traversedNodes % TRAVERSAL_TICK_RATE == 0)
+				logger.info("{} traversed nodes", traversedNodes);
 
 			path = stack.pop();
 			Vertex current = path.getLast();
