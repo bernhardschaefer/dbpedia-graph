@@ -22,7 +22,7 @@
 		<level value="info" />
 	</logger>
 	
-	<logger name="de.unima.dws.dbpediagraph.subgraph">
+	<logger name="de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionIterative">
 		<level value="debug" />
 	</logger>
 	
