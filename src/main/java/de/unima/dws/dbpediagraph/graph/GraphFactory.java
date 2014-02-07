@@ -31,8 +31,7 @@ public final class GraphFactory {
 		static {
 			GRAPH = openGraph(true);
 
-			if (GraphConfig.config().getBoolean("graph.warmup"))
-				warmUpGraph(GRAPH);
+			GraphWarmup.byConfig(GRAPH, GraphConfig.config());
 
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
@@ -139,35 +138,6 @@ public final class GraphFactory {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public static void warmUpGraph(Graph graph) {
-		logger.info("Starting graph warmup");
-		Stopwatch totalTime = Stopwatch.createStarted();
-
-		Stopwatch vertCountTime = Stopwatch.createStarted();
-		int vertCount = Graphs.verticesCount(graph);
-		logger.info("Found {} vertices in {}", vertCount, vertCountTime);
-
-		Stopwatch edgesCountTime = Stopwatch.createStarted();
-		int edgesCount = Graphs.edgesCount(graph);
-		logger.info("Found {} edges in {}", edgesCount, edgesCountTime);
-
-		Stopwatch vertUriTime = Stopwatch.createStarted();
-		for (Vertex v : graph.getVertices()) {
-			String uri = Graphs.shortUriOfVertex(v);
-			logger.trace("Found uri {}", uri);
-		}
-		logger.info("Iterated over all vertex uris in {}", vertUriTime);
-
-		Stopwatch edgesUriTime = Stopwatch.createStarted();
-		for (Edge e : graph.getEdges()) {
-			String uri = Graphs.shortUriOfEdge(e);
-			logger.trace("Found uri {}", uri);
-		}
-		logger.info("Iterated over all edges uris in {}", edgesUriTime);
-
-		logger.info("Done with graph warmup (overall time {})", totalTime);
 	}
 
 	public static void main(String[] args) {
