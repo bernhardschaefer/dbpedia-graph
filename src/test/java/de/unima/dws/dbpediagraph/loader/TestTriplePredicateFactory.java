@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import com.google.common.base.Predicate;
 
-import de.unima.dws.dbpediagraph.loader.TriplePredicateFactory.LoadingType;
 import de.unima.dws.dbpediagraph.util.EnumUtils;
 
 public class TestTriplePredicateFactory {
@@ -33,8 +32,7 @@ public class TestTriplePredicateFactory {
 
 	@Test
 	public void testFromLoadingType() {
-		for (LoadingType type : LoadingType.values()) {
-			Predicate<Triple> pred = type.getPredicate();
+		for (Predicate<Triple> pred : TriplePredicate.values()) {
 			assertNotNull(pred);
 		}
 	}
@@ -42,30 +40,30 @@ public class TestTriplePredicateFactory {
 	@Test
 	public void testConfig1LoadingTypes() {
 		// config1 --> BLACKLIST, COMPLETE
-		List<LoadingType> loadingTypes = EnumUtils.enumsfromConfig(LoadingType.class, config1, configKey);
+		List<TriplePredicate> loadingTypes = EnumUtils.enumsfromConfig(TriplePredicate.class, config1, configKey);
 		assertTrue(loadingTypes.size() == 2);
-		assertTrue(loadingTypes.get(0).equals(LoadingType.BLACKLIST));
-		assertTrue(loadingTypes.get(1).equals(LoadingType.COMPLETE));
+		assertTrue(loadingTypes.get(0).equals(TriplePredicate.BLACKLIST));
+		assertTrue(loadingTypes.get(1).equals(TriplePredicate.COMPLETE));
 	}
 
 	@Test
 	public void testConfig1Predicates() {
-		Predicate<Triple> loadingTypes = TriplePredicateFactory.fromConfig(config1);
+		Predicate<Triple> loadingTypes = TriplePredicate.fromConfig(config1);
 		assertNotNull(loadingTypes);
 	}
 
 	@Test
 	public void testConfig2LoadingTypes() {
 		// config2 --> COMPLETE
-		List<LoadingType> loadingTypes = EnumUtils.enumsfromConfig(LoadingType.class, config2, configKey);
+		List<TriplePredicate> loadingTypes = EnumUtils.enumsfromConfig(TriplePredicate.class, config2, configKey);
 		assertTrue(loadingTypes.size() == 1);
-		assertTrue(loadingTypes.get(0).equals(LoadingType.COMPLETE));
+		assertTrue(loadingTypes.get(0).equals(TriplePredicate.COMPLETE));
 	}
 
 	@Test
 	public void testConfig3LoadingTypes() {
 		// config3 --> no key and value
-		List<LoadingType> loadingTypes = EnumUtils.enumsfromConfig(LoadingType.class, config3, configKey);
+		List<TriplePredicate> loadingTypes = EnumUtils.enumsfromConfig(TriplePredicate.class, config3, configKey);
 		assertTrue(loadingTypes.size() == 0);
 	}
 }

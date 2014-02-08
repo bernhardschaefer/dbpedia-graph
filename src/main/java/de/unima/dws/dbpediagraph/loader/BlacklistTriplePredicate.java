@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
 
+import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.util.FileUtils;
 
 /**
@@ -19,14 +20,22 @@ import de.unima.dws.dbpediagraph.util.FileUtils;
  * @author Bernhard Schäfer
  */
 class BlacklistTriplePredicate implements Predicate<Triple> {
+
 	private static final Logger logger = LoggerFactory.getLogger(BlacklistTriplePredicate.class);
 
 	// Blacklists from "Exploiting Linked Data for Semantic Document Modelling"
 	private static final String CONFIG_CATEGORIES_FILE = "loading.filter.categories.file";
 	private static final String CONFIG_PREDICATES_FILE = "loading.filter.predicates.file";
 
+	private static final BlacklistTriplePredicate DEFAULT_BLACKLIST_TRIPLE_PREDICATE = new BlacklistTriplePredicate(
+			GraphConfig.config());
+
 	private final HashSet<String> categories;
 	private final HashSet<String> predicates;
+
+	static BlacklistTriplePredicate getDefault() {
+		return DEFAULT_BLACKLIST_TRIPLE_PREDICATE;
+	}
 
 	BlacklistTriplePredicate(Configuration config) {
 		categories = new HashSet<String>();
