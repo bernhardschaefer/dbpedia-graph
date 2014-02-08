@@ -89,7 +89,7 @@ public class DemoSubgraphConstruction {
 		String sensesFileName = "/demo/napoleon-sentence-test";
 		// String sensesFileName = "/dbpedia-default-sentence-test";
 		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
-				sensesFileName, DemoSubgraphConstruction.class, GraphConfig.DBPEDIA_RESOURCE_PREFIX);
+				sensesFileName, DemoSubgraphConstruction.class, UriTransformer.DBPEDIA_RESOURCE_PREFIX);
 
 		Graph graph = GraphFactory.getDBpediaGraph();
 		demo(graph, wordsSensesString, disambiguators);

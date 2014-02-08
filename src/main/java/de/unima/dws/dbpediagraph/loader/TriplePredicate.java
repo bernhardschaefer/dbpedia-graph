@@ -7,8 +7,7 @@ import org.apache.commons.configuration.Configuration;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-import de.unima.dws.dbpediagraph.graph.GraphConfig;
-import de.unima.dws.dbpediagraph.util.*;
+import de.unima.dws.dbpediagraph.util.EnumUtils;
 
 /**
  * Triple predicates for {@link Predicate}s that can be used for filtering {@link Triple}s while loading the graph from
@@ -60,9 +59,7 @@ enum TriplePredicate implements Predicate<Triple> {
 	DOMAIN {
 		@Override
 		public boolean apply(Triple t) {
-			if (!t.object().startsWith("http://dbpedia.org/"))
-				return false;
-			return true;
+			return t.object().startsWith("http://dbpedia.org/");
 		}
 	},
 	/**
@@ -72,10 +69,18 @@ enum TriplePredicate implements Predicate<Triple> {
 	RESOURCE {
 		@Override
 		public boolean apply(Triple t) {
-			if (!t.object().startsWith(GraphConfig.DBPEDIA_RESOURCE_PREFIX))
-				return false;
-			return true;
+			return t.object().startsWith("http://dbpedia.org/resource/");
 		}
+	},
+	/**
+	 * Filter all triples with DBpedia category objects.
+	 */
+	NON_CATEGORY {
+		@Override
+		public boolean apply(Triple t) {
+			return !t.object().startsWith("http://dbpedia.org/resource/Category:");
+		}
+
 	};
 
 	private static final String CONFIG_TRIPLE_PREDICATE = "loading.filter.impl";

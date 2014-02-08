@@ -15,12 +15,14 @@ import com.tinkerpop.blueprints.Graph;
  * 
  */
 public final class UriTransformer {
+	public static final String DBPEDIA_RESOURCE_PREFIX = "http://dbpedia.org/resource/";
+	
 	private static final Map<String, String> URI_TO_PREFIX;
 	static {
 		URI_TO_PREFIX = new LinkedHashMap<String, String>();
 
 		// subject and objects are all dbpedia resources
-		URI_TO_PREFIX.put(GraphConfig.DBPEDIA_RESOURCE_PREFIX, "dbr:");
+		URI_TO_PREFIX.put(DBPEDIA_RESOURCE_PREFIX, "dbr:");
 
 		// top predicates extracted from dumps
 		URI_TO_PREFIX.put("http://dbpedia.org/ontology/", "dbo:");
