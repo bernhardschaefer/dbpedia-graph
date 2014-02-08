@@ -71,12 +71,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4jBatch-Implementation -->
-			<groupId>com.tinkerpop.blueprints</groupId>
-			<artifactId>blueprints-neo4jbatch-graph</artifactId>
-			<version>2.2.0</version>
-		</dependency>
+		<!-- <dependency> -->
+		<!-- https://github.com/tinkerpop/blueprints/wiki/Neo4jBatch-Implementation -->
+		<!-- <groupId>com.tinkerpop.blueprints</groupId> -->
+		<!-- <artifactId>blueprints-neo4jbatch-graph</artifactId> -->
+		<!-- <version>2.2.0</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<!-- https://github.com/tinkerpop/blueprints/wiki/JUNG-Ouplementation -->
 			<groupId>com.tinkerpop.blueprints</groupId>

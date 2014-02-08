@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
 import com.tinkerpop.blueprints.*;
-import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 
@@ -60,7 +59,7 @@ public final class GraphFactory {
 		// check if graph exists already
 		long verticesCount = Graphs.verticesCount(graph);
 		if (verticesCount != 0) {
-			bgraph.setVertexIdKey(GraphConfig.URI_PROPERTY);
+			// bgraph.setVertexIdKey(GraphConfig.URI_PROPERTY);
 			bgraph.setLoadingFromScratch(false);
 			logger.info("There is an existing graph with {} vertices.", verticesCount);
 		}
@@ -104,10 +103,12 @@ public final class GraphFactory {
 							+ "For graph-based disambiguation run the graph loader tool "
 							+ "first to create a graph from data dumps.", GraphConfig.graphDirectory()));
 
-		if (graph instanceof Neo4jGraph) {
-			Neo4jGraph nGraph = (Neo4jGraph) graph;
-			nGraph.createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
-		}
+		// createKeyIndex only necessary for full text search???
+		// @see http://docs.neo4j.org/chunked/milestone/indexing-create-advanced.html
+		// if (graph instanceof Neo4jGraph) {
+		// Neo4jGraph nGraph = (Neo4jGraph) graph;
+		// nGraph.createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
+		// }
 
 		logger.info("Graph loading time {}", stopwatch);
 		if (graph instanceof TransactionalGraph)
