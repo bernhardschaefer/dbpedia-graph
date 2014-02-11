@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
 import com.tinkerpop.blueprints.*;
+import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 import com.tinkerpop.blueprints.util.wrappers.batch.VertexIDType;
@@ -106,12 +107,11 @@ public final class GraphFactory {
 							+ "For graph-based disambiguation run the graph loader tool "
 							+ "first to create a graph from data dumps.", GraphConfig.graphDirectory()));
 
-		// createKeyIndex only necessary for full text search???
-		// @see http://docs.neo4j.org/chunked/milestone/indexing-create-advanced.html
-		// if (graph instanceof Neo4jGraph) {
-		// Neo4jGraph nGraph = (Neo4jGraph) graph;
-		// nGraph.createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
-		// }
+		// https://github.com/tinkerpop/blueprints/wiki/Neo4j-Implementation#wiki-indices-with-neo4jgraph
+		 if (graph instanceof Neo4jGraph) {
+			 ((Neo4jGraph) graph).createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
+			 ((Neo4jGraph) graph).createKeyIndex(GraphConfig.URI_PROPERTY, Edge.class);
+		 }
 
 		logger.info("Graph loading time {}", stopwatch);
 		if (graph instanceof TransactionalGraph)
