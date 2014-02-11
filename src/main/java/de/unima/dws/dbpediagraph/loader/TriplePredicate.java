@@ -62,12 +62,16 @@ enum TriplePredicate implements Predicate<Triple> {
 		}
 	},
 	/**
-	 * Filter all triples with DBpedia category objects.
+	 * Yield all triples where objects and subjects are not a DBpedia category.
 	 */
 	NON_CATEGORY {
+		private final String catPrefix = "http://dbpedia.org/resource/Category:";
+
 		@Override
 		public boolean apply(Triple t) {
-			return !t.object().startsWith("http://dbpedia.org/resource/Category:");
+			// Checking for subjects is necessary since there are also triples with category subjects
+			// see e.g. topical_concepts_en.nt dump file
+			return !t.object().startsWith(catPrefix) && !t.subject().startsWith(catPrefix);
 		}
 
 	};
