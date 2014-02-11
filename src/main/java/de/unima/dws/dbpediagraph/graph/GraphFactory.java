@@ -9,6 +9,7 @@ import com.google.common.base.Stopwatch;
 import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
+import com.tinkerpop.blueprints.util.wrappers.batch.VertexIDType;
 
 /**
  * Noninstantiable graph factory class that provides graph instances.
@@ -54,7 +55,7 @@ public final class GraphFactory {
 	 */
 	public static BatchGraph<? extends TransactionalGraph> getBatchGraph(long bufferSize) {
 		TransactionalGraph graph = openGraph(false);
-		BatchGraph<TransactionalGraph> bgraph = new BatchGraph<>(graph, bufferSize);
+		BatchGraph<TransactionalGraph> bgraph = new BatchGraph<>(graph, VertexIDType.STRING, bufferSize);
 
 		// check if graph exists already
 		long verticesCount = Graphs.verticesCount(graph);
