@@ -60,9 +60,11 @@ public final class GraphFactory {
 		// check if graph exists already
 		long verticesCount = Graphs.verticesCount(graph);
 		if (verticesCount != 0) {
-			// bgraph.setVertexIdKey(GraphConfig.URI_PROPERTY);
+			// since Neo4j ignores supplied ids, we need to define which property should be used as keys
+			// this is necessary so that a vertex is not added more than once
+			bgraph.setVertexIdKey(GraphConfig.URI_PROPERTY);
 			bgraph.setLoadingFromScratch(false);
-			logger.info("There is an existing graph with {} vertices.", verticesCount);
+			logger.info("Using the existing graph with {} vertices.", verticesCount);
 		}
 
 		return bgraph;
