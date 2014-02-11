@@ -30,8 +30,7 @@ enum TriplePredicate implements Predicate<Triple> {
 		}
 	},
 	/**
-	 * Filter that yields all triple with DBpedia resources, ontologies, or yago classes as object. This includes the
-	 * entire class hierarchy and classes such as foaf:Person.
+	 * Filter that yields all triple with objects of DBpedia resources, ontologies, or categories.
 	 */
 	COMPLETE {
 		/**
@@ -53,18 +52,8 @@ enum TriplePredicate implements Predicate<Triple> {
 		}
 	},
 	/**
-	 * Filter that yields all triple with a DBpedia URI as object (http://dbpedia.org/*). This implementation is
-	 * somewhat inconsistent since it partly includes the class hierarchy.
-	 */
-	DOMAIN {
-		@Override
-		public boolean apply(Triple t) {
-			return t.object().startsWith("http://dbpedia.org/");
-		}
-	},
-	/**
 	 * Filter that yields all triple with DBpedia resources as subject and object, which means the match the pattern
-	 * http://dbpedia.org/resource/* .
+	 * http://dbpedia.org/resource/*. This excludes the entire DBpedia ontology.
 	 */
 	RESOURCE {
 		@Override
