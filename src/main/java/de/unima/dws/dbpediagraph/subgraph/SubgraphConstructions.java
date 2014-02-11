@@ -35,9 +35,9 @@ final class SubgraphConstructions {
 
 	public static void addPathToSubGraph(Vertex start, Vertex target, List<Edge> path, Graph subGraph,
 			GraphType graphType) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("Found sense vid: {} uri: {}", target.getId(), target.getProperty(GraphConfig.URI_PROPERTY));
-			logger.debug(toStringPath(path, start, target, graphType));
+		if(logger.isTraceEnabled()) {
+			logger.trace("Found sense vid: {} uri: {}", target.getId(), target.getProperty(GraphConfig.URI_PROPERTY));
+			logger.trace(toStringPath(path, start, target, graphType));
 		}
 		Graphs.addNodeAndEdgesByIdIfNonExistent(subGraph, path);
 	}
