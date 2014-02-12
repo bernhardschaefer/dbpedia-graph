@@ -23,7 +23,7 @@ public enum GraphWarmup {
 		void warmup(Graph graph) {
 			Stopwatch vertCountTime = Stopwatch.createStarted();
 			int vertCount = Graphs.verticesCount(graph);
-			logger.info("Found {} vertices in {}", vertCount, vertCountTime);
+			logger.info("Traversed {} vertices in {}", vertCount, vertCountTime);
 		}
 	},
 	TRAVERSE_EDGES {
@@ -31,7 +31,7 @@ public enum GraphWarmup {
 		void warmup(Graph graph) {
 			Stopwatch edgesCountTime = Stopwatch.createStarted();
 			int edgesCount = Graphs.edgesCount(graph);
-			logger.info("Found {} edges in {}", edgesCount, edgesCountTime);
+			logger.info("Traversed {} edges in {}", edgesCount, edgesCountTime);
 		}
 	},
 	TRAVERSE_VERTEX_URIS {
