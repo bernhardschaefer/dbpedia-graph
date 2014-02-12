@@ -25,7 +25,7 @@ public class TestCandidateSupportFilter {
 
 	@Test
 	public void testFilterBestkSensesBySupport() {
-		Map<SurfaceForm, List<Sense>> sfssSenses = CandidateSupportFilter.filterBestkSensesBySupport(sfsSenses, 3);
+		Map<SurfaceForm, List<Sense>> sfssSenses = CandidateFilter.maxKByPrior(sfsSenses, 3);
 		assertEquals(1, sfssSenses.size());
 		List<Sense> best3 = sfssSenses.get(surfaceForm1);
 		assertEquals(3, best3.size());
@@ -36,7 +36,7 @@ public class TestCandidateSupportFilter {
 
 	@Test
 	public void testFilterSensesBySupport() {
-		Map<SurfaceForm, List<Sense>> sfssSenses = CandidateSupportFilter.filterSensesBySupport(sfsSenses, 10);
+		Map<SurfaceForm, List<Sense>> sfssSenses = CandidateFilter.byMinSupport(sfsSenses, 10);
 		assertEquals(1, sfssSenses.size());
 		List<Sense> minSupport10 = sfssSenses.get(surfaceForm1);
 		assertEquals(2, minSupport10.size());
