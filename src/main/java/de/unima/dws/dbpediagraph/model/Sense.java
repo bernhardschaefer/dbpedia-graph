@@ -15,7 +15,12 @@ public interface Sense {
 	public String fullUri();
 
 	/**
-	 * Prior probability of a sense.
+	 * Prior probability of a sense for the respective surface form.
 	 */
 	public Double prior();
+	
+	/**
+	 * Support of a sense
+	 */
+	public Integer support();
 }
