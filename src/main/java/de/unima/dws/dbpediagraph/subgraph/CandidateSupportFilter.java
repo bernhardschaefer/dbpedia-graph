@@ -38,62 +38,62 @@ public class CandidateSupportFilter {
 	};
 
 	/**
-	 * Deletes all {@link DBpediaResource} from the map values which do not belong to the best k for each surface form.
-	 * If k <= 0, the method does not do anything.
+	 * Deletes all {@link Sense}s from the map values which do not belong to the best k for each surface form. If k <=
+	 * 0, the method does not do anything.
 	 */
-	public static <T extends SurfaceForm, U extends Sense> void filterBestkResourcesBySupport(
-			Map<T, List<U>> sfsSenses, int k) {
+	public static <T extends SurfaceForm, U extends Sense> void filterBestkSensesBySupport(Map<T, List<U>> sfsSenses,
+			int k) {
 		if (k <= 0)
 			return;
 		int filtered = 0;
 
 		for (Entry<T, List<U>> entry : sfsSenses.entrySet()) {
 			if (entry.getValue().size() > k) {
-				List<U> unfilteredResources = entry.getValue();
-				List<U> bestKResources = descSupport.greatestOf(unfilteredResources, k);
-				sfsSenses.put(entry.getKey(), bestKResources);
+				List<U> unfilteredSenses = entry.getValue();
+				List<U> bestKSenses = descSupport.greatestOf(unfilteredSenses, k);
+				sfsSenses.put(entry.getKey(), bestKSenses);
 
-				filtered += (unfilteredResources.size() - bestKResources.size());
+				filtered += (unfilteredSenses.size() - bestKSenses.size());
 			}
 		}
 
-		logger.info("Filtered " + filtered + " resource candidates by best " + k + " candidate filter.");
+		logger.info("Filtered " + filtered + " sense candidates by best " + k + " candidate filter.");
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> void filterBestkResourcesByConfigSupport(
+	public static <T extends SurfaceForm, U extends Sense> void filterBestkSensesByConfigSupport(
 			Map<T, List<U>> sfsSenses, Configuration config) {
 		int bestkSupport = config.getInt(CONFIG_CANDIDATE_BEST_K_SUPPORT, -1);
-		filterBestkResourcesBySupport(sfsSenses, bestkSupport);
+		filterBestkSensesBySupport(sfsSenses, bestkSupport);
 	}
 
 	/**
-	 * Removes all {@link DBpediaResource} from the map values with support < minSupport. If minSupport <= 0, the method
-	 * returns right away.
+	 * Removes all {@link Sense}s from the map values with support < minSupport. If minSupport <= 0, the method returns
+	 * right away.
 	 */
-	public static <T extends SurfaceForm, U extends Sense> void filterResourcesBySupport(Map<T, List<U>> sfsSenses,
+	public static <T extends SurfaceForm, U extends Sense> void filterSensesBySupport(Map<T, List<U>> sfsSenses,
 			final int minSupport) {
 		if (minSupport <= 0)
 			return;
 		int filtered = 0;
 
 		for (Entry<T, List<U>> entry : sfsSenses.entrySet()) {
-			List<U> unfilteredResources = entry.getValue();
-			List<U> filteredResources = new ArrayList<>();
-			for (U resource : unfilteredResources) {
-				if (resource.support() >= minSupport)
-					filteredResources.add(resource);
+			List<U> unfilteredSenses = entry.getValue();
+			List<U> filteredSenses = new ArrayList<>();
+			for (U sense : unfilteredSenses) {
+				if (sense.support() >= minSupport)
+					filteredSenses.add(sense);
 			}
-			sfsSenses.put(entry.getKey(), filteredResources);
+			sfsSenses.put(entry.getKey(), filteredSenses);
 
-			filtered += (unfilteredResources.size() - filteredResources.size());
+			filtered += (unfilteredSenses.size() - filteredSenses.size());
 		}
 
-		logger.info("Filtered " + filtered + " resource candidates with support < " + minSupport);
+		logger.info("Filtered " + filtered + " sense candidates with support < " + minSupport);
 	}
 
-	public static <T extends SurfaceForm, U extends Sense> void filterResourcesByConfigMinSupport(
+	public static <T extends SurfaceForm, U extends Sense> void filterSensesByConfigMinSupport(
 			Map<T, List<U>> sfsSenses, Configuration config) {
 		int minSupport = config.getInt(CONFIG_CANDIDATE_MIN_SUPPORT, -1);
-		filterResourcesBySupport(sfsSenses, minSupport);
+		filterSensesBySupport(sfsSenses, minSupport);
 	}
 }
