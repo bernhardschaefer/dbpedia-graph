@@ -3,6 +3,7 @@ package de.unima.dws.dbpediagraph.loader;
 import java.io.*;
 import java.util.*;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.openrdf.rio.*;
 import org.slf4j.Logger;
@@ -58,7 +59,7 @@ public final class DBpediaGraphLoader {
 	/**
 	 * Generates a {@link Graph} by parsing the provided RDF files.
 	 */
-	public static void loadFromFiles(Collection<File> files) throws ConfigurationException {
+	public static void loadFromFiles(Collection<File> files, Configuration config) throws ConfigurationException {
 		if (files == null || files.size() == 0) {
 			throw new IllegalArgumentException("Provide one or several directories or files in RDF Format.");
 		}
@@ -67,13 +68,13 @@ public final class DBpediaGraphLoader {
 		LoadingMetrics globalMetric = new LoadingMetrics("OVERALL");
 		List<LoadingMetrics> metrics = new LinkedList<LoadingMetrics>();
 
-		Graph graph = GraphFactory.getBatchGraph(BUFFER_SIZE);
+		Graph graph = GraphFactory.getBatchGraphFromConfig(config, BUFFER_SIZE);
 
 		for (File f : files) {
 			LoadingMetrics metric = new LoadingMetrics(f.getName());
 
 			// get appropriate handler
-			Predicate<Triple> filter = TriplePredicate.fromConfig(GraphConfig.config());
+			Predicate<Triple> filter = TriplePredicate.fromConfig(config);
 			RDFHandlerVerbose handler = new DBpediaBatchHandler(graph, filter);
 
 			// get appropriate parser
@@ -111,7 +112,7 @@ public final class DBpediaGraphLoader {
 	 *            each arg can be a directory containing RDF files or a RDF file itself.
 	 */
 	public static void main(String[] args) throws ConfigurationException {
-		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args));
+		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args), GraphConfig.config());
 		PredObjOccsCounter.countAndPersistDBpediaGraphOccs();
 	}
 }

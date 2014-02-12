@@ -2,6 +2,7 @@ package de.unima.dws.dbpediagraph.graph;
 
 import java.io.*;
 
+import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,8 @@ import com.tinkerpop.blueprints.util.wrappers.batch.VertexIDType;
 public final class GraphFactory {
 	private static final Logger logger = LoggerFactory.getLogger(GraphFactory.class);
 
+	private static final String CONFIG_EDGE_INDEX = "graph.edge.index";
+
 	/**
 	 * DBpedia Graph Holder is loaded on the first execution of {@link GraphFactory#getDBpediaGraph()} or the first
 	 * access to DBpediaGraphHolder.GRAPH, not before. This lazy initialization is beneficial in case the graph is not
@@ -30,10 +33,9 @@ public final class GraphFactory {
 		public static final TransactionalGraph GRAPH;
 
 		static {
-			GRAPH = openGraph(true);
-
-			GraphWarmup.byConfig(GRAPH, GraphConfig.config());
-
+			Configuration config = GraphConfig.config();
+			GRAPH = openFromConfig(config, true);
+			GraphWarmup.byConfig(GRAPH, config);
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
 				public void run() {
@@ -54,8 +56,8 @@ public final class GraphFactory {
 	 *            the buffer size used for the batch inserts.
 	 * @return
 	 */
-	public static BatchGraph<? extends TransactionalGraph> getBatchGraph(long bufferSize) {
-		TransactionalGraph graph = openGraph(false);
+	public static BatchGraph<? extends TransactionalGraph> getBatchGraphFromConfig(Configuration config, long bufferSize) {
+		TransactionalGraph graph = openFromConfig(config, false);
 		BatchGraph<TransactionalGraph> bgraph = new BatchGraph<>(graph, VertexIDType.STRING, bufferSize);
 
 		// check if graph exists already
@@ -96,10 +98,10 @@ public final class GraphFactory {
 	 * @throws IllegalStateException
 	 *             if needsToExist==true and there is no existing graph with vertices.
 	 */
-	private static TransactionalGraph openGraph(boolean needsToExist) {
+	private static TransactionalGraph openFromConfig(Configuration config, boolean needsToExist) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
-		Graph graph = com.tinkerpop.blueprints.GraphFactory.open(GraphConfig.config());
+		Graph graph = com.tinkerpop.blueprints.GraphFactory.open(config);
 		if (needsToExist && Graphs.hasNoVertices(graph))
 			// TODO cleanup directory and delete empty graph that blueprints.GraphFactory created
 			throw new IllegalStateException(String.format(
@@ -107,11 +109,12 @@ public final class GraphFactory {
 							+ "For graph-based disambiguation run the graph loader tool "
 							+ "first to create a graph from data dumps.", GraphConfig.graphDirectory()));
 
-		// https://github.com/tinkerpop/blueprints/wiki/Neo4j-Implementation#wiki-indices-with-neo4jgraph
-		 if (graph instanceof Neo4jGraph) {
-			 ((Neo4jGraph) graph).createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
-			 ((Neo4jGraph) graph).createKeyIndex(GraphConfig.URI_PROPERTY, Edge.class);
-		 }
+		if (graph instanceof Neo4jGraph) {
+			// https://github.com/tinkerpop/blueprints/wiki/Neo4j-Implementation#wiki-indices-with-neo4jgraph
+			((Neo4jGraph) graph).createKeyIndex(GraphConfig.URI_PROPERTY, Vertex.class);
+			if (config.getBoolean(CONFIG_EDGE_INDEX))
+				((Neo4jGraph) graph).createKeyIndex(GraphConfig.URI_PROPERTY, Edge.class);
+		}
 
 		logger.info("Graph loading time {}", stopwatch);
 		if (graph instanceof TransactionalGraph)
