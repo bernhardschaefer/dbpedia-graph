@@ -96,7 +96,7 @@ enum PriorStrategy {
 	private static final String CONFIG_PRIOR_STRATEGY_THRESHOLD = "de.unima.dws.dbpediagraph.disambiguate.priorstrategy.threshold";
 
 	static PriorStrategy fromConfig(Configuration config) {
-		return EnumUtils.fromConfig(PriorStrategy.class, config, CONFIG_PRIOR_STRATEGY);
+		return EnumUtils.fromConfig(PriorStrategy.class, config, CONFIG_PRIOR_STRATEGY, true);
 	}
 
 	static double getThresholdFromConfig(Configuration config) {

@@ -3,6 +3,8 @@ package de.unima.dws.dbpediagraph.disambiguate;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.model.Sense;
@@ -17,6 +19,7 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory;
  * 
  */
 public final class GraphDisambiguatorFactory {
+	private static final Logger logger = LoggerFactory.getLogger(GraphDisambiguatorFactory.class);
 
 	private static final String CONFIG_DISAMBIGUATOR = "de.unima.dws.dbpediagraph.graph.disambiguator";
 
@@ -42,8 +45,12 @@ public final class GraphDisambiguatorFactory {
 		}
 
 		PriorStrategy priorStrategy = PriorStrategy.fromConfig(config);
-		double threshold = PriorStrategy.getThresholdFromConfig(config);
-		return new PriorStrategyDisambiguatorDecorator<>(disambiguator, priorStrategy, threshold);
+		if (priorStrategy != null) {
+			double threshold = PriorStrategy.getThresholdFromConfig(config);
+			logger.debug("Using PriorStrategy {} with threshold {}", priorStrategy, threshold);
+			return new PriorStrategyDisambiguatorDecorator<>(disambiguator, priorStrategy, threshold);
+		} else
+			return disambiguator;
 	}
 
 	// Suppress default constructor for non-instantiability

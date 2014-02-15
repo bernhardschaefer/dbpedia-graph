@@ -6,8 +6,11 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 
 public class EnumUtils {
-	public static <E extends Enum<E>> E fromConfig(Class<E> enumClass, Configuration config, String configKey) {
+	public static <E extends Enum<E>> E fromConfig(Class<E> enumClass, Configuration config, String configKey,
+			boolean returnNullIfNotPresent) {
 		String enumName = config.getString(configKey);
+		if (returnNullIfNotPresent && enumName == null)
+			return null;
 		return fromString(enumClass, enumName);
 	}
 
