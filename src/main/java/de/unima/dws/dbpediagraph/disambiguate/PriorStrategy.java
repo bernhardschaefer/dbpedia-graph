@@ -112,6 +112,8 @@ enum PriorStrategy {
 			Double prior = surfaceFormSenseScore.getSense().prior();
 			if (prior != null)
 				surfaceFormSenseScore.setScore(prior);
+			else
+				logger.warn("{} has no prior.", surfaceFormSenseScore.getSense().fullUri());
 		}
 	}
 
