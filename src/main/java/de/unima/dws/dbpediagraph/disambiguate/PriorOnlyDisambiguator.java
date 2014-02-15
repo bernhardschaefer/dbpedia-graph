@@ -7,10 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Graph;
 
+import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.model.*;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 public class PriorOnlyDisambiguator<T extends SurfaceForm, U extends Sense> implements LocalGraphDisambiguator<T, U> {
 	private static final Logger logger = LoggerFactory.getLogger(PriorOnlyDisambiguator.class);
+
+	public PriorOnlyDisambiguator(GraphType graphType, EdgeWeights edgeWeights) {
+	}
 
 	@Override
 	public Map<T, List<SurfaceFormSenseScore<T, U>>> allSurfaceFormSensesScores(Map<T, List<U>> surfaceFormsSenses,
