@@ -16,10 +16,13 @@ import de.unima.dws.dbpediagraph.model.*;
 class PriorStrategyDisambiguatorDecorator<T extends SurfaceForm, U extends Sense> implements GraphDisambiguator<T, U> {
 	private final GraphDisambiguator<T, U> disambiguator;
 	private final PriorStrategy priorStrategy;
+	private final double threshold;
 
-	public PriorStrategyDisambiguatorDecorator(GraphDisambiguator<T, U> disambiguator, PriorStrategy priorStrategy) {
+	public PriorStrategyDisambiguatorDecorator(GraphDisambiguator<T, U> disambiguator, PriorStrategy priorStrategy,
+			double threshold) {
 		this.disambiguator = disambiguator;
 		this.priorStrategy = priorStrategy;
+		this.threshold = threshold;
 	}
 
 	@Override
@@ -33,7 +36,7 @@ class PriorStrategyDisambiguatorDecorator<T extends SurfaceForm, U extends Sense
 		for (Entry<T, List<SurfaceFormSenseScore<T, U>>> entry : allCandidates.entrySet()) {
 			T surfaceForm = entry.getKey();
 			List<SurfaceFormSenseScore<T, U>> sfss = entry.getValue();
-			priorStrategy.reviseScores(surfaceForm, sfss);
+			priorStrategy.reviseScores(surfaceForm, sfss, threshold);
 
 			// after modifying scores we can get the bestK
 			Collections.sort(sfss, SurfaceFormSenseScore.DESCENDING_SCORE_COMPARATOR);

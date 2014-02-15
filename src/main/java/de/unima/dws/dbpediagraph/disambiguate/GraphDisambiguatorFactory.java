@@ -41,8 +41,9 @@ public final class GraphDisambiguatorFactory {
 							disambiguatorClassName), e);
 		}
 
-		PriorStrategy priorStrategy = PriorStrategyFactory.fromConfig(config);
-		return new PriorStrategyDisambiguatorDecorator<>(disambiguator, priorStrategy);
+		PriorStrategy priorStrategy = PriorStrategy.fromConfig(config);
+		double threshold = PriorStrategy.getThresholdFromConfig(config);
+		return new PriorStrategyDisambiguatorDecorator<>(disambiguator, priorStrategy, threshold);
 	}
 
 	// Suppress default constructor for non-instantiability
