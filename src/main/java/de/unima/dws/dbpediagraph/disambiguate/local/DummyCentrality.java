@@ -1,6 +1,9 @@
 package de.unima.dws.dbpediagraph.disambiguate.local;
 
-import com.tinkerpop.blueprints.*;
+import java.util.Map;
+
+import com.tinkerpop.blueprints.Graph;
+import com.tinkerpop.blueprints.Vertex;
 
 import de.unima.dws.dbpediagraph.disambiguate.*;
 import de.unima.dws.dbpediagraph.graph.GraphType;
@@ -30,7 +33,7 @@ public class DummyCentrality<T extends SurfaceForm, U extends Sense> extends Abs
 	};
 
 	@Override
-	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
+	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph, Map<Vertex, Double> vertexPriors) {
 		return DUMMY_SCORER;
 	}
 

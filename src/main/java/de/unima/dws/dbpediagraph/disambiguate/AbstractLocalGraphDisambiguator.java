@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
-import de.unima.dws.dbpediagraph.graph.*;
+import de.unima.dws.dbpediagraph.graph.GraphType;
+import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
@@ -41,7 +42,11 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	@Override
 	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, int k) {
 		logger.info("Using disambiguator {}", this);
-		VertexScorer<Vertex, Double> vertexScorer = getVertexScorer(subgraph);
+
+		Map<String, Vertex> fullUriToVertex = getVerticesByFullUris(surfaceFormsSenses, subgraph);
+
+		VertexScorer<Vertex, Double> vertexScorer = getVertexScorer(subgraph,
+				getVertexPriors(surfaceFormsSenses, fullUriToVertex));
 
 		Map<T, List<SurfaceFormSenseScore<T, U>>> senseScores = new HashMap<>();
 
@@ -51,7 +56,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 
 			List<SurfaceFormSenseScore<T, U>> sfss = new ArrayList<>();
 			for (U sense : sFSenses) { // get the score for each sense
-				Vertex v = Graphs.vertexByFullUri(subgraph, sense.fullUri());
+				Vertex v = fullUriToVertex.get(sense.fullUri());
 				double score = (v == null) ? 0 : vertexScorer.getVertexScore(v);
 				sfss.add(new SurfaceFormSenseScore<T, U>(surfaceForm, sense, score));
 			}
@@ -63,6 +68,32 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 		}
 
 		return senseScores;
+	}
+
+	private static <T extends SurfaceForm, U extends Sense> Map<String, Vertex> getVerticesByFullUris(
+			Map<T, List<U>> surfaceFormsSenses, Graph subgraph) {
+		Map<String, Vertex> fullUriToVertex = new HashMap<>();
+		for (List<U> senses : surfaceFormsSenses.values()) {
+			for (U sense : senses) {
+				Vertex v = Graphs.vertexByFullUri(subgraph, sense.fullUri());
+				if (v != null)
+					fullUriToVertex.put(sense.fullUri(), v);
+			}
+		}
+		return fullUriToVertex;
+	}
+
+	private static <T extends SurfaceForm, U extends Sense> Map<Vertex, Double> getVertexPriors(
+			Map<T, List<U>> surfaceFormsSenses, Map<String, Vertex> fullUriToVertex) {
+		Map<Vertex, Double> vertexPriors = new HashMap<>(fullUriToVertex.size());
+		for (List<U> senses : surfaceFormsSenses.values()) {
+			for (U sense : senses) {
+				Vertex v = fullUriToVertex.get(sense.fullUri());
+				if (v != null)
+					vertexPriors.put(v, sense.prior());
+			}
+		}
+		return vertexPriors;
 	}
 
 	@Override
@@ -90,9 +121,11 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 	 * 
 	 * @param subgraph
 	 *            the subgraph that the vertices are contained in
+	 * @param vertexPriors
+	 *            the prior probabilities of the vertices
 	 * @return a {@link VertexScorer} implementation
 	 */
-	protected abstract VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph);
+	protected abstract VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph, Map<Vertex, Double> vertexPriors);
 
 	@Override
 	public String toString() {

@@ -1,5 +1,7 @@
 package de.unima.dws.dbpediagraph.disambiguate.local;
 
+import java.util.Map;
+
 import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
@@ -47,7 +49,7 @@ public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> exten
 	}
 
 	@Override
-	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
+	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph, Map<Vertex, Double> vertexPriors) {
 		return new BetweennessVertexScorer(subgraph);
 	}
 

@@ -65,7 +65,7 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 	}
 
 	@Override
-	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
+	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph, Map<Vertex, Double> vertexPriors) {
 		return new KPPVertexScorer(subgraph);
 	}
 

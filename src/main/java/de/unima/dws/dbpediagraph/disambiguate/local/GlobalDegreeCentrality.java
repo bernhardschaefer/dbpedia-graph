@@ -1,5 +1,7 @@
 package de.unima.dws.dbpediagraph.disambiguate.local;
 
+import java.util.Map;
+
 import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.disambiguate.*;
@@ -21,7 +23,7 @@ public class GlobalDegreeCentrality<T extends SurfaceForm, U extends Sense> exte
 		AbstractLocalGraphDisambiguator<T, U> implements LocalGraphDisambiguator<T, U> {
 
 	private static final double globalVerticesCount = Graphs.verticesCount(GraphFactory.getDBpediaGraph());
-	
+
 	public GlobalDegreeCentrality(GraphType graphType, EdgeWeights graphWeights) {
 		super(graphType, graphWeights);
 	}
@@ -40,7 +42,7 @@ public class GlobalDegreeCentrality<T extends SurfaceForm, U extends Sense> exte
 	}
 
 	@Override
-	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
+	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph, Map<Vertex, Double> vertexPriors) {
 		return new DegreeVertexScorer();
 	}
 }

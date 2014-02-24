@@ -1,5 +1,7 @@
 package de.unima.dws.dbpediagraph.disambiguate.local;
 
+import java.util.Map;
+
 import com.tinkerpop.blueprints.*;
 
 import de.unima.dws.dbpediagraph.disambiguate.*;
@@ -40,7 +42,7 @@ public class NormalizedDegreeCentrality<T extends SurfaceForm, U extends Sense> 
 	}
 
 	@Override
-	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph) {
+	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph, Map<Vertex, Double> vertexPriors) {
 		return new DegreeVertexScorer();
 	}
 }
