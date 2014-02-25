@@ -50,7 +50,7 @@ public class HITSWithPriorsCentrality<T extends SurfaceForm, U extends Sense> ex
 			Double authority = entry.getValue();
 			hitsPriors.put(entry.getKey(), new Scores(hub, authority));
 		}
-		return TransformerUtils.mapTransformer(hitsPriors);
+		return new ScoresTransformer(hitsPriors);
 	}
 
 	@Override
@@ -64,5 +64,23 @@ public class HITSWithPriorsCentrality<T extends SurfaceForm, U extends Sense> ex
 	public String toString() {
 		return new StringBuilder(super.toString()).append(" (alpha: ").append(alpha).append(", iterations: ")
 				.append(iterations).append(")").toString();
+	}
+
+	/**
+	 * Decorates a transformer with zero scores for non existing vertices.
+	 */
+	static class ScoresTransformer implements Transformer<Vertex, Scores> {
+		private Transformer<Vertex, Scores> transformer;
+
+		public ScoresTransformer(Map<Vertex, Scores> hitsPriors) {
+			transformer = TransformerUtils.mapTransformer(hitsPriors);
+		}
+
+		@Override
+		public Scores transform(Vertex v) {
+			Scores scores = transformer.transform(v);
+			return scores != null ? scores : new Scores(0, 0);
+		}
+
 	}
 }
