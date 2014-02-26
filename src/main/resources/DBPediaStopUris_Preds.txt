@@ -1,31 +1,33 @@
-http://purl.org/dc/elements/1.1/language
-http://purl.org/dc/elements/1.1/rights
-http://purl.org/dc/elements/1.1/description
-http://dbpedia.org/ontology/wikiPageExternalLink
-http://dbpedia.org/ontology/wikiPageWikiLink
-# Redirects are needed since Spotlight uses them for spotting 
-# http://dbpedia.org/ontology/wikiPageRedirects
-http://dbpedia.org/ontology/wikiPageInterLanguageLink
-http://dbpedia.org/ontology/thumbnail
-http://dbpedia.org/ontology/wikiPageDisambiguates
-http://dbpedia.org/property/wikiPageUsesTemplate
-http://dbpedia.org/property/hasPhotoCollection
-http://dbpedia.org/property/url
-http://dbpedia.org/property/filetype
-http://dbpedia.org/property/format
-http://www.w3.org/2000/01/rdf-schema#suBClassOf
-http://www.w3.org/2000/01/rdf-schema#seeAlso
-http://www.w3.org/2003/01/geo/wgs84_pos#lat
-http://www.w3.org/2003/01/geo/wgs84_pos#long
-http://www.w3.org/2007/05/powder-s#describedby
-http://www.w3.org/2002/07/owl#sameAs
-http://www.w3.org/ns/prov#wasDerivedFrom
-http://xmlns.com/foaf/0.1/primaryTopic
-http://xmlns.com/foaf/0.1/isPrimaryTopicOf
-http://xmlns.com/foaf/0.1/homepage
-http://xmlns.com/foaf/0.1/depiction
-http://xmlns.com/foaf/0.1/thumbnail
-http://www.opengis.net/gml/_Feature
+# Blacklist from Schuhmacher & Ponzetto (2014): Exploiting Linked Data for Semantic Document Modelling
+# http://purl.org/dc/elements/1.1/language --> not present in any used dataset
+# http://purl.org/dc/elements/1.1/rights --> not present in any used dataset
+# http://purl.org/dc/elements/1.1/description --> covered by literal object filter
+# http://dbpedia.org/ontology/wikiPageExternalLink --> not present in any used dataset
+# http://dbpedia.org/ontology/wikiPageWikiLink --> not present in any used dataset
+# http://dbpedia.org/ontology/wikiPageRedirects --> needed since Spotlight uses them for spotting 
+# http://dbpedia.org/ontology/wikiPageInterLanguageLink --> not present in any used dataset
+# http://dbpedia.org/ontology/thumbnail --> not present in any used dataset
+# http://dbpedia.org/ontology/wikiPageDisambiguates --> not present in any used dataset
+# Properties not present in any used dataset
+# http://dbpedia.org/property/wikiPageUsesTemplate
+# http://dbpedia.org/property/hasPhotoCollection
+# http://dbpedia.org/property/url
+# http://dbpedia.org/property/filetype
+# http://dbpedia.org/property/format
+# http://www.w3.org/2000/01/rdf-schema#suBClassOf --> not present in any used dataset
+# http://www.w3.org/2000/01/rdf-schema#seeAlso --> not present in any used dataset
+# http://www.w3.org/2003/01/geo/wgs84_pos#lat --> covered by literal object filter
+# http://www.w3.org/2003/01/geo/wgs84_pos#long --> covered by literal object filter
+# http://www.w3.org/2007/05/powder-s#describedby --> not present in any used dataset
+# http://www.w3.org/2002/07/owl#sameAs --> not present in any used dataset
+# http://www.w3.org/ns/prov#wasDerivedFrom --> not present in any used dataset
+# http://xmlns.com/foaf/0.1/primaryTopic --> not present in any used dataset
+# http://xmlns.com/foaf/0.1/isPrimaryTopicOf --> not present in any used dataset
+# http://xmlns.com/foaf/0.1/homepage --> covered by external URI filter
+# http://xmlns.com/foaf/0.1/depiction --> can contain relevant URIs
+# http://xmlns.com/foaf/0.1/thumbnail --> can contain relevant URIs
+# http://www.opengis.net/gml/_Feature --> covered by Hulpus et al. filter
+# Template filters are needed since they are present in redirects_en.nt
 http://dbpedia.org/resource/Template:%22_
 http://dbpedia.org/resource/Template:10TeamBracket
 http://dbpedia.org/resource/Template:10TeamBracket-NCAA
