@@ -2,8 +2,7 @@ package de.unima.dws.dbpediagraph.loader;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -20,53 +19,41 @@ import de.unima.dws.dbpediagraph.util.FileUtils;
  * @author Bernhard Schäfer
  */
 class BlacklistTriplePredicate implements Predicate<Triple> {
-
 	private static final Logger logger = LoggerFactory.getLogger(BlacklistTriplePredicate.class);
 
-	// Blacklists from "Exploiting Linked Data for Semantic Document Modelling"
-	private static final String CONFIG_CATEGORIES_FILE = "loading.filter.categories.file";
-	private static final String CONFIG_PREDICATES_FILE = "loading.filter.predicates.file";
+	private static final String CONFIG_BLACKLIST_FILES = "loading.filter.blacklist.files";
 
 	private static final BlacklistTriplePredicate DEFAULT_BLACKLIST_TRIPLE_PREDICATE = new BlacklistTriplePredicate(
 			GraphConfig.config());
 
-	private final HashSet<String> categories;
-	private final HashSet<String> predicates;
+	private final Set<String> blacklist;
 
 	static BlacklistTriplePredicate getDefault() {
 		return DEFAULT_BLACKLIST_TRIPLE_PREDICATE;
 	}
 
 	BlacklistTriplePredicate(Configuration config) {
-		categories = new HashSet<String>();
-		predicates = new HashSet<String>();
+		blacklist = new HashSet<>();
 
-		String categoriesFileName = config.getString(CONFIG_CATEGORIES_FILE);
-		try {
-			categories.addAll(FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), categoriesFileName));
-		} catch (URISyntaxException | IOException e) {
-			logger.warn("Category filter could not be loaded.", e);
-		}
+		@SuppressWarnings("unchecked")
+		List<String> blacklistFileNames = config.getList(CONFIG_BLACKLIST_FILES);
 
-		String predicatesFileName = config.getString(CONFIG_PREDICATES_FILE);
-		try {
-			predicates.addAll(FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), predicatesFileName));
-		} catch (URISyntaxException | IOException e) {
-			logger.warn("Predicate filter could not be loaded.", e);
+		for (String fileName : blacklistFileNames) {
+			try {
+				blacklist.addAll(FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), "/" + fileName));
+			} catch (IOException | URISyntaxException e) {
+				logger.warn("Filter " + fileName + " could not be loaded.", e);
+			}
 		}
 	}
 
 	private static boolean isTripleUriInBlacklist(Triple t, Set<String> blacklist) {
-		return blacklist.contains(t.subject()) || blacklist.contains(t.predicate()) || blacklist.contains(t.object());
+		return blacklist.contains(t.subject()) || blacklist.contains(t.object());
 	}
 
 	@Override
 	public boolean apply(Triple t) {
-		// TODO check if enough to look at triple subject and object
-		boolean validCategory = !(isTripleUriInBlacklist(t, categories));
-		// TODO check if enough to look at triple predicate
-		boolean validPredicate = !(isTripleUriInBlacklist(t, predicates));
-		return validCategory && validPredicate;
+		return !isTripleUriInBlacklist(t, blacklist);
 	}
 
 }

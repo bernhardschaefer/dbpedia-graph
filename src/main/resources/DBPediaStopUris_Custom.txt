@@ -1,0 +1,2 @@
+# Own custom Blacklist
+http://dbpedia.org/resource/Category:Category:Living_people
