@@ -2,6 +2,7 @@ package de.unima.dws.dbpediagraph.loader;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.configuration.*;
@@ -28,6 +29,26 @@ public class TestTriplePredicate {
 	private static final Triple rdfTypeTriple = Triple.fromStringUris("http://test.org/2",
 			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://do.not.filter.org");
 
+	private static final List<Triple> categoryValidTriples = Arrays.asList( //
+			Triple.fromStringUris("http://dbpedia.org/resource/Ayn_Rand", "http://purl.org/dc/terms/subject",
+					"http://dbpedia.org/resource/Category:Ayn_Rand"), //
+			Triple.fromStringUris("http://dbpedia.org/resource/Ayn_Rand", "http://purl.org/dc/terms/subject",
+					"http://dbpedia.org/resource/Category:American_anti-communists"));
+
+	private static final List<Triple> categoryInvalidTriples = Arrays.asList( //
+			Triple.fromStringUris("http://dbpedia.org/resource/Ayn_Rand", "http://purl.org/dc/terms/subject",
+					"http://dbpedia.org/resource/Category:1905_births"), // "^\\d+.*$"
+			Triple.fromStringUris("http://dbpedia.org/resource/Ayn_Rand", "http://purl.org/dc/terms/subject",
+					"http://dbpedia.org/resource/Category:20th-century_philosophers"), // "^\\d+.*$"
+			Triple.fromStringUris("http://dbpedia.org/resource/Skateboarding_Hall_of_Fame",
+					"http://purl.org/dc/terms/subject",
+					"http://dbpedia.org/resource/Category:Awards_established_in_2009"), // "^.*\\d+$"
+			Triple.fromStringUris("http://dbpedia.org/resource/Abbotsford_House", "http://purl.org/dc/terms/subject",
+					"http://dbpedia.org/resource/Category:Listed_houses_in_Scotland"), // "^list.*"
+			Triple.fromStringUris("http://dbpedia.org/resource/Decision_analysis_cycle",
+					"http://purl.org/dc/terms/subject", "http://dbpedia.org/resource/Category:Decision_theory_stubs") // "^.*(wiki|disambiguation|templates|portal|categories|articles|pages|redirect|navigational_boxes|infoboxes|stub).*"
+			);
+
 	@BeforeClass
 	public static void beforeClass() throws ConfigurationException {
 		String prefix = "test-loader/testconfig";
@@ -43,6 +64,15 @@ public class TestTriplePredicate {
 		assertFalse(pred.apply(categoryObjectTriple));
 		assertTrue(pred.apply(ontologyObjectTriple));
 		assertTrue(pred.apply(rdfTypeTriple));
+	}
+
+	@Test
+	public void testRegexpCategoryPredicate() {
+		Predicate<Triple> pred = TriplePredicate.REGEXP_CATEGORY;
+		for (Triple t : categoryValidTriples)
+			assertTrue(pred.apply(t));
+		for (Triple t : categoryInvalidTriples)
+			assertFalse(pred.apply(t));
 	}
 
 	@Test
