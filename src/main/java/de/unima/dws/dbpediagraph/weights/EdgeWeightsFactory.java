@@ -81,7 +81,7 @@ public final class EdgeWeightsFactory {
 	/**
 	 * Enum where each type corresponds to one {@link EdgeWeights} implementation.
 	 */
-	enum EdgeWeightsType {
+	public enum EdgeWeightsType {
 		DUMMY, JOINT_IC, COMB_IC, IC_PMI;
 
 		private static final String CONFIG_EDGE_WEIGHTS_IMPL = "graph.edge.weights.impl";

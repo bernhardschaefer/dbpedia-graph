@@ -16,6 +16,7 @@ import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.util.FileUtils;
 import de.unima.dws.dbpediagraph.util.LoadingMetrics;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory.EdgeWeightsType;
 import de.unima.dws.dbpediagraph.weights.PredObjOccsCounter;
 
 /**
@@ -112,7 +113,9 @@ public final class DBpediaGraphLoader {
 	 *            each arg can be a directory containing RDF files or a RDF file itself.
 	 */
 	public static void main(String[] args) throws ConfigurationException {
-		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args), GraphConfig.config());
-		PredObjOccsCounter.countAndPersistDBpediaGraphOccs();
+		Configuration config = GraphConfig.config();
+		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args), config);
+		if (EdgeWeightsType.fromConfig(config) != EdgeWeightsType.DUMMY)
+			PredObjOccsCounter.countAndPersistDBpediaGraphOccs();
 	}
 }
