@@ -58,12 +58,21 @@ enum TriplePredicate implements Predicate<Triple> {
 	},
 	/**
 	 * Filter that yields all triple with DBpedia resources as subject and object, which means the match the pattern
-	 * http://dbpedia.org/resource/*. This excludes the entire DBpedia ontology.
+	 * http://dbpedia.org/resource/*. This excludes most of the entire DBpedia ontology.
 	 */
 	RESOURCE {
 		@Override
 		public boolean apply(Triple t) {
 			return t.object().startsWith("http://dbpedia.org/resource/");
+		}
+	},
+	/**
+	 * Filter that yields all triple with DBpedia domains as object.
+	 */
+	DOMAIN {
+		@Override
+		public boolean apply(Triple t) {
+			return t.object().startsWith("http://dbpedia.org/");
 		}
 	},
 	/**
