@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
 
-import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.util.FileUtils;
 
 /**
@@ -23,28 +22,25 @@ class BlacklistTriplePredicate implements Predicate<Triple> {
 
 	private static final String CONFIG_BLACKLIST_FILES = "loading.filter.blacklist.files";
 
-	private static final BlacklistTriplePredicate DEFAULT_BLACKLIST_TRIPLE_PREDICATE = new BlacklistTriplePredicate(
-			GraphConfig.config());
-
 	private final Set<String> blacklist;
 
-	static BlacklistTriplePredicate getDefault() {
-		return DEFAULT_BLACKLIST_TRIPLE_PREDICATE;
+	BlacklistTriplePredicate(Set<String> blacklist) {
+		this.blacklist = blacklist;
 	}
 
-	BlacklistTriplePredicate(Configuration config) {
-		blacklist = new HashSet<>();
-
+	static BlacklistTriplePredicate fromConfig(Configuration config) {
+		Set<String> blacklist = new HashSet<>();
 		@SuppressWarnings("unchecked")
 		List<String> blacklistFileNames = config.getList(CONFIG_BLACKLIST_FILES);
-
 		for (String fileName : blacklistFileNames) {
 			try {
-				blacklist.addAll(FileUtils.readNonEmptyNonCommentLinesFromFile(getClass(), "/" + fileName));
+				blacklist.addAll(FileUtils.readNonEmptyNonCommentLinesFromFile(BlacklistTriplePredicate.class, "/"
+						+ fileName));
 			} catch (IOException | URISyntaxException e) {
 				logger.warn("Filter " + fileName + " could not be loaded.", e);
 			}
 		}
+		return new BlacklistTriplePredicate(blacklist);
 	}
 
 	private static boolean isTripleUriInBlacklist(Triple t, Set<String> blacklist) {

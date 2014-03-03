@@ -9,6 +9,7 @@ import org.apache.commons.configuration.Configuration;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.util.EnumUtils;
 
 /**
@@ -26,9 +27,11 @@ enum TriplePredicate implements Predicate<Triple> {
 		}
 	},
 	BLACKLIST {
+		private final Predicate<Triple> pred = BlacklistTriplePredicate.fromConfig(GraphConfig.config());
+
 		@Override
 		public boolean apply(Triple t) {
-			return BlacklistTriplePredicate.getDefault().apply(t);
+			return pred.apply(t);
 		}
 	},
 	/**
@@ -103,11 +106,26 @@ enum TriplePredicate implements Predicate<Triple> {
 			}
 			return false;
 		}
+	},
+	ONTOLOGY_THRESHOLD {
+		private final Predicate<Triple> pred = OntologyTriplePredicate.fromConfig(GraphConfig.config());
+
+		@Override
+		public boolean apply(Triple t) {
+			return pred.apply(t);
+		}
+	},
+	NON_ONTOLOGY {
+		@Override
+		public boolean apply(Triple t) {
+			return !t.predicate().equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+		}
 	};
 
 	private static final String CONFIG_TRIPLE_PREDICATE = "loading.filter.impl";
 
-	private static final String CATEGORY_PREFIX = "http://dbpedia.org/resource/Category:";
+	static final String CATEGORY_PREFIX = "http://dbpedia.org/resource/Category:";
+	static final String ONTOLOGY_PREFIX = "http://dbpedia.org/ontology/";
 
 	/**
 	 * Get a {@link Predicate} implementation from config.

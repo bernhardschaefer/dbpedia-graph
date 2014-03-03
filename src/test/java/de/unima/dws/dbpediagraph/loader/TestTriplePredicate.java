@@ -24,7 +24,7 @@ public class TestTriplePredicate {
 
 	private static final Triple categoryObjectTriple = Triple.fromStringUris("http://test.org/3",
 			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://dbpedia.org/resource/Category:Topic");
-	private static final Triple ontologyObjectTriple = Triple.fromStringUris("http://test.org/1",
+	private static final Triple ontologyRootObjectTriple = Triple.fromStringUris("http://test.org/1",
 			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/2002/07/owl#Class");
 	private static final Triple rdfTypeTriple = Triple.fromStringUris("http://test.org/2",
 			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://do.not.filter.org");
@@ -62,8 +62,50 @@ public class TestTriplePredicate {
 	public void testNonCategoryPredicate() {
 		Predicate<Triple> pred = TriplePredicate.NON_CATEGORY;
 		assertFalse(pred.apply(categoryObjectTriple));
-		assertTrue(pred.apply(ontologyObjectTriple));
+		assertTrue(pred.apply(ontologyRootObjectTriple));
 		assertTrue(pred.apply(rdfTypeTriple));
+	}
+
+	@Test
+	public void testBlacklistPredicate() {
+		Predicate<Triple> pred = BlacklistTriplePredicate.fromConfig(GraphConfig.config());
+		assertFalse(pred.apply(categoryObjectTriple));
+		assertFalse(pred.apply(ontologyRootObjectTriple));
+
+		assertTrue(pred.apply(rdfTypeTriple));
+	}
+
+	// c(Skater) == 222
+	private static final Triple ontologyValidTriple = Triple.fromStringUris("http://dbpedia.org/resource/Maria_Sterk",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://dbpedia.org/ontology/Skater");
+
+	// c(Work) == 372226
+	private static final Triple ontologyInvalidTriple = Triple.fromStringUris(
+			"http://dbpedia.org/resource/The_Archers", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+			"http://dbpedia.org/ontology/Work");
+
+	@Test
+	public void testOntologyPredicate() {
+		Predicate<Triple> pred = OntologyTriplePredicate.fromConfig(GraphConfig.config());
+		assertTrue(pred.apply(rdfTypeTriple));
+		assertTrue(pred.apply(categoryObjectTriple));
+		assertTrue(pred.apply(ontologyRootObjectTriple));
+
+		assertTrue(pred.apply(ontologyValidTriple));
+		assertFalse(pred.apply(ontologyInvalidTriple));
+	}
+
+	@Test
+	public void testNonOntologyPredicate() {
+		Predicate<Triple> pred = TriplePredicate.NON_ONTOLOGY;
+		for (Triple t : categoryValidTriples)
+			assertTrue(pred.apply(t));
+		for (Triple t : categoryInvalidTriples)
+			assertTrue(pred.apply(t));
+
+		assertFalse(pred.apply(rdfTypeTriple));
+		assertFalse(pred.apply(ontologyValidTriple));
+		assertFalse(pred.apply(ontologyInvalidTriple));
 	}
 
 	@Test
@@ -73,15 +115,6 @@ public class TestTriplePredicate {
 			assertTrue(pred.apply(t));
 		for (Triple t : categoryInvalidTriples)
 			assertFalse(pred.apply(t));
-	}
-
-	@Test
-	public void testBlacklistPredicate() {
-		Predicate<Triple> pred = new BlacklistTriplePredicate(GraphConfig.config());
-		assertFalse(pred.apply(categoryObjectTriple));
-		assertFalse(pred.apply(ontologyObjectTriple));
-
-		assertTrue(pred.apply(rdfTypeTriple));
 	}
 
 	@Test
@@ -120,4 +153,5 @@ public class TestTriplePredicate {
 		List<TriplePredicate> loadingTypes = EnumUtils.enumsfromConfig(TriplePredicate.class, config3, configKey);
 		assertTrue(loadingTypes.size() == 0);
 	}
+
 }
