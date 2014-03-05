@@ -10,21 +10,18 @@ import javax.swing.JFrame;
 
 import org.apache.commons.collections15.Transformer;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.disambiguate.GraphDisambiguator;
-import de.unima.dws.dbpediagraph.disambiguate.global.*;
 import de.unima.dws.dbpediagraph.disambiguate.local.*;
 import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.subgraph.*;
 import de.unima.dws.dbpediagraph.util.FileUtils;
-import de.unima.dws.dbpediagraph.weights.EdgeWeights;
-import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory;
+import de.unima.dws.dbpediagraph.weights.*;
+import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory.EdgeWeightsType;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
@@ -36,16 +33,15 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
  * 
  */
 public class DemoSubgraphConstruction {
+	private static final String SENSES_FILE_NAME = "/demo/sentence-test";
 
 	private static final int MAX_DISTANCE = 2;
 	private static final GraphType GRAPH_TYPE = GraphType.UNDIRECTED_GRAPH;
-	// private static final GraphType GRAPH_TYPE = GraphType.DIRECTED_GRAPH;
-	private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.dbpediaFromConfig(GraphConfig.config());
-	private static final Predicate<Edge> EDGE_FILTER = Predicates.and(EdgePredicate.NON_CATEGORY, EdgePredicate.NON_ONTOLOGY);
-	// private static final Predicate<Edge> EDGE_FILTER = EdgePredicate.DUMMY;
+	private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.fromEdgeWeightsType(EdgeWeightsType.DUMMY, null);
 
 	private static final SubgraphConstructionSettings SETTINGS = new SubgraphConstructionSettings.Builder()
-			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).edgeFilter(EDGE_FILTER).build();
+			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).persistSubgraph(true)
+			.persistSubgraphDirectory("/var/dbpedia-graphdb/subgraphs").build();
 
 	private static final Collection<GraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators;
 	static {
@@ -59,9 +55,9 @@ public class DemoSubgraphConstruction {
 		disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
 
 		// global
-		disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
-		disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
-		disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
 	}
 
 	private static <T extends SurfaceForm, U extends Sense> void demo(Graph graph, Map<T, List<U>> surfaceFormsSenses,
@@ -85,11 +81,8 @@ public class DemoSubgraphConstruction {
 	}
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		// String sensesFileName = "/demo/dylan-sentence";
-		String sensesFileName = "/demo/napoleon-sentence-test";
-		// String sensesFileName = "/dbpedia-default-sentence-test";
 		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
-				sensesFileName, DemoSubgraphConstruction.class, UriTransformer.DBPEDIA_RESOURCE_PREFIX);
+				SENSES_FILE_NAME, DemoSubgraphConstruction.class, UriTransformer.DBPEDIA_RESOURCE_PREFIX);
 
 		Graph graph = GraphFactory.getDBpediaGraph();
 		demo(graph, wordsSensesString, disambiguators);

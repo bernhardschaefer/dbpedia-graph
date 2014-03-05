@@ -1,10 +1,7 @@
 # Napoleon was defeated at Waterloo by Wellington.
 
-# Napoleon
-Napoleon Napoleon_II Napoleon_III Napoleon_Louis_Bonaparte
+NAPOLEON	Napoleon Napoleon_II Napoleon_III
 
-# Waterloo
-Battle_of_Waterloo Waterloo,_Belgium Waterloo,_Ontario University_of_Waterloo
+WATERLOO	Battle_of_Waterloo Waterloo,_Belgium Waterloo,_Ontario
 
-# Wellington
-Arthur_Wellesley,_1st_Duke_of_Wellington Wellington Beef_Wellington
+WELLINGTON	Arthur_Wellesley,_1st_Duke_of_Wellington Wellington
