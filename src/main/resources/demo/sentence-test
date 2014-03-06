@@ -1,7 +1,16 @@
 # Napoleon was defeated at Waterloo by Wellington.
 
-NAPOLEON	Napoleon Napoleon_II Napoleon_III
+# Napoleon (prior: 0.9636106886812948, support: 8871)
+# Napoleon_(Animal_Farm) (prior: 0.009450358461872692, support: 87)
+# Napoleon,_Ohio (prior: 0.005213990875515968, support: 48)
+NAPOLEON	Napoleon	Napoleon_(Animal_Farm)	Napoleon,_Ohio
+ 
+# Waterloo,_Ontario (prior: 0.2587447283552468, support: 1043)
+# Battle_of_Waterloo (prior: 0.1510791366906475, support: 609)
+# London_Waterloo_station (prior: 0.0838501612503101, support: 338)
+WATERLOO	Waterloo,_Ontario	Battle_of_Waterloo	London_Waterloo_station
 
-WATERLOO	Battle_of_Waterloo Waterloo,_Belgium Waterloo,_Ontario
-
-WELLINGTON	Arthur_Wellesley,_1st_Duke_of_Wellington Wellington
+# Wellington (prior: 0.6512422878105719, support: 7811)
+# Arthur_Wellesley,_1st_Duke_of_Wellington (prior: 0.04719026179756545, support: 566)
+# Wellington_Rugby_Football_Union (prior: 0.04377188594297149, support: 525)]
+WELLINGTON	Wellington	Arthur_Wellesley,_1st_Duke_of_Wellington	Wellington_Rugby_Football_Union
