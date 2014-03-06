@@ -108,7 +108,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 				continue;
 			}
 			SurfaceFormSenseScore<T, U> highestScoreSense = Collections.max(sFSScores,
-					SurfaceFormSenseScore.DESCENDING_SCORE_COMPARATOR);
+					SurfaceFormSenseScore.SCORE_COMPARATOR);
 			highestScores.add(highestScoreSense);
 		}
 

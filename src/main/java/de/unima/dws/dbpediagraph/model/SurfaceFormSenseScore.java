@@ -65,7 +65,7 @@ public class SurfaceFormSenseScore<T extends SurfaceForm, U extends Sense> {
 				.append(score).toString();
 	}
 
-	public static final Comparator<? super SurfaceFormSenseScore<?, ?>> ASCENDING_SCORE_COMPARATOR = new Comparator<SurfaceFormSenseScore<?, ?>>() {
+	public static final Comparator<? super SurfaceFormSenseScore<?, ?>> SCORE_COMPARATOR = new Comparator<SurfaceFormSenseScore<?, ?>>() {
 		@Override
 		public int compare(SurfaceFormSenseScore<?, ?> left, SurfaceFormSenseScore<?, ?> right) {
 			return Double.compare(left.getScore(), right.getScore());
