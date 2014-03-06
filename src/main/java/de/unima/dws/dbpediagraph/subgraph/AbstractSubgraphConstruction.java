@@ -90,14 +90,14 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 
 		for (Vertex start : assignments) {
 			Set<Vertex> targetSenses = CollectionUtils.remove(assignments, start);
-			if (logger.isDebugEnabled())
-				logger.debug("Starting DFS with vid: {}, uri: {}", start.getId(),
+			if (logger.isTraceEnabled())
+				logger.trace("Starting DFS with vid: {}, uri: {}", start.getId(),
 						start.getProperty(GraphConfig.URI_PROPERTY));
 			Set<Vertex> stopVertices = Sets.difference(allSensesVertices, targetSenses);
 			dfs(new Path(start), targetSenses, subsubgraph, stopVertices);
 		}
 
-		if (logger.isDebugEnabled())
+		if (logger.isTraceEnabled())
 			SubgraphConstructions.logSubgraphConstructionStats(logger, getClass(), subsubgraph, stopwatch,
 					traversedNodes, settings.maxDistance);
 
