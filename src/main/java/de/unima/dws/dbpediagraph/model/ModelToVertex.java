@@ -1,6 +1,10 @@
 package de.unima.dws.dbpediagraph.model;
 
 import java.util.*;
+import java.util.Map.Entry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
@@ -15,6 +19,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
  * 
  */
 public final class ModelToVertex {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ModelToVertex.class);
 
 	public static Set<Vertex> verticesFromSenses(Graph graph, Collection<? extends Sense> senses) {
 		Set<Vertex> vertices = new HashSet<>(senses.size());
@@ -35,22 +40,15 @@ public final class ModelToVertex {
 	 *            the graph used for retrieving the vertices
 	 */
 	public static Collection<Set<Vertex>> verticesFromSurfaceFormSenses(Graph graph,
-			Map<? extends SurfaceForm, ? extends List<? extends Sense>> sFSenses) {
-		return verticesFromNestedSenses(graph, sFSenses.values());
-	}
-
-	/**
-	 * Transform a model-based representation of sense candidates into a nested collection of vertices, where each inner
-	 * collection represents the sense candidates of a surface form.
-	 * 
-	 * @param graph
-	 *            the graph used for retrieving the vertices
-	 */
-	public static Collection<Set<Vertex>> verticesFromNestedSenses(Graph graph,
-			Collection<? extends List<? extends Sense>> senses) {
+			Map<? extends SurfaceForm, ? extends List<? extends Sense>> sfsSenses) {
 		Collection<Set<Vertex>> senseVertices = new ArrayList<>();
-		for (List<? extends Sense> sFSenses : senses) {
-			Set<Vertex> vertices = verticesFromSenses(graph, sFSenses);
+		Set<String> sfUris = new HashSet<>();
+		for (Entry<? extends SurfaceForm, ? extends List<? extends Sense>> entry : sfsSenses.entrySet()) {
+			if (!sfUris.add(entry.getKey().name())) {
+				LOGGER.debug("Skipping sf since the name exists more than once: {}", entry.getKey());
+				continue;
+			}
+			Set<Vertex> vertices = verticesFromSenses(graph, entry.getValue());
 			if (!vertices.isEmpty())
 				senseVertices.add(vertices);
 		}
