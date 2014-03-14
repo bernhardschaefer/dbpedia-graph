@@ -111,8 +111,9 @@ public final class DBpediaGraphLoader {
 	 * 
 	 * @param args
 	 *            each arg can be a directory containing RDF files or a RDF file itself.
+	 * @throws FileNotFoundException
 	 */
-	public static void main(String[] args) throws ConfigurationException {
+	public static void main(String[] args) throws ConfigurationException, FileNotFoundException {
 		Configuration config = GraphConfig.config();
 		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args), config);
 		if (EdgeWeightsType.fromConfig(config) != EdgeWeightsType.DUMMY)
