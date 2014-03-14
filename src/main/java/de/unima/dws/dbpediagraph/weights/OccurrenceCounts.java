@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import de.unima.dws.dbpediagraph.util.PersistentMap;
 
 public class OccurrenceCounts {
 	private static final Logger logger = LoggerFactory.getLogger(OccurrenceCounts.class);
+
+	static final String CONFIG_EDGE_WARMUP = "graph.edge.weights.warmup";
 
 	/**
 	 * Inner class for lazy-loading DBpedia occurrence counts so that other counts can be used for testing etc.
@@ -82,6 +85,18 @@ public class OccurrenceCounts {
 	// Suppress default constructor for non-instantiability
 	private OccurrenceCounts() {
 		throw new AssertionError();
+	}
+
+	public static void doWarmup(Map<String, Integer> occCounts) {
+		logger.info("Starting edge weights warmup");
+		Stopwatch stopwatch = Stopwatch.createStarted();
+		int counter = 0;
+		long weightSum = 0;
+		for (Entry<String, Integer> entry : occCounts.entrySet()) {
+			counter++;
+			weightSum += entry.getValue();
+		}
+		logger.info("Traversed {} edge weights in {} (total weight sum: {}).", counter, stopwatch, weightSum);
 	}
 
 }
