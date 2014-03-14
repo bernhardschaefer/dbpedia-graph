@@ -35,6 +35,7 @@ public class OccurrenceCounts {
 	}
 
 	public static Map<String, Integer> loadOccCountsMap(Configuration config) {
+		logger.info("Start loading edge weights");
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		String fileName = config.getString(CONFIG_EDGE_COUNTS_FILE);
 		Kryo kryo = KryoMap.getDefault();
@@ -50,7 +51,7 @@ public class OccurrenceCounts {
 		Map<String, Integer> map = kryo.readObject(input, HashMap.class);
 		input.close();
 
-		logger.info("Graph weights loading time {}", stopwatch);
+		logger.info("Edge weights loading time {}", stopwatch);
 
 		return map;
 	}
