@@ -6,8 +6,6 @@ import java.util.*;
 
 import org.apache.commons.configuration.Configuration;
 
-import de.unima.dws.dbpediagraph.graph.GraphConfig;
-
 /**
  * Noninstantiable graph weights factory class that provides the graph weights needed for disambiguation.
  * 
@@ -25,8 +23,6 @@ public final class EdgeWeightsFactory {
 		private static final Map<EdgeWeightsType, EdgeWeights> DBPEDIA_EDGE_WEIGHTS;
 		static {
 			Map<String, Integer> occCounts = OccurrenceCounts.getDBpediaOccCounts();
-			if (GraphConfig.config().getBoolean(OccurrenceCounts.CONFIG_EDGE_WARMUP))
-				OccurrenceCounts.doWarmup(occCounts);
 			DBPEDIA_EDGE_WEIGHTS = new EnumMap<>(EdgeWeightsType.class);
 			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.DUMMY, DummyEdgeWeights.INSTANCE);
 			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.COMB_IC, new CombinedInformationContent(occCounts));

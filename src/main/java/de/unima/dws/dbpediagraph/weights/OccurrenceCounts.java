@@ -99,4 +99,9 @@ public class OccurrenceCounts {
 		logger.info("Traversed {} edge weights in {} (total weight sum: {}).", counter, stopwatch, weightSum);
 	}
 
+	public static void doWarmupIfConfigured(Configuration config) {
+		if (config.getBoolean(OccurrenceCounts.CONFIG_EDGE_WARMUP))
+			doWarmup(getDBpediaOccCounts());
+	}
+
 }
