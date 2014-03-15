@@ -46,7 +46,6 @@ public class OccurrenceCounts {
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-		;
 		@SuppressWarnings("unchecked")
 		Map<String, Integer> map = kryo.readObject(input, HashMap.class);
 		input.close();

@@ -127,7 +127,7 @@ public final class GraphFactory {
 		String line = "";
 
 		while (true) {
-			System.out.println("Please enter a URI, then press <return> (type \"exit\" to quit)");
+			System.out.println("Please enter a full URI, then press <return> (type \"exit\" to quit)");
 			BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
 			try {
@@ -140,6 +140,8 @@ public final class GraphFactory {
 				Vertex v = Graphs.vertexByFullUri(graph, line);
 				if (v != null)
 					System.out.println("VERTEX STATS: " + Graphs.vertexToString(v));
+				else
+					System.out.println("VERTEX NOT FOUND");
 
 			} catch (IOException e) {
 				e.printStackTrace();
