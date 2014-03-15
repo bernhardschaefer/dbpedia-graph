@@ -38,13 +38,15 @@ public final class ModelToVertex {
 	 * 
 	 * @param graph
 	 *            the graph used for retrieving the vertices
+	 * @param mergeEqualSurfaceForms
+	 *            keep only one set of candidates for multiple surface forms with equal names
 	 */
 	public static Collection<Set<Vertex>> verticesFromSurfaceFormSenses(Graph graph,
-			Map<? extends SurfaceForm, ? extends List<? extends Sense>> sfsSenses) {
+			Map<? extends SurfaceForm, ? extends List<? extends Sense>> sfsSenses, boolean mergeEqualSurfaceForms) {
 		Collection<Set<Vertex>> senseVertices = new ArrayList<>();
 		Set<String> sfUris = new HashSet<>();
 		for (Entry<? extends SurfaceForm, ? extends List<? extends Sense>> entry : sfsSenses.entrySet()) {
-			if (!sfUris.add(entry.getKey().name())) {
+			if (mergeEqualSurfaceForms && !sfUris.add(entry.getKey().name())) {
 				LOGGER.debug("Skipping sf since the name exists more than once: {}", entry.getKey());
 				continue;
 			}
@@ -52,6 +54,8 @@ public final class ModelToVertex {
 			if (!vertices.isEmpty())
 				senseVertices.add(vertices);
 		}
+		if (senseVertices.isEmpty())
+			LOGGER.warn("No vertices found for {}", sfsSenses);
 		return senseVertices;
 	}
 

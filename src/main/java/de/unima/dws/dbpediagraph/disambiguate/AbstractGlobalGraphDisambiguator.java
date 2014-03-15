@@ -54,7 +54,7 @@ public abstract class AbstractGlobalGraphDisambiguator<T extends SurfaceForm, U 
 		logger.info("Using disambiguator {}", this);
 
 		final Set<Vertex> allSensesVertices = Sets.newHashSet(Iterables.concat(ModelToVertex
-				.verticesFromSurfaceFormSenses(subgraph, surfaceFormsSenses)));
+				.verticesFromSurfaceFormSenses(subgraph, surfaceFormsSenses, true)));
 		ConnectivityMeasureFunction<T, U> scoreFunction = new ConnectivityMeasureFunction<T, U>() {
 			@Override
 			public double getMeasure(Map<T, U> assignments, Graph subgraph) {

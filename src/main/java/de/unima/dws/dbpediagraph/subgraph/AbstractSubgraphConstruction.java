@@ -74,7 +74,7 @@ abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
 	@Override
 	public Graph createSubgraph(Map<? extends SurfaceForm, ? extends List<? extends Sense>> surfaceFormSenses) {
 		Collection<Set<Vertex>> surfaceFormVertices = ModelToVertex.verticesFromSurfaceFormSenses(graph,
-				surfaceFormSenses);
+				surfaceFormSenses, true);
 		return createSubgraph(surfaceFormVertices);
 	}
 
