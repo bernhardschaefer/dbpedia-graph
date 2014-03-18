@@ -28,6 +28,8 @@ public final class EdgeWeightsFactory {
 			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.COMB_IC, new CombinedInformationContent(occCounts));
 			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.JOINT_IC, new JointInformationContent(occCounts));
 			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.IC_PMI, new InfContentAndPointwiseMutuaInf(occCounts));
+			DBPEDIA_EDGE_WEIGHTS.put(EdgeWeightsType.EXP, new ExponentialEdgeWeightsDecorator(
+					new CombinedInformationContent(occCounts), 5));
 		}
 	}
 
@@ -44,6 +46,8 @@ public final class EdgeWeightsFactory {
 			return new InfContentAndPointwiseMutuaInf(occCounts);
 		case JOINT_IC:
 			return new JointInformationContent(occCounts);
+		case EXP:
+			return new ExponentialEdgeWeightsDecorator(new InfContentAndPointwiseMutuaInf(occCounts), 4);
 		case DUMMY:
 			return DummyEdgeWeights.INSTANCE;
 		}
@@ -82,7 +86,7 @@ public final class EdgeWeightsFactory {
 	 * Enum where each type corresponds to one {@link EdgeWeights} implementation.
 	 */
 	public enum EdgeWeightsType {
-		DUMMY, JOINT_IC, COMB_IC, IC_PMI;
+		DUMMY, JOINT_IC, COMB_IC, IC_PMI, EXP;
 
 		private static final String CONFIG_EDGE_WEIGHTS_IMPL = "graph.edge.weights.impl";
 

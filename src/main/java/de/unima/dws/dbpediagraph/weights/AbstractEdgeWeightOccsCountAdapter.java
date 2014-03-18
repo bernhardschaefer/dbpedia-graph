@@ -7,7 +7,11 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
+
+import de.unima.dws.dbpediagraph.graph.GraphConfig;
+import de.unima.dws.dbpediagraph.graph.Graphs;
 
 /**
  * {@link EdgeWeights} adapter using a {@link Map} of occurrences counts.
@@ -49,5 +53,13 @@ public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights 
 		if(LOGGER.isTraceEnabled())
 			LOGGER.trace(String.format("ic(%s)=%.2f", shortUri, ic));
 		return ic;
+	}
+	
+	protected String getPred(Edge e) {
+		return e.getProperty(GraphConfig.URI_PROPERTY);
+	}
+	
+	protected String getObj(Edge e) {
+		return Graphs.shortUriOfVertex(e.getVertex(Direction.IN));
 	}
 }
