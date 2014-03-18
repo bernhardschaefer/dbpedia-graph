@@ -38,7 +38,6 @@ public class PredObjOccsCounter {
 	private static Map<String, Integer> countGraphOccs(Graph graph) {
 		Counter c = new Counter("process edges", 1_000_000);
 
-		// Map<String, Integer> counts = new Object2IntOpenHashMap<String>();
 		Map<String, Integer> counts = new HashMap<>(1_000_000);
 		for (Edge edge : graph.getEdges()) {
 			String shortPredUri = Graphs.shortUriOfEdge(edge);

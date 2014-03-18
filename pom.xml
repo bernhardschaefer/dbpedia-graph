@@ -16,7 +16,6 @@
 		<neo4j.version>1.9.2</neo4j.version>
 		<sesame.version>2.7.5</sesame.version>
 		<slf4j.version>1.7.5</slf4j.version>
-		<logback.version>1.0.13</logback.version>
 	</properties>
 
 	<dependencies>
@@ -108,16 +107,6 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>ch.qos.logback</groupId> -->
-		<!-- <artifactId>logback-core</artifactId> -->
-		<!-- <version>${logback.version}</version> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>ch.qos.logback</groupId> -->
-		<!-- <artifactId>logback-classic</artifactId> -->
-		<!-- <version>${logback.version}</version> -->
-		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -128,11 +117,6 @@
 			<groupId>com.googlecode.aima-java</groupId>
 			<artifactId>aima-core</artifactId>
 			<version>0.10.5</version>
-		</dependency>
-		<dependency>
-			<groupId>it.unimi.dsi</groupId>
-			<artifactId>fastutil</artifactId>
-			<version>6.5.11</version>
 		</dependency>
 		<dependency>
 			<groupId>com.esotericsoftware.kryo</groupId>
