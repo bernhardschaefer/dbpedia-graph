@@ -117,6 +117,6 @@ public final class DBpediaGraphLoader {
 		Configuration config = GraphConfig.config();
 		DBpediaGraphLoader.loadFromFiles(FileUtils.extractFilesFromArgs(args), config);
 		if (EdgeWeightsType.fromConfig(config) != EdgeWeightsType.DUMMY)
-			PredObjOccsCounter.countAndPersistDBpediaGraphOccs();
+			PredObjOccsCounter.countAndPersistDBpediaGraphOccs(GraphFactory.getDBpediaGraph());
 	}
 }

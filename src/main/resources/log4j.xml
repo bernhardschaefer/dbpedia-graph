@@ -26,6 +26,9 @@
 		<level value="debug" />
 	</logger>
 	
+	<logger name="de.unima.dws.dbpediagraph.weights.AbstractEdgeWeightOccsCountAdapter">
+		<level value="trace" />
+	</logger>
 
 	<root>
 		<priority value="info" />

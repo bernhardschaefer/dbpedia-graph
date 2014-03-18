@@ -4,6 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tinkerpop.blueprints.Edge;
 
 /**
@@ -13,9 +16,10 @@ import com.tinkerpop.blueprints.Edge;
  * 
  */
 public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractEdgeWeightOccsCountAdapter.class);
+	
 	private final Map<String, Integer> occCounts;
-	private final double totalEdges;
+	private final int totalEdges;
 
 	public AbstractEdgeWeightOccsCountAdapter(Map<String, Integer> occCounts) {
 		this.occCounts = occCounts;
@@ -31,13 +35,19 @@ public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights 
 	protected double p(String shortUri) {
 		int shortUriCount = checkNotNull(occCounts.get(shortUri),
 				"The graph occs count is corrupt. URI %s has no count.", shortUri);
-		return shortUriCount / totalEdges;
+		double p = (double) shortUriCount / totalEdges;
+		if(LOGGER.isTraceEnabled())
+			LOGGER.trace(String.format("p(%s)=%,d/%,d=%.6f", shortUri, shortUriCount, totalEdges, p));
+		return p;
 	}
 
 	/**
 	 * @return the information content of the short URI.
 	 */
 	protected double ic(String shortUri) {
-		return -1 * Math.log(p(shortUri));
+		double ic = -1 * Math.log(p(shortUri));
+		if(LOGGER.isTraceEnabled())
+			LOGGER.trace(String.format("ic(%s)=%.2f", shortUri, ic));
+		return ic;
 	}
 }

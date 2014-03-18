@@ -13,6 +13,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.google.common.base.Stopwatch;
 
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
+import de.unima.dws.dbpediagraph.graph.GraphFactory;
 
 public class OccurrenceCounts {
 	private static final Logger logger = LoggerFactory.getLogger(OccurrenceCounts.class);
@@ -26,7 +27,7 @@ public class OccurrenceCounts {
 	private static class DBpediaOccCountsHolder {
 		private static final Map<String, Integer> OCC_COUNTS;
 		static {
-			OCC_COUNTS = OccurrenceCounts.loadOccCountsMap(GraphConfig.config());
+			OCC_COUNTS = OccurrenceCounts.loadOccCountsMap(GraphConfig.config(), true);
 		}
 	}
 
@@ -34,15 +35,25 @@ public class OccurrenceCounts {
 		return DBpediaOccCountsHolder.OCC_COUNTS;
 	}
 
-	public static Map<String, Integer> loadOccCountsMap(Configuration config) {
+	public static Map<String, Integer> loadOccCountsMap(Configuration config, boolean createIfNonExisting) {
+		String fileName = config.getString(CONFIG_EDGE_COUNTS_FILE);
+		File file = new File(fileName);
+		if (createIfNonExisting && !file.exists()) {
+			try {
+				PredObjOccsCounter.countAndPersistDBpediaGraphOccs(GraphFactory.getDBpediaGraph());
+			} catch (FileNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
 		logger.info("Start loading edge weights");
 		Stopwatch stopwatch = Stopwatch.createStarted();
-		String fileName = config.getString(CONFIG_EDGE_COUNTS_FILE);
+
 		Kryo kryo = KryoMap.getDefault();
 
 		Input input;
 		try {
-			input = new Input(new FileInputStream(fileName));
+			input = new Input(new FileInputStream(file));
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -56,7 +67,7 @@ public class OccurrenceCounts {
 	}
 
 	public static void main(String[] args) {
-		Map<String, Integer> map = loadOccCountsMap(GraphConfig.config());
+		Map<String, Integer> map = loadOccCountsMap(GraphConfig.config(), false);
 		queryContent(map);
 	}
 

@@ -23,15 +23,14 @@ public class PredObjOccsCounter {
 	public static final String KEY_EDGE_COUNT = "EDGE_COUNT";
 
 	public static void main(String[] args) throws FileNotFoundException {
-		countAndPersistDBpediaGraphOccs();
+		Graph graph = GraphFactory.getDBpediaGraph();
+		countAndPersistDBpediaGraphOccs(graph);
+		graph.shutdown();
 	}
 
-	public static void countAndPersistDBpediaGraphOccs() throws FileNotFoundException {
+	public static void countAndPersistDBpediaGraphOccs(Graph graph) throws FileNotFoundException {
 		logger.info("STARTING with counting and persisting DBpedia graph URI occurrences.");
-		Graph graph = GraphFactory.getDBpediaGraph();
-
 		Map<String, Integer> map = countGraphOccs(graph);
-		graph.shutdown(); // free ram
 		KryoMap.serializeMap(map, GraphConfig.config());
 	}
 
