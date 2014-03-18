@@ -15,10 +15,16 @@ import com.google.common.base.Stopwatch;
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
 
+/**
+ * Class for retrieving the occurrence counts of predicates, objects, and predicate-object combinations which have been
+ * counted by {@link PredObjOccsCounter}.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class OccurrenceCounts {
 	private static final Logger logger = LoggerFactory.getLogger(OccurrenceCounts.class);
 
-	static final String CONFIG_EDGE_WARMUP = "graph.edge.weights.warmup";
 	static final String CONFIG_EDGE_COUNTS_FILE = "graph.occ.counts.file";
 
 	/**
@@ -35,7 +41,7 @@ public class OccurrenceCounts {
 		return DBpediaOccCountsHolder.OCC_COUNTS;
 	}
 
-	public static Map<String, Integer> loadOccCountsMap(Configuration config, boolean createIfNonExisting) {
+	private static Map<String, Integer> loadOccCountsMap(Configuration config, boolean createIfNonExisting) {
 		String fileName = config.getString(CONFIG_EDGE_COUNTS_FILE);
 		File file = new File(fileName);
 		if (createIfNonExisting && !file.exists()) {
@@ -61,7 +67,7 @@ public class OccurrenceCounts {
 		Map<String, Integer> map = kryo.readObject(input, HashMap.class);
 		input.close();
 
-		logger.info("Edge weights loading time {}", stopwatch);
+		logger.info("Edge weights with {} entries loaded in {}", map.size(), stopwatch);
 
 		return map;
 	}
@@ -71,7 +77,7 @@ public class OccurrenceCounts {
 		queryContent(map);
 	}
 
-	public static <V> void queryContent(Map<String, Integer> map) {
+	private static <V> void queryContent(Map<String, Integer> map) {
 		String line = "";
 
 		while (true) {

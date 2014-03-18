@@ -14,7 +14,7 @@ import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.util.Counter;
 
 /**
- * 
+ * Main functionality in {@link #countAndPersistDBpediaGraphOccs(Graph)}.
  * @author Bernhard Schäfer
  * 
  */
@@ -28,6 +28,10 @@ public class PredObjOccsCounter {
 		graph.shutdown();
 	}
 
+	/**
+	 * Counts the occurrences of predicates , objects and predicate-object combinations within the provided graph.
+	 * Divided by the number of edges these counts represent P(pred), P(obj), and P(pred,obj).
+	 */
 	public static void countAndPersistDBpediaGraphOccs(Graph graph) throws FileNotFoundException {
 		logger.info("STARTING with counting and persisting DBpedia graph URI occurrences.");
 		Map<String, Integer> map = countGraphOccs(graph);
