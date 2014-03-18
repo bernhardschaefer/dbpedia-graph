@@ -35,7 +35,6 @@ public final class GraphFactory {
 		static {
 			Configuration config = GraphConfig.config();
 			GRAPH = openFromConfig(config, true);
-			GraphWarmup.byConfig(GRAPH, config);
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
 				public void run() {
