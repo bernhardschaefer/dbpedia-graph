@@ -20,7 +20,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
  * 
  */
 public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractEdgeWeightOccsCountAdapter.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractEdgeWeightOccsCountAdapter.class);
 	
 	private final Map<String, Integer> occCounts;
 	private final int totalEdges;

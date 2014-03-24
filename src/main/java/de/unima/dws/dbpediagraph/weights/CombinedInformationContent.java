@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.tinkerpop.blueprints.Edge;
 
+import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory.EdgeWeightsType;
 
 public class CombinedInformationContent extends AbstractEdgeWeightOccsCountAdapter {
@@ -17,7 +18,10 @@ public class CombinedInformationContent extends AbstractEdgeWeightOccsCountAdapt
 		// w_combIC(e) = IC(w_Pred ) + IC(w_Obj) .
 		String pred = getPred(e);
 		String obj = getObj(e);
-		return ic(pred) + ic(obj);
+		double score = ic(pred) + ic(obj);
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug("{}: {}", Graphs.edgeToString(e), score);
+		return score;
 	}
 
 	@Override

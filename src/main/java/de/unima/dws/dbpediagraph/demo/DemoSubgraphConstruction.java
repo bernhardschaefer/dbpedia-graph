@@ -9,13 +9,14 @@ import java.util.*;
 import javax.swing.JFrame;
 
 import org.apache.commons.collections15.Transformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tinkerpop.blueprints.*;
 import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.disambiguate.GraphDisambiguator;
-import de.unima.dws.dbpediagraph.disambiguate.global.*;
-import de.unima.dws.dbpediagraph.disambiguate.local.*;
+import de.unima.dws.dbpediagraph.disambiguate.local.DegreeCentrality;
 import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.model.*;
@@ -34,31 +35,43 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
  * 
  */
 public class DemoSubgraphConstruction {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoSubgraphConstruction.class);
+
 	private static final String SENSES_FILE_NAME = "/demo/sentence-test";
 
 	private static final int MAX_DISTANCE = 2;
 	private static final GraphType GRAPH_TYPE = GraphType.UNDIRECTED_GRAPH;
-	private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.fromEdgeWeightsType(EdgeWeightsType.DUMMY, null);
 
 	private static final SubgraphConstructionSettings SETTINGS = new SubgraphConstructionSettings.Builder()
 			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).persistSubgraph(true)
 			.persistSubgraphDirectory("/var/dbpedia-graphdb/subgraphs").build();
+
+	private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.fromEdgeWeightsType(EdgeWeightsType.JOINT_IC,
+			OccurrenceCounts.getDBpediaOccCounts());
 
 	private static final Collection<GraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators;
 	static {
 		disambiguators = new ArrayList<>();
 
 		// local
-		disambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new BetweennessCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
 		disambiguators.add(new DegreeCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
-		disambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
-		disambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
-		disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
 
 		// global
-		 disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
-		 disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
-		 disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new Compactness<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new EdgeDensity<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+		// disambiguators.add(new GraphEntropy<DefaultSurfaceForm, DefaultSense>(GRAPH_TYPE, EDGE_WEIGHTS));
+	}
+
+	public static void main(String[] args) throws IOException, URISyntaxException {
+		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
+				SENSES_FILE_NAME, DemoSubgraphConstruction.class, UriTransformer.DBPEDIA_RESOURCE_PREFIX);
+		Graph graph = GraphFactory.getDBpediaGraph();
+		demo(graph, wordsSensesString, disambiguators);
+		graph.shutdown();
 	}
 
 	private static <T extends SurfaceForm, U extends Sense> void demo(Graph graph, Map<T, List<U>> surfaceFormsSenses,
@@ -67,27 +80,25 @@ public class DemoSubgraphConstruction {
 		Graph subGraph = sc.createSubgraph(surfaceFormsSenses);
 
 		for (GraphDisambiguator<T, U> d : disambiguators) {
-			System.out.println(d);
+			LOGGER.info("DISAMBIGUATOR {}", d);
 
-			List<SurfaceFormSenseScore<T, U>> senseScores = d.disambiguate(surfaceFormsSenses, subGraph);
-			for (SurfaceFormSenseScore<T, U> senseScore : senseScores)
-				System.out.printf("  %s (%.2f)", UriTransformer.shorten(senseScore.getSense().fullUri()),
-						senseScore.getScore());
-			System.out.println();
+			Map<T, List<SurfaceFormSenseScore<T, U>>> sfss = d.bestK(surfaceFormsSenses, subGraph, 3);
+			for (List<SurfaceFormSenseScore<T, U>> sfScores : sfss.values()) {
+				for (SurfaceFormSenseScore<T, U> senseScore : sfScores) {
+					LOGGER.info(String.format("  %s (%.4f)", UriTransformer.shorten(senseScore.getSense().fullUri()),
+							senseScore.getScore()));
+				}
+			}
+
+			// List<SurfaceFormSenseScore<T, U>> senseScores = d.disambiguate(surfaceFormsSenses, subGraph);
+			// for (SurfaceFormSenseScore<T, U> senseScore : senseScores)
+			// LOGGER.info(String.format("  %s (%.2f)", UriTransformer.shorten(senseScore.getSense().fullUri()),
+			// senseScore.getScore()));
 		}
 
 		visualizeGraph(subGraph, sc.getClass().getSimpleName() + " (max distance: " + MAX_DISTANCE + ")");
 
 		subGraph.shutdown();
-	}
-
-	public static void main(String[] args) throws IOException, URISyntaxException {
-		Map<DefaultSurfaceForm, List<DefaultSense>> wordsSensesString = FileUtils.parseSurfaceFormSensesFromFile(
-				SENSES_FILE_NAME, DemoSubgraphConstruction.class, UriTransformer.DBPEDIA_RESOURCE_PREFIX);
-
-		Graph graph = GraphFactory.getDBpediaGraph();
-		demo(graph, wordsSensesString, disambiguators);
-		graph.shutdown();
 	}
 
 	private static final Dimension SCREEN_DIMENSION;

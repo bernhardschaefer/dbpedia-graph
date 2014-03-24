@@ -129,6 +129,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[ graphType: " + graphType + " ]";
+		return String.format("%s [graphType: %s, edgeWeights: %s ]", getClass().getSimpleName(), graphType, edgeWeights
+				.getClass().getSimpleName());
 	}
 }
