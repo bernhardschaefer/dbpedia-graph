@@ -41,7 +41,7 @@ public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights 
 				"The graph occs count is corrupt. URI %s has no count.", shortUri);
 		double p = (double) shortUriCount / totalEdges;
 		if(LOGGER.isTraceEnabled())
-			LOGGER.trace(String.format("p(%s)=%,d/%,d=%.6f", shortUri, shortUriCount, totalEdges, p));
+			LOGGER.trace(String.format("p(%s)=%d/%d=%.6f%%", shortUri, shortUriCount, totalEdges, p * 100));
 		return p;
 	}
 
