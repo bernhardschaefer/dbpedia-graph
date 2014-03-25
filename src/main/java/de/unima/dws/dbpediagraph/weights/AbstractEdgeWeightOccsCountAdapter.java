@@ -21,7 +21,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
  */
 public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractEdgeWeightOccsCountAdapter.class);
-	
+
 	private final Map<String, Integer> occCounts;
 	private final int totalEdges;
 
@@ -40,7 +40,7 @@ public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights 
 		int shortUriCount = checkNotNull(occCounts.get(shortUri),
 				"The graph occs count is corrupt. URI %s has no count.", shortUri);
 		double p = (double) shortUriCount / totalEdges;
-		if(LOGGER.isTraceEnabled())
+		if (LOGGER.isTraceEnabled())
 			LOGGER.trace(String.format("p(%s)=%d/%d=%.6f%%", shortUri, shortUriCount, totalEdges, p * 100));
 		return p;
 	}
@@ -50,16 +50,21 @@ public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights 
 	 */
 	protected double ic(String shortUri) {
 		double ic = -1 * Math.log(p(shortUri));
-		if(LOGGER.isTraceEnabled())
+		if (LOGGER.isTraceEnabled())
 			LOGGER.trace(String.format("ic(%s)=%.2f", shortUri, ic));
 		return ic;
 	}
-	
-	protected String getPred(Edge e) {
+
+	protected static String getPred(Edge e) {
 		return e.getProperty(GraphConfig.URI_PROPERTY);
 	}
-	
-	protected String getObj(Edge e) {
+
+	protected static String getObj(Edge e) {
 		return Graphs.shortUriOfVertex(e.getVertex(Direction.IN));
+	}
+
+	protected static void logEdgeScore(Edge e, double score) {
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug(String.format("%s: %.2f", Graphs.edgeToString(e), score));
 	}
 }
