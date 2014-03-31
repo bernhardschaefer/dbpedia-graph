@@ -22,8 +22,8 @@ import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.subgraph.*;
 import de.unima.dws.dbpediagraph.util.FileUtils;
-import de.unima.dws.dbpediagraph.weights.*;
-import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory.EdgeWeightsType;
+import de.unima.dws.dbpediagraph.weights.DummyEdgeWeights;
+import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
@@ -37,17 +37,18 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 public class DemoSubgraphConstruction {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DemoSubgraphConstruction.class);
 
-	private static final String SENSES_FILE_NAME = "/demo/sentence-test";
+	private static final String SENSES_FILE_NAME = "/demo/napoleon-1-sentence";
 
-	private static final int MAX_DISTANCE = 2;
+	private static final int MAX_DISTANCE = 1;
 	private static final GraphType GRAPH_TYPE = GraphType.UNDIRECTED_GRAPH;
 
 	private static final SubgraphConstructionSettings SETTINGS = new SubgraphConstructionSettings.Builder()
 			.maxDistance(MAX_DISTANCE).graphType(GRAPH_TYPE).persistSubgraph(true)
 			.persistSubgraphDirectory("/var/dbpedia-graphdb/subgraphs").build();
 
-	private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.fromEdgeWeightsType(EdgeWeightsType.JOINT_IC,
-			OccurrenceCounts.getDBpediaOccCounts());
+	// private static final EdgeWeights EDGE_WEIGHTS = EdgeWeightsFactory.fromEdgeWeightsType(EdgeWeightsType.JOINT_IC,
+	// OccurrenceCounts.getDBpediaOccCounts());
+	private static final EdgeWeights EDGE_WEIGHTS = DummyEdgeWeights.INSTANCE;
 
 	private static final Collection<GraphDisambiguator<DefaultSurfaceForm, DefaultSense>> disambiguators;
 	static {
