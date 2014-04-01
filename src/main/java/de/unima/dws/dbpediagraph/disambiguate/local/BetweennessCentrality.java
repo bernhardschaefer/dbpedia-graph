@@ -15,6 +15,8 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
+ * Betweenness Centrality implementation as described in Navigli & Lapata (2010).
+ * 
  * @author Bernhard Schäfer
  */
 // TODO evaluate GraphStream

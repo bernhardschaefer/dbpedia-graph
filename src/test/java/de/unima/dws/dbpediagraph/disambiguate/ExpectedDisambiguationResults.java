@@ -11,6 +11,9 @@ import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.util.FileUtils;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class ExpectedDisambiguationResults<T extends SurfaceForm, U extends Sense> {
 	private static final Logger logger = LoggerFactory.getLogger(ExpectedDisambiguationResults.class);
 

@@ -7,6 +7,9 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class TestTripleDecoding {
 
 	private static final Map<String, String> urisDumpToDecoded = new HashMap<>();

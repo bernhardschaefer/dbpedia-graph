@@ -6,6 +6,9 @@ import org.apache.commons.configuration.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class TestPriorStrategy {
 	private static Configuration config1;
 	private static Configuration config2;

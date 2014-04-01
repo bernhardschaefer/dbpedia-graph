@@ -6,7 +6,13 @@ import com.tinkerpop.blueprints.Edge;
 
 import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory.EdgeWeightsType;
 
-public class CombinedInformationContent extends AbstractEdgeWeightOccsCountAdapter {
+/**
+ * Combined Information Content edge weights implementation as described in Schuhmacher & Ponzetto (2014).
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
+public class CombinedInformationContent extends AbstractEdgeWeightOccsCountAdapter implements EdgeWeights {
 
 	public CombinedInformationContent(Map<String, Integer> occCounts) {
 		super(occCounts);

@@ -21,7 +21,6 @@ import com.tinkerpop.blueprints.util.io.graphml.GraphMLWriter;
  * Utilities for serializing {@link Graph}s.
  * 
  * @author Bernhard Schäfer
- * 
  */
 public final class GraphExporter {
 	private static final Logger logger = LoggerFactory.getLogger(GraphExporter.class);

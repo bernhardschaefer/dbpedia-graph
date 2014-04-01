@@ -2,6 +2,9 @@ package de.unima.dws.dbpediagraph.weights;
 
 import java.util.*;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class DummyOccurrenceCounts {
 	public static final Map<String,Integer> DUMMY_MAP = new RandomDummyMap();
 	

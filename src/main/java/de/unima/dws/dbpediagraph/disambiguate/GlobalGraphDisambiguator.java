@@ -26,7 +26,6 @@ public interface GlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense
 	 *            the surface form sense assignments as vertices
 	 * @param subgraph
 	 *            the subgraph consists of all paths between all senses; not just the provided senses.
-	 * @param senseVertices TODO javadoc
 	 * @return the score for the provided assignments
 	 */
 	public double globalConnectivityMeasure(Collection<Vertex> assigments, Graph subgraph, Set<Vertex> sensesVertices);
@@ -34,5 +33,6 @@ public interface GlobalGraphDisambiguator<T extends SurfaceForm, U extends Sense
 	/**
 	 * Convenience method for {@link #globalConnectivityMeasure(Collection, Graph, Set)}.
 	 */
-	public double globalConnectivityMeasure(Map<T, U> surfaceFormSenseAssigments, Graph subgraph, Set<Vertex> sensesVertices);
+	public double globalConnectivityMeasure(Map<T, U> surfaceFormSenseAssigments, Graph subgraph,
+			Set<Vertex> sensesVertices);
 }

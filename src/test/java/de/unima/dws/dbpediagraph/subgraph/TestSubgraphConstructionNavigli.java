@@ -12,6 +12,9 @@ import de.unima.dws.dbpediagraph.graph.SubgraphTester;
 import de.unima.dws.dbpediagraph.weights.DummyEdgeWeights;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class TestSubgraphConstructionNavigli {
 	private static final EdgeWeights EDGE_WEIGHTS = DummyEdgeWeights.INSTANCE;
 

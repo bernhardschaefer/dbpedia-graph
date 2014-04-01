@@ -16,7 +16,7 @@ import de.unima.dws.dbpediagraph.util.GraphJungUndirectedWrapper;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
 /**
- * Noninstantiable utility class for performing various graph operations. All operations are static.
+ * Utility class for performing various graph operations. All operations are static.
  * 
  * @author Bernhard Schäfer
  * 

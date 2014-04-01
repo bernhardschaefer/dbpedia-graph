@@ -15,6 +15,9 @@ import de.unima.dws.dbpediagraph.subgraph.SubgraphConstructionSettings;
 import de.unima.dws.dbpediagraph.weights.DummyEdgeWeights;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class TestGlobalDisambiguators {
 	private static final Logger logger = LoggerFactory.getLogger(TestGlobalDisambiguators.class);
 

@@ -59,8 +59,8 @@ enum PriorStrategy {
 		@Override
 		<T extends SurfaceForm, U extends Sense> void reviseScores(T surfaceForm,
 				List<SurfaceFormSenseScore<T, U>> sfss, double threshold) {
-			double confidence = sfss.isEmpty() ? 1.0 : Collections.max(sfss,
-					SurfaceFormSenseScore.SCORE_COMPARATOR).getScore();
+			double confidence = sfss.isEmpty() ? 1.0 : Collections.max(sfss, SurfaceFormSenseScore.SCORE_COMPARATOR)
+					.getScore();
 			if (confidence <= threshold)
 				sfss.clear(); // delete all candidates so annotation is done
 
@@ -78,8 +78,8 @@ enum PriorStrategy {
 		<T extends SurfaceForm, U extends Sense> void reviseScores(T surfaceForm,
 				List<SurfaceFormSenseScore<T, U>> sfss, double threshold) {
 			// check if there are only singletons
-			double confidence = sfss.isEmpty() ? 1.0 : Collections.max(sfss,
-					SurfaceFormSenseScore.SCORE_COMPARATOR).getScore();
+			double confidence = sfss.isEmpty() ? 1.0 : Collections.max(sfss, SurfaceFormSenseScore.SCORE_COMPARATOR)
+					.getScore();
 			if (confidence <= threshold)
 				assignPriors(surfaceForm, sfss);
 

@@ -6,6 +6,12 @@ import com.tinkerpop.blueprints.Edge;
 
 import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory.EdgeWeightsType;
 
+/**
+ * Joint Information Content edge weights implementation as described in Schuhmacher & Ponzetto (2014).
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class JointInformationContent extends AbstractEdgeWeightOccsCountAdapter {
 
 	public JointInformationContent(Map<String, Integer> occCounts) {

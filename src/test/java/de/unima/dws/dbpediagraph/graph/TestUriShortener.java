@@ -12,6 +12,9 @@ import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.graph.UriTransformer;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class TestUriShortener {
 
 	private Map<String, String> uriToPrefix;

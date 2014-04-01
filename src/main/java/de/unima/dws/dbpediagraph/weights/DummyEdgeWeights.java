@@ -4,6 +4,12 @@ import com.tinkerpop.blueprints.Edge;
 
 import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory.EdgeWeightsType;
 
+/**
+ * Dummy edge weights implementation that is used when no edge weights are configured.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public enum DummyEdgeWeights implements EdgeWeights {
 	INSTANCE;
 

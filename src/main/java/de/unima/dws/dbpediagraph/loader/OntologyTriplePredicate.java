@@ -10,6 +10,13 @@ import com.google.common.base.Predicate;
 
 import de.unima.dws.dbpediagraph.util.FileUtils;
 
+/**
+ * Filters RDF Triples if the object is an ontology class and occurs more frequently than the provided threshold. This
+ * is necessary to filter common classes like owl#Thing or Person.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 class OntologyTriplePredicate implements Predicate<Triple> {
 	private static final String CONFIG_OCCURRENCE_COUNTS_FILE = "loading.filter.ontology.occurrences.file";
 	private static final String CONFIG_ONTOLOGY_THRESHOLD = "loading.filter.ontology.threshold";

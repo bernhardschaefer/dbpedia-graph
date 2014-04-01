@@ -12,6 +12,8 @@ import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.util.LRUMap;
 
 /**
+ * Exploration threshold condition to prevent exploration of edges where the ingoing vertex has a high degree.
+ * 
  * @author Bernhard Schäfer
  */
 public class DegreeThreshold implements ExplorationThreshold {

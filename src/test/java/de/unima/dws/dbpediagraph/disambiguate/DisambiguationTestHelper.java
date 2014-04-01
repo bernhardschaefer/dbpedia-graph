@@ -14,6 +14,9 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.graph.SubgraphTester;
 import de.unima.dws.dbpediagraph.model.*;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class DisambiguationTestHelper {
 	private static final Logger logger = LoggerFactory.getLogger(DisambiguationTestHelper.class);
 

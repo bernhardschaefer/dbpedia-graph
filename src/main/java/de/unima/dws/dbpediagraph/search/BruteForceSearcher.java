@@ -17,7 +17,7 @@ import de.unima.dws.dbpediagraph.model.SurfaceForm;
  * @author Bernhard Schäfer
  * 
  */
-// TODO what happens if a surface form has no senses
+// TODO what happens if a surface form has no senses?
 class BruteForceSearcher implements Searcher {
 
 	@Override

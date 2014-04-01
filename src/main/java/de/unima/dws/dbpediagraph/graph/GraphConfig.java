@@ -11,10 +11,9 @@ import org.slf4j.LoggerFactory;
 import com.tinkerpop.blueprints.Graph;
 
 /**
- * The configuration hub for the DBpedia graph project.
+ * Loads and observes the central configuration file. Uses a redirect mechanism described in redirect.properties.
  * 
  * @author Bernhard Schäfer
- * 
  */
 public final class GraphConfig {
 	private static final Logger logger = LoggerFactory.getLogger(GraphConfig.class);

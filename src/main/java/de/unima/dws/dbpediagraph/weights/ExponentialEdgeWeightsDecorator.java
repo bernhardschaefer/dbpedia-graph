@@ -4,7 +4,14 @@ import com.tinkerpop.blueprints.Edge;
 
 import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory.EdgeWeightsType;
 
-public class ExponentialEdgeWeightsDecorator  implements EdgeWeights {
+/**
+ * Hack which decorates an edge weights implementation by raising the weight of the decorated implementation by the
+ * provided exponent.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
+public class ExponentialEdgeWeightsDecorator implements EdgeWeights {
 	private double exp;
 	private EdgeWeights edgeWeights;
 
@@ -15,7 +22,7 @@ public class ExponentialEdgeWeightsDecorator  implements EdgeWeights {
 
 	@Override
 	public Double transform(Edge e) {
-		return Math.pow(edgeWeights.transform(e),exp);
+		return Math.pow(edgeWeights.transform(e), exp);
 	}
 
 	@Override

@@ -13,6 +13,9 @@ import de.unima.dws.dbpediagraph.util.CollectionUtils;
 import de.unima.dws.dbpediagraph.weights.DummyEdgeWeights;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class TestLocalDisambiguators {
 	/** Name of the package where the local disambiguator classes reside. */
 	private static final String LOCAL_PACKAGE_NAME = "de.unima.dws.dbpediagraph.disambiguate.local";

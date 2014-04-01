@@ -9,8 +9,6 @@ package de.unima.dws.dbpediagraph.model;
 public interface Sense {
 	/**
 	 * Return the unshortened URI of the sense.
-	 * 
-	 * @return the unshortened URI
 	 */
 	public String fullUri();
 
@@ -18,7 +16,7 @@ public interface Sense {
 	 * Prior probability of a sense for the respective surface form.
 	 */
 	public Double prior();
-	
+
 	/**
 	 * Support of a sense
 	 */

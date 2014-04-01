@@ -116,6 +116,9 @@ enum TriplePredicate implements Predicate<Triple> {
 			return false;
 		}
 	},
+	/**
+	 * See {@link OntologyTriplePredicate}.
+	 */
 	ONTOLOGY_THRESHOLD {
 		private final Predicate<Triple> pred = OntologyTriplePredicate.fromConfig(GraphConfig.config());
 

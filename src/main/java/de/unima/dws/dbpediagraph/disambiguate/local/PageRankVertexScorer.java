@@ -5,6 +5,11 @@ import com.tinkerpop.blueprints.*;
 import edu.uci.ics.jung.algorithms.scoring.PageRankWithPriors;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
+/**
+ * PageRank Vertex Scorer as helper class for PageRank centrality algorithms.
+ * 
+ * @author Bernhard Schäfer
+ */
 class PRVertexScorer implements VertexScorer<Vertex, Double> {
 	private final double scoreSum;
 

@@ -13,13 +13,14 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
 /**
- * Absolute Degree Centrality {@link GraphDisambiguator} that only takes into account the degree of edges in the subgraph.
+ * Absolute Degree Centrality {@link GraphDisambiguator} that only takes into account the degree of edges in the
+ * subgraph.
  * 
  * @author Bernhard Schäfer
  * 
  */
-public class AbsoluteDegreeCentrality<T extends SurfaceForm, U extends Sense> extends AbstractLocalGraphDisambiguator<T, U>
-		implements LocalGraphDisambiguator<T, U> {
+public class AbsoluteDegreeCentrality<T extends SurfaceForm, U extends Sense> extends
+		AbstractLocalGraphDisambiguator<T, U> implements LocalGraphDisambiguator<T, U> {
 
 	public AbsoluteDegreeCentrality(GraphType graphType, EdgeWeights graphWeights) {
 		super(graphType, graphWeights);

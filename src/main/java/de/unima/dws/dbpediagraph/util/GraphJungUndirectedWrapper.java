@@ -10,6 +10,12 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 
 import de.unima.dws.dbpediagraph.graph.Graphs;
 
+/**
+ * Wraps a {@link Graph} as an undirected {@link GraphJung} graph.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class GraphJungUndirectedWrapper extends GraphJung<Graph> {
 
 	public GraphJungUndirectedWrapper(Graph graph) {

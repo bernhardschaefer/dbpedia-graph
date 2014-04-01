@@ -7,6 +7,11 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
 import edu.uci.ics.jung.algorithms.scoring.*;
 import edu.uci.ics.jung.algorithms.scoring.HITS.Scores;
 
+/**
+ * HITS Vertex Scorer as helper class for HITS centrality algorithms.
+ * 
+ * @author Bernhard Schäfer
+ */
 class HITSVertexScorer implements VertexScorer<Vertex, Double> {
 
 	private final HITSWithPriors<Vertex, Edge> hits;

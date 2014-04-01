@@ -13,6 +13,9 @@ import de.unima.dws.dbpediagraph.util.FileUtils;
 import de.unima.dws.dbpediagraph.weights.DummyEdgeWeights;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class TestSubgraphConstructionCyclic {
 	private static final int MAX_DISTANCE = 10;
 	private static final EdgeWeights EDGE_WEIGHTS = DummyEdgeWeights.INSTANCE;

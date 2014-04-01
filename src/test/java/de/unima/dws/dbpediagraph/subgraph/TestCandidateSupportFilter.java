@@ -8,6 +8,9 @@ import org.junit.Test;
 
 import de.unima.dws.dbpediagraph.model.*;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class TestCandidateSupportFilter {
 
 	private static final Sense sense1 = new DefaultSense("uri1", 0.05, 20);

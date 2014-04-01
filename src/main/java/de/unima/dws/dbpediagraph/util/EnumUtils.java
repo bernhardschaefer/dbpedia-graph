@@ -5,6 +5,12 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 
+/**
+ * Helper class for reading enum values from a Configuration file.
+ * 
+ * @author Bernhard Schäfer
+ * 
+ */
 public class EnumUtils {
 	public static <E extends Enum<E>> E fromConfig(Class<E> enumClass, Configuration config, String configKey,
 			boolean returnNullIfNotPresent) {

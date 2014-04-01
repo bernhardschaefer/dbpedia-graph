@@ -12,6 +12,9 @@ import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.subgraph.EdgePredicate;
 
+/**
+ * @author Bernhard Schäfer
+ */
 public class TestEdgeFilters {
 
 	static Graph GRAPH;

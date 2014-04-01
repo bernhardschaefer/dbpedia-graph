@@ -19,7 +19,7 @@ import de.unima.dws.dbpediagraph.weights.EdgeWeightsFactory;
  * 
  */
 public final class GraphDisambiguatorFactory {
-	private static final Logger logger = LoggerFactory.getLogger(GraphDisambiguatorFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GraphDisambiguatorFactory.class);
 
 	private static final String CONFIG_DISAMBIGUATOR = "de.unima.dws.dbpediagraph.graph.disambiguator";
 
@@ -47,7 +47,7 @@ public final class GraphDisambiguatorFactory {
 		PriorStrategy priorStrategy = PriorStrategy.fromConfig(config);
 		if (priorStrategy != null) {
 			double threshold = PriorStrategy.getThresholdFromConfig(config);
-			logger.debug("Using PriorStrategy {} with threshold {}", priorStrategy, threshold);
+			LOGGER.debug("Using PriorStrategy {} with threshold {}", priorStrategy, threshold);
 			return new PriorStrategyDisambiguatorDecorator<>(disambiguator, priorStrategy, threshold);
 		} else
 			return disambiguator;

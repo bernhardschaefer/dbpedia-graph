@@ -14,10 +14,9 @@ import com.tinkerpop.blueprints.util.wrappers.batch.BatchGraph;
 import com.tinkerpop.blueprints.util.wrappers.batch.VertexIDType;
 
 /**
- * Noninstantiable graph factory class that provides graph instances.
+ * Graph factory class that provides the configured DBpedia Graph and non-serializable in-memory graph instances.
  * 
  * @author Bernhard Schäfer
- * 
  */
 public final class GraphFactory {
 	private static final Logger logger = LoggerFactory.getLogger(GraphFactory.class);

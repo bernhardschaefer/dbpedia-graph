@@ -6,12 +6,9 @@ import java.util.Map;
 import com.google.common.collect.ForwardingMap;
 
 /**
+ * LRU cache which adheres to the {@link Map} interface.
  * 
- * A simple Least Recently Used cache in Java. Note that this implementation is not synchronized.
- * 
- * @author ponzetto
  * @author Bernhard Schäfer
- * 
  */
 public class LRUMap<K, V> extends ForwardingMap<K, V> implements Map<K, V> {
 

@@ -11,6 +11,11 @@ import de.unima.dws.dbpediagraph.graph.GraphType;
 import de.unima.dws.dbpediagraph.model.*;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
 
+/**
+ * Baseline disambiguator that assigns prior probability scores.
+ * 
+ * @author Bernhard Schäfer
+ */
 public class PriorOnlyDisambiguator<T extends SurfaceForm, U extends Sense> implements LocalGraphDisambiguator<T, U> {
 	private static final Logger logger = LoggerFactory.getLogger(PriorOnlyDisambiguator.class);
 
