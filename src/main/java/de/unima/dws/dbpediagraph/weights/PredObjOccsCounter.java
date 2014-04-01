@@ -1,5 +1,6 @@
 package de.unima.dws.dbpediagraph.weights;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +13,11 @@ import com.tinkerpop.blueprints.*;
 import de.unima.dws.dbpediagraph.graph.*;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.util.Counter;
+import de.unima.dws.dbpediagraph.util.KryoSerializer;
 
 /**
  * Main functionality in {@link #countAndPersistDBpediaGraphOccs(Graph)}.
+ * 
  * @author Bernhard Schäfer
  * 
  */
@@ -35,27 +38,23 @@ public class PredObjOccsCounter {
 	public static void countAndPersistDBpediaGraphOccs(Graph graph) throws FileNotFoundException {
 		logger.info("STARTING with counting and persisting DBpedia graph URI occurrences.");
 		Map<String, Integer> map = countGraphOccs(graph);
-		KryoMap.serializeMap(map, GraphConfig.config());
+		String fileName = GraphConfig.config().getString(OccurrenceCounts.CONFIG_EDGE_COUNTS_FILE);
+		KryoSerializer.serializeStringIntegerMap(map, new File(fileName));
 	}
 
 	private static Map<String, Integer> countGraphOccs(Graph graph) {
 		Counter c = new Counter("process edges", 1_000_000);
-
 		Map<String, Integer> counts = new HashMap<>(1_000_000);
 		for (Edge edge : graph.getEdges()) {
 			String shortPredUri = Graphs.shortUriOfEdge(edge);
 			String shortObjUri = Graphs.shortUriOfVertex(edge.getVertex(Direction.IN));
-
 			incValueOfKey(counts, shortPredUri);
 			incValueOfKey(counts, shortObjUri);
-			incValueOfKey(counts, shortPredUri + shortObjUri);
-
+			incValueOfKey(counts, shortPredUri + shortObjUri); // TODO this is a hack and not intuitive
 			c.inc();
 		}
-
 		counts.put(KEY_EDGE_COUNT, c.count());
 		c.finish();
-
 		return counts;
 	}
 
