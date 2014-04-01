@@ -7,12 +7,12 @@
 		<layout class="org.apache.log4j.PatternLayout">
 			<!-- v1 -->
 			<!-- <param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" /> -->
-			
+
 			<!-- less verbose v2 -->
 			<param name="ConversionPattern" value="%d %-5p %30.30c - %m%n" />
-			
+
 			<!-- even less verbose v3 (only message and line separator) -->
-<!-- 			<param name="ConversionPattern" value="%m%n" /> -->
+			<!-- <param name="ConversionPattern" value="%m%n" /> -->
 
 		</layout>
 	</appender>
