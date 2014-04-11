@@ -63,8 +63,8 @@ public abstract class AbstractEdgeWeightOccsCountAdapter implements EdgeWeights 
 		return Graphs.shortUriOfVertex(e.getVertex(Direction.IN));
 	}
 
-	protected static void logEdgeScore(Edge e, double score) {
+	protected void logEdgeScore(Edge e, double score) {
 		if (LOGGER.isDebugEnabled())
-			LOGGER.debug(String.format("%s: %.2f", Graphs.edgeToString(e), score));
+			LOGGER.debug(String.format("%s(%s) = %.2f", type(), Graphs.edgeToString(e), score));
 	}
 }
