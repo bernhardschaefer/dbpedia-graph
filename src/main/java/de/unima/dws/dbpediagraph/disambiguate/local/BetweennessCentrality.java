@@ -40,6 +40,11 @@ public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> exten
 		@Override
 		public Double getVertexScore(Vertex v) {
 			double score = betweenness.getVertexScore(v);
+			if (graphType == GraphType.UNDIRECTED_GRAPH)
+				// for vertices u,v shortest paths are searches for u->v and v->u
+				// this results in two equal paths for undirected traversal
+				// thus, for undirected graphs we have to divide the score by two
+				score /= 2;
 			double normalizedScore = score / ((verticesCount - 1) * (verticesCount - 2));
 			return normalizedScore;
 		}
