@@ -35,7 +35,7 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 		while (!stack.isEmpty()) {
 			traversedNodes++;
 			if (LOGGER.isDebugEnabled() && traversedNodes % TRAVERSAL_TICK_RATE == 0)
-				LOGGER.debug("Current vertex: {}, total traversed nodes: {}", Graphs.fullUriOfVertex(start.getLast()),
+				LOGGER.debug("Current vertex: {}, total traversed nodes: {}", Graphs.shortUriOfVertex(start.getLast()),
 						traversedNodes);
 
 			Path path = stack.pop();
