@@ -23,7 +23,7 @@ import de.unima.dws.dbpediagraph.util.CollectionUtils;
  * 
  */
 abstract class AbstractSubgraphConstruction implements SubgraphConstruction {
-	protected static final Logger logger = LoggerFactory.getLogger(AbstractSubgraphConstruction.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractSubgraphConstruction.class);
 
 	protected final SubgraphConstructionSettings settings;
 	protected long traversedNodes;

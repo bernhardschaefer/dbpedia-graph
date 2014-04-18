@@ -2,6 +2,9 @@ package de.unima.dws.dbpediagraph.subgraph;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Iterables;
 import com.tinkerpop.blueprints.*;
 
@@ -15,6 +18,7 @@ import de.unima.dws.dbpediagraph.graph.Graphs;
  * 
  */
 class SubgraphConstructionIterative extends AbstractSubgraphConstruction implements SubgraphConstruction {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SubgraphConstructionIterative.class);
 	private static final long TRAVERSAL_TICK_RATE = 1_000_000;
 
 	public SubgraphConstructionIterative(Graph graph, SubgraphConstructionSettings settings) {
@@ -30,8 +34,9 @@ class SubgraphConstructionIterative extends AbstractSubgraphConstruction impleme
 		stack.push(start);
 		while (!stack.isEmpty()) {
 			traversedNodes++;
-			if (logger.isDebugEnabled() && traversedNodes % TRAVERSAL_TICK_RATE == 0)
-				logger.debug("Start vertex: {}, traversed nodes: {}", Graphs.fullUriOfVertex(start.getLast()), traversedNodes);
+			if (LOGGER.isDebugEnabled() && traversedNodes % TRAVERSAL_TICK_RATE == 0)
+				LOGGER.debug("Current vertex: {}, total traversed nodes: {}", Graphs.fullUriOfVertex(start.getLast()),
+						traversedNodes);
 
 			Path path = stack.pop();
 			Vertex current = path.getLast();
