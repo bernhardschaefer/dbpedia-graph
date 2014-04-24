@@ -5,6 +5,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Stopwatch;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
@@ -41,7 +42,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 
 	@Override
 	public Map<T, List<SurfaceFormSenseScore<T, U>>> bestK(Map<T, List<U>> surfaceFormsSenses, Graph subgraph, int k) {
-		logger.info("Using disambiguator {}", this);
+		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		Map<String, Vertex> fullUriToVertex = getVerticesByFullUris(surfaceFormsSenses, subgraph);
 
@@ -67,6 +68,7 @@ public abstract class AbstractLocalGraphDisambiguator<T extends SurfaceForm, U e
 			senseScores.put(surfaceForm, sfss.subList(0, toIndex));
 		}
 
+		logger.info("Disambiguated {} surface forms in {} using {}", surfaceFormsSenses.size(), stopwatch, this);
 		return senseScores;
 	}
 
