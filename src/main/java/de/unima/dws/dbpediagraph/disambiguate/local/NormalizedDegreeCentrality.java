@@ -35,7 +35,7 @@ public class NormalizedDegreeCentrality<T extends SurfaceForm, U extends Sense> 
 			Vertex vDBpediaGraph = GraphFactory.getDBpediaGraph().getVertex(v.getId());
 			double totalDegree = Graphs.vertexDegreeWeighted(vDBpediaGraph, Direction.BOTH, edgeWeights);
 
-			double centrality = subgraphDegree / totalDegree;
+			double centrality = totalDegree == 0 ? 0 : subgraphDegree / totalDegree;
 			return centrality;
 		}
 

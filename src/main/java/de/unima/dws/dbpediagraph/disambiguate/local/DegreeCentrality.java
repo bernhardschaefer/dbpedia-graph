@@ -34,6 +34,8 @@ public class DegreeCentrality<T extends SurfaceForm, U extends Sense> extends Ab
 
 		@Override
 		public Double getVertexScore(Vertex v) {
+			if (verticesCount == 1) // shortcut to prevent division by zero NaN
+				return 0.0;
 			// TODO should Direction.IN be used for directed graphs?
 			double degree = Graphs.vertexDegreeWeighted(v, Direction.BOTH, edgeWeights);
 			double centrality = degree / (verticesCount - 1);

@@ -29,7 +29,7 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 
 	class KPPVertexScorer implements VertexScorer<Vertex, Double> {
 		private final Distance<Vertex> distances;
-		private final int numberOfVertices;
+		private final int verticesCount;
 		private final Graph subgraph;
 
 		public KPPVertexScorer(Graph subgraph) {
@@ -37,11 +37,13 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 			GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
 			// distances = new UnweightedShortestPath<>(graphJung);
 			distances = new DijkstraDistance<>(graphJung, edgeWeights);
-			numberOfVertices = Graphs.verticesCount(subgraph);
+			verticesCount = Graphs.verticesCount(subgraph);
 		}
 
 		@Override
 		public Double getVertexScore(Vertex v) {
+			if (verticesCount == 1) // shortcut to prevent division by zero NaN
+				return 0.0;
 			Map<Vertex, Number> distancesFromVertex = distances.getDistanceMap(v);
 			double sumInverseShortestDistances = 0;
 			for (Vertex otherVertex : subgraph.getVertices()) {
@@ -52,13 +54,13 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 				if (distance == null || distance.doubleValue() == 0)
 					// if there is no path, the distance is the constant
 					// 1/(numberOfVertices-1)
-					inverseShortestDistance = 1.0 / (numberOfVertices - 1);
+					inverseShortestDistance = 1.0 / (verticesCount - 1);
 				else
 					inverseShortestDistance = 1.0 / distance.doubleValue();
 				sumInverseShortestDistances += inverseShortestDistance;
 			}
 
-			double score = sumInverseShortestDistances / (numberOfVertices - 1);
+			double score = sumInverseShortestDistances / (verticesCount - 1);
 			return score;
 		}
 

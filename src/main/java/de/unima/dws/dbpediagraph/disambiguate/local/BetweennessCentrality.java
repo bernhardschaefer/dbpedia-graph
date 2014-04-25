@@ -39,6 +39,8 @@ public class BetweennessCentrality<T extends SurfaceForm, U extends Sense> exten
 
 		@Override
 		public Double getVertexScore(Vertex v) {
+			if (verticesCount <= 2) // shortcut to prevent division by zero NaN
+				return 0.0;
 			double score = betweenness.getVertexScore(v);
 			if (graphType == GraphType.UNDIRECTED_GRAPH)
 				// for vertices u,v shortest paths are searches for u->v and v->u
