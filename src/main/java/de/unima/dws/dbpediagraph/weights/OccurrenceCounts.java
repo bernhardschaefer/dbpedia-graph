@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 
+import com.google.common.base.Preconditions;
+
 import de.unima.dws.dbpediagraph.graph.GraphConfig;
 import de.unima.dws.dbpediagraph.graph.GraphFactory;
 import de.unima.dws.dbpediagraph.util.KryoSerializer;
@@ -25,7 +27,7 @@ public class OccurrenceCounts {
 	private static class DBpediaOccCountsHolder {
 		private static final Map<String, Integer> OCC_COUNTS;
 		static {
-			OCC_COUNTS = OccurrenceCounts.loadOccCountsMap(GraphConfig.config(), true);
+			OCC_COUNTS = loadOccCountsMap(GraphConfig.config(), true);
 		}
 	}
 
@@ -34,7 +36,8 @@ public class OccurrenceCounts {
 	}
 
 	private static Map<String, Integer> loadOccCountsMap(Configuration config, boolean createIfNonExisting) {
-		String fileName = config.getString(CONFIG_EDGE_COUNTS_FILE);
+		String fileName = Preconditions.checkNotNull(config.getString(CONFIG_EDGE_COUNTS_FILE),
+				"No occurrence counts map file name defined in configuration (key %s)", CONFIG_EDGE_COUNTS_FILE);
 		File file = new File(fileName);
 		try {
 			if (createIfNonExisting && !file.exists())
