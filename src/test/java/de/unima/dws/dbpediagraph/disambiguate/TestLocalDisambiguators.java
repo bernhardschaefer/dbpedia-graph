@@ -38,7 +38,7 @@ public class TestLocalDisambiguators {
 		// int iterations = 100;
 		// localDisambiguators.add(new HITSCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights, alpha,
 		// iterations));
-		localDisambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
+		// localDisambiguators.add(new KPPCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
 		// localDisambiguators.add(new PageRankCentrality<DefaultSurfaceForm, DefaultSense>(graphType, graphWeights));
 
 		disambiguatorResults = new HashMap<>();
