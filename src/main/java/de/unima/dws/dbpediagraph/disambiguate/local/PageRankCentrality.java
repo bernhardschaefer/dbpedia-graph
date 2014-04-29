@@ -8,7 +8,6 @@ import com.tinkerpop.blueprints.oupls.jung.GraphJung;
 import de.unima.dws.dbpediagraph.disambiguate.AbstractLocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.disambiguate.LocalGraphDisambiguator;
 import de.unima.dws.dbpediagraph.graph.GraphType;
-import de.unima.dws.dbpediagraph.graph.Graphs;
 import de.unima.dws.dbpediagraph.model.Sense;
 import de.unima.dws.dbpediagraph.model.SurfaceForm;
 import de.unima.dws.dbpediagraph.weights.EdgeWeights;
@@ -22,7 +21,8 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 
 	/** Default Iterations value from "The PageRank Citation Ranking: Bringing Order to the Web" */
 	private static final int DEFAULT_ITERATIONS = 52;
-	private static final double DEFAULT_ALPHA = 0;
+	/** damping factor d is normally 0.85. According to {@link PageRank}, alpha is used as (1-d); thus alpha = 0.15 */
+	private static final double DEFAULT_ALPHA = 0.15;
 
 	private final double alpha;
 	private final int iterations;
@@ -39,7 +39,7 @@ public class PageRankCentrality<T extends SurfaceForm, U extends Sense> extends 
 
 	@Override
 	protected VertexScorer<Vertex, Double> getVertexScorer(Graph subgraph, Map<Vertex, Double> vertexPriors) {
-		GraphJung<Graph> graphJung = Graphs.asGraphJung(graphType, subgraph);
+		GraphJung<Graph> graphJung = new GraphJung<Graph>(subgraph); // PageRank values overflow with undirected graph
 		PageRankWithPriors<Vertex, Edge> pageRank = new PageRank<Vertex, Edge>(graphJung, edgeWeights, alpha);
 		return new PRVertexScorer(pageRank, subgraph, iterations);
 	}

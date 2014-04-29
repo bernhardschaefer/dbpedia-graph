@@ -22,10 +22,8 @@ class PRVertexScorer implements VertexScorer<Vertex, Double> {
 
 		scoreSum = calculateScoreSum(pageRank, subgraph);
 
-		// VertexProgram pr =
-		// PageRankProgram.create().alpha(alpha).iterations(iterations).build();
-		// GraphComputer computer = new SerialGraphComputer(subgraph, pr,
-		// Isolation.BSP);
+		// VertexProgram pr = PageRankProgram.create().alpha(alpha).iterations(iterations).build();
+		// GraphComputer computer = new SerialGraphComputer(subgraph, pr, Isolation.BSP);
 		// computer.execute();
 		// VertexMemory vertexMemory = computer.getVertexMemory();
 	}
@@ -39,10 +37,10 @@ class PRVertexScorer implements VertexScorer<Vertex, Double> {
 
 	@Override
 	public Double getVertexScore(Vertex v) {
-		// double rank = vertexMemory.getProperty(vertex,
-		// PageRankProgram.PAGE_RANK);
-		// double edgeCount = vertexMemory.getProperty(vertex,
-		// PageRankProgram.EDGE_COUNT);
+		if (scoreSum == 0) // shortcut to prevent division by zero NaN
+			return 0.0;
+		// double rank = vertexMemory.getProperty(vertex, PageRankProgram.PAGE_RANK);
+		// double edgeCount = vertexMemory.getProperty(vertex, PageRankProgram.EDGE_COUNT);
 		return pageRank.getVertexScore(v) / scoreSum;
 	}
 
