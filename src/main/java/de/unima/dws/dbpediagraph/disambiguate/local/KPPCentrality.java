@@ -52,9 +52,11 @@ public class KPPCentrality<T extends SurfaceForm, U extends Sense> extends Abstr
 				Number distance = distancesFromVertex.get(otherVertex);
 				double inverseShortestDistance;
 				if (distance == null || distance.doubleValue() == 0)
-					// if there is no path, the distance is the constant
-					// 1/(numberOfVertices-1)
-					inverseShortestDistance = 1.0 / (verticesCount - 1);
+					// Navigli & Lapata: if there is no path, the distance is the constant 1/(numberOfVertices-1)
+					// inverseShortestDistance = 1.0 / (verticesCount - 1);
+
+					// we wan't a score of 0 for unconnected vertices
+					inverseShortestDistance = 0.0;
 				else
 					inverseShortestDistance = 1.0 / distance.doubleValue();
 				sumInverseShortestDistances += inverseShortestDistance;
