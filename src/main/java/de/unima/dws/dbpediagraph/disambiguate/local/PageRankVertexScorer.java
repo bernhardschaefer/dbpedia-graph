@@ -2,6 +2,7 @@ package de.unima.dws.dbpediagraph.disambiguate.local;
 
 import com.tinkerpop.blueprints.*;
 
+import de.unima.dws.dbpediagraph.graph.Graphs;
 import edu.uci.ics.jung.algorithms.scoring.PageRankWithPriors;
 import edu.uci.ics.jung.algorithms.scoring.VertexScorer;
 
@@ -31,13 +32,16 @@ class PRVertexScorer implements VertexScorer<Vertex, Double> {
 	private static double calculateScoreSum(PageRankWithPriors<Vertex, Edge> pageRank, Graph subgraph) {
 		double scoreSum = 0;
 		for (Vertex v : subgraph.getVertices())
-			scoreSum += pageRank.getVertexScore(v);
+			if (Graphs.vertexHasNeighbours(v))
+				scoreSum += pageRank.getVertexScore(v);
 		return scoreSum;
 	}
 
 	@Override
 	public Double getVertexScore(Vertex v) {
 		if (scoreSum == 0) // shortcut to prevent division by zero NaN
+			return 0.0;
+		if (Graphs.vertexHasNoNeighbours(v)) // unlike original PageRank, we want zero score for unconnected vertices
 			return 0.0;
 		// double rank = vertexMemory.getProperty(vertex, PageRankProgram.PAGE_RANK);
 		// double edgeCount = vertexMemory.getProperty(vertex, PageRankProgram.EDGE_COUNT);

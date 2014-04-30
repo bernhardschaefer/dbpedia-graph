@@ -155,6 +155,10 @@ public final class Graphs {
 
 	// ----------- Vertex related methods ------------
 
+	public static boolean vertexHasNeighbours(Vertex v) {
+		return !vertexHasNoNeighbours(v);
+	}
+
 	public static boolean vertexHasNoNeighbours(Vertex v) {
 		return Iterables.isEmpty(v.getEdges(Direction.BOTH));
 	}
