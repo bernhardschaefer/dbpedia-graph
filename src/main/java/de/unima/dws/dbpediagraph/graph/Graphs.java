@@ -102,7 +102,7 @@ public final class Graphs {
 	public static Set<Vertex> connectedVerticesBothDirections(Vertex vertex) {
 		final Set<Vertex> vertices = new HashSet<Vertex>();
 		for (final Edge edge : vertex.getEdges(Direction.BOTH)) {
-			Vertex other = Graphs.oppositeVertexUnsafe(edge, vertex);
+			Vertex other = oppositeVertexUnsafe(edge, vertex);
 			vertices.add(other);
 		}
 		return vertices;
@@ -155,11 +155,11 @@ public final class Graphs {
 
 	// ----------- Vertex related methods ------------
 
-	public static boolean vertexHasNeighbours(Vertex v) {
-		return !vertexHasNoNeighbours(v);
+	public static boolean vertexIsConnected(Vertex v) {
+		return !vertexIsUnconnected(v);
 	}
 
-	public static boolean vertexHasNoNeighbours(Vertex v) {
+	public static boolean vertexIsUnconnected(Vertex v) {
 		return Iterables.isEmpty(v.getEdges(Direction.BOTH));
 	}
 
@@ -241,7 +241,7 @@ public final class Graphs {
 		builder.append("\nedges: ");
 		for (Edge e : edges)
 			builder.append(e.getProperty(GraphConfig.URI_PROPERTY)).append("--")
-					.append(Graphs.oppositeVertexSafe(e, v).getProperty(GraphConfig.URI_PROPERTY)).append("\t");
+					.append(oppositeVertexSafe(e, v).getProperty(GraphConfig.URI_PROPERTY)).append("\t");
 
 		return builder.toString();
 	}

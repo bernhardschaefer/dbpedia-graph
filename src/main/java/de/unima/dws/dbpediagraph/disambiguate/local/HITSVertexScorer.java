@@ -32,7 +32,7 @@ class HITSVertexScorer implements VertexScorer<Vertex, Double> {
 		Scores scores = hits.getVertexScore(v);
 		// HitsScores scores = hitsScores.get(v);
 		// assign authority of 0 if v is not connected to any other vertex.
-		double authority = Graphs.vertexHasNoNeighbours(v) ? 0 : scores.authority;
+		double authority = Graphs.vertexIsUnconnected(v) ? 0 : scores.authority;
 		return authority;
 	}
 
