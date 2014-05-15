@@ -53,11 +53,11 @@ The following DBpedia datasets are considered useful for disambiguation:
 ### Core Module Code Changes
 - [DBGraphDisambiguator](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/scala/org/dbpedia/spotlight/graphdb/DBGraphDisambiguator.scala): Interface between Spotlight and DBpedia Graph project.
   - Generates candidate entities for the document.
-  - Converts forth and back between Spotlight and DBpedia Graph model
-  - Prunes candidate set of entities using [CandidateFilter](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/java/de/unima/dws/dbpediagraph/subgraph/CandidateFilter.java)
-  - Creates subgraph using implementation of [SubgraphConstruction](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/java/de/unima/dws/dbpediagraph/subgraph/SubgraphConstruction.java)
-  - Disambiguates bestK entities using implementation of [GraphDisambiguator](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/java/de/unima/dws/dbpediagraph/disambiguate/GraphDisambiguator.java)
-- [DBMergedDisambiguator](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/scala/org/dbpedia/spotlight/graphdb/DBMergedDisambiguator.scala): Federated disambiguator that combines DBpedia Graph and Spotlight disambiguation
+  - Converts forth and back between Spotlight and DBpedia Graph model.
+  - Prunes candidate set of entities using [CandidateFilter](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/java/de/unima/dws/dbpediagraph/subgraph/CandidateFilter.java).
+  - Creates subgraph using implementation of [SubgraphConstruction](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/java/de/unima/dws/dbpediagraph/subgraph/SubgraphConstruction.java).
+  - Disambiguates bestK entities using implementation of [GraphDisambiguator](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/java/de/unima/dws/dbpediagraph/disambiguate/GraphDisambiguator.java).
+- [DBMergedDisambiguator](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/scala/org/dbpedia/spotlight/graphdb/DBMergedDisambiguator.scala): Federated disambiguator that combines DBpedia Graph and Spotlight disambiguation.
   - Two feature combination approach: Combines the bestK lists of entities of Spotlight and DBpedia Graph. Treats Spotlight as a black-box system.
   - Four feature combination approach: Combines the scores of all 3 Spotlight features with the DBpedia graph scores for the bestK entities into a final score.
 - [SpotlightConfiguration](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/java/org/dbpedia/spotlight/model/SpotlightConfiguration.java): Added GraphBased and Merged disambiguation policies to the DisambiguationPolicy enum in line [61](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/java/org/dbpedia/spotlight/model/SpotlightConfiguration.java#L61).
@@ -65,10 +65,10 @@ The following DBpedia datasets are considered useful for disambiguation:
 - [pom.xml](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/master/core/pom.xml): DBpedia Graph project dependency (line [247](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/master/core/pom.xml#L247)).
 
 ### Run
-1. Install DBpedia Graph project into local maven repository using ```mvn install``` (make sure you have created a graph and configured the properties file)
+1. Install DBpedia Graph project into local maven repository using ```mvn install``` (make sure you have created a graph and configured the properties file).
 2. Package the Spotlight fork using ```mvn package```. This creates a jar with dependencies in the ```dist/target/``` folder.
-3. Download and extract the English Spotlight model ```en.tar.gz``` for version 0.6 from the [Downloads Page](http://spotlight.sztaki.hu/downloads/raw)
-4. Run the Spotlight fork jar
+3. Download and extract the English Spotlight model ```en.tar.gz``` for version 0.6 from the [Downloads Page](http://spotlight.sztaki.hu/downloads/raw).
+4. Run the Spotlight fork jar.
 
 Exemplary command for running the Spotlight fat jar:
 
