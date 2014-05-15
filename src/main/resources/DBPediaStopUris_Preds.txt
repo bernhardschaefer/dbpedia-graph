@@ -1,4 +1,5 @@
 # Blacklist from Schuhmacher & Ponzetto (2014): Exploiting Linked Data for Semantic Document Modelling
+# Filters that are irrelevant have been commented out
 # http://purl.org/dc/elements/1.1/language --> not present in any used dataset
 # http://purl.org/dc/elements/1.1/rights --> not present in any used dataset
 # http://purl.org/dc/elements/1.1/description --> covered by literal object filter
