@@ -25,12 +25,12 @@ public class CandidateFilter {
 	/**
 	 * Configuration key for filtering candidate senses by minimum support.
 	 */
-	private static final String CONFIG_CANDIDATE_MIN_SUPPORT = "org.dbpedia.spotlight.graphdb.filter.minSupport";
+	private static final String CONFIG_CANDIDATE_MIN_SUPPORT = "de.unima.dws.dbpediagraph.subgraph.filter.minSupport";
 
 	/**
 	 * Configuration key for filtering the best k candidate senses by prior.
 	 */
-	private static final String CONFIG_MAX_CANDIDATES_BY_PRIOR = "org.dbpedia.spotlight.graphdb.filter.maxCandidatesByPrior";
+	private static final String CONFIG_MAX_CANDIDATES_BY_PRIOR = "de.unima.dws.dbpediagraph.subgraph.filter.maxCandidatesByPrior";
 
 	private static Ordering<Sense> ascPrior = new Ordering<Sense>() {
 		@Override
