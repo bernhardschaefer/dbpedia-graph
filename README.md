@@ -1,7 +1,7 @@
 ## DBpedia Graph Project
-- This project exploits DBpedia for disambiguating ambiguous enitities and linking them to Wikipedia.
-- To this end a DBpedia graph is created and used for disambiguation, thereby adapting the method of Navigli & Lapata (2010) (see [paper link](http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4782967))
-- It is developed as a maven project and integrated into a [DBpedia Spotlight fork](https://github.com/bernhardschaefer/dbpedia-spotlight) (see [DBpedia Spotlight Fork](#dbpedia-spotlight-fork) for more details).
+- This project exploits DBpedia for disambiguating ambiguous entities and linking them to Wikipedia.
+- To this end a DBpedia graph is created and used for disambiguation, thereby adapting the method of Navigli & Lapata (2010) ([paper link](http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4782967))
+- It is developed as a maven project and integrated into a [DBpedia Spotlight fork](https://github.com/bernhardschaefer/dbpedia-spotlight) (see [DBpedia Spotlight Fork](#dbpedia-spotlight-fork) section for more details).
 
 ### Build
 - Execute maven as follows; this creates a jar with all dependencies in the ```/target``` folder
@@ -13,12 +13,11 @@ mvn compile assembly:single
 ### Configuration
 - Configuration for creating a graph and for disambiguation is done using a properties file
 - The path to the actual properties file needs to be configured in [redirect.properties](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/resources/redirect.properties)
-- A sample properties file is given by [graphdb.properties](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/resources/graphdb.properties)
-- The property file is reread at each request if it was changed
+- A sample properties file, which explains each property, is given by [graphdb.properties](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/resources/graphdb.properties).
+- The property file is reread at each request if it was changed.
 
 ### Create a DBpedia graph from DBpedia datasets
 1. Configure ```graph.*```, ```blueprints.*```, and ```loading.*``` related properties in the configuration file
-  - Each property is explained in the sample config file [graphdb.properties](https://github.com/bernhardschaefer/dbpedia-graph/blob/master/src/main/resources/graphdb.properties)
 2. [Build](#build) a single jar with dependencies. 
 3. Run DBpediaGraphLoader class. As arguments multiple DBpedia datasets or directories containing DBpedia datasets are allowed.
 
@@ -46,10 +45,10 @@ The following DBpedia datasets are considered useful for disambiguation:
 - Redirects (DBpedia Spotlight uses them for spotting & candidate generation): ```redirects_en.nt```
 
 ## DBpedia Spotlight Fork
-- The DBpedia Graph project is integrated into a [DBpedia Spotlight fork](https://github.com/bernhardschaefer/dbpedia-spotlight)
-- Here, the branch [v0.6](https://github.com/bernhardschaefer/dbpedia-spotlight/tree/v0.6) contains all the modified code based on the DBpedia Spotlight version 0.6. This branch should be updated to contain the Spotlight master code changes (see [TODO](#todo)).
+- The DBpedia Graph project is integrated into a [DBpedia Spotlight fork](https://github.com/bernhardschaefer/dbpedia-spotlight).
+- Here, the branch [v0.6](https://github.com/bernhardschaefer/dbpedia-spotlight/tree/v0.6) contains all the modified code based on the DBpedia Spotlight version 0.6. This branch needs to be updated at some point to contain the Spotlight master code changes (see [TODO](#todo)).
 - Integration with Spotlight is needed because the DBpedia Graph is only used for disambiguation and does not perform spotting or generation of candidate entities.
-- The code changes are done in the core module of DBpedia Spotlight. The affected classes are described in the following.
+- The code changes are done in the core module of DBpedia Spotlight. The affected classes are described in the [core module](#core-module-code-changes) section.
 
 ### Core Module Code Changes
 - [DBGraphDisambiguator](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/scala/org/dbpedia/spotlight/graphdb/DBGraphDisambiguator.scala): Interface between Spotlight and DBpedia Graph project.
