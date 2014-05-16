@@ -48,7 +48,7 @@ The following DBpedia datasets are considered useful for disambiguation:
 - The DBpedia Graph project is integrated into a [DBpedia Spotlight fork](https://github.com/bernhardschaefer/dbpedia-spotlight).
 - Here, the branch [v0.6](https://github.com/bernhardschaefer/dbpedia-spotlight/tree/v0.6) contains all the modified code based on the DBpedia Spotlight version 0.6. This branch needs to be updated at some point to contain the Spotlight master code changes (see [TODO](#todo)).
 - Integration with Spotlight is needed because the DBpedia Graph is only used for disambiguation and does not perform spotting or generation of candidate entities.
-- The code changes for running the disambiguators are done in the core module of DBpedia Spotlight. The affected classes are described in the [core module](#core-module-code-changes) section.
+- The code changes for running the statistical disambiguators are done in the core module of DBpedia Spotlight. The affected classes are described in the [core module](#core-module-code-changes) section.
 - For training the feature weights, the linear regression learners have been implemented in the [eval module](#eval-module-code-changes).
 
 ### Core Module Code Changes
@@ -64,6 +64,9 @@ The following DBpedia datasets are considered useful for disambiguation:
 - [SpotlightConfiguration](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/java/org/dbpedia/spotlight/model/SpotlightConfiguration.java): Added GraphBased and Merged disambiguation policies to the DisambiguationPolicy enum in line [61](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/java/org/dbpedia/spotlight/model/SpotlightConfiguration.java#L61).
 - [SpotlightModel](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/scala/org/dbpedia/spotlight/db/SpotlightModel.scala): Added GraphBased and Merged Disambiguators to the statistical system and mapped them to the respective disambiguator classes.
 - [pom.xml](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/master/core/pom.xml): DBpedia Graph project dependency (line [247](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/master/core/pom.xml#L247)).
+
+- [FeatureNormalizer](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/scala/org/dbpedia/spotlight/disambiguate/mixtures/FeatureNormalizer.scala): Different approaches for normalizing the log-scaled features. Relevant for training the feature weights and for the NormalizedLinearRegressionFeatureMixture.
+- [NormalizedLinearRegressionFeatureMixture](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/scala/org/dbpedia/spotlight/disambiguate/mixtures/NormalizedLinearRegressionFeatureMixture.scala): uses a list of weighted features and a feature normalizer to combine the normalized features in a weighted linear combination.
 
 ### Eval Module Code Changes
 - [CorpusLearner](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/eval/src/main/scala/org/dbpedia/spotlight/learning/CorpusLearner.scala): Generates training data that can be used for linear regression. To this end, an evaluation corpus and a disambiguator is specified. The corpus learner then generates the training data using the specified [TrainingDataHandler](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/eval/src/main/scala/org/dbpedia/spotlight/learning/TrainingDataHandler.scala)'s. 
