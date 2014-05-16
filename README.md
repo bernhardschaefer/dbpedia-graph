@@ -96,4 +96,6 @@ java -Xmx20G -jar dist/target/dbpedia-spotlight-0.6-jar-with-dependencies.jar /p
 - ```//TODO```'s in code
 - Sync branch v0.6 with the Spotlight master
 - Big TODO: Separate DBpedia Graph and Spotlight project so that both communicate using HTTP.
+- Add dedicated redirect resolving module: Redirect resolving is needed because Spotlight generates candidate entities that are redirects. Currently all redirect URI's are integrated into the graph, which bloats up the graph unnecessarily.
+- Improve performance of subgraph construction, e.g. by unifying traversal of same candidate entities of different surface forms.
 - ...
