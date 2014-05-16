@@ -48,7 +48,8 @@ The following DBpedia datasets are considered useful for disambiguation:
 - The DBpedia Graph project is integrated into a [DBpedia Spotlight fork](https://github.com/bernhardschaefer/dbpedia-spotlight).
 - Here, the branch [v0.6](https://github.com/bernhardschaefer/dbpedia-spotlight/tree/v0.6) contains all the modified code based on the DBpedia Spotlight version 0.6. This branch needs to be updated at some point to contain the Spotlight master code changes (see [TODO](#todo)).
 - Integration with Spotlight is needed because the DBpedia Graph is only used for disambiguation and does not perform spotting or generation of candidate entities.
-- The code changes are done in the core module of DBpedia Spotlight. The affected classes are described in the [core module](#core-module-code-changes) section.
+- The code changes for running the disambiguators are done in the core module of DBpedia Spotlight. The affected classes are described in the [core module](#core-module-code-changes) section.
+- For training the feature weights, the linear regression learners have been implemented in the [eval module](#eval-module-code-changes).
 
 ### Core Module Code Changes
 - [DBGraphDisambiguator](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/scala/org/dbpedia/spotlight/graphdb/DBGraphDisambiguator.scala): Interface between Spotlight and DBpedia Graph project.
@@ -63,6 +64,12 @@ The following DBpedia datasets are considered useful for disambiguation:
 - [SpotlightConfiguration](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/java/org/dbpedia/spotlight/model/SpotlightConfiguration.java): Added GraphBased and Merged disambiguation policies to the DisambiguationPolicy enum in line [61](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/java/org/dbpedia/spotlight/model/SpotlightConfiguration.java#L61).
 - [SpotlightModel](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/core/src/main/scala/org/dbpedia/spotlight/db/SpotlightModel.scala): Added GraphBased and Merged Disambiguators to the statistical system and mapped them to the respective disambiguator classes.
 - [pom.xml](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/master/core/pom.xml): DBpedia Graph project dependency (line [247](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/master/core/pom.xml#L247)).
+
+### Eval Module Code Changes
+- [CorpusLearner](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/eval/src/main/scala/org/dbpedia/spotlight/learning/CorpusLearner.scala): Generates training data that can be used for linear regression. To this end, an evaluation corpus and a disambiguator is specified. The corpus learner then generates the training data using the specified [TrainingDataHandler](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/eval/src/main/scala/org/dbpedia/spotlight/learning/TrainingDataHandler.scala)'s. 
+- [LinRegTrainingDataHandler](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/eval/src/main/scala/org/dbpedia/spotlight/learning/TrainingDataHandler.scala#L15): Uses breeze linear regression to learn the feature weights based on the training data generated from the corpus and the disambiguator.
+- [DumpVowpalTrainingDataHandler](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/eval/src/main/scala/org/dbpedia/spotlight/learning/TrainingDataHandler.scala#L43): Generates a text file that can be used by Vowpal Wabbit for feature weights learning. Further documentation is provided in the code.
+- [DumpTsvTrainingDataHandler](https://github.com/bernhardschaefer/dbpedia-spotlight/blob/v0.6/eval/src/main/scala/org/dbpedia/spotlight/learning/TrainingDataHandler.scala#L63): Generates a TSV text file for feature weights learning.
 
 ### Run
 1. Install DBpedia Graph project into local maven repository using ```mvn install``` (make sure you have created a graph and configured the properties file).
